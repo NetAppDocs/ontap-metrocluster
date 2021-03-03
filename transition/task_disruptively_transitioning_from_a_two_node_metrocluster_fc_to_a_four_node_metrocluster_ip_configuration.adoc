@@ -912,7 +912,7 @@ The storage aggregate show command indicates that the root aggregate is unmirror
 +
 If none are present, skip the following two steps.
 
-. Display the list of LIfs using VLANs or ifgrps: `network interface show -fields home-port,curr-port``network port show -type if-group | vlan`
+. Display the list of LIfs using VLANs or ifgrps: `network interface show -fields home-port,curr-port``network port show -type if-group \| vlan`
 . Remove any VLANs and interface groups.
 +
 You must perform these steps for all LIFs in all SVMs, including those SVMs with the -mc suffix.
@@ -925,7 +925,7 @@ You must perform these steps for all LIFs in all SVMs, including those SVMs with
 No LIFs should appear in the output.
 
  .. Remove VLAN and ifgrp ports from broadcast domain:: `network port broadcast-domain remove-ports -ipspace ipspace -broadcast-domain broadcast-domain-name -ports nodename:portname,nodename:portname,..`
- .. Verify that all the vlan and ifgrp ports are not assigned to a broadcast domain: `network port show -type if-group | vlan`
+ .. Verify that all the vlan and ifgrp ports are not assigned to a broadcast domain: `network port show -type if-group \| vlan`
  .. Delete all VLANs: `network port vlan delete -node nodename -vlan-name vlan-name`
  .. Delete interface groups: `network port ifgrp delete -node nodename -ifgrp ifgrp-name`
 
@@ -1076,11 +1076,11 @@ Please choose one of the following:
 This will replace all flash-based configuration with the last backup to disks. Are you sure you want to continue?: yes
 
 Metrocluster Transition: Name of the MetroCluster FC node: `node_A_1-FC`
-Metrocluster Transition: Please confirm if this is the correct value [yes|no]:? y
+Metrocluster Transition: Please confirm if this is the correct value [yes\|no]:? y
 Metrocluster Transition: Disaster Recovery partner sysid of MetroCluster FC node node_A_1-FC: `systemID-of-node_B_1-FC`
-Metrocluster Transition: Please confirm if this is the correct value [yes|no]:? y
+Metrocluster Transition: Please confirm if this is the correct value [yes\|no]:? y
 Metrocluster Transition: Disaster Recovery partner sysid of local Metrocluster IP node: `systemID-of-node_B_1-IP`
-Metrocluster Transition: Please confirm if this is the correct value [yes|no]:? y
+Metrocluster Transition: Please confirm if this is the correct value [yes\|no]:? y
 ----
 . If data volumes are encrypted, restore the keys using the correct command for your key management configuration.
 +
