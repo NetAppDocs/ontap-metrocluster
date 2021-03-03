@@ -1,0 +1,48 @@
+---
+permalink: upgrade/task_expanding_a_two_node_metrocluster_fc_configuration_to_a_four_node_fc_configuration_supertask.html
+sidebar: sidebar
+keywords: 
+summary: 'Expanding a two-node MetroCluster FC configuration to a four-node MetroCluster FC configuration involves adding a controller to each cluster to form an HA pair at each MetroCluster site, and then refreshing the MetroCluster FC configuration.'
+---
+= Expanding a two-node MetroCluster FC configuration to a four-node configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Expanding a two-node MetroCluster FC configuration to a four-node MetroCluster FC configuration involves adding a controller to each cluster to form an HA pair at each MetroCluster site, and then refreshing the MetroCluster FC configuration.
+
+* The nodes must be running ONTAP 9 or later in a MetroCluster FC configuration.
++
+This procedure is not supported on earlier versions of ONTAP or in MetroCluster IP configurations.
+
+* If the platforms in your two-node configuration are not supported in ONTAP 9.2 and you plan to upgrade to platforms supported in ONTAP 9.2 _and_ expand to a four-node cluster, you must upgrade the platforms in the two-node configuration _before_ expanding the MetroCluster FC configuration.
+* The existing MetroCluster FC configuration must be healthy.
+* The equipment you are adding must be supported and meet all of the requirements described in the _Fabric-attached MetroCluster Installation and Configuration Guide_ or the _Stretch Installation and Configuration Guide_.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-stretch/home.html[Stretch MetroCluster installation and configuration]
+
+* You must have available FC switch ports to accommodate the new controllers and any new bridges.
+* You need the admin password and access to an FTP or SCP server.
+* This procedure applies only to MetroCluster FC configurations.
+* This procedure is disruptive and takes approximately four hours to complete.
+* Before performing this procedure, the MetroCluster FC configuration consists of two single-node clusters:
++
+image::../media/mcc_dr_groups_2_node.gif[]
++
+After completing this procedure, the MetroCluster FC configuration consists of two HA pairs, one at each site:
++
+image::../media/mcc_dr_groups_4_node.gif[]
+
+* Both sites must be expanded equally.
++
+A MetroCluster configuration cannot consist of an uneven number of nodes.
+
+* This procedure can take over an hour per site, with additional time for tasks such as initializing the disks and netbooting the new nodes.
++
+The time to initialize the disks depends on the size of the disks.
+
+* This procedure uses the following workflow:
+
+image::../media/workflow_mcc_2_to_4_node_expansion_high_level.gif[]

@@ -1,0 +1,199 @@
+---
+permalink: maintain/task_disabling_encryption_on_brocade_fc_switches.html
+sidebar: sidebar
+keywords: 
+summary: 'You might need to disable encryption on Brocade FC switches.'
+---
+= Disabling encryption on Brocade FC switches
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You might need to disable encryption on Brocade FC switches.
+
+. Send an AutoSupport message from both sites indicating the beginning of maintenance.
++
+----
+cluster_A::> autosupport invoke -node * -type all -message MAINT=4h
+----
++
+----
+cluster_B::> autosupport invoke -node * -type all -message MAINT=4h
+----
+
+. Verify the operation of the MetroCluster configuration from Cluster A.
+ .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
++
+----
+cluster_A::> metrocluster show
+----
+
+ .. Perform a MetroCluster check: `metrocluster check run`
++
+[source,nolinebreak]
+----
+cluster_A::> metrocluster check run
+----
+
+ .. Display the results of the MetroCluster check: `metrocluster check show`
++
+[source,nolinebreak]
+----
+cluster_A::> metrocluster check show
+----
+. Check the status of both switches: `fabric show`
++
+----
+switch_A_1:admin> fabric show
+----
++
+----
+switch_B_1:admin> fabric show
+----
+
+. Disable both switches: `switchdisable`
++
+----
+switch_A_1:admin> switchdisable
+----
++
+----
+switch_B_1:admin> switchdisable
+----
+
+. Check the available paths for the nodes on each cluster: `sysconfig`
++
+----
+cluster_A::> system node run -node node-name -command sysconfig -a
+----
++
+----
+cluster_B::> system node run -node node-name -command sysconfig -a
+----
++
+As the switch fabric is now disabled, the System Storage Configuration should be Single-Path HA.
+
+. Check the aggregate status for both clusters.
++
+----
+cluster_A::> aggr status
+----
++
+----
+cluster_B::> aggr status
+----
++
+System output should show the aggregates are mirrored and normal for both clusters:
++
+----
+mirrored,normal
+----
+
+. Repeat the following substeps from the admin prompt on both switches.
+ .. Show which ports are encrypted: `portenccompshow`
++
+----
+switch_A_1:admin> portenccompshow
+----
+
+ .. Disable encryption on the encrypted ports: `portcfgencrypt – disable port-number`
++
+----
+switch_A_1:admin> portcfgencrypt --disable 40
+switch_A_1:admin> portcfgencrypt --disable 41
+switch_A_1:admin> portcfgencrypt --disable 42
+switch_A_1:admin> portcfgencrypt --disable 43
+----
+
+ .. Set the authentication type to all: `authUtil --set -a all`
++
+----
+switch_A_1:admin> authUtil --set -a all
+----
+
+ .. Set the authentication policy on the switch. to off: `authutil --policy -sw off`
++
+----
+switch_A_1:admin> authutil --policy -sw off
+----
+
+ .. Set the authentication Diffie-Hellman group to *: `authutil --set -g *`
++
+----
+switch_A_1:admin> authUtil --set -g *
+----
+
+ .. Delete the secret key database: `secAuthSecret --remove -all`
++
+----
+switch_A_1:admin> secAuthSecret --remove -all
+----
+
+ .. Confirm that encryption is disabled on the ports: `portenccompshow`
++
+----
+switch_A_1:admin> portenccompshow
+----
+
+ .. Enable the switch: `switchenable`
++
+----
+switch_A_1:admin> switchenable
+----
+
+ .. Confirm the status of the ISLs: `islshow`
++
+----
+switch_A_1:admin> islshow
+----
+. Check the available paths for the nodes on each cluster: `sysconfig`
++
+----
+cluster_A::> system node run -node * -command sysconfig -a
+----
++
+----
+cluster_B::> system node run -node * -command sysconfig -a
+----
++
+The system output should indicate that System Storage Configuration has changed back to Quad-Path HA.
+
+. Check the aggregate status for both clusters.
++
+----
+cluster_A::> aggr status
+----
++
+----
+cluster_B::> aggr status
+----
++
+The system should show that the aggregates are mirrored and normal for both clusters as shown in the following system output:
++
+----
+mirrored,normal
+----
+
+. Verify the operation of the MetroCluster configuration from Cluster A.
+ .. Perform a MetroCluster check: `metrocluster check run`
++
+[source,nolinebreak]
+----
+cluster_A::> metrocluster check run
+----
+
+ .. Display the results of the MetroCluster check: `metrocluster check show`
++
+[source,nolinebreak]
+----
+cluster_A::> metrocluster check show
+----
+. Send an AutoSupport message from both sites indicating the end of maintenance.
++
+----
+cluster_A::> autosupport invoke -node node-name -type all -message MAINT=END
+----
++
+----
+cluster_B::> autosupport invoke -node node-name -type all -message MAINT=END
+----

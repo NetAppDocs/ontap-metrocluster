@@ -1,0 +1,74 @@
+---
+permalink: maintain/task_upgrading_firmware_on_metrocluster_ip_switches.html
+sidebar: sidebar
+keywords: 
+summary: ''
+---
+= Upgrading firmware on MetroCluster IP switches
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+. Check the health of the configuration.
+ .. Check that the MetroCluster is configured and in normal mode on each cluster: `metrocluster show`
++
+----
+cluster_A::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+ Local: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-cluster-disaster
+Remote: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-cluster-disaster
+----
+
+ .. Check that mirroring is enabled on each node: `metrocluster node show`
++
+----
+cluster_A::> metrocluster node show
+DR                           Configuration  DR
+Group Cluster Node           State          Mirroring Mode
+----- ------- -------------- -------------- --------- --------------------
+1     cluster_A
+              node_A_1       configured     enabled   normal
+      cluster_B
+              node_B_1       configured     enabled   normal
+2 entries were displayed.
+----
+
+ .. Check that the MetroCluster components are healthy: `metrocluster check run`
++
+----
+cluster_A::> metrocluster check run
+
+Last Checked On: 10/1/2014 16:03:37
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+4 entries were displayed.
+
+Command completed. Use the "metrocluster check show -instance" command or sub-commands in "metrocluster check" directory for detailed results.
+To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
+----
+
+ .. Check that there are no health alerts: `system health alert show`
+. Install the software on the first switch.
++
+Follow the steps for installing switch software in the relevant section in the _MetroCluster IP Installation and Configuration Guide_ depending on whether the switch type is Cisco or Broadcom:
+
+ ** _Downloading and installing the Cisco switch NX-OS software_
+ ** _Downloading and installing the Broadcom switch EFOS software_
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP installation and configuration]
+
++
+Repeat this step for each of the switches.
++
+NOTE: In the sections referenced, skip the step on downloading the reference configuration (RCF) files.
+
+. Repeat step 1 to check the health of the configuration.

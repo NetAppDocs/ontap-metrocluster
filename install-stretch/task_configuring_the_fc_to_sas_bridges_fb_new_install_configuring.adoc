@@ -1,0 +1,156 @@
+---
+permalink: install-stretch/task_configuring_the_fc_to_sas_bridges_fb_new_install_configuring.html
+sidebar: sidebar
+keywords: 
+summary: 'Before cabling your model of the FC-to-SAS bridges, you must configure the settings in the FibreBridge software.'
+---
+= Configuring the FC-to-SAS bridges
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Before cabling your model of the FC-to-SAS bridges, you must configure the settings in the FibreBridge software.
+
+You should decide whether you will be using in-band management of the bridges.
+
+NOTE: Starting with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
+
+If you will be using in-band management of the bridge rather than IP management, the steps for configuring the Ethernet port and IP settings can be skipped, as noted in the relevant steps.
+
+. If configuring for in-band management, connect a cable from FibreBridge RS-232 serial port to the serial (COM) port on a personal computer.
++
+The serial connection will be used for initial configuration, and then in-band management via ONTAP and the FC ports can be used to monitor and manage the bridge.
+
+. If configuring for IP management, connect the Ethernet management 1 port on each bridge to your network by using an Ethernet cable.
++
+In systems running ONTAP 9.5 or later, in-band management can be used to access the bridge via the FC ports rather than the Ethernet port. Starting with ONTAP 9.8, only in-band management is supported and SNMP management is deprecated.
++
+The Ethernet management 1 port enables you to quickly download the bridge firmware (using ATTO ExpressNAV or FTP management interfaces) and to retrieve core files and extract logs.
+
+. If configuring for IP management, configure the Ethernet management 1 port for each bridge by following the procedure in section 2.0 of the _ATTO FibreBridge Installation and Operation Manual_ for your bridge model.
++
+In systems running ONTAP 9.5 or later, in-band management can be used to access the bridge via the FC ports rather than the Ethernet port. Starting with ONTAP 9.8, only in-band management is supported and SNMP management is deprecated.
++
+When running QuickNAV to configure an Ethernet management port, only the Ethernet management port that is connected by the Ethernet cable is configured. For example, if you also wanted to configure the Ethernet management 2 port, you would need to connect the Ethernet cable to port 2 and run QuickNAV.
+
+. Configure the bridge.
++
+You should make note of the user name and password that you designate.
++
+NOTE: Do not configure time synchronization on ATTO FibreBridge 7600N or 7500N. The time synchronization for ATTO FibreBridge 7600N or 7500N is set to the cluster time after the bridge is discovered by ONTAP. It is also synchronized periodically once a day. The time zone used is GMT and is not changeable.
+
+ .. If configuring for IP management, configure the IP settings of the bridge.
++
+In systems running ONTAP 9.5 or later, in-band management can be used to access the bridge via the FC ports rather than the Ethernet port. Starting with ONTAP 9.8, only in-band management is supported and SNMP management is deprecated.
++
+To set the IP address without the QuickNAV utility, you need to have a serial connection to the FibreBridge.
++
+If using the CLI, you must run the following commands:``set ipaddress mp1 ip-address```set ipsubnetmask mp1 subnet-mask``set ipgateway mp1 x.x.x.x``set ipdhcp mp1 disabled``set ethernetspeed mp1 1000`
+
+ .. Configure the bridge name.
++
+The bridges should each have a unique name within the MetroCluster configuration.
++
+Example bridge names for one stack group on each site:
+
+  *** bridge_A_1a
+  *** bridge_A_1b
+  *** bridge_B_1a
+  *** bridge_B_1b
+If using the CLI, you must run the following command:``set bridgename bridgename``
+
+ .. If running ONTAP 9.4 or earlier, enable SNMP on the bridge: `set SNMP enabled`
++
+In systems running ONTAP 9.5 or later, in-band management can be used to access the bridge via the FC ports rather than the Ethernet port. Starting with ONTAP 9.8, only in-band management is supported and SNMP management is deprecated.
+
+. Configure the bridge FC ports.
+ .. Configure the data rate/speed of the bridge FC ports.
++
+The supported FC data rate depends on your model bridge.
+
+  *** The FibreBridge 7600 bridge supports up to 32, 16, or 8 Gbps.
+  *** The FibreBridge 7500 bridge supports up to 16, 8, or 4 Gbps.
+  *** The FibreBridge 6500 bridge supports up to 8, 4, or 2 Gbps.
+*Note:* The FCDataRate speed you select is limited to the maximum speed supported by both the bridge and the FC port of the controller module to which the bridge port connects. Cabling distances must not exceed the limitations of the SFPs and other hardware.
+
++
+If using the CLI, you must run the following command: `set FCDataRate port-numberport-speed`
+
+ .. If you are configuring a FibreBridge 7500N or 6500N bridge, configure the connection mode that the port uses to ptp.
++
+NOTE: The FCConnMode setting is not required when configuring a FibreBridge 7600N bridge.
++
+If using the CLI, you must run the following command: `set FCConnMode port-number ptp`
+
+ .. If you are configuring a FibreBridge 7600N or 7500N bridge, you must configure or disable the FC2 port.
+  *** If you are using the second port, you must repeat the previous substeps for the FC2 port.
+  *** If you are not using the second port, then you must disable the port: `FCPortDisable port-number`
+The following example shows the disabling of FC port 2:
+
++
+----
+`FCPortDisable 2`
+
+Fibre Channel Port 2 has been disabled.
+----
+ .. If you are configuring a FibreBridge 7600N or 7500N bridge, disable the unused SAS ports: `SASPortDisable sas-port```
++
+NOTE: SAS ports A through D are enabled by default. You must disable the SAS ports that are not being used.
++
+If only SAS port A is used, then SAS ports B, C, and D must be disabled. The following example shows the disabling of SAS port B. You must similarly disable SAS ports C and D:
++
+----
+`SASPortDisable b`
+
+SAS Port B has been disabled.
+----
+. Secure access to the bridge and save the bridge's configuration. Choose an option from below depending on the version of ONTAP your system is running.
++
+|===
+| ONTAP version| Steps
+a|
+*ONTAP 9.5 or later*
+a|
+
+ .. View the status of the bridges: `storage bridge show`
++
+The output shows which bridge is not secured.
+
+ .. Secure the bridge: `securebridge`
+
+a|
+*ONTAP 9.4 or earlier*
+a|
+
+ .. View the status of the bridges: `storage bridge show`
++
+The output shows which bridge is not secured.
+
+ .. Check the status of the unsecured bridge's ports: info
++
+The output shows the status of Ethernet ports MP1 and MP2.
+
+ .. If Ethernet port MP1 is enabled, run: `set EthernetPort mp1 disabled`
++
+If Ethernet port MP2 is also enabled, repeat the previous substep for port MP2.
+
+ .. Save the bridge's configuration.
++
+You must run the following commands:
++
+`SaveConfiguration`
++
+`FirmwareRestart`
++
+You are prompted to restart the bridge.
+
++
+|===
+
+. After completing MetroCluster configuration, use the flashimages command to check your version of FibreBridge firmware and, if the bridges are not using the latest supported version, update the firmware on all bridges in the configuration.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/home.html[MetroCluster Service Guide]
+
+*Related information*
+
+xref:concept_in_band_management_of_the_fc_to_sas_bridges.adoc[In-band management of the FC-to-SAS bridges]

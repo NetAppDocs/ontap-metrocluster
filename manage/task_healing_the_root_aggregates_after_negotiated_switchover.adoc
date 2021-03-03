@@ -1,0 +1,44 @@
+---
+permalink: manage/task_healing_the_root_aggregates_after_negotiated_switchover.html
+sidebar: sidebar
+keywords: MetroCluster configurations
+summary: 'After the data aggregates have been healed, you must heal the root aggregates in preparation for the switchback operation.'
+---
+= Healing the root aggregates after negotiated switchover
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+After the data aggregates have been healed, you must heal the root aggregates in preparation for the switchback operation.
+
+The data aggregates phase of the MetroCluster healing process must have been completed successfully.
+
+. Switch back the mirrored aggregates by running the metrocluster heal -phase root-aggregates command.
++
+----
+cluster_A::> metrocluster heal -phase root-aggregates
+[Job 137] Job succeeded: Heal Root Aggregates is successful
+----
++
+If the healing is vetoed, you have the option of reissuing the metrocluster heal command with the --override-vetoes parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
+
+. Confirm the heal operation is complete by running the metrocluster operation show command on the healthy cluster:
++
+----
+
+cluster_A::> metrocluster operation show
+  Operation: heal-root-aggregates
+      State: successful
+ Start Time: 7/29/2014 20:54:41
+   End Time: 7/29/2014 20:54:42
+     Errors: -
+----
+
+. Check for and remove any failed disks belonging to the disaster site by issuing the following command on the healthy site: `disk show -broken`
+. Power up or boot each controller module on the disaster site.
++
+If the system displays the LOADER prompt, run the `boot_ontap` command.
+
+. After nodes are booted, verify that the root aggregates are mirrored.
++
+If both plexes are present, resynchronization will occur automatically if the plexes are not synchronized. If one plex has failed, that plex must be destroyed and the mirror must be recreated using the storage aggregate mirror -aggregateaggregate-name command to reestablish the mirror relationship.

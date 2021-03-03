@@ -1,0 +1,78 @@
+---
+permalink: manage/task_performing_a_switchback.html
+sidebar: sidebar
+keywords: MetroCluster configurations
+summary: 'After you heal the MetroCluster configuration, you can perform the MetroCluster switchback operation. The MetroCluster switchback operation returns the configuration to its normal operating state, with the sync-source storage virtual machines \(SVMs\) on the disaster site active and serving data from the local disk pools.'
+---
+= Performing a switchback
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+After you heal the MetroCluster configuration, you can perform the MetroCluster switchback operation. The MetroCluster switchback operation returns the configuration to its normal operating state, with the sync-source storage virtual machines (SVMs) on the disaster site active and serving data from the local disk pools.
+
+* The disaster cluster must have successfully switched over to the surviving cluster.
+* Healing must have been performed on the data and root aggregates.
+* The surviving cluster nodes must not be in the HA failover state (all nodes must be up and running for each HA pair).
+* The disaster site controller modules must be completely booted and not in the HA takeover mode.
+* The root aggregate must be mirrored.
+* The Inter-Switch Links (ISLs) must be online.
+* Any required licenses must be installed on the system.
+
+. Confirm that all nodes are in the enabled state: `metrocluster node show`
++
+The following example displays the nodes that are in the enabled state:
++
+----
+cluster_B::>  metrocluster node show
+
+DR                        Configuration  DR
+Group Cluster Node        State          Mirroring Mode
+----- ------- ----------- -------------- --------- --------------------
+1     cluster_A
+              node_A_1    configured     enabled   heal roots completed
+              node_A_2    configured     enabled   heal roots completed
+      cluster_B
+              node_B_1    configured     enabled   waiting for switchback recovery
+              node_B_2    configured     enabled   waiting for switchback recovery
+4 entries were displayed.
+----
+
+. Confirm that resynchronization is complete on all SVMs: `metrocluster vserver show`
+. Verify that any automatic LIF migrations being performed by the healing operations have been successfully completed: metrocluster check lif show
+. Perform the switchback by running the metrocluster switchback command from any node in the surviving cluster.
+. Check the progress of the switchback operation: `metrocluster show`
++
+The switchback operation is still in progress when the output displays waiting-for-switchback:
++
+----
+cluster_B::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+ Local: cluster_B         Configuration state configured
+                          Mode                switchover
+                          AUSO Failure Domain -
+Remote: cluster_A         Configuration state configured
+                          Mode                waiting-for-switchback
+                          AUSO Failure Domain -
+----
++
+The switchback operation is complete when the output displays normal:
++
+----
+cluster_B::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+ Local: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain -
+Remote: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain -
+----
++
+If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the metrocluster config-replication resync-status show command. This command is at the advanced privilege level.
+
+. Reestablish any SnapMirror or SnapVault configurations.
++
+In ONTAP 8.3, you need to manually reestablish a lost SnapMirror configuration after a MetroCluster switchback operation. In ONTAP 9.0 and later, the relationship is reestablished automatically.

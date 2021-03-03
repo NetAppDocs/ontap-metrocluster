@@ -1,0 +1,140 @@
+---
+permalink: install-fc/task_resetting_the_brocade_fc_switch_to_factory_defaults.html
+sidebar: sidebar
+keywords: 
+summary: 'Before installing a new software version and RCF files, you must erase the current switch configuration and perform basic configuration.'
+---
+= Resetting the Brocade FC switch to factory defaults
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Before installing a new software version and RCF files, you must erase the current switch configuration and perform basic configuration.
+
+You must repeat these steps on each of the FC switches in the MetroCluster fabric configuration.
+
+. Log in to the switch as an administrator.
+. Disable the Brocade Virtual Fabrics (VF) feature: `fosconfig options`
++
+----
+FC_switch_A_1:admin> fosconfig --disable vf
+WARNING:  This is a disruptive operation that requires a reboot to take effect.
+Would you like to continue  [Y/N]: y
+----
+
+. Disconnect the ISL cables from the ports on the switch.
+. Disable the switch: `switchcfgpersistentdisable`
++
+----
+FC_switch_A_1:admin> switchcfgpersistentdisable
+----
+
+. Disable the configuration: `cfgDisable`
++
+----
+FC_switch_A_1:admin> cfgDisable
+You are about to disable zoning configuration. This action will disable any previous zoning configuration enabled.
+Do you want to disable zoning configuration? (yes, y, no, n): [no] y
+Updating flash ...
+Effective configuration is empty. "No  Access" default zone mode is ON.
+----
+
+. Clear the configuration: `cfgClear`
++
+----
+FC_switch_A_1:admin> cfgClear
+The Clear All action will clear all Aliases, Zones, FA Zones
+and configurations in the Defined configuration.
+Run cfgSave to commit the transaction or cfgTransAbort to
+cancel the transaction.
+Do you really want to clear all configurations?  (yes, y, no, n): [no] y
+----
+
+. Save the configuration: `cfgSave`
++
+----
+FC_switch_A_1:admin> cfgSave
+You are about to save the Defined zoning configuration. This
+action will only save the changes on Defined configuration.
+Do you want to save the Defined zoning configuration only?  (yes, y, no, n): [no] y
+Updating flash ...
+----
+
+. Set the default configuration: `configDefault`
++
+----
+FC_switch_A_1:admin> configDefault
+WARNING:  This is a disruptive operation that requires a switch reboot.
+Would you like to continue [Y/N]: y
+Executing configdefault...Please wait
+2020/10/05-08:04:08, [FCR-1069], 1016, FID 128, INFO, FC_switch_A_1, The FC Routing service is enabled.
+2020/10/05-08:04:08, [FCR-1068], 1017, FID 128, INFO, FC_switch_A_1, The FC Routing service is disabled.
+2020/10/05-08:04:08, [FCR-1070], 1018, FID 128, INFO, FC_switch_A_1, The FC Routing configuration is set to default.
+Committing configuration ... done.
+2020/10/05-08:04:12, [MAPS-1113], 1019, FID 128, INFO, FC_switch_A_1, Policy dflt_conservative_policy activated.
+2020/10/05-08:04:12, [MAPS-1145], 1020, FID 128, INFO, FC_switch_A_1, FPI Profile dflt_fpi_profile is activated for E-Ports.
+2020/10/05-08:04:12, [MAPS-1144], 1021, FID 128, INFO, FC_switch_A_1, FPI Profile dflt_fpi_profile is activated for F-Ports.
+The switch has to be rebooted to allow the changes to take effect.
+2020/10/05-08:04:12, [CONF-1031], 1022, FID 128, INFO, FC_switch_A_1, configDefault completed successfully for switch.
+----
+
+. Set the port configuration to default for all ports: `portcfgdefault port-number`
++
+----
+FC_switch_A_1:admin> portcfgdefault <port number>
+----
++
+You must complete this step for each port.
+
+. Verify that the switch is using the dynamic Port on Demand (POD) method.
++
+NOTE: For Brocade Fabric OS versions before 8.0, you run the following commands as admin, and for versions 8.0 and later, you run them as root.
+
+ .. Run the command `licenseport --show`
++
+----
+FC_switch_A_1:admin> licenseport -show
+24 ports are available in this switch
+Full POD license is installed
+Dynamic POD method is in use
+----
+
+ .. Enable the root user if it is disabled by Brocade.
++
+----
+FC_switch_A_1:admin> userconfig --change root -e yes
+FC_switch_A_1:admin> rootaccess --set consoleonly
+----
+
+ .. Run the license command: `licenseport --show`
++
+----
+FC_switch_A_1:root> licenseport -show
+24 ports are available in this switch
+Full POD license is installed
+Dynamic POD method is in use
+----
+
+ .. Change the license method to dynamic: `licenseport --method dynamic`
++
+NOTE: If the dynamic POD method is not in use (if POD method is in static) you must change the license assignment method to dynamic. Skip this step if the dynamic POD method is in use.
++
+----
+FC_switch_A_1:admin> licenseport --method dynamic
+The POD method has been changed to dynamic.
+Please reboot the switch now for this change to take effect
+----
+
+. Reboot the switch: `fastBoot`
++
+----
+FC_switch_A_1:admin> fastboot
+Warning: This command would cause the switch to reboot
+and result in traffic disruption.
+Are you sure you want to reboot the switch [y/n]?y
+----
+
+. Confirm that the default settings have been implemented: `switchShow`
+. Verify that the IP address is set correctly: `ipAddrShow`
++
+You can set the IP address with the following command, if required: `ipAddrSet`

@@ -1,0 +1,21 @@
+---
+permalink: manage/task_sending_a_custom_autosupport_message_prior_to_negotiated_switchover.html
+sidebar: sidebar
+keywords: 
+summary: 'Before performing a negotiated switchover, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. The negotiated switchover might result in plex or MetroCluster operation failures that trigger AutoSupport messages. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.'
+---
+= Sending a custom AutoSupport message prior to negotiated switchover
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Before performing a negotiated switchover, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. The negotiated switchover might result in plex or MetroCluster operation failures that trigger AutoSupport messages. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
+
+This task must be performed on each MetroCluster site.
+
+. Log in to the cluster at Site_A.
+. Invoke an AutoSupport message indicating the start of the maintenance: `system node autosupport invoke -node * -type all -message MAINT=maintenance-window-in-hours`
++
+maintenance-window-in-hours specifies the length of the maintenance window and can be a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can issue a command to indicating that the maintenance period has ended:``system node autosupport invoke -node * -type all -message MAINT=end``
+
+. Repeat this step on the partner site.

@@ -1,0 +1,45 @@
+---
+permalink: maintain/task_enabling_ip_port_access_on_the_fibrebridge_7600n_bridge_guides.html
+sidebar: sidebar
+keywords: 
+summary: 'If you are using an ONTAP version prior to 9.5, or otherwise plan to use out-of-band access to the FibreBridge 7600N bridge using telnet or other IP port protocols and services \(FTP, ExpressNAV, ICMP, or QuickNAV\), you can enable the access services via the console port.'
+---
+= Enabling IP port access on the FibreBridge 7600N bridge if necessary
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If you are using an ONTAP version prior to 9.5, or otherwise plan to use out-of-band access to the FibreBridge 7600N bridge using telnet or other IP port protocols and services (FTP, ExpressNAV, ICMP, or QuickNAV), you can enable the access services via the console port.
+
+Unlike the ATTO FibreBridge 7500N and 6500N bridges, the FibreBridge 7600N bridge is shipped with all IP port protocols and services disabled.
+
+Starting with ONTAP 9.5, _in-band management_ of the bridges is supported. This means the bridges can be configured and monitored from the ONTAP CLI via the FC connection to the bridge. Physical access to the bridge via the bridge Ethernet ports is not required and the bridge user interfaces are not required.
+
+Starting with ONTAP 9.8, _in-band management_ of the bridges is supported by default and out-of-band SNMP management is deprecated.
+
+This task is required if you are *not* using in-band management to manage the bridges. In this case, you need to configure the bridge via the Ethernet management port.
+
+. Access the bridge's console interface by connecting a serial cable to the serial port on the FibreBridge 7600N bridge.
+. Using the console, enable the access services, and then save the configuration: `set closeport none``saveconfiguration`
++
+The set closeport none command enables all access services on the bridge.
+
+. Disable a service, if desired, by issuing the set closeport and repeating the command as necessary until all desired services are disabled: `set closeport service`
++
+The set closeport command disables a single service at a time.
++
+service can specify one of the following:
+
+ ** expressnav
+ ** ftp
+ ** icmp
+ ** quicknav
+ ** snmp
+ ** telnet
+You can check whether a specific protocol is enabled or disabled by using the get closeport command.
+
+. If you are enabling SNMP, you must also issue the set SNMP enabled command: `set SNMP enabled`
++
+SNMP is the only protocol that requires a separate enable command.
+
+. Save the configuration: `saveconfiguration`

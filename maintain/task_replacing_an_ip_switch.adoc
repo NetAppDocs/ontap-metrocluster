@@ -1,0 +1,107 @@
+---
+permalink: maintain/task_replacing_an_ip_switch.html
+sidebar: sidebar
+keywords: 
+summary: 'You might need to replace a failed switch, or upgrade or downgrade a switch. The new switch can be the same as the old switch when a switch has failed, or you can change the switch type \(upgrade or downgrade the switch\).'
+---
+= Replacing an IP switch
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You might need to replace a failed switch, or upgrade or downgrade a switch. The new switch can be the same as the old switch when a switch has failed, or you can change the switch type (upgrade or downgrade the switch).
+
+If you want to replace a failed switch with the same type of switch, you only need to replace the failed switch. If you want to upgrade or downgrade a switch, you need to adjust two switches that are in the same network. Two switches are in the same network if they are connected with an inter-switch link (ISL) and are not located at the same site. For example, Network 1 includes IP_switch_A_1 and IP_switch_B_1. Network 2 includes IP_switch_A_2 and IP_switch_B_2 as shown in the diagram below:
+
+image::../media/mcc_ip_hardware_architecture_ip_interconnect.png[]
+
+This procedure is for Cisco or Broadcom switches. If you want to change the switch vendor, further steps are required.
+
+If you upgrade or downgrade the networks, you must repeat this procedure for the second network.
+
+. Check the health of the configuration.
+ .. Check that the MetroCluster is configured and in normal mode on each cluster: `metrocluster show`
++
+----
+cluster_A::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+ Local: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-cluster-disaster
+Remote: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-cluster-disaster
+----
+
+ .. Check that mirroring is enabled on each node: `metrocluster node show`
++
+----
+cluster_A::> metrocluster node show
+DR                           Configuration  DR
+Group Cluster Node           State          Mirroring Mode
+----- ------- -------------- -------------- --------- --------------------
+1     cluster_A
+              node_A_1       configured     enabled   normal
+      cluster_B
+              node_B_1       configured     enabled   normal
+2 entries were displayed.
+----
+
+ .. Check that the MetroCluster components are healthy: `metrocluster check run`
++
+----
+cluster_A::> metrocluster check run
+
+Last Checked On: 10/1/2014 16:03:37
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+4 entries were displayed.
+
+Command completed. Use the "metrocluster check show -instance" command or sub-commands in "metrocluster check" directory for detailed results.
+To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
+----
+
+ .. Check that there are no health alerts: `system health alert show`
+. Configure the new switch before installation.
++
+NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
++
+Follow the steps in the section _Configuring the IP switches_ in the _MetroCluster IP Installation and Configuration Guide._
++
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP installation and configuration]
++
+Make sure that you apply the correct RCF file for switch _A_1, _A_2, _B_1 or _B_2. If the new switch is the same as the old switch, you need to apply the same RCF file.
++
+If you upgrade or downgrade a switch, apply the latest supported RCF file for the new switch.
+
+. Run the port show command to view information about the network ports: `network port show`
+. Disconnect the ISL connections from the remote switch that connect to the old switch.
++
+You should disconnect the ISL connections from the ports on the IP_switch_A_1 that connect to IP_switch_B_1.
+
+. Power off the switch, remove the cables and physically remove IP_switch_B_1.
+. Install the new switch.
++
+Cable the new switch first (including the ISLs) according to the steps in the _Cabling the IP switches_ section in the _MetroCluster IP Installation and Configuration Guide._
++
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP installation and configuration]
++
+NOTE: The used ports might be different from those on the old switch if the switch type is different.
++
+If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs. Only cable the local ISLs if you are upgrading or downgrading the switches in the second network and both switches at one site are the same type.
+
+. Power up the switch or switches.
++
+If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second network is updated.
+
+. Verify that the MetroCluster configuration is healthy by repeating step 1.
++
+If you are upgrading or downgrading the switches in the first network, you might see some alerts related to local clustering.
++
+NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for the second network.

@@ -1,0 +1,72 @@
+---
+permalink: upgrade/task_creating_unmirrored_data_aggregates_metrocluster.html
+sidebar: sidebar
+keywords: 
+summary: 'You can optionally create unmirrored data aggregates for data that does not require the redundant mirroring provided by MetroCluster configurations.'
+---
+= Creating unmirrored data aggregates
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You can optionally create unmirrored data aggregates for data that does not require the redundant mirroring provided by MetroCluster configurations.
+
+* You should know what drives or array LUNs will be used in the new aggregate.
+* If you have multiple drive types in your system (heterogeneous storage), you should understand how you can verify that the correct drive type is selected.
+
+IMPORTANT:
+
+In MetroCluster IP configurations, remote unmirrored aggregates are not accessible after a switchover
+
+NOTE: The unmirrored aggregates must be local to the node owning them.
+
+* Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
+* Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
+* The _Disks and Aggregates Power Guide_ contains more information about mirroring aggregates.
+
+. Enable unmirrored aggregate deployment: `metrocluster modify -enable-unmirrored-aggr-deployment true`
+. Verify that disk autoassignment is disabled: `disk option show`
+. Install and cable the disk shelves that will contain the unmirrored aggregates.
++
+You can use the procedures in the Installation and Setup documentation for your platform and disk shelves.
++
+https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+
+. Manually assign all disks on the new shelf to the appropriate node: `disk assign -disk disk-id -owner owner-node-name`
+. Create the aggregate: `storage aggregate create`
++
+If you are logged in to the cluster on the cluster management interface, you can create an aggregate on any node in the cluster. To verify that the aggregate is created on a specific node, you should use the -node parameter or specify drives that are owned by that node.
++
+You must also ensure that you are only including drives on the unmirrored shelf to the aggregate.
++
+You can specify the following options:
+
+ ** Aggregate's home node (that is, the node that owns the aggregate in normal operation)
+ ** List of specific drives or array LUNs that are to be added to the aggregate
+ ** Number of drives to include
+ ** Checksum style to use for the aggregate
+ ** Type of drives to use
+ ** Size of drives to use
+ ** Drive speed to use
+ ** RAID type for RAID groups on the aggregate
+ ** Maximum number of drives or array LUNs that can be included in a RAID group
+ ** Whether drives with different RPM are allowed
+For more information about these options, see the storage aggregate create man page.
+
++
+The following command creates a unmirrored aggregate with 10 disks:
++
+----
+controller_A_1::> storage aggregate create aggr1_controller_A_1 -diskcount 10 -node controller_A_1
+[Job 15] Job is queued: Create aggr1_controller_A_1.
+[Job 15] The job is starting.
+[Job 15] Job succeeded: DONE
+----
+
+. Verify the RAID group and drives of your new aggregate: `storage aggregate show-status -aggregate aggregate-name`
+. Disable unmirrored aggregate deployment: `metrocluster modify -enable-unmirrored-aggr-deployment false`
+. Verify that disk autoassignment is enabled: `disk option show`
+
+*Related information*
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]

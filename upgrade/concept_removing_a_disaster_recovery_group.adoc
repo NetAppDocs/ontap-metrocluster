@@ -1,0 +1,128 @@
+---
+permalink: upgrade/concept_removing_a_disaster_recovery_group.html
+sidebar: sidebar
+keywords: 
+summary: 'Starting with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.'
+---
+= Removing a Disaster Recovery group
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Starting with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.
+
+This procedure is supported on ONTAP 9.8 and later. On earlier versions of ONTAP, please contact technical support to remove a DR group.
+
+https://mysupport.netapp.com/site/global/dashboard[NetApp Support]
+
+An eight-node configuration includes eight-nodes organized as two four-node DR groups.
+
+image::../media/mcc_dr_groups_8_node.gif[]
+
+By removing a DR Group, four nodes remain in the configuration.
+
+image::../media/mcc_dr_groups_4_node.gif[]
+
+== Removing the DR group nodes from each cluster
+
+* You must perform this step on both clusters.
+* The metrocluster remove-dr-group command is supported only on ONTAP 9.8 and later.
+
+. Prepare for the removal of the DR group, if you haven't already.
+ .. Move all data volumes to another DR group.
+ .. Move all MDV_CRS metadata volumes to another DR group. Follow the steps in the following procedure: https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/task_moving_a_metadata_volume_in_metrocluster_configurations.html[Moving a metadata volume in MetroCluster configurations]
+ .. Delete all MDV_aud metadata volumes that may exist in the DR group to be removed.
+ .. Delete all data aggregates in the DR group to be removed as shown in the following example:
++
+----
+ClusterA::> storage aggregate show -node ClusterA-01, ClusterA-02 -fields aggregate ,node
+ClusterA::> aggr delete -aggregate aggregate_name
+ClusterB::> storage aggregate show -node ClusterB-01, ClusterB-02 -fields aggregate ,node
+ClusterB::> aggr delete -aggregate aggregate_name
+----
++
+NOTE: Root aggregates are not deleted.
+
+ .. Migrate all data LIFs to home nodes in another DR group. `network interface show -home-node old_node``network interface modify -vserver svm-name -lifdata-lif -home-port port-id`
+ .. Migrate the cluster management LIF to a home node in another DR group. `network interface show -role cluster-mgmt``network interface modify -vserver svm-name -lif data-lif -home-port port-id`
++
+Node management and inter-cluster LIFs are not migrated.
+
+ .. Transfer epsilon to a node in another DR group if required.
++
+----
+ClusterA::> set advanced
+ClusterA::*> cluster show
+Move epsilon if needed
+ClusterA::*> cluster modify -node nodename -epsilon false
+ClusterA::*> cluster modify -node nodename -epsilon true
+
+ClusterB::> set advanced
+ClusterB::*> cluster show
+ClusterB::*> cluster modify -node nodename -epsilon false
+ClusterB::*> cluster modify -node nodename -epsilon true
+ClusterB::*> set admin
+----
+. Identify and remove the DR group.
+ .. Identify the correct DR group for removal: `metrocluster node show`
+ .. Remove the DR group nodes: `metrocluster remove-dr-group -dr-group-id 1`
++
+The following example shows the removal of the DR group configuration on cluster_A.
++
+----
+cluster_A::*>
+
+Warning: Nodes in the DR group that are removed from the MetroCluster
+         configuration will lose their disaster recovery protection.
+
+         Local nodes "node_A_1-FC, node_A_2-FC"will be removed from the
+         MetroCluster configuration. You must repeat the operation on the
+         partner cluster "cluster_B"to remove the remote nodes in the DR group.
+Do you want to continue? {y|n}: y
+
+Info: The following preparation steps must be completed on the local and partner
+      clusters before removing a DR group.
+
+      1. Move all data volumes to another DR group.
+      2. Move all MDV_CRS metadata volumes to another DR group.
+      3. Delete all MDV_aud metadata volumes that may exist in the DR group to
+      be removed.
+      4. Delete all data aggregates in the DR group to be removed. Root
+      aggregates are not deleted.
+      5. Migrate all data LIFs to home nodes in another DR group.
+      6. Migrate the cluster management LIF to a home node in another DR group.
+      Node management and inter-cluster LIFs are not migrated.
+      7. Transfer epsilon to a node in another DR group.
+
+      The command is vetoed if the preparation steps are not completed on the
+      local and partner clusters.
+Do you want to continue? {y|n}: y
+[Job 513] Job succeeded: Remove DR Group is successful.
+
+cluster_A::*>
+----
+. Repeat the previous step on the partner cluster.
+. If in a MetroCluster IP configuration, remove the MetroCluster connections on the nodes of the old DR group.
++
+These commands can be issued from either cluster and apply to the entire DR group spanning both the clusters.
+
+ .. Disconnect the connections: `metrocluster configuration-settings connection disconnect dr-group-id`
+ .. Delete the MetroCluster interfaces on the nodes of the old DR group: `metrocluster configuration-settings interface delete`
+ .. Delete the old DR group's configuration.`metrocluster configuration-settings dr-group delete`
+
+. Unjoin the nodes in the old DR group.
++
+You must perform this step on each cluster.
+
+ .. Set the advanced privilege level: `set -privilege advanced`
+ .. Unjoin the node: `cluster unjoin -node node-name`
++
+Repeat this step for the other local node in the old DR group.
+
+ .. Set the admin privilege level: `set -privilege admin`
+
+. Re-enable cluster HA in the new DR group: `cluster ha modify -configured true`
++
+You must perform this step on each cluster.
+
+. Halt, power down, and remove the old controller modules and storage shelves.

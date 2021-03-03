@@ -1,0 +1,217 @@
+---
+permalink: manage/concept_monitoring_the_metrocluster_configuration.html
+sidebar: sidebar
+keywords: 
+summary: ''
+---
+= Monitoring the MetroCluster configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You can use ONTAP MetroCluster commands and Active IQ Unified Manager (formerly OnCommand Unified Manager) to monitor the health of a variety of software components and the state of MetroCluster operations.
+
+== Checking the MetroCluster configuration
+
+[.lead]
+You can check that the components and relationships in the MetroCluster configuration are working correctly. You should do a check after initial configuration and after making any changes to the MetroCluster configuration. You should also do a check before a negotiated (planned) switchover or a switchback operation.
+
+If the metrocluster check run command is issued twice within a short time on either or both clusters, a conflict can occur and the command might not collect all data. Subsequent metrocluster check show commands do not show the expected output.
+
+. Check the configuration: `metrocluster check run`
++
+The command runs as a background job and might not be completed immediately.
++
+----
+cluster_A::> metrocluster check run
+The operation has been started and is running in the background. Wait for
+it to complete and run "metrocluster check show" to view the results. To
+check the status of the running metrocluster check operation, use the command,
+"metrocluster operation history show -job-id 2245"
+----
+
+. Display more detailed results from the most recent metrocluster check run command: `metrocluster check aggregate show``metrocluster check cluster show``metrocluster check config-replication show``metrocluster check lif show``metrocluster check node show`
++
+The metrocluster check show commands show the results of the most recent metrocluster check run command. You should always run the metrocluster check run command prior to using the metrocluster check show commands so that the information displayed is current.
++
+The following example shows the metrocluster check aggregate show command output for a healthy four-node MetroCluster configuration:
++
+----
+cluster_A::> metrocluster check aggregate show
+
+Last Checked On: 8/5/2014 00:42:58
+
+Node                  Aggregate                  Check                      Result
+---------------       --------------------       ---------------------      ---------
+controller_A_1        controller_A_1_aggr0
+                                                 mirroring-status           ok
+                                                 disk-pool-allocation       ok
+                                                 ownership-state            ok
+                      controller_A_1_aggr1
+                                                 mirroring-status           ok
+                                                 disk-pool-allocation       ok
+                                                 ownership-state            ok
+                      controller_A_1_aggr2
+                                                 mirroring-status           ok
+                                                 disk-pool-allocation       ok
+                                                 ownership-state            ok
+
+
+controller_A_2        controller_A_2_aggr0
+                                                 mirroring-status           ok
+                                                 disk-pool-allocation       ok
+                                                 ownership-state            ok
+                      controller_A_2_aggr1
+                                                 mirroring-status           ok
+                                                 disk-pool-allocation       ok
+                                                 ownership-state            ok
+                      controller_A_2_aggr2
+                                                 mirroring-status           ok
+                                                 disk-pool-allocation       ok
+                                                 ownership-state            ok
+
+18 entries were displayed.
+----
++
+The following example shows the metrocluster check cluster show command output for a healthy four-node MetroCluster configuration. It indicates that the clusters are ready to perform a negotiated switchover if necessary.
++
+----
+Last Checked On: 9/13/2017 20:47:04
+
+Cluster               Check                           Result
+--------------------- ------------------------------- ---------
+mccint-fas9000-0102
+                      negotiated-switchover-ready     not-applicable
+                      switchback-ready                not-applicable
+                      job-schedules                   ok
+                      licenses                        ok
+                      periodic-check-enabled          ok
+mccint-fas9000-0304
+                      negotiated-switchover-ready     not-applicable
+                      switchback-ready                not-applicable
+                      job-schedules                   ok
+                      licenses                        ok
+                      periodic-check-enabled          ok
+10 entries were displayed.
+----
+
+== Commands for checking and monitoring the MetroCluster configuration
+
+[.lead]
+There are specific ONTAP commands for monitoring the MetroCluster configuration and checking MetroCluster operations.
+
+=== Commands for checking MetroCluster operations
+
+|===
+| If you want to...| Use this command...
+a|
+Perform a check of the MetroCluster operations.*Note:* This command should not be used as the only command for pre-DR operation system validation.
+
+a|
+metrocluster check run
+a|
+View the results of the last check on MetroCluster operations.
+a|
+metrocluster show
+a|
+View results of check on configuration replication between the sites.
+a|
+metrocluster check config-replication show metrocluster check config-replication show-aggregate-eligibility
+
+a|
+View results of check on node configuration.
+a|
+metrocluster check node show
+a|
+View results of check on aggregate configuration.
+a|
+metrocluster check aggregate show
+a|
+View the LIF placement failures in the MetroCluster configuration.
+a|
+metrocluster check lif show
+|===
+
+=== Commands for monitoring the MetroCluster interconnect
+
+|===
+| If you want to...| Use this command...
+a|
+Display the HA and DR mirroring status and information for the MetroCluster nodes in the cluster.
+a|
+metrocluster interconnect mirror show
+|===
+
+=== Commands for monitoring MetroCluster SVMs
+
+|===
+| If you want to...| Use this command...
+a|
+View all SVMs in both sites in the MetroCluster configuration.
+a|
+metrocluster vserver show
+|===
+
+== Detecting failures with NetApp MetroCluster Tiebreaker software
+
+[.lead]
+The Tiebreaker software resides on a Linux host. You need the Tiebreaker software only if you want to monitor two clusters and the connectivity status between them from a third site. Doing so enables each partner in a cluster to distinguish between an ISL failure, when inter-site links are down, from a site failure.
+
+After you install the Tiebreaker software on a Linux host, you can configure the clusters in a MetroCluster configuration to monitor for disaster conditions.
+
+=== How the Tiebreaker software detects intersite connectivity failures
+
+[.lead]
+The MetroCluster Tiebreaker software alerts you if all connectivity between the sites is lost.
+
+==== Types of network paths
+
+Depending on the configuration, there are three types of network paths between the two clusters in a MetroCluster configuration:
+
+* *FC network (present in fabric-attached MetroCluster configurations)*
++
+This type of network is composed of two redundant FC switch fabrics. Each switch fabric has two FC switches, with one switch of each switch fabric co-located with a cluster. Each cluster has two FC switches, one from each switch fabric. All of the nodes have FC (NV interconnect and FCP initiator) connectivity to each of the co-located FC switches. Data is replicated from cluster to cluster over the ISL.
+
+* *Intercluster peering network*
++
+This type of network is composed of a redundant IP network path between the two clusters. The cluster peering network provides the connectivity that is required to mirror the storage virtual machine (SVM) configuration. The configuration of all of the SVMs on one cluster is mirrored by the partner cluster.
+
+* *IP network (present in MetroCluster IP configurations)*
++
+This type of network is composed of two redundant IP switch networks. Each network has two IP switches, with one switch of each switch fabric co-located with a cluster. Each cluster has two IP switches, one from each switch fabric. All of the nodes have connectivity to each of the co-located FC switches. Data is replicated from cluster to cluster over the ISL.
+
+==== Monitoring intersite connectivity
+
+The Tiebreaker software regularly retrieves the status of intersite connectivity from the nodes. If NV interconnect connectivity is lost and the intercluster peering does not respond to pings, then the clusters assume that the sites are isolated and the Tiebreaker software triggers an alert as "`AllLinksSevered`". If a cluster identifies the "`AllLinksSevered`" status and the other cluster is not reachable through the network, then the Tiebreaker software triggers an alert as "`disaster`".
+
+=== How the Tiebreaker software detects site failures
+
+[.lead]
+The NetApp MetroCluster Tiebreaker software checks the reachability of the nodes in a MetroCluster configuration and the cluster to determine whether a site failure has occurred. The Tiebreaker software also triggers an alert under certain conditions.
+
+==== Components monitored by the Tiebreaker software
+
+The Tiebreaker software monitors each controller in the MetroCluster configuration by establishing redundant connections through multiple paths to a node management LIF and to the cluster management LIF, both hosted on the IP network.
+
+The Tiebreaker software monitors the following components in the MetroCluster configuration:
+
+* Nodes through local node interfaces
+* Cluster through the cluster-designated interfaces
+* Surviving cluster to evaluate whether it has connectivity to the disaster site (NV interconnect, storage, and intercluster peering)
+
+When there is a loss of connection between the Tiebreaker software and all of the nodes in the cluster and to the cluster itself, the cluster will be declared as "`not reachable`" by the Tiebreaker software. It takes around three to five seconds to detect a connection failure. If a cluster is unreachable from the Tiebreaker software, the surviving cluster (the cluster that is still reachable) must indicate that all of the links to the partner cluster are severed before the Tiebreaker software triggers an alert.
+
+NOTE: All of the links are severed if the surviving cluster can no longer communicate with the cluster at the disaster site through FC (NV interconnect and storage) and intercluster peering.
+
+==== Failure scenarios during which Tiebreaker software triggers an alert
+
+The Tiebreaker software triggers an alert when the cluster (all of the nodes) at the disaster site is down or unreachable and the cluster at the surviving site indicates the "`AllLinksSevered`" status.
+
+The Tiebreaker software does not trigger an alert (or the alert is vetoed) in the following scenarios:
+
+* In an eight-node MetroCluster configuration, if one HA pair at the disaster site is down
+* In a cluster with all of the nodes at the disaster site down, one HA pair at the surviving site down, and the cluster at the surviving site indicates the "`AllLinksSevered`" status
++
+The Tiebreaker software triggers an alert, but ONTAP vetoes that alert. In this situation, a manual switchover is also vetoed
+
+* Any scenario in which the Tiebreaker software can either reach at least one node or the cluster interface at the disaster site, or the surviving site still can reach either node at the disaster site through either FC (NV interconnect and storage) or intercluster peering

@@ -1,0 +1,56 @@
+---
+permalink: upgrade/task_preparing_the_netboot_server_cluster_mode.html
+sidebar: sidebar
+keywords: 
+summary: 'When you are ready to prepare the netboot server, you must download the correct ONTAP netboot image from the NetApp Support Site to the netboot server and note the IP address.'
+---
+= Preparing the netboot server to download the image
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+When you are ready to prepare the netboot server, you must download the correct ONTAP netboot image from the NetApp Support Site to the netboot server and note the IP address.
+
+* You must be able to access an HTTP server from the system before and after adding the new controller module.
+* You must have access to the NetApp Support Site to download the necessary system files for your platform and your version of ONTAP.
++
+https://mysupport.netapp.com/site/global/dashboard[NetApp Support Site]
+
+* Both controller modules in the HA pair must run the same version of ONTAP.
+
+. Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the <ontap_version>_image.tgz file on a web-accessible directory.
++
+The <ontap_version>_image.tgz file is used for performing a netboot of your system.
+
+. Change to the web-accessible directory and verify that the files you need are available.
++
+|===
+| For...| Then...
+a|
+*FAS2200, FAS2500, FAS3200, FAS6200, FAS/AFF8000 series systems*
+a|
+Extract the contents of the <ontap_version>_image.tgz file to the target directory: `tar -zxvf <ontap_version>_image.tgz`    *Note:* If you are extracting the contents on Windows, use 7-Zip or WinRAR to extract the netboot image.
++
+Your directory listing should contain a netboot folder with a kernel file:
++
+----
+netboot/kernel
+----
+a|
+*All other systems*
+a|
+    Your directory listing should contain the following file:
++
+----
+<ontap_version>_image.tgz
+----
++
+NOTE: There is no need to extract the file contents.
++
+|===
+
+. Determine the IP address of the existing controller module.
++
+This address is referred to later in this procedure as ip-address-of-existing controller.
+
+. Ping ip-address-of-existing controller to verify that the IP address is reachable.

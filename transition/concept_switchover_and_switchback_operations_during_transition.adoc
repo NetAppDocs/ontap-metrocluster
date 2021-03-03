@@ -1,0 +1,64 @@
+---
+permalink: transition/concept_switchover_and_switchback_operations_during_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'Depending on the stage of the transition process, the MetroCluster switchover, healing, and switchback operations use either the MetroCluster FC or MetroCluster IP workflow.'
+---
+= Switchover, healing, and switchback operations during nondisruptive transition
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Depending on the stage of the transition process, the MetroCluster switchover, healing, and switchback operations use either the MetroCluster FC or MetroCluster IP workflow.
+
+The following table shows what workflows are used at different stages of the transition process. In some stages, switchover and switchback are not supported.
+
+* In the MetroCluster FC workflow, the switchover, healing and switchback steps are those used by a MetroCluster FC configuration.
+* In the MetroCluster IP workflow, the switchover, healing and switchback steps are those used by a MetroCluster IP configuration.
+* In the unified workflow, when both the FC and IP nodes are configured, the steps depend on whether NSO or USO is performed. The details are shown in the table.
+
+For information on the MetroCluster FC and IP workflows for switchover, healing, and switchback, seehttp://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-mgmt-dr/GUID-D56024DE-8924-426F-BFA7-8043870A4932.html[Understanding MetroCluster data protection and disaster recovery].
+
+NOTE: Automatic unplanned switchover is not available during the transition process.
+
+|===
+| Stage of transition| Workflow used
+| Negotiated switchover uses...| Unplanned switchover uses...
+a|
+Before the MetroCluster IP nodes have joined the cluster.
+a|
+MetroCluster FC
+a|
+MetroCluster FC
+a|
+After the MetroCluster IP nodes have joined the cluster, before the metrocluster configure command is performed.
+a|
+Not supported
+a|
+MetroCluster FC
+a|
+After the metrocluster configure command has been issued. Volume move can be in progress.
+
+a|
+Unified:All remote site nodes remain up and healing is done automatically
+
+a|
+Unified:
+
+* Mirrored aggregates owned by the MetroCluster FC node are mirrored if storage is accessible, all others are degraded after switchover
+* All remote site nodes are able to boot up.
+* Heal aggregate and heal root commands must be run manually.
+
+a|
+The MetroCluster FC nodes have been unconfigured.
+a|
+Not supported
+a|
+MetroCluster IP
+a|
+The cluster unjoin command has been performed on the MetroCluster FC nodes.
+a|
+MetroCluster IP
+a|
+MetroCluster IP
+|===

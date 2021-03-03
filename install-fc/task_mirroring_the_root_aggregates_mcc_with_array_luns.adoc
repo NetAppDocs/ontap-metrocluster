@@ -1,0 +1,28 @@
+---
+permalink: install-fc/task_mirroring_the_root_aggregates_mcc_with_array_luns.html
+sidebar: sidebar
+keywords: 
+summary: 'You must mirror the root aggregates in your MetroCluster configuration to ensure data protection.'
+---
+= Mirroring the root aggregates
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must mirror the root aggregates in your MetroCluster configuration to ensure data protection.
+
+You must have ensured that the SyncMirror requirements for the MetroCluster configuration with array LUNs are satisfied.
+
+xref:reference_requirements_for_a_metrocluster_configuration_with_array_luns_reference.adoc[Requirements for a MetroCluster configuration with array LUNs]
+
+You must repeat this task for each controller in the MetroCluster configuration.
+
+. Use the storage aggregate mirror command to mirror the unmirrored root aggregate.
++
+The following command mirrors the root aggregate for controller_A_1:
++
+----
+controller_A_1::> storage aggregate mirror aggr0_controller_A_1
+----
++
+The root aggregate is mirrored with array LUNs from pool1.

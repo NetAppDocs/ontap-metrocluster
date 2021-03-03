@@ -1,0 +1,119 @@
+---
+permalink: manage/concept_monitoring_and_protecting_database_validity_by_using_nvfail.html
+sidebar: sidebar
+keywords: 
+summary: ''
+---
+= Monitoring and protecting the file system consistency using NVFAIL
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+The -nvfail parameter of the volume modify command enables ONTAP to detect nonvolatile RAM (NVRAM) inconsistencies when the system is booting or after a switchover operation. It also warns you and protects the system against data access and modification until the volume can be manually recovered.
+
+If ONTAP detects any problems, database or file system instances stop responding or shut down. ONTAP then sends error messages to the console to alert you to check the state of the database or file system. You can enable NVFAIL to warn database administrators of NVRAM inconsistencies among clustered nodes that can compromise database validity.
+
+After the NVRAM data loss during failover or boot recovery, NFS clients cannot access data from any of the nodes until the NVFAIL state is cleared. CIFS clients are unaffected.
+
+== How NVFAIL impacts access to NFS volumes or LUNs
+
+[.lead]
+The NVFAIL state is set when ONTAP detects NVRAM errors when booting, when a MetroCluster switchover operation occurs, or during an HA takeover operation if the NVFAIL option is set on the volume. If no errors are detected at startup, the file service is started normally. However, if NVRAM errors are detected or NVFAIL processing is enforced on a disaster switchover, ONTAP stops database instances from responding.
+
+When you enable the NVFAIL option, one of the processes described in the following table takes place during bootup:
+
+|===
+| If...| Then...
+a|
+ONTAP detects no NVRAM errors
+a|
+File service starts normally.
+a|
+ONTAP detects NVRAM errors
+a|
+
+* ONTAP returns a stale file handle (ESTALE) error to NFS clients trying to access the database, causing the application to stop responding, crash, or shut down.
++
+ONTAP then sends an error message to the system console and log file.
+
+* When the application restarts, files are available to CIFS clients even if you have not verified that they are valid.
++
+For NFS clients, files remain inaccessible until you reset the in-nvfailed-state option on the affected volume.
+
+a|
+If one of the following parameters is used:
+
+* dr-force-nvfail volume option is set
+* force-nvfail-all switchover command option is set.
+
+a|
+You can unset the dr-force-nvfail option after the switchover, if the administrator is not expecting to force NVFAIL processing for possible future disaster switchover operations. For NFS clients, files remain inaccessible until you reset the in-nvfailed-state option on the affected volume.
+
+NOTE: Using the force-nvfail-all option causes the dr-force-nvfail option to be set on all of the DR volumes processed during the disaster switchover.
+
+a|
+ONTAP detects NVRAM errors on a volume that contains LUNs
+a|
+LUNs in that volume are brought offline. The in-nvfailed-state option on the volume must be cleared, and the NVFAIL attribute on the LUNs must be cleared by bringing each LUN in the affected volume online. You can perform the steps to check the integrity of the LUNs and recover the LUN from a Snapshot copy or back up as necessary. After all of the LUNs in the volume are recovered, the in-nvfailed-state option on the affected volume is cleared.
+
+|===
+
+== Commands for monitoring data loss events
+
+[.lead]
+If you enable the NVFAIL option, you receive notification when a system crash caused by NVRAM inconsistencies or a MetroCluster switchover occurs.
+
+By default, the NVFAIL parameter is not enabled.
+
+|===
+| If you want to...| Use this command...
+a|
+Create a new volume with NVFAIL enabled
+a|
+volume create -nvfail on
+a|
+Enable NVFAIL on an existing volume
+a|
+volume modify *Note:* You set the -nvfail option to on to enable NVFAIL on the created volume.
+
+a|
+Display whether NVFAIL is currently enabled for a specified volume
+a|
+volume show *Note:* You set the -fields parameter to nvfail to display the NVFAIL attribute for a specified volume.
+
+|===
+See the man page for each command for more information.
+
+== Accessing volumes in NVFAIL state after a switchover
+
+[.lead]
+After a switchover, you must clear the NVFAIL state by resetting the -in-nvfailed-state parameter of the volume modify command to remove the restriction of clients to access data.
+
+The database or file system must not be running or trying to access the affected volume.
+
+Setting -in-nvfailed-state parameter requires advanced-level privilege.
+
+. Recover the volume by using the volume modify command with the -in-nvfailed-state parameter set to false.
+
+For instructions about examining database file validity, see the documentation for your specific database software.
+
+If your database uses LUNs, review the steps to make the LUNs accessible to the host after an NVRAM failure.
+
+*Related information*
+
+link:concept_monitoring_and_protecting_database_validity_by_using_nvfail.md#[Monitoring and protecting the file system consistency using NVFAIL]
+
+== Recovering LUNs in NVFAIL states after switchover
+
+[.lead]
+After a switchover, the host no longer has access to data on the LUNs that are in NVFAIL states. You must perform a number of actions before the database has access to the LUNs.
+
+The database must not be running.
+
+. Clear the NVFAIL state on the affect volume that hosts the LUNs by resetting the -in-nvfailed-state parameter of the volume modify command.
+. Bring the affected LUNs online.
+. Examine the LUNs for any data inconsistencies and resolve them.
++
+This might involve host-based recovery or recovery done on the storage controller using SnapRestore.
+
+. Bring the database application online after recovering the LUNs.

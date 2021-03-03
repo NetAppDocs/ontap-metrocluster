@@ -1,0 +1,76 @@
+---
+permalink: maintain/reference_metrocluster_failure_scenarios.html
+sidebar: sidebar
+keywords: 
+summary: 'You should be aware of how the MetroCluster configuration responds to different failure events.'
+---
+= MetroCluster failure and recovery scenarios
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You should be aware of how the MetroCluster configuration responds to different failure events.
+
+NOTE: For additional information about recovery from node failures, see the section "Choosing the correct recovery procedure" in the _MetroCluster Management and Disaster Recovery Guide_.
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-mgmt-dr/home.html[MetroCluster management and disaster recovery]
+
+|===
+| Event| Impact| Recovery
+a|
+Single node failure
+a|
+A failover is triggered.
+a|
+The configuration recovers through a local takeover. RAID is not impacted. Review system messages and replace failed FRUs as necessary. https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+
+a|
+Two nodes fail at one site
+a|
+Two nodes will fail only if automated switchover is enabled in the MetroCluster Tiebreaker software.
+a|
+Manual USO if automated switchover in MetroCluster Tiebreaker software is not enabled. https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+
+a|
+MetroCluster IP interface--failure of one port
+a|
+The system is degraded. Additional port failure impacts HA mirroring.
+a|
+The second port is used. Health Monitor generates an alert if the physical link to the port is broken. Review system messages and replace failed FRUs as necessary. https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+
+a|
+MetroCluster IP interface--failure of both ports
+a|
+HA capability is impacted. RAID SyncMirror of the node stops syncing.
+a|
+Immediate manual recovery is required as there is no HA takeover. Review system messages and replace failed FRUs as necessary. https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+
+a|
+Failure of one MetroCluster IP switch
+a|
+No impact. Redundancy is provided through the second network.
+a|
+Replace the failed switch as necessary.xref:task_replacing_an_ip_switch.adoc[Replacing an IP switch]
+
+a|
+Failure of two MetroCluster IP switches that are in the same network
+a|
+No impact. Redundancy is provided through the second network.
+a|
+Replace the failed switch as necessary.xref:task_replacing_an_ip_switch.adoc[Replacing an IP switch]
+
+a|
+Failure of two MetroCluster IP switches that are at one site
+a|
+RAID SyncMirror of the node stops syncing. HA capability is impacted and the cluster goes out of quorum.
+a|
+Replace the failed switch as necessary.xref:task_replacing_an_ip_switch.adoc[Replacing an IP switch]
+
+a|
+Failure of two MetroCluster IP switches that are at different sites and not on the same network (diagonal failure)
+a|
+RAID SyncMirror of the node stops syncing.
+a|
+RAID SyncMirror of the node stops syncing. Cluster and HA capability are not impacted. Replace the failed switch as necessary. xref:task_replacing_an_ip_switch.adoc[Replacing an IP switch]
+
+|===
