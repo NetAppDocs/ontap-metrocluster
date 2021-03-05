@@ -26,13 +26,13 @@ You must perform the MetroCluster IP recovery steps on these nodes.
 Perform the steps in the following order.
 
 . Prepare the FC nodes for switchback by performing the following tasks in order:
- .. link:task_preparing_for_switchback_in_a_metrocluster_fc_configuration_supertask.md#[Verifying port configuration (MetroCluster FC configurations only)]
- .. link:task_preparing_for_switchback_in_a_metrocluster_fc_configuration_supertask.md#[Configuring the FC-to-SAS bridges (MetroCluster FC configurations only)]
- .. link:task_preparing_for_switchback_in_a_metrocluster_fc_configuration_supertask.md#[Configuring the FC switches (MetroCluster FC configurations only)]
- .. link:task_preparing_for_switchback_in_a_metrocluster_fc_configuration_supertask.md#[Verifying the storage configuration] (only perform these steps on replaced drives on the MetroCluster FC nodes)
- .. link:task_preparing_for_switchback_in_a_metrocluster_fc_configuration_supertask.md#[Powering on the equipment at the disaster site] (only perform these steps on replaced drives on the MetroCluster FC nodes)
- .. link:task_preparing_for_switchback_in_a_metrocluster_fc_configuration_supertask.md#[Assigning ownership for replaced drives] (only perform these steps on replaced drives on the MetroCluster FC nodes)
- .. Perform the steps in link:task_preparing_for_switchback_in_a_metrocluster_fc_configuration_supertask.md#[Reassigning disk ownership for root aggregates to replacement controller modules (MetroCluster FC configurations)], up to and including the step to issue the mailbox destroy command.
+ .. link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Verifying port configuration (MetroCluster FC configurations only)]
+ .. link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Configuring the FC-to-SAS bridges (MetroCluster FC configurations only)]
+ .. link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Configuring the FC switches (MetroCluster FC configurations only)]
+ .. link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Verifying the storage configuration] (only perform these steps on replaced drives on the MetroCluster FC nodes)
+ .. link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Powering on the equipment at the disaster site] (only perform these steps on replaced drives on the MetroCluster FC nodes)
+ .. link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Assigning ownership for replaced drives] (only perform these steps on replaced drives on the MetroCluster FC nodes)
+ .. Perform the steps in link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Reassigning disk ownership for root aggregates to replacement controller modules (MetroCluster FC configurations)], up to and including the step to issue the mailbox destroy command.
  .. Destroy the local plex (plex 0) of the root aggregate: `aggr destroy plex-id`
  .. If the root aggr is not online, online it.
 . Boot the MetroCluster FC nodes.
@@ -90,7 +90,7 @@ Group Cluster Node               State          Mirroring Mode
               wmc55-b2           configured
 ----
 
-. Prepare the MetroCluster IP nodes for switchback by performing the tasks in link:task_preparing_for_switchback_in_a_metrocluster_ip_configuration_supertask.md#[Preparing for switchback in a MetroCluster IP configuration] up to and including link:task_preparing_for_switchback_in_a_metrocluster_ip_configuration_supertask.md#[Deleting failed plexes owned by the surviving site (MetroCluster IP configurations)].
-. On the MetroCluster FC nodes, perform the steps in link:task_preparing_for_switchback_in_a_metrocluster_fc_configuration_supertask.md#[Performing aggregate healing and restoring mirrors (MetroCluster FC configurations)].
-. On the MetroCluster IP nodes, perform the steps in link:task_preparing_for_switchback_in_a_metrocluster_ip_configuration_supertask.md#[Performing aggregate healing and restoring mirrors (MetroCluster IP configurations)].
-. Proceed through the remaining tasks of the recovery process starting with link:task_completing_recovery_chunk.md#[Reestablishing object stores for FabricPool configurations].
+. Prepare the MetroCluster IP nodes for switchback by performing the tasks in link:task_preparing_for_switchback_in_a_mcc_ip_configuration_supertask.md#[Preparing for switchback in a MetroCluster IP configuration] up to and including link:task_preparing_for_switchback_in_a_mcc_ip_configuration_supertask.md#[Deleting failed plexes owned by the surviving site (MetroCluster IP configurations)].
+. On the MetroCluster FC nodes, perform the steps in link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Performing aggregate healing and restoring mirrors (MetroCluster FC configurations)].
+. On the MetroCluster IP nodes, perform the steps in link:task_preparing_for_switchback_in_a_mcc_ip_configuration_supertask.md#[Performing aggregate healing and restoring mirrors (MetroCluster IP configurations)].
+. Proceed through the remaining tasks of the recovery process starting with link:task_completing_recovery.md#[Reestablishing object stores for FabricPool configurations].

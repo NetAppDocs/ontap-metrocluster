@@ -1,0 +1,7030 @@
+---
+permalink: disaster-recovery/task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.html
+sidebar: sidebar
+keywords: 
+summary: ''
+---
+= Preparing for switchback in a MetroCluster FC configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must perform certain tasks in order to prepare the MetroCluster FC configuration for the switchback operation.
+
+== Verifying port configuration (MetroCluster FC configurations only)
+
+[.lead]
+You must set the environmental variables on the node and then power it off to prepare it for MetroCluster configuration.
+
+This procedure is performed with the replacement controller modules in Maintenance mode.
+
+The steps to check configuration of ports is needed only on systems in which FC or CNA ports are used in initiator mode.
+
+. In Maintenance mode, enter the following command to restore the FC port configuration: `ucadmin modify -m fc -t initiatoradapter_name`
++
+If you only want to use one of a port pair in the initiator configuration, enter a precise adapter_name.
+
+. Take one of the following actions, depending on your configuration:
++
+|===
+| If the FC port configuration is...| Then...
+a|
+The same for both ports
+a|
+Answer `y` when prompted by the system since modifying one port in a port pair modifies the other port as well.
+a|
+Different
+a|
+
+ .. Answer `n` when prompted by the system.
+ .. Enter the following command to restore the FC port configuration: `ucadmin modify -m fc -t initiator\|targetadapter_name`
+
++
+|===
+
+. Exit Maintenance mode by entering the following command: `halt`
++
+After you issue the command, wait until the system stops at the LOADER prompt.
+
+. Boot the node back into Maintenance mode for the configuration changes to take effect: `boot_ontap maint`
+. Verify the values of the variables by entering the following command: `ucadmin show`
+. Exit Maintenance mode and display the LOADER prompt:``halt``
+
+== Configuring the FC-to-SAS bridges (MetroCluster FC configurations only)
+
+[.lead]
+If you replaced the FC-to-SAS bridges, you must configure them when restoring the MetroCluster configuration. The procedure is identical to the initial configuration of an FC-to-SAS bridge.
+
+. Power on the FC-to-SAS bridges.
+. Set the IP address on the Ethernet ports by using the set IPAddressportipaddress command.
++
+port can be either MP1 or MP2.
++
+ipaddress can be an IP address in the format xxx.xxx.xxx.xxx.
++
+In the following example, the IP address is 10.10.10.55 on Ethernet port 1:
++
+----
+
+Ready.
+set IPAddress MP1 10.10.10.55
+
+Ready. *
+----
+
+. Set the IP subnet mask on the Ethernet ports by using the set IPSubnetMaskportmask command.
++
+port can be MP1 or MP2.
++
+mask can be a subnet mask in the format xxx.xxx.xxx.xxx.
++
+In the following example, the IP subnet mask is 255.255.255.0 on Ethernet port 1:
++
+----
+
+Ready.
+set IPSubnetMask MP1 255.255.255.0
+
+Ready. *
+----
+
+. Set the speed on the Ethernet ports by using the set EthernetSpeedportspeed command.
++
+port can be MP1 or MP2.
++
+speed can be 100, 1000, or auto.
++
+In the following example, the Ethernet speed is set to 1000 on Ethernet port 1.
++
+----
+
+Ready.
+set EthernetSpeed MP1 1000
+
+Ready. *
+----
+
+. Save the configuration by using the saveConfiguration command, and restart the bridge when prompted to do so.
++
+Saving the configuration after configuring the Ethernet ports enables you to proceed with the bridge configuration using Telnet and enables you to access the bridge using FTP to perform firmware updates.
++
+The following example shows the saveConfiguration command and the prompt to restart the bridge.
++
+----
+
+Ready.
+SaveConfiguration
+  Restart is necessary....
+  Do you wish to restart (y/n) ?
+Confirm with 'y'. The bridge will save and restart with the new settings.
+----
+
+. After the FC-to-SAS bridge reboots, log in again.
+. Set the speed on the FC ports by using the set fcdatarateportspeed command.
++
+port can be 1 or 2.
++
+speed can be 2 Gb, 4 Gb, 8 Gb, or 16 Gb, depending on your model bridge.
++
+In the following example, the port FC1 speed is set to 8 Gb.
++
+----
+
+Ready.
+set fcdatarate 1 8Gb
+
+Ready. *
+----
+
+. Set the topology on the FC ports by using the set FCConnModeportmode command.
++
+port can be 1 or 2.
++
+mode can be ptp, loop, ptp-loop, or auto.
++
+In the following example, the port FC1 topology is set to ptp.
++
+----
+
+Ready.
+set FCConnMode 1 ptp
+
+Ready. *
+----
+
+. Save the configuration by using the saveConfiguration command, and restart the bridge when prompted to do so.
++
+The following example shows the saveConfiguration command and the prompt to restart the bridge.
++
+----
+
+ Ready.
+ SaveConfiguration
+    Restart is necessary....
+    Do you wish to restart (y/n) ?
+ Confirm with 'y'. The bridge will save and restart with the new settings.
+----
+
+. After the FC-to-SAS bridge reboots, log in again.
+. If the FC-to-SAS bridge is running firmware 1.60 or later, enable SNMP.
++
+----
+
+Ready.
+set snmp enabled
+
+Ready. *
+saveconfiguration
+
+Restart is necessary....
+Do you wish to restart (y/n) ?
+
+Verify with 'y' to restart the FibreBridge.
+----
+
+. Power off the FC-to-SAS bridges.
+
+== Configuring the FC switches (MetroCluster FC configurations only)
+
+[.lead]
+If you have replaced the FC switches in the disaster site, you must configure them using the vendor-specific procedures. You must configure one switch, verify that storage access on the surviving site is not impacted, and then configure the second switch.
+
+*Related information*
+
+link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Configuring a Brocade FC switch after site disaster]
+
+link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Configuring a Cisco FC switch after site disaster]
+
+link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Port assignments for FC switches when using ONTAP 9.0]
+
+link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Port assignments for FC switches when using ONTAP 9.1 and later]
+
+=== Configuring a Brocade FC switch after site disaster
+
+[.lead]
+You must use this Brocade-specific procedure to configure the replacement switch and enable the ISL ports.
+
+The examples in this procedure are based on the following assumptions:
+
+* Site A is the disaster site.
+* FC_switch_A_1 has been replaced.
+* FC_switch_A_2 has been replaced.
+* Site B is the surviving site.
+* FC_switch_B_1 is healthy.
+* FC_switch_B_2 is healthy.
+
+You must verify that you are using the specified port assignments when you cable the FC switches:
+
+* link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Port assignments for FC switches when using ONTAP 9.0]
+* link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#[Port assignments for FC switches when using ONTAP 9.1 and later]
+
+The examples show two FC-to-SAS bridges. If you have more bridges, you must disable and subsequently enable the additional ports.
+
+. Boot and pre-configure the new switch:
+ .. Power up the new switch and let it boot up.
+ .. Check the firmware version on the switch to confirm it matches the version of the other FC switches: `firmwareShow`
+ .. Configure the new switch as described in the _MetroCluster Installation and Configuration Guide_, skipping the steps for configuring zoning on the switch.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-stretch/home.html[Stretch MetroCluster installation and configuration]
+
+ .. Disable the switch persistently: `switchcfgpersistentdisable`
++
+The switch will remain disabled after a reboot or fastboot. If this command is not available, you should use the switchdisable command.
++
+The following example shows the command on BrocadeSwitchA:
++
+----
+BrocadeSwitchA:admin> switchcfgpersistentdisable
+----
++
+The following example shows the command on BrocadeSwitchB:
++
+----
+BrocadeSwitchA:admin> switchcfgpersistentdisable
+----
+. Complete configuration of the new switch:
+ .. Enable the ISLs on the surviving site: `portcfgpersistentenable port-number`
++
+----
+FC_switch_B_1:admin> portcfgpersistentenable 10
+FC_switch_B_1:admin> portcfgpersistentenable 11
+----
+
+ .. Enable the ISLs on the replacement switches: `portcfgpersistentenable port-number`
++
+----
+FC_switch_A_1:admin> portcfgpersistentenable 10
+FC_switch_A_1:admin> portcfgpersistentenable 11
+----
+
+ .. On the replacement switch (FC_switch_A_1 in our example) verify that the ISL's are online:``switchshow``
++
+----
+FC_switch_A_1:admin> switchshow
+switchName: FC_switch_A_1
+switchType: 71.2
+switchState:Online
+switchMode: Native
+switchRole: Principal
+switchDomain:       4
+switchId:   fffc03
+switchWwn:  10:00:00:05:33:8c:2e:9a
+zoning:             OFF
+switchBeacon:       OFF
+
+Index Port Address Media Speed State  Proto
+==============================================
+...
+10   10    030A00 id   16G     Online  FC E-Port 10:00:00:05:33:86:89:cb "FC_switch_A_1"
+11   11    030B00 id   16G     Online  FC E-Port 10:00:00:05:33:86:89:cb "FC_switch_A_1" (downstream)
+...
+----
+. Persistently enable the switch: `switchcfgpersistentenable`
+. Verify that the ports are online:``switchshow``
+
+=== Configuring a Cisco FC switch after site disaster
+
+[.lead]
+You must use the Cisco-specific procedure to configure the replacement switch and enable the ISL ports.
+
+The examples in this procedure are based on the following assumptions:
+
+* Site A is the disaster site.
+* FC_switch_A_1 has been replaced.
+* FC_switch_A_2 has been replaced.
+* Site B is the surviving site.
+* FC_switch_B_1 is healthy.
+* FC_switch_B_2 is healthy.
+
+. Configure the switch:
+ .. Download the Fabric-attached MetroCluster Installation and Configuration Guide.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
+
+ .. Follow the steps for configuring the switch in the "`Configuring the Cisco FC switches`" section, _except_ for the "`Configuring zoning on a Cisco FC switch`" section.
+
++
+Zoning is configured later in this procedure.
+. On the healthy switch (in this example, FC_switch_B_1), enable the ISL ports.
++
+The following example shows the commands to enable the ports:
++
+----
+FC_switch_B_1# conf t
+FC_switch_B_1(config)# int fc1/14-15
+FC_switch_B_1(config)# no shut
+FC_switch_B_1(config)# end
+FC_switch_B_1# copy running-config startup-config
+FC_switch_B_1#
+----
+
+. Verify that the ISL ports are up by using the show interface brief command.
+. Retrieve the zoning information from the fabric.
++
+The following example shows the commands to distribute the zoning configuration:
++
+----
+FC_switch_B_1(config-zone)# zoneset distribute full vsan 10
+FC_switch_B_1(config-zone)# zoneset distribute full vsan 20
+FC_switch_B_1(config-zone)# end
+----
++
+FC_switch_B_1 is distributed to all other switches in the fabric for vsan 10 and vsan 20, and the zoning information is retrieved from FC_switch_A_1.
+
+. On the healthy switch, verify that the zoning information is properly retrieved from the partner switch: `show zone`
++
+----
+FC_switch_B_1# show zone
+zone name FC-VI_Zone_1_10 vsan 10
+  interface fc1/1 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/2 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/1 swwn 20:00:54:7f:ee:b8:24:c0
+  interface fc1/2 swwn 20:00:54:7f:ee:b8:24:c0
+
+zone name STOR_Zone_1_20_25A vsan 20
+  interface fc1/5 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/8 swwn 20:00:54:7f:ee:b8:24:c0
+  interface fc1/9 swwn 20:00:54:7f:ee:b8:24:c0
+  interface fc1/10 swwn 20:00:54:7f:ee:b8:24:c0
+  interface fc1/11 swwn 20:00:54:7f:ee:b8:24:c0
+
+zone name STOR_Zone_1_20_25B vsan 20
+  interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+  interface fc1/5 swwn 20:00:54:7f:ee:b8:24:c0
+  interface fc1/8 swwn 20:00:54:7f:ee:b8:24:c0
+  interface fc1/9 swwn 20:00:54:7f:ee:b8:24:c0
+  interface fc1/10 swwn 20:00:54:7f:ee:b8:24:c0
+  interface fc1/11 swwn 20:00:54:7f:ee:b8:24:c0
+FC_switch_B_1#
+----
+
+. Determine the worldwide names (WWNs) of the switches in the switch fabric.
++
+In this example, the two switch WWNs are as follows:
+
+ ** FC_switch_A_1: 20:00:54:7f:ee:b8:24:c0
+ ** FC_switch_B_1: 20:00:54:7f:ee:c6:80:78
+
++
+----
+FC_switch_B_1# show wwn switch
+Switch WWN is 20:00:54:7f:ee:c6:80:78
+FC_switch_B_1#
+
+FC_switch_A_1# show wwn switch
+Switch WWN is 20:00:54:7f:ee:b8:24:c0
+FC_switch_A_1#
+----
+
+. Enter configuration mode for the zone and remove zone members that do not belong to the switch WWNs of the two switches: `no member interface interface-ide swwn wwn`
++
+In this example, the following members are not associated with the WWN of either of the switches in the fabric and must be removed:
+
+ ** Zone name FC-VI_Zone_1_10 vsan 10
+  *** Interface fc1/1 swwn 20:00:54:7f:ee:e3:86:50
+  *** Interface fc1/2 swwn 20:00:54:7f:ee:e3:86:50
+*Note:* AFF A700 and FAS9000 systems support four FC-VI ports. You must remove all four ports from the FC-VI zone.
+ ** Zone name STOR_Zone_1_20_25A vsan 20
+  *** Interface fc1/5 swwn 20:00:54:7f:ee:e3:86:50
+  *** Interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
+  *** Interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
+  *** Interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
+  *** Interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+ ** Zone name STOR_Zone_1_20_25B vsan 20
+  *** Interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
+  *** Interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
+  *** Interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
+  *** Interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+The following example shows the removal of these interfaces:
+
++
+----
+
+ FC_switch_B_1# conf t
+ FC_switch_B_1(config)# zone name FC-VI_Zone_1_10 vsan 10
+ FC_switch_B_1(config-zone)# no member interface fc1/1 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# no member interface fc1/2 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# zone name STOR_Zone_1_20_25A vsan 20
+ FC_switch_B_1(config-zone)# no member interface fc1/5 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# no member interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# no member interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# no member interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# no member interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# zone name STOR_Zone_1_20_25B vsan 20
+ FC_switch_B_1(config-zone)# no member interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# no member interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# no member interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# no member interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+ FC_switch_B_1(config-zone)# save running-config startup-config
+ FC_switch_B_1(config-zone)# zoneset distribute full 10
+ FC_switch_B_1(config-zone)# zoneset distribute full 20
+ FC_switch_B_1(config-zone)# end
+ FC_switch_B_1# copy running-config startup-config
+----
+
+. Add the ports of the new switch to the zones.
++
+The following example assumes that the cabling on the replacement switch is the same as on the old switch:
++
+----
+
+ FC_switch_B_1# conf t
+ FC_switch_B_1(config)# zone name FC-VI_Zone_1_10 vsan 10
+ FC_switch_B_1(config-zone)# member interface fc1/1 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# member interface fc1/2 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# zone name STOR_Zone_1_20_25A vsan 20
+ FC_switch_B_1(config-zone)# member interface fc1/5 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# member interface fc1/8 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# member interface fc1/9 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# member interface fc1/10 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# member interface fc1/11 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# zone name STOR_Zone_1_20_25B vsan 20
+ FC_switch_B_1(config-zone)# member interface fc1/8 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# member interface fc1/9 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# member interface fc1/10 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# member interface fc1/11 swwn 20:00:54:7f:ee:c6:80:78
+ FC_switch_B_1(config-zone)# save running-config startup-config
+ FC_switch_B_1(config-zone)# zoneset distribute full 10
+ FC_switch_B_1(config-zone)# zoneset distribute full 20
+ FC_switch_B_1(config-zone)# end
+ FC_switch_B_1# copy running-config startup-config
+----
+
+. Verify that the zoning is properly configured: `show zone`
++
+The following example output shows the three zones:
++
+----
+
+ FC_switch_B_1# show zone
+   zone name FC-VI_Zone_1_10 vsan 10
+     interface fc1/1 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/2 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/1 swwn 20:00:54:7f:ee:b8:24:c0
+     interface fc1/2 swwn 20:00:54:7f:ee:b8:24:c0
+
+   zone name STOR_Zone_1_20_25A vsan 20
+     interface fc1/5 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/8 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/9 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/10 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/11 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/8 swwn 20:00:54:7f:ee:b8:24:c0
+     interface fc1/9 swwn 20:00:54:7f:ee:b8:24:c0
+     interface fc1/10 swwn 20:00:54:7f:ee:b8:24:c0
+     interface fc1/11 swwn 20:00:54:7f:ee:b8:24:c0
+
+   zone name STOR_Zone_1_20_25B vsan 20
+     interface fc1/8 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/9 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/10 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/11 swwn 20:00:54:7f:ee:c6:80:78
+     interface fc1/5 swwn 20:00:54:7f:ee:b8:24:c0
+     interface fc1/8 swwn 20:00:54:7f:ee:b8:24:c0
+     interface fc1/9 swwn 20:00:54:7f:ee:b8:24:c0
+     interface fc1/10 swwn 20:00:54:7f:ee:b8:24:c0
+     interface fc1/11 swwn 20:00:54:7f:ee:b8:24:c0
+ FC_switch_B_1#
+----
+
+=== Port assignments for FC switches when using ONTAP 9.0
+
+[.lead]
+You need to verify that you are using the specified port assignments when you cable the FC switches. The port assignments are different between ONTAP 9.0 and later versions of ONTAP.
+
+Ports that are not used for attaching initiator ports, FC-VI ports, or ISLs can be reconfigured to act as storage ports. However, if the supported RCFs are being used, the zoning must be changed accordingly.
+
+If the supported RCF files are used, ISL ports may not connect to the same ports shown here and may need to be reconfigured manually.
+
+==== Overall cabling guidelines
+
+You should be aware of the following guidelines when using the cabling tables:
+
+* The Brocade and Cisco switches use different port numbering:
+ ** On Brocade switches, the first port is numbered 0.
+ ** On Cisco switches, the first port is numbered 1.
+* The cabling is the same for each FC switch in the switch fabric.
+* AFF A300 and FAS8200 storage systems can be ordered with one of two options for FC-VI connectivity:
+ ** Onboard ports 0e and 0f configured in FC-VI mode.
+ ** Ports 1a and 1b on an FC-VI card in slot 1.
+
+==== Brocade port usage for controller connections in an eight-node MetroCluster configuration running ONTAP 9.0
+
+The cabling is the same for each FC switch in the switch fabric.
+
+The following table shows controller port usage on Brocade switches:
+
+|===
+| MetroCluster eight-node configuration
+| Component| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+0
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+0
+a|
+HBA port a
+a|
+1
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+1
+a|
+HBA port c
+a|
+2
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+2
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+3
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+3
+a|
+HBA port a
+a|
+4
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+4
+a|
+HBA port c
+a|
+5
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+5
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+6
+a|
+ 
+a|
+FC-VI port b
+a|
+-
+a|
+6
+a|
+HBA port a
+a|
+7
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+7
+a|
+HBA port c
+a|
+8
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+8
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+9
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+9
+a|
+HBA port a
+a|
+10
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+10
+a|
+HBA port c
+a|
+11
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+11
+|===
+
+==== Brocade port usage for FC-to-SAS bridge connections in an eight-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows bridge port usage when using FibreBridge 7500 bridges:
+
+|===
+| MetroCluster eight-node configuration
+| FibreBridge 7500 bridge| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+bridge_x_1b
+a|
+FC1
+a|
+13
+a|
+-
+a|
+FC2
+a|
+-
+a|
+13
+a|
+bridge_x_2a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+14
+a|
+bridge_x_2b
+a|
+FC1
+a|
+15
+a|
+-
+a|
+FC2
+a|
+-
+a|
+15
+a|
+bridge_x_3a
+a|
+FC1
+a|
+16
+a|
+-
+a|
+FC2
+a|
+-
+a|
+16
+a|
+bridge_x_3b
+a|
+FC1
+a|
+17
+a|
+-
+a|
+FC2
+a|
+-
+a|
+17
+a|
+bridge_x_4a
+a|
+FC1
+a|
+18
+a|
+-
+a|
+FC2
+a|
+-
+a|
+18
+a|
+bridge_x_4b
+a|
+FC1
+a|
+19
+a|
+-
+a|
+FC2
+a|
+-
+a|
+19
+|===
+The following table shows bridge port usage when using FibreBridge 6500 bridges:
+
+|===
+| MetroCluster eight-node configuration
+| FibreBridge 6500 bridge| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+12
+a|
+bridge_x_2a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+13
+a|
+bridge_x_3a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+14
+a|
+bridge_x_4a
+a|
+FC1
+a|
+15
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+15
+a|
+bridge_x_5a
+a|
+FC1
+a|
+16
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+16
+a|
+bridge_x_6a
+a|
+FC1
+a|
+17
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+17
+a|
+bridge_x_7a
+a|
+FC1
+a|
+18
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+18
+a|
+bridge_x_8a
+a|
+FC1
+a|
+19
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+19
+|===
+
+==== Brocade port usage for ISLs in an eight-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows ISL port usage:
+
+|===
+| MetroCluster eight-node configuration
+| ISL port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
+ISL port 1
+a|
+20
+a|
+20
+a|
+ISL port 2
+a|
+21
+a|
+21
+a|
+ISL port 3
+a|
+22
+a|
+22
+a|
+ISL port 4
+a|
+23
+a|
+23
+|===
+
+==== Brocade port usage for controllers in a four-node MetroCluster configuration running ONTAP 9.0
+
+The cabling is the same for each FC switch in the switch fabric.
+
+|===
+| MetroCluster four-node configuration
+| Component| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+0
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+0
+a|
+HBA port a
+a|
+1
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+1
+a|
+HBA port c
+a|
+2
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+2
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+3
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+3
+a|
+HBA port a
+a|
+4
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+4
+a|
+HBA port c
+a|
+5
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+5
+|===
+
+==== Brocade port usage for bridges in a four-node MetroCluster configuration running ONTAP 9.0
+
+The cabling is the same for each FC switch in the switch fabric.
+
+The following table shows bridge port usage up to port 17 when using FibreBridge 7500 bridges. Additional bridges can be cabled to ports 18 through 23.
+
+|===
+| MetroCluster four-node configuration
+| FibreBridge 7500 bridge| Port| Brocade 6510 or DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+6
+a|
+-
+a|
+6
+a|
+-
+a|
+FC2
+a|
+-
+a|
+6
+a|
+-
+a|
+6
+a|
+bridge_x_1b
+a|
+FC1
+a|
+7
+a|
+-
+a|
+7
+a|
+-
+a|
+FC2
+a|
+-
+a|
+7
+a|
+-
+a|
+7
+a|
+bridge_x_2a
+a|
+FC1
+a|
+8
+a|
+-
+a|
+12
+a|
+-
+a|
+FC2
+a|
+-
+a|
+8
+a|
+-
+a|
+12
+a|
+bridge_x_2b
+a|
+FC1
+a|
+9
+a|
+-
+a|
+13
+a|
+-
+a|
+FC2
+a|
+-
+a|
+9
+a|
+-
+a|
+13
+a|
+bridge_x_3a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+10
+a|
+-
+a|
+14
+a|
+bridge_x_3b
+a|
+FC1
+a|
+11
+a|
+-
+a|
+15
+a|
+-
+a|
+FC2
+a|
+-
+a|
+11
+a|
+-
+a|
+15
+a|
+bridge_x_4a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+16
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+-
+a|
+16
+a|
+bridge_x_4b
+a|
+FC1
+a|
+13
+a|
+-
+a|
+17
+a|
+-
+a|
+FC2
+a|
+-
+a|
+13
+a|
+-
+a|
+17
+a|
+ 
+a|
+ 
+a|
+additional bridges can be cabled through port 19, then ports 24 through 47
+a|
+additional bridges can be cabled through port 23
+|===
+The following table shows bridge port usage when using FibreBridge 6500 bridges:
+
+|===
+| FibreBridge 6500 bridge| Port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+6
+a|
+-
+a|
+6
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+6
+a|
+-
+a|
+6
+a|
+bridge_x_2a
+a|
+FC1
+a|
+7
+a|
+-
+a|
+7
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+7
+a|
+-
+a|
+7
+a|
+bridge_x_3a
+a|
+FC1
+a|
+8
+a|
+-
+a|
+12
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+8
+a|
+-
+a|
+12
+a|
+bridge_x_4a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+13
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+9
+a|
+-
+a|
+13
+a|
+bridge_x_5a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+14
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+10
+a|
+-
+a|
+14
+a|
+bridge_x_6a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+15
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+11
+a|
+-
+a|
+15
+a|
+bridge_x_7a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+16
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+12
+a|
+-
+a|
+16
+a|
+bridge_x_8a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+17
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+13
+a|
+-
+a|
+17
+a|
+ 
+a|
+ 
+a|
+additional bridges can be cabled through port 19, then ports 24 through 47
+a|
+additional bridges can be cabled through port 23
+|===
+
+==== Brocade port usage for ISLs in a four-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows ISL port usage:
+
+|===
+| MetroCluster four-node configuration
+| ISL port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
+a|
+ISL port 1
+a|
+20
+a|
+20
+a|
+8
+a|
+8
+a|
+ISL port 2
+a|
+21
+a|
+21
+a|
+9
+a|
+9
+a|
+ISL port 3
+a|
+22
+a|
+22
+a|
+10
+a|
+10
+a|
+ISL port 4
+a|
+23
+a|
+23
+a|
+11
+a|
+11
+|===
+
+==== Brocade port usage for controllers in a two-node MetroCluster configuration running ONTAP 9.0
+
+The cabling is the same for each FC switch in the switch fabric.
+
+|===
+| MetroCluster two-node configuration
+| Component| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+0
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+0
+a|
+HBA port a
+a|
+1
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+1
+a|
+HBA port c
+a|
+2
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+2
+|===
+
+==== Brocade port usage for bridges in a two-node MetroCluster configuration running ONTAP 9.0
+
+The cabling is the same for each FC switch in the switch fabric.
+
+The following table shows bridge port usage up to port 17 when using FibreBridge 7500 bridges. Additional bridges can be cabled to ports 18 through 23.
+
+|===
+| MetroCluster two-node configuration
+| FibreBridge 7500 bridge| Port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+6
+a|
+-
+a|
+6
+a|
+-
+a|
+FC2
+a|
+-
+a|
+6
+a|
+-
+a|
+6
+a|
+bridge_x_1b
+a|
+FC1
+a|
+7
+a|
+-
+a|
+7
+a|
+-
+a|
+FC2
+a|
+-
+a|
+7
+a|
+-
+a|
+7
+a|
+bridge_x_2a
+a|
+FC1
+a|
+8
+a|
+-
+a|
+12
+a|
+-
+a|
+FC2
+a|
+-
+a|
+8
+a|
+-
+a|
+12
+a|
+bridge_x_2b
+a|
+FC1
+a|
+9
+a|
+-
+a|
+13
+a|
+-
+a|
+FC2
+a|
+-
+a|
+9
+a|
+-
+a|
+13
+a|
+bridge_x_3a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+10
+a|
+-
+a|
+14
+a|
+bridge_x_3b
+a|
+FC1
+a|
+11
+a|
+-
+a|
+15
+a|
+-
+a|
+FC2
+a|
+-
+a|
+11
+a|
+-
+a|
+15
+a|
+bridge_x_4a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+16
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+-
+a|
+16
+a|
+bridge_x_4b
+a|
+FC1
+a|
+13
+a|
+-
+a|
+17
+a|
+-
+a|
+FC2
+a|
+-
+a|
+13
+a|
+-
+a|
+17
+a|
+ 
+a|
+ 
+a|
+additional bridges can be cabled through port 19, then ports 24 through 47
+a|
+additional bridges can be cabled through port 23
+|===
+The following table shows bridge port usage when using FibreBridge 6500 bridges:
+
+|===
+| MetroCluster two-node configuration
+| FibreBridge 6500 bridge| Port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+6
+a|
+-
+a|
+6
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+6
+a|
+-
+a|
+6
+a|
+bridge_x_2a
+a|
+FC1
+a|
+7
+a|
+-
+a|
+7
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+7
+a|
+-
+a|
+7
+a|
+bridge_x_3a
+a|
+FC1
+a|
+8
+a|
+-
+a|
+12
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+8
+a|
+-
+a|
+12
+a|
+bridge_x_4a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+13
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+9
+a|
+-
+a|
+13
+a|
+bridge_x_5a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+14
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+10
+a|
+-
+a|
+14
+a|
+bridge_x_6a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+15
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+11
+a|
+-
+a|
+15
+a|
+bridge_x_7a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+16
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+12
+a|
+-
+a|
+16
+a|
+bridge_x_8a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+17
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+13
+a|
+-
+a|
+17
+a|
+ 
+a|
+ 
+a|
+additional bridges can be cabled through port 19, then ports 24 through 47
+a|
+additional bridges can be cabled through port 23
+|===
+
+==== Brocade port usage for ISLs in a two-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows ISL port usage:
+
+|===
+| MetroCluster two-node configuration
+| ISL port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
+a|
+ISL port 1
+a|
+20
+a|
+20
+a|
+8
+a|
+8
+a|
+ISL port 2
+a|
+21
+a|
+21
+a|
+9
+a|
+9
+a|
+ISL port 3
+a|
+22
+a|
+22
+a|
+10
+a|
+10
+a|
+ISL port 4
+a|
+23
+a|
+23
+a|
+11
+a|
+11
+|===
+
+==== Cisco port usage for controllers in an eight-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows controller port usage on Cisco switches:
+
+|===
+| MetroCluster eight-node configuration
+| Component| Port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+HBA port a
+a|
+2
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+2
+a|
+HBA port c
+a|
+3
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+3
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+4
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+4
+a|
+HBA port a
+a|
+5
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+5
+a|
+HBA port c
+a|
+6
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+6
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+7
+a|
+ 
+a|
+FC-VI port b
+a|
+-
+a|
+7
+a|
+HBA port a
+a|
+8
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+8
+a|
+HBA port c
+a|
+9
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+9
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+10
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+10
+a|
+HBA port a
+a|
+11
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+11
+a|
+HBA port c
+a|
+13
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+13
+|===
+
+==== Cisco port usage for FC-to-SAS bridges in an eight-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows bridge port usage up to port 23 when using FibreBridge 7500 bridges. Additional bridges can be attached using ports 25 through 48.
+
+|===
+| MetroCluster eight-node configuration
+| FibreBridge 7500 bridge| Port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+14
+a|
+14
+a|
+FC2
+a|
+-
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+15
+a|
+15
+a|
+FC2
+a|
+-
+a|
+-
+a|
+bridge_x_2a
+a|
+FC1
+a|
+17
+a|
+17
+a|
+FC2
+a|
+-
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+18
+a|
+18
+a|
+FC2
+a|
+-
+a|
+-
+a|
+bridge_x_3a
+a|
+FC1
+a|
+19
+a|
+19
+a|
+FC2
+a|
+-
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+21
+a|
+21
+a|
+FC2
+a|
+-
+a|
+-
+a|
+bridge_x_4a
+a|
+FC1
+a|
+22
+a|
+22
+a|
+FC2
+a|
+-
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+23
+a|
+23
+a|
+FC2
+a|
+-
+a|
+-
+a|
+Additional bridges can be attached using ports 25 through 48 following the same pattern.
+|===
+The following table shows bridge port usage up to port 23 when using FibreBridge 6500 bridges. Additional bridges can be attached using ports 25-48.
+
+|===
+| FibreBridge 6500 bridge| Port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+14
+a|
+bridge_x_2a
+a|
+FC1
+a|
+15
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+15
+a|
+bridge_x_3a
+a|
+FC1
+a|
+17
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+17
+a|
+bridge_x_4a
+a|
+FC1
+a|
+18
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+18
+a|
+bridge_x_5a
+a|
+FC1
+a|
+19
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+19
+a|
+bridge_x_6a
+a|
+FC1
+a|
+21
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+21
+a|
+bridge_x_7a
+a|
+FC1
+a|
+22
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+22
+a|
+bridge_x_8a
+a|
+FC1
+a|
+23
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+23
+a|
+Additional bridges can be attached using ports 25 through 48 following the same pattern.
+|===
+
+==== Cisco port usage for ISLs in an eight-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows ISL port usage:
+
+|===
+| MetroCluster eight-node configuration
+| ISL port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
+a|
+ISL port 1
+a|
+12
+a|
+12
+a|
+ISL port 2
+a|
+16
+a|
+16
+a|
+ISL port 3
+a|
+20
+a|
+20
+a|
+ISL port 4
+a|
+24
+a|
+24
+|===
+
+==== Cisco port usage for controllers in a four-node MetroCluster configuration
+
+The cabling is the same for each FC switch in the switch fabric.
+
+The following table shows controller port usage on Cisco switches:
+
+|===
+| MetroCluster four-node configuration
+| Component| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+HBA port a
+a|
+2
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+2
+a|
+HBA port c
+a|
+3
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+3
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+4
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+4
+a|
+HBA port a
+a|
+5
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+5
+a|
+HBA port c
+a|
+6
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+6
+|===
+
+==== Cisco port usage for FC-to-SAS bridges in a four-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows bridge port usage up to port 14 when using FibreBridge 7500 bridges. Additional bridges can be attached to ports 15 through 32 following the same pattern.
+
+|===
+| MetroCluster four-node configuration
+| FibreBridge 7500 bridge| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+7
+a|
+-
+a|
+FC2
+a|
+-
+a|
+7
+a|
+bridge_x_1b
+a|
+FC1
+a|
+8
+a|
+-
+a|
+FC2
+a|
+-
+a|
+8
+a|
+bridge_x_2a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+FC2
+a|
+-
+a|
+9
+a|
+bridge_x_2b
+a|
+FC1
+a|
+10
+a|
+-
+a|
+FC2
+a|
+-
+a|
+10
+a|
+bridge_x_3a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+FC2
+a|
+-
+a|
+11
+a|
+bridge_x_3b
+a|
+FC1
+a|
+12
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+bridge_x_4a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+FC2
+a|
+-
+a|
+13
+a|
+bridge_x_4b
+a|
+FC1
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+14
+|===
+The following table shows bridge port usage when using FibreBridge 6500 bridges up to port 14. Additional bridges can be attached to ports 15 through 32 following the same pattern.
+
+|===
+| FibreBridge 6500 bridge| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+7
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+7
+a|
+bridge_x_2a
+a|
+FC1
+a|
+8
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+8
+a|
+bridge_x_3a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+9
+a|
+bridge_x_4a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+10
+a|
+bridge_x_5a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+11
+a|
+bridge_x_6a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+12
+a|
+bridge_x_7a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+13
+a|
+bridge_x_8a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+14
+a|
+Additional bridges can be attached to ports 15 through 32 following the same pattern.
+|===
+
+==== Cisco 9148 and 9148S port usage for ISLs on a four-node MetroCluster configuration running ONTAP 9.0
+
+The cabling is the same for each FC switch in the switch fabric.
+
+The following table shows ISL port usage:
+
+|===
+| MetroCluster four-node configuration
+| ISL port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
+a|
+ISL port 1
+a|
+36
+a|
+36
+a|
+ISL port 2
+a|
+40
+a|
+40
+a|
+ISL port 3
+a|
+44
+a|
+44
+a|
+ISL port 4
+a|
+48
+a|
+48
+|===
+
+==== Cisco 9250i port usage for ISLs on a four-node MetroCluster configuration running ONTAP 9.0
+
+The Cisco 9250i switch uses the FCIP ports for the ISL.
+
+Ports 40 through 48 are 10 GbE ports and are not used in the MetroCluster configuration.
+
+==== Cisco port usage for controllers in a two-node MetroCluster configuration
+
+The cabling is the same for each FC switch in the switch fabric.
+
+The following table shows controller port usage on Cisco switches:
+
+|===
+| MetroCluster two-node configuration
+| Component| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+HBA port a
+a|
+2
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+2
+a|
+HBA port c
+a|
+3
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+3
+|===
+
+==== Cisco port usage for FC-to-SAS bridges in a two-node MetroCluster configuration running ONTAP 9.0
+
+The following table shows bridge port usage up to port 14 when using FibreBridge 7500 bridges. Additional bridges can be attached to ports 15 through 32 following the same pattern.
+
+|===
+| MetroCluster two-node configuration
+| FibreBridge 7500 bridge| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+7
+a|
+-
+a|
+FC2
+a|
+-
+a|
+7
+a|
+bridge_x_1b
+a|
+FC1
+a|
+8
+a|
+-
+a|
+FC2
+a|
+-
+a|
+8
+a|
+bridge_x_2a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+FC2
+a|
+-
+a|
+9
+a|
+bridge_x_2b
+a|
+FC1
+a|
+10
+a|
+-
+a|
+FC2
+a|
+-
+a|
+10
+a|
+bridge_x_3a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+FC2
+a|
+-
+a|
+11
+a|
+bridge_x_3b
+a|
+FC1
+a|
+12
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+bridge_x_4a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+FC2
+a|
+-
+a|
+13
+a|
+bridge_x_4b
+a|
+FC1
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+14
+|===
+The following table shows bridge port usage when using FibreBridge 6500 bridges up to port 14. Additional bridges can be attached to ports 15 through 32 following the same pattern.
+
+|===
+| MetroCluster two-node configuration
+| FibreBridge 6500 bridge| Port| Cisco 9148, 9148S, or 9250i|  
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+7
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+7
+a|
+bridge_x_2a
+a|
+FC1
+a|
+8
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+8
+a|
+bridge_x_3a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+9
+a|
+bridge_x_4a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+10
+a|
+bridge_x_5a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+11
+a|
+bridge_x_6a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+12
+a|
+bridge_x_7a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+13
+a|
+bridge_x_8a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+14
+a|
+Additional bridges can be attached to ports 15 through 32 following the same pattern.
+|===
+
+==== Cisco 9148 or 9148S port usage for ISLs on a two-node MetroCluster configuration running ONTAP 9.0
+
+The cabling is the same for each FC switch in the switch fabric.
+
+The following table shows ISL port usage:
+
+|===
+| MetroCluster two-node configuration
+| ISL port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
+a|
+ISL port 1
+a|
+36
+a|
+36
+a|
+ISL port 2
+a|
+40
+a|
+40
+a|
+ISL port 3
+a|
+44
+a|
+44
+a|
+ISL port 4
+a|
+48
+a|
+48
+|===
+
+==== Cisco 9250i port usage for ISLs on a two-node MetroCluster configuration running ONTAP 9.0
+
+The Cisco 9250i switch uses the FCIP ports for the ISL.
+
+Ports 40 through 48 are 10 GbE ports and are not used in the MetroCluster configuration.
+
+=== Port assignments for FC switches when using ONTAP 9.1 and later
+
+[.lead]
+You need to verify that you are using the specified port assignments when you cable the FC switches when using ONTAP 9.1 and later.
+
+Ports that are not used for attaching initiator ports, FC-VI ports, or ISLs can be reconfigured to act as storage ports. However, if the supported RCFs are being used, the zoning must be changed accordingly.
+
+If the supported RCFs are used, ISL ports might not connect to the same ports shown here and might need to be reconfigured manually.
+
+If you configured your switches using the port assignments for ONTAP 9, you can continue to use the older assignments. However, new configurations running ONTAP 9.1 or later releases should use the port assignments shown here.
+
+==== Overall cabling guidelines
+
+You should be aware of the following guidelines when using the cabling tables:
+
+* The Brocade and Cisco switches use different port numbering:
+ ** On Brocade switches, the first port is numbered 0.
+ ** On Cisco switches, the first port is numbered 1.
+* The cabling is the same for each FC switch in the switch fabric.
+* AFF A300 and FAS8200 storage systems can be ordered with one of two options for FC-VI connectivity:
+ ** Onboard ports 0e and 0f configured in FC-VI mode.
+ ** Ports 1a and 1b on an FC-VI card in slot 1.
+* AFF A700 and FAS9000 storage systems require four FC-VI ports. The following tables show cabling for the FC switches with four FC-VI ports on each controller except for the Cisco 9250i switch.
++
+For other storage systems, use the cabling shown in the tables but ignore the cabling for FC-VI ports c and d.
++
+You can leave those ports empty.
+
+* AFF A400 and FAS8300 storage systems use ports 2a and 2b for FC-VI connectivity.
+* If you have two MetroCluster configurations sharing ISLs, use the same port assignments as that for an eight-node MetroCluster cabling.
++
+The number of ISLs you cable may vary depending on your site's requirements.
+
+==== Brocade port usage for controllers in a MetroCluster configuration running ONTAP 9.1 or later
+
+The following tables show port usage on Brocade switches. The tables show the maximum supported configuration, with eight controller modules in two DR groups. For smaller configurations, ignore the rows for the additional controller modules. Note that eight ISLs are supported only on the Brocade 6510, Brocade DCX 8510-8, G620, G630, G620-1, G630-1, and G720 switches.
+
+NOTE: Port usage for the Brocade 6505 and Brocade G610 switches in an eight-node MetroCluster configuration is not shown. Due to the limited number of ports, port assignments must be made on a site-by-site basis depending on the controller module model and the number of ISLs and bridge pairs in use.
+
+NOTE: The Brocade DCX 8510-8 switch can use the same port layout as the 6510 switch *or* the 7840 switch.
+
+|===
+| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+| MetroCluster 1 or DR Group 1
+| Component| Port| Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1 and DCX 8510-8| Brocade switch model G720
+| Connects to FC switch...| Connects to switch port...| Connects to switch port...
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+0
+a|
+0
+a|
+FC-VI port b
+a|
+2
+a|
+0
+a|
+0
+a|
+FC-VI port c
+a|
+1
+a|
+1
+a|
+1
+a|
+FC-VI port d
+a|
+2
+a|
+1
+a|
+1
+a|
+HBA port a
+a|
+1
+a|
+2
+a|
+8
+a|
+HBA port b
+a|
+2
+a|
+2
+a|
+8
+a|
+HBA port c
+a|
+1
+a|
+3
+a|
+9
+a|
+HBA port d
+a|
+2
+a|
+3
+a|
+9
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+1
+a|
+4
+a|
+4
+a|
+FC-VI port b
+a|
+2
+a|
+4
+a|
+4
+a|
+FC-VI port c
+a|
+1
+a|
+5
+a|
+5
+a|
+FC-VI port d
+a|
+2
+a|
+5
+a|
+5
+a|
+HBA port a
+a|
+1
+a|
+6
+a|
+12
+a|
+HBA port b
+a|
+2
+a|
+6
+a|
+12
+a|
+HBA port c
+a|
+1
+a|
+7
+a|
+13
+a|
+HBA port d
+a|
+2
+a|
+7
+a|
+13
+a|
+Stack 1
+a|
+bridge_x_1a
+a|
+1
+a|
+8
+a|
+10
+a|
+bridge_x_1b
+a|
+2
+a|
+8
+a|
+10
+a|
+Stack 2
+a|
+bridge_x_2a
+a|
+1
+a|
+9
+a|
+11
+a|
+bridge_x_2b
+a|
+2
+a|
+9
+a|
+11
+a|
+Stack 3
+a|
+bridge_x_3a
+a|
+1
+a|
+10
+a|
+14
+a|
+bridge_x_4b
+a|
+2
+a|
+10
+a|
+14
+a|
+Stack y
+a|
+bridge_x_ya
+a|
+1
+a|
+11
+a|
+15
+a|
+bridge_x_yb
+a|
+2
+a|
+11
+a|
+15
+a|
+*Note:*
+
+* On G620, G630, G620-1 and G630-1 switches, additional bridges can be cabled to ports 12 - 17, 20 and 21.
+* On G610 switches, additional bridges can be cabled to ports 12 - 19.
+* On G720 switches, additional bridges can be cabled to ports 16 - 17, 20 and 21.
+
+|===
+|===
+| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+| MetroCluster 2 or DR Group 2
+|  |  |  | Brocade switch model
+| Component| Port| Connects to FC_switch...| 6510, DCX 8510-8| 6520| 7840, DCX 8510-8| G620, G620-1, G630, G630-1| G720
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+1
+a|
+24
+a|
+48
+a|
+12
+a|
+18
+a|
+18
+a|
+FC-VI port b
+a|
+2
+a|
+24
+a|
+48
+a|
+12
+a|
+18
+a|
+18
+a|
+FC-VI port c
+a|
+1
+a|
+25
+a|
+49
+a|
+13
+a|
+19
+a|
+19
+a|
+FC-VI port d
+a|
+2
+a|
+25
+a|
+49
+a|
+13
+a|
+19
+a|
+19
+a|
+HBA port a
+a|
+1
+a|
+26
+a|
+50
+a|
+14
+a|
+24
+a|
+26
+a|
+HBA port b
+a|
+2
+a|
+26
+a|
+50
+a|
+14
+a|
+24
+a|
+26
+a|
+HBA port c
+a|
+1
+a|
+27
+a|
+51
+a|
+15
+a|
+25
+a|
+27
+a|
+HBA port d
+a|
+2
+a|
+27
+a|
+51
+a|
+15
+a|
+25
+a|
+27
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+1
+a|
+28
+a|
+52
+a|
+16
+a|
+22
+a|
+22
+a|
+FC-VI port b
+a|
+2
+a|
+28
+a|
+52
+a|
+16
+a|
+22
+a|
+22
+a|
+FC-VI port c
+a|
+1
+a|
+29
+a|
+53
+a|
+17
+a|
+23
+a|
+23
+a|
+FC-VI port d
+a|
+2
+a|
+29
+a|
+53
+a|
+17
+a|
+23
+a|
+23
+a|
+HBA port a
+a|
+1
+a|
+30
+a|
+54
+a|
+18
+a|
+28
+a|
+30
+a|
+HBA port b
+a|
+2
+a|
+30
+a|
+54
+a|
+18
+a|
+28
+a|
+30
+a|
+HBA port c
+a|
+1
+a|
+31
+a|
+55
+a|
+19
+a|
+29
+a|
+31
+a|
+HBA port d
+a|
+2
+a|
+32
+a|
+55
+a|
+19
+a|
+29
+a|
+31
+a|
+Stack 1
+a|
+bridge_x_51a
+a|
+1
+a|
+32
+a|
+56
+a|
+20
+a|
+26
+a|
+32
+a|
+bridge_x_51b
+a|
+2
+a|
+32
+a|
+56
+a|
+20
+a|
+26
+a|
+32
+a|
+Stack 2
+a|
+bridge_x_52a
+a|
+1
+a|
+33
+a|
+57
+a|
+21
+a|
+27
+a|
+33
+a|
+bridge_x_52b
+a|
+2
+a|
+33
+a|
+57
+a|
+21
+a|
+27
+a|
+33
+a|
+Stack 3
+a|
+bridge_x_53a
+a|
+1
+a|
+34
+a|
+58
+a|
+22
+a|
+30
+a|
+34
+a|
+bridge_x_54b
+a|
+2
+a|
+34
+a|
+58
+a|
+22
+a|
+30
+a|
+34
+a|
+Stack y
+a|
+bridge_x_ya
+a|
+1
+a|
+35
+a|
+59
+a|
+23
+a|
+31
+a|
+35
+a|
+bridge_x_yb
+a|
+2
+a|
+35
+a|
+59
+a|
+23
+a|
+31
+a|
+35
+a|
+*Note:*
+
+* On G720 switches, additional bridges can be cabled to ports 36-39.
+
+|===
+|===
+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+| MetroCluster 1 or DR Group 1
+| Component| Port| Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1, and DCX 8510-8| Brocade switch G720
+| Connects to FC_switch...| Connects to switch port...| Connects to switch port...
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+0
+a|
+0
+a|
+FC-VI port b
+a|
+2
+a|
+0
+a|
+0
+a|
+FC-VI port c
+a|
+1
+a|
+1
+a|
+1
+a|
+FC-VI port d
+a|
+2
+a|
+1
+a|
+1
+a|
+HBA port a
+a|
+1
+a|
+2
+a|
+8
+a|
+HBA port b
+a|
+2
+a|
+2
+a|
+8
+a|
+HBA port c
+a|
+1
+a|
+3
+a|
+9
+a|
+HBA port d
+a|
+2
+a|
+3
+a|
+9
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+1
+a|
+4
+a|
+4
+a|
+FC-VI port b
+a|
+2
+a|
+4
+a|
+4
+a|
+FC-VI port c
+a|
+1
+a|
+5
+a|
+5
+a|
+FC-VI port d
+a|
+2
+a|
+5
+a|
+5
+a|
+HBA port a
+a|
+1
+a|
+6
+a|
+12
+a|
+HBA port b
+a|
+2
+a|
+6
+a|
+12
+a|
+HBA port c
+a|
+1
+a|
+7
+a|
+13
+a|
+HBA port d
+a|
+2
+a|
+7
+a|
+13
+a|
+Stack 1
+a|
+bridge_x_1a
+a|
+FC1
+a|
+1
+a|
+8
+a|
+10
+a|
+FC2
+a|
+2
+a|
+8
+a|
+10
+a|
+bridge_x_1B
+a|
+FC1
+a|
+1
+a|
+9
+a|
+11
+a|
+FC2
+a|
+2
+a|
+9
+a|
+11
+a|
+Stack 2
+a|
+bridge_x_2a
+a|
+FC1
+a|
+1
+a|
+10
+a|
+14
+a|
+FC2
+a|
+2
+a|
+10
+a|
+14
+a|
+bridge_x_2B
+a|
+FC1
+a|
+1
+a|
+11
+a|
+15
+a|
+FC2
+a|
+2
+a|
+11
+a|
+15
+a|
+Stack 3
+a|
+bridge_x_3a
+a|
+FC1
+a|
+1
+a|
+12*
+a|
+16
+a|
+FC2
+a|
+2
+a|
+12*
+a|
+16
+a|
+bridge_x_3B
+a|
+FC1
+a|
+1
+a|
+13*
+a|
+17
+a|
+FC2
+a|
+2
+a|
+13*
+a|
+17
+a|
+Stack y
+a|
+bridge_x_ya
+a|
+FC1
+a|
+1
+a|
+14*
+a|
+20
+a|
+FC2
+a|
+2
+a|
+14*
+a|
+20
+a|
+bridge_x_yb
+a|
+FC1
+a|
+1
+a|
+15*
+a|
+21
+a|
+FC2
+a|
+2
+a|
+15*
+a|
+21
+a|
+* - Ports 12 through 15 are reserved for the second MetroCluster or DR group on the Brocade 7840 switch.*Note:* Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1 and G630-1 switches.
+
+|===
+|===
+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+| MetroCluster 2 or DR Group 2
+| Component| Port| Brocade switch model
+| Connects to FC_switch...| 6510, DCX 8510-8| 6520| 7840, DCX 8510-8| G620, G620-1, G630, G630-1| G720
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+1
+a|
+24
+a|
+48
+a|
+12
+a|
+18
+a|
+18
+a|
+FC-VI port b
+a|
+2
+a|
+24
+a|
+48
+a|
+12
+a|
+18
+a|
+18
+a|
+FC-VI port c
+a|
+1
+a|
+25
+a|
+49
+a|
+13
+a|
+19
+a|
+19
+a|
+FC-VI port d
+a|
+2
+a|
+25
+a|
+49
+a|
+13
+a|
+19
+a|
+19
+a|
+HBA port a
+a|
+1
+a|
+26
+a|
+50
+a|
+14
+a|
+24
+a|
+26
+a|
+HBA port b
+a|
+2
+a|
+26
+a|
+50
+a|
+14
+a|
+24
+a|
+26
+a|
+HBA port c
+a|
+1
+a|
+27
+a|
+51
+a|
+15
+a|
+25
+a|
+27
+a|
+HBA port d
+a|
+2
+a|
+27
+a|
+51
+a|
+15
+a|
+25
+a|
+27
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+1
+a|
+28
+a|
+52
+a|
+16
+a|
+22
+a|
+22
+a|
+FC-VI port b
+a|
+2
+a|
+28
+a|
+52
+a|
+16
+a|
+22
+a|
+22
+a|
+FC-VI port c
+a|
+1
+a|
+29
+a|
+53
+a|
+17
+a|
+23
+a|
+23
+a|
+FC-VI port d
+a|
+2
+a|
+29
+a|
+53
+a|
+17
+a|
+23
+a|
+23
+a|
+HBA port a
+a|
+1
+a|
+30
+a|
+54
+a|
+18
+a|
+28
+a|
+30
+a|
+HBA port b
+a|
+2
+a|
+30
+a|
+54
+a|
+18
+a|
+28
+a|
+30
+a|
+HBA port c
+a|
+1
+a|
+31
+a|
+55
+a|
+19
+a|
+29
+a|
+31
+a|
+HBA port d
+a|
+2
+a|
+31
+a|
+55
+a|
+19
+a|
+29
+a|
+31
+a|
+Stack 1
+a|
+bridge_x_51a
+a|
+FC1
+a|
+1
+a|
+32
+a|
+56
+a|
+20
+a|
+26
+a|
+32
+a|
+FC2
+a|
+2
+a|
+32
+a|
+56
+a|
+20
+a|
+26
+a|
+32
+a|
+bridge_x_51b
+a|
+FC1
+a|
+1
+a|
+33
+a|
+57
+a|
+21
+a|
+27
+a|
+33
+a|
+FC2
+a|
+2
+a|
+33
+a|
+57
+a|
+21
+a|
+27
+a|
+33
+a|
+Stack 2
+a|
+bridge_x_52a
+a|
+FC1
+a|
+1
+a|
+34
+a|
+58
+a|
+22
+a|
+30
+a|
+34
+a|
+FC2
+a|
+2
+a|
+34
+a|
+58
+a|
+22
+a|
+30
+a|
+34
+a|
+bridge_x_52b
+a|
+FC1
+a|
+1
+a|
+35
+a|
+59
+a|
+23
+a|
+31
+a|
+35
+a|
+FC2
+a|
+2
+a|
+35
+a|
+59
+a|
+23
+a|
+31
+a|
+35
+a|
+Stack 3
+a|
+bridge_x_53a
+a|
+FC1
+a|
+1
+a|
+36
+a|
+60
+a|
+-
+a|
+32
+a|
+36
+a|
+FC2
+a|
+2
+a|
+36
+a|
+60
+a|
+-
+a|
+32
+a|
+36
+a|
+bridge_x_53b
+a|
+FC1
+a|
+1
+a|
+37
+a|
+61
+a|
+-
+a|
+33
+a|
+37
+a|
+FC2
+a|
+2
+a|
+37
+a|
+61
+a|
+-
+a|
+33
+a|
+37
+a|
+Stack y
+a|
+bridge_x_5ya
+a|
+FC1
+a|
+1
+a|
+38
+a|
+62
+a|
+-
+a|
+34
+a|
+38
+a|
+FC2
+a|
+2
+a|
+38
+a|
+62
+a|
+-
+a|
+34
+a|
+38
+a|
+bridge_x_5yb
+a|
+FC1
+a|
+1
+a|
+39
+a|
+63
+a|
+-
+a|
+35
+a|
+39
+a|
+FC2
+a|
+2
+a|
+39
+a|
+63
+a|
+-
+a|
+35
+a|
+39
+a|
+*Note:* Additional bridges can be cabled to ports 36 to 39 in G620, G630, G620-1, and G630-1 switches.
+
+a|
+ 
+|===
+
+==== Brocade port usage for ISLs in a MetroCluster configuration running ONTAP 9.1 or later
+
+The following table shows ISL port usage for the Brocade switches.
+
+NOTE: AFF A700 or FAS9000 systems support up to eight ISLs for improved performance. Eight ISLs are supported on the Brocade 6510 and G620 switches.
+
+|===
+| Switch model| ISL port| Switch port
+a|
+Brocade 6520
+a|
+ISL port 1
+a|
+23
+a|
+ISL port 2
+a|
+47
+a|
+ISL port 3
+a|
+71
+a|
+ISL port 4
+a|
+95
+a|
+Brocade 6505
+a|
+ISL port 1
+a|
+20
+a|
+ISL port 2
+a|
+21
+a|
+ISL port 3
+a|
+22
+a|
+ISL port 4
+a|
+23
+a|
+Brocade 6510 and Brocade DCX 8510-8
+a|
+ISL port 1
+a|
+40
+a|
+ISL port 2
+a|
+41
+a|
+ISL port 3
+a|
+42
+a|
+ISL port 4
+a|
+43
+a|
+ISL port 5
+a|
+44
+a|
+ISL port 6
+a|
+45
+a|
+ISL port 7
+a|
+46
+a|
+ISL port 8
+a|
+47
+a|
+Brocade 7810
+a|
+ISL port 1
+a|
+ge2 (10-Gbps)
+a|
+ISL port 2
+a|
+ge3(10-Gbps)
+a|
+ISL port 3
+a|
+ge4 (10-Gbps)
+a|
+ISL port 4
+a|
+ge5 (10-Gbps)
+a|
+ISL port 5
+a|
+ge6 (10-Gbps)
+a|
+ISL port 6
+a|
+ge7 (10-Gbps)
+a|
+Brocade 7840**Note:** The Brocade 7840 switch supports either two 40 Gbps VE-ports or up to four 10 Gbps VE-ports per switch for the creation of FCIP ISLs.
+
+a|
+ISL port 1
+a|
+ge0 (40-Gbps) or ge2 (10-Gbps)
+a|
+ISL port 2
+a|
+ge1 (40-Gbps) or ge3 (10-Gbps)
+a|
+ISL port 3
+a|
+ge10 (10-Gbps)
+a|
+ISL port 4
+a|
+ge11 (10-Gbps)
+a|
+Brocade G610
+a|
+ISL port 1
+a|
+20
+a|
+ISL port 2
+a|
+21
+a|
+ISL port 3
+a|
+22
+a|
+ISL port 4
+a|
+23
+a|
+Brocade G620, G620-1, G630, G630-1, G720
+a|
+ISL port 1
+a|
+40
+a|
+ISL port 2
+a|
+41
+a|
+ISL port 3
+a|
+42
+a|
+ISL port 4
+a|
+43
+a|
+ISL port 5
+a|
+44
+a|
+ISL port 6
+a|
+45
+a|
+ISL port 7
+a|
+46
+a|
+ISL port 8
+a|
+47
+|===
+
+==== Cisco port usage for controllers in a MetroCluster configuration running ONTAP 9.4 or later
+
+The tables show the maximum supported configuration, with eight controller modules in two DR groups. For smaller configurations, ignore the rows for the additional controller modules.
+
+|===
+| Cisco 9396S
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+FC-VI port c
+a|
+2
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+2
+a|
+HBA port a
+a|
+3
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+3
+a|
+HBA port c
+a|
+4
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+4
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+5
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+5
+a|
+FC-VI port c
+a|
+6
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+6
+a|
+HBA port a
+a|
+7
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+7
+a|
+HBA port c
+a|
+8
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+8
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+49
+a|
+ 
+a|
+FC-VI port b
+a|
+-
+a|
+49
+a|
+FC-VI port c
+a|
+50
+a|
+ 
+a|
+FC-VI port d
+a|
+-
+a|
+50
+a|
+HBA port a
+a|
+51
+a|
+ 
+a|
+HBA port b
+a|
+-
+a|
+51
+a|
+HBA port c
+a|
+52
+a|
+ 
+a|
+HBA port d
+a|
+-
+a|
+52
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+53
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+53
+a|
+FC-VI port c
+a|
+54
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+54
+a|
+HBA port a
+a|
+55
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+55
+a|
+HBA port c
+a|
+56
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+56
+|===
+|===
+| Cisco 9148S
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+FC-VI port c
+a|
+2
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+2
+a|
+HBA port a
+a|
+3
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+3
+a|
+HBA port c
+a|
+4
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+4
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+5
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+5
+a|
+FC-VI port c
+a|
+6
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+6
+a|
+HBA port a
+a|
+7
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+7
+a|
+HBA port c
+a|
+8
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+8
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+25
+a|
+ 
+a|
+FC-VI port b
+a|
+-
+a|
+25
+a|
+FC-VI port c
+a|
+26
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+26
+a|
+HBA port a
+a|
+27
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+27
+a|
+HBA port c
+a|
+28
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+28
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+29
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+29
+a|
+FC-VI port c
+a|
+30
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+30
+a|
+HBA port a
+a|
+31
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+31
+a|
+HBA port c
+a|
+32
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+32
+|===
+|===
+| Cisco 9132T
+| MDS module 1
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+FC-VI port c
+a|
+2
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+2
+a|
+HBA port a
+a|
+3
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+3
+a|
+HBA port c
+a|
+4
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+4
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+5
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+5
+a|
+FC-VI port c
+a|
+6
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+6
+a|
+HBA port a
+a|
+7
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+7
+a|
+HBA port c
+a|
+8
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+8
+a|
+MDS module 2
+a|
+Component
+a|
+Port
+a|
+Switch 1
+a|
+Switch 2
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+FC-VI port c
+a|
+2
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+2
+a|
+HBA port a
+a|
+3
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+3
+a|
+HBA port c
+a|
+4
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+4
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+5
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+5
+a|
+FC-VI port c
+a|
+6
+a|
+-
+a|
+FC-VI port d
+a|
+-
+a|
+6
+a|
+HBA port a
+a|
+7
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+7
+a|
+HBA port c
+a|
+8
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+8
+|===
+*Note:* The following table shows systems with two FC-VI ports. AFF A700 and FAS9000 systems have four FC-VI ports (a, b, c, and d). If using an AFF A700 or FAS9000 system, the port assignments move along by one position. For example, FC-VI ports c and d go to switch port 2 and HBA ports a and b go to switch port 3.
+
+|===
+| Cisco 9250i*
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+HBA port a
+a|
+2
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+2
+a|
+HBA port c
+a|
+3
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+3
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+4
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+4
+a|
+HBA port a
+a|
+5
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+5
+a|
+HBA port c
+a|
+6
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+6
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+7
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+7
+a|
+HBA port a
+a|
+8
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+8
+a|
+HBA port c
+a|
+9
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+9
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+10
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+10
+a|
+HBA port a
+a|
+11
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+11
+a|
+HBA port c
+a|
+13
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+13
+|===
+* - The Cisco 9250i switch is not supported for eight-node MetroCluster configurations.
+
+==== Cisco port usage for FC-to-SAS bridges in a MetroCluster configuration running ONTAP 9.1 or later
+
+|===
+| Cisco 9396S
+| FibreBridge 7500 using two FC ports| Port| Switch 1| Switch 2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+FC2
+a|
+-
+a|
+9
+a|
+bridge_x_1b
+a|
+FC1
+a|
+10
+a|
+-
+a|
+FC2
+a|
+-
+a|
+10
+a|
+bridge_x_2a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+FC2
+a|
+-
+a|
+11
+a|
+bridge_x_2b
+a|
+FC1
+a|
+12
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+bridge_x_3a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+FC2
+a|
+-
+a|
+13
+a|
+bridge_x_3b
+a|
+FC1
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+14
+a|
+bridge_x_4a
+a|
+FC1
+a|
+15
+a|
+-
+a|
+FC2
+a|
+-
+a|
+15
+a|
+bridge_x_4b
+a|
+FC1
+a|
+16
+a|
+-
+a|
+FC2
+a|
+-
+a|
+16
+a|
+ 
+a|
+Additional bridges can be attached using ports 17 through 40 and 57 through 88 following the same pattern.
+|===
+|===
+| Cisco 9148S
+| FibreBridge 7500 using two FC ports| Port|  
+| Switch 1| Switch 2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+FC2
+a|
+-
+a|
+9
+a|
+bridge_x_1b
+a|
+FC1
+a|
+10
+a|
+-
+a|
+FC2
+a|
+-
+a|
+10
+a|
+bridge_x_2a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+FC2
+a|
+-
+a|
+11
+a|
+bridge_x_2b
+a|
+FC1
+a|
+12
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+bridge_x_3a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+FC2
+a|
+-
+a|
+13
+a|
+bridge_x_3b
+a|
+FC1
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+14
+a|
+bridge_x_4a
+a|
+FC1
+a|
+15
+a|
+-
+a|
+FC2
+a|
+-
+a|
+15
+a|
+bridge_x_4b
+a|
+FC1
+a|
+16
+a|
+-
+a|
+FC2
+a|
+-
+a|
+16
+a|
+ 
+a|
+Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 33 through 40 following the same pattern.
+|===
+|===
+| Cisco 9132T
+| FibreBridge 7500 using two FC ports| Port|  
+| Switch 1| Switch 2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+FC2
+a|
+-
+a|
+9
+a|
+bridge_x_1b
+a|
+FC1
+a|
+10
+a|
+-
+a|
+FC2
+a|
+-
+a|
+10
+a|
+bridge_x_2a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+FC2
+a|
+-
+a|
+11
+a|
+bridge_x_2b
+a|
+FC1
+a|
+12
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+ 
+a|
+Additional bridges for a second DR group or second MetroCluster configuration can be attached using the same port numbers on the second MDS module.
+|===
+|===
+| Cisco 9250i
+| FibreBridge 7500 using two FC ports| Port|  
+| Switch 1| Switch 2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+14
+a|
+bridge_x_1b
+a|
+FC1
+a|
+15
+a|
+-
+a|
+FC2
+a|
+-
+a|
+15
+a|
+bridge_x_2a
+a|
+FC1
+a|
+17
+a|
+-
+a|
+FC2
+a|
+-
+a|
+17
+a|
+bridge_x_2b
+a|
+FC1
+a|
+18
+a|
+-
+a|
+FC2
+a|
+-
+a|
+18
+a|
+bridge_x_3a
+a|
+FC1
+a|
+19
+a|
+-
+a|
+FC2
+a|
+-
+a|
+19
+a|
+bridge_x_3b
+a|
+FC1
+a|
+21
+a|
+-
+a|
+FC2
+a|
+-
+a|
+21
+a|
+bridge_x_4a
+a|
+FC1
+a|
+22
+a|
+-
+a|
+FC2
+a|
+-
+a|
+22
+a|
+bridge_x_4b
+a|
+FC1
+a|
+23
+a|
+-
+a|
+FC2
+a|
+-
+a|
+23
+a|
+ 
+a|
+Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 25 through 48 following the same pattern.
+|===
+The following tables show bridge port usage when using FibreBridge 6500 bridges or FibreBridge 7500 bridges using one FC port (FC1 or FC2) only. For FibreBridge 7500 bridges using one FC port, either FC1 or FC2 can be cabled to the port indicated as FC1. Additional bridges can be attached using ports 25-48.
+
+|===
+| FibreBridge 6500 bridge or FibreBridge 7500 using one FC port| Port| Cisco 9396S
+| Switch 1| Switch 2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+9
+a|
+bridge_x_2a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+10
+a|
+bridge_x_3a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+11
+a|
+bridge_x_4a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+12
+a|
+bridge_x_5a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+13
+a|
+bridge_x_6a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+14
+a|
+bridge_x_7a
+a|
+FC1
+a|
+15
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+15
+a|
+bridge_x_8a
+a|
+FC1
+a|
+16
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+16
+a|
+ 
+a|
+Additional bridges can be attached using ports 17 through 40 and 57 through 88 following the same pattern.
+|===
+|===
+| FibreBridge 6500 bridge or FibreBridge 7500 using one FC port| Port| Cisco 9148S
+| Switch 1| Switch 2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+9
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+9
+a|
+bridge_x_2a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+10
+a|
+bridge_x_3a
+a|
+FC1
+a|
+11
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+11
+a|
+bridge_x_4a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+12
+a|
+bridge_x_5a
+a|
+FC1
+a|
+13
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+13
+a|
+bridge_x_6a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+14
+a|
+bridge_x_7a
+a|
+FC1
+a|
+15
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+15
+a|
+bridge_x_8a
+a|
+FC1
+a|
+16
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+16
+a|
+ 
+a|
+Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 25 through 48 following the same pattern.
+|===
+|===
+| Cisco 9250i
+| FibreBridge 6500 bridge or FibreBridge 7500 using one FC port| Port| Switch 1| Switch 2
+a|
+bridge_x_1a
+a|
+FC1
+a|
+14
+a|
+-
+a|
+bridge_x_1b
+a|
+FC1
+a|
+-
+a|
+14
+a|
+bridge_x_2a
+a|
+FC1
+a|
+15
+a|
+-
+a|
+bridge_x_2b
+a|
+FC1
+a|
+-
+a|
+15
+a|
+bridge_x_3a
+a|
+FC1
+a|
+17
+a|
+-
+a|
+bridge_x_3b
+a|
+FC1
+a|
+-
+a|
+17
+a|
+bridge_x_4a
+a|
+FC1
+a|
+18
+a|
+-
+a|
+bridge_x_4b
+a|
+FC1
+a|
+-
+a|
+18
+a|
+bridge_x_5a
+a|
+FC1
+a|
+19
+a|
+-
+a|
+bridge_x_5b
+a|
+FC1
+a|
+-
+a|
+19
+a|
+bridge_x_6a
+a|
+FC1
+a|
+21
+a|
+-
+a|
+bridge_x_6b
+a|
+FC1
+a|
+-
+a|
+21
+a|
+bridge_x_7a
+a|
+FC1
+a|
+22
+a|
+-
+a|
+bridge_x_7b
+a|
+FC1
+a|
+-
+a|
+22
+a|
+bridge_x_8a
+a|
+FC1
+a|
+23
+a|
+-
+a|
+bridge_x_8b
+a|
+FC1
+a|
+-
+a|
+23
+a|
+ 
+a|
+Additional bridges can be attached using ports 25 through 48 following the same pattern.
+|===
+
+==== Cisco port usage for ISLs in an eight-node configuration in a MetroCluster configuration running ONTAP 9.1 or later
+
+The following table shows ISL port usage. ISL port usage is the same on all switches in the configuration.
+
+|===
+| Switch model| ISL port| Switch port
+a|
+Cisco 9396S
+a|
+ISL 1
+a|
+44
+a|
+ISL 2
+a|
+48
+a|
+ISL 3
+a|
+92
+a|
+ISL 4
+a|
+96
+a|
+Cisco 9250i with 24 port license
+a|
+ISL 1
+a|
+12
+a|
+ISL 2
+a|
+16
+a|
+ISL 3
+a|
+20
+a|
+ISL 4
+a|
+24
+a|
+Cisco 9148S
+a|
+ISL 1
+a|
+20
+a|
+ISL 2
+a|
+24
+a|
+ISL 3
+a|
+44
+a|
+ISL 4
+a|
+48
+a|
+Cisco 9132T
+a|
+ISL 1
+a|
+MDS module 1 port 13
+a|
+ISL 2
+a|
+MDS module 1 port 14
+a|
+ISL 3
+a|
+MDS module 1 port 15
+a|
+ISL 4
+a|
+MDS module 1 port 16
+|===
+
+== Verifying the storage configuration
+
+[.lead]
+You must confirm that all storage is visible from the surviving nodes.
+
+. Confirm that all storage components at the disaster site are the same in quantity and type at the surviving site.
++
+The surviving site and disaster site should have the same number of disk shelf stacks, disk shelves, and disks. In a bridge-attached or fabric-attached MetroCluster configuration, the sites should have the same number of FC-to-SAS bridges.
+
+. Confirm that all disks that have been replaced at the disaster site are unowned: run local disk show-n
++
+Disks should appear as being unowned.
+
+. If no disks were replaced, confirm that all disks are present: disk show
+
+== Powering on the equipment at the disaster site
+
+[.lead]
+You must power on the MetroCluster components at the disaster site when you are ready to prepare for switchback. In addition, you must also recable the SAS storage connections in direct-attached MetroCluster configurations and enable non-Inter-Switch Link ports in fabric-attached MetroCluster configurations.
+
+You must have already replaced and cabled the MetroCluster components exactly as the old ones.
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-stretch/home.html[Stretch MetroCluster installation and configuration]
+
+The examples in this procedure assume the following:
+
+* Site A is the disaster site.
+* FC_switch_A_1 has been replaced.
+* FC_switch_A_2 has been replaced.
+* Site B is the surviving site.
+* FC_switch_B_1 is healthy.
+* FC_switch_B_2 is healthy.
+
+The FC switches are present only in fabric-attached MetroCluster configurations.
+
+. In a stretch MetroCluster configuration using SAS cabling (and no FC switch fabric or FC-to-SAS bridges), connect all the storage including the remote storage across both sites.
++
+The controller at the disaster site must remain powered off or at the LOADER prompt.
+
+. On the surviving site, disable disk autoassignment: `storage disk option modify -autoassign off *`
++
+----
+cluster_B::> storage disk option modify -autoassign off *
+2 entries were modified.
+----
+
+. On the surviving site, confirm that disk autoassignment is off: `storage disk option show`
++
+----
+ cluster_B::> storage disk option show
+ Node     BKg. FW. Upd.  Auto Copy   Auto Assign  Auto Assign Policy
+--------  -------------  -----------  -----------  ------------------
+node_B_1       on            on          off             default
+node_B_2       on            on          off             default
+2 entries were displayed.
+
+ cluster_B::>
+----
+
+. Turn on the disk shelves at the disaster site and make sure that all disks are running.
+. In a bridge-attached or fabric-attached MetroCluster configuration, turn on all FC-to-SAS bridges at the disaster site.
+. If any disks were replaced, leave the controllers powered off or at the LOADER prompt.
+. In a fabric-attached MetroCluster configuration, enable the non-ISL ports on the FC switches.
++
+|===
+| If the switch vendor is...| Then use these steps to enable the ports...
+a|
+Brocade
+a|
+
+ .. Persistently enable the ports connected to the FC-to-SAS bridges: `portpersistentenable port-number`
++
+In the following example, ports 6 and 7 are enabled:
++
+----
+FC_switch_A_1:admin> portpersistentenable 6
+FC_switch_A_1:admin> portpersistentenable 7
+
+FC_switch_A_1:admin>
+----
+
+ .. Persistently enable the ports connected to the HBAs and FC-VI adapters: `portpersistentenable port-number`
++
+In the following example, ports 6 and 7 are enabled:
++
+----
+FC_switch_A_1:admin> portpersistentenable 1
+FC_switch_A_1:admin> portpersistentenable 2
+FC_switch_A_1:admin> portpersistentenable 4
+FC_switch_A_1:admin> portpersistentenable 5
+FC_switch_A_1:admin>
+----
++
+NOTE: For AFF A700 and FAS9000 systems, you must persistently enable all four FC-VI ports by using the switchcfgpersistentenable command.
+
+ .. Repeat substeps a and b for the second FC switch at the surviving site.
+
+a|
+Cisco
+a|
+
+ .. Enter configuration mode for the interface, and then enable the ports with the no shut command.
++
+In the following example, port fc1/36 is disabled:
++
+----
+ FC_switch_A_1# conf t
+FC_switch_A_1(config)# interface fc1/36
+FC_switch_A_1(config)# no shut
+FC_switch_A_1(config-if)# end
+FC_switch_A_1# copy running-config startup-config
+----
+
+ .. Verify that the switch port is enabled: `show interface brief`
+ .. Repeat substeps a and b on the other ports connected to the FC-to-SAS bridges, HBAs, and FC-VI adapters.
+ .. Repeat substeps a, b, and c for the second FC switch at the surviving site.
+
++
+|===
+
+== Assigning ownership for replaced drives
+
+[.lead]
+If you replaced drives when restoring hardware at the disaster site or you had to zero drives or remove ownership, you must assign ownership to the affected drives.
+
+The disaster site must have at least as many available drives as it did prior to the disaster.
+
+The drives shelves and drives arrangement must meet the requirements in the "`Required MetroCluster IP components and naming conventions`" section of the _MetroCluster IP Installation and Configuration Guide_.
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP installation and configuration]
+
+These steps are performed on the cluster at the disaster site.
+
+This procedure shows the reassignment of all drives and the creation of new plexes at the disaster site. The new plexes are remote plexes of surviving site and local plexes of disaster site.
+
+This section provides examples for two and four-node configurations. For two-node configurations, you can ignore references to the second node at each site. For eight-node configurations, you must account for the additional nodes on the second DR group. The examples make the following assumptions:
+
+* Site A is the disaster site.
+* node_A_1 has been replaced.
+* node_A_2 has been replaced.
++
+Present only in four-node MetroCluster configurations.
+
+* Site B is the surviving site.
+* node_B_1 is healthy.
+* node_B_2 is healthy.
++
+Present only in four-node MetroCluster configurations.
+
+The controller modules have the following original system IDs:
+
+|===
+| Number of nodes in MetroCluster configuration| Node| Original system ID
+a|
+Four
+a|
+node_A_1
+a|
+4068741258
+a|
+node_A_2
+a|
+4068741260
+a|
+node_B_1
+a|
+4068741254
+a|
+node_B_2
+a|
+4068741256
+a|
+Two
+a|
+node_A_1
+a|
+4068741258
+a|
+node_B_1
+a|
+4068741254
+|===
+You should keep in mind the following points when assigning the drives:
+
+* The old-count-of-disks must be at least the same number of disks for each node that were present before the disaster.
++
+If a lower number of disks is specified or present, the healing operations might not be completed due to insufficient space.
+
+* The new plexes to be created are remote plexes belonging to the surviving site (node_B_x pool1) and local plexes belonging to the disaster site (node_B_x pool0).
+* The total number of required drives should not include the root aggr disks.
++
+If n disks are assigned to pool1 of the surviving site, then (n-3) disks should be assigned to the disaster site with the assumption that the root aggregate uses three disks.
+
+* None of the disks can be assigned to a pool that is different from the one to which all other disks on the same stack are assigned.
+* Disks belonging to the surviving site are assigned to pool 1 and disks belonging to the disaster site are assigned to pool 0.
+
+. Assign the new, unowned drives based on whether you have a four-node or two-node MetroCluster configuration:
+ ** For four-node MetroCluster configurations, assign the new, unowned disks to the appropriate disk pools by using the following series of commands on the replacement nodes:
+  ... Systematically assign the replaced disks for each node to their respective disk pools: `disk assign -s sysid -n old-count-of-disks -p pool`
++
+From the surviving site, you issue a disk assign command for each node:
++
+----
+cluster_B::> disk assign -s node_B_1-sysid -n old-count-of-disks -p 1 **\(remote pool of surviving site\)**
+cluster_B::> disk assign -s node_B_2-sysid -n old-count-of-disks -p 1 **\(remote pool of surviving site\)**
+cluster_B::> disk assign -s node_A_1-old-sysid -n old-count-of-disks -p 0 **\(local pool of disaster site\)**
+cluster_B::> disk assign -s node_A_2-old-sysid -n old-count-of-disks -p 0 **\(local pool of disaster site\)**
+----
++
+The following example shows the commands with the system IDs:
++
+----
+cluster_B::> disk assign -s 4068741254 -n 21 -p 1
+cluster_B::> disk assign -s 4068741256 -n 21 -p 1
+cluster_B::> disk assign -s 4068741258 -n 21 -p 0
+cluster_B::> disk assign -s 4068741260 -n 21 -p 0
+----
+
+  ... Confirm the ownership of the disks: `storage disk show -fields owner, pool`
++
+----
+storage disk show -fields owner, pool
+cluster_A::> storage disk show -fields owner, pool
+disk     owner          pool
+-------- ------------- -----
+0c.00.1  node_A_1      Pool0
+0c.00.2  node_A_1      Pool0
+.
+.
+.
+0c.00.8  node_A_1      Pool1
+0c.00.9  node_A_1      Pool1
+.
+.
+.
+0c.00.15 node_A_2      Pool0
+0c.00.16 node_A_2      Pool0
+.
+.
+.
+0c.00.22 node_A_2      Pool1
+0c.00.23 node_A_2      Pool1
+.
+.
+.
+----
+ ** For two-node MetroCluster configurations, assign the new, unowned disks to the appropriate disk pools by using the following series of commands on the replacement node:
+  ... Display the local shelf IDs: `run local storage show shelf`
+  ... Assign the replaced disks for the healthy node to pool 1: `run local disk assign -shelf shelf-id -n old-count-of-disks -p 1 -s node_B_1-sysid -f`
+  ... Assign the replaced disks for the replacement node to pool 0: `run local disk assign -shelf shelf-id -n old-count-of-disks -p 0 -s node_A_1-sysid -f`
+. On the surviving site, turn on automatic disk assignment again: `storage disk option modify -autoassign on *`
++
+----
+cluster_B::> storage disk option modify -autoassign on *
+2 entries were modified.
+----
+
+. On the surviving site, confirm that automatic disk assignment is on: `storage disk option show`
++
+----
+ cluster_B::> storage disk option show
+ Node     BKg. FW. Upd.  Auto Copy   Auto Assign  Auto Assign Policy
+--------  -------------  -----------  -----------  ------------------
+node_B_1       on            on          on             default
+node_B_2       on            on          on             default
+2 entries were displayed.
+
+ cluster_B::>
+----
+
+*Related information*
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+
+link:[How MetroCluster configurations use SyncMirror to provide data redundancy]
+
+== Performing aggregate healing and restoring mirrors (MetroCluster FC configurations)
+
+[.lead]
+After replacing hardware and assigning disks, you can perform the MetroCluster healing operations. You must then confirm that aggregates are mirrored and, if necessary, restart mirroring.
+
+. Perform the two phases of healing (aggregate healing and root healing) on the disaster site:
++
+----
+cluster_B::> metrocluster heal -phase aggregates
+
+cluster_B::> metrocluster heal -phase root aggregates
+----
+
+. Monitor the healing and verify that the aggregates are in either the resyncing or mirrored state: `storage aggregate show -node local`
++
+|===
+| If the aggregate shows this state...| Then...
+a|
+resyncing
+a|
+No action is required.    Let the aggregate complete resyncing.
+a|
+mirror degraded
+a|
+Proceed to step link:task_preparing_for_switchback_in_a_mcc_fc_configuration_supertask.md#STEP_0192B6F128114A77837D1BB5AAB8A770[3].
+a|
+mirrored, normal
+a|
+No action is required.
+a|
+unknown, offline
+a|
+The root aggregate shows this state if all the disks on the disaster sites were replaced.
+|===
++
+----
+cluster_B::> storage aggregate show -node local
+
+ Aggregate     Size Available Used% State   #Vols  Nodes      RAID Status
+ --------- -------- --------- ----- ------- ------ ---------- ------------
+ node_B_1_aggr1
+            227.1GB   11.00GB   95% online       1 node_B_1   raid_dp,
+                                                              resyncing
+ NodeA_1_aggr2
+            430.3GB   28.02GB   93% online       2 node_B_1   raid_dp,
+                                                              mirror
+                                                              degraded
+ node_B_1_aggr3
+            812.8GB   85.37GB   89% online       5 node_B_1   raid_dp,
+                                                              mirrored,
+                                                              normal
+ 3 entries were displayed.
+
+cluster_B::>
+----
++
+In the following examples, the three aggregates are each in a different state:
++
+|===
+| Node| State
+a|
+node_B_1_aggr1
+a|
+resyncing
+a|
+node_B_1_aggr2
+a|
+mirror degraded
+a|
+node_B_1_aggr3
+a|
+mirrored, normal
+|===
+
+. If one or more plexes remain offline, additional steps are required to rebuild the mirror.
++
+In the preceding table, the mirror for node_B_1_aggr2 must be rebuilt.
+
+ .. View details of the aggregate to identify any failed plexes: `storage aggregate show -r -aggregate node_B_1_aggr2`
++
+In the following example, plex /node_B_1_aggr2/plex0 is in a failed state:
++
+----
+cluster_B::> storage aggregate show -r -aggregate node_B_1_aggr2
+
+ Owner Node: node_B_1
+  Aggregate: node_B_1_aggr2 (online, raid_dp, mirror degraded) (block checksums)
+   Plex: /node_B_1_aggr2/plex0 (offline, failed, inactive, pool0)
+    RAID Group /node_B_1_aggr2/plex0/rg0 (partial)
+                                                               Usable Physical
+      Position Disk                     Pool Type     RPM     Size     Size Status
+      -------- ------------------------ ---- ----- ------ -------- -------- ----------
+
+   Plex: /node_B_1_aggr2/plex1 (online, normal, active, pool1)
+    RAID Group /node_B_1_aggr2/plex1/rg0 (normal, block checksums)
+                                                               Usable Physical
+      Position Disk                     Pool Type     RPM     Size     Size Status
+      -------- ------------------------ ---- ----- ------ -------- -------- ----------
+      dparity  1.44.8                    1   SAS    15000  265.6GB  273.5GB (normal)
+      parity   1.41.11                   1   SAS    15000  265.6GB  273.5GB (normal)
+      data     1.42.8                    1   SAS    15000  265.6GB  273.5GB (normal)
+      data     1.43.11                   1   SAS    15000  265.6GB  273.5GB (normal)
+      data     1.44.9                    1   SAS    15000  265.6GB  273.5GB (normal)
+      data     1.43.18                   1   SAS    15000  265.6GB  273.5GB (normal)
+ 6 entries were displayed.
+
+ cluster_B::>
+----
+
+ .. Delete the failed plex: `storage aggregate plex delete -aggregate aggregate-name -plex plex`
+ .. Reestablish the mirror: `storage aggregate mirror -aggregate aggregate-name`
+ .. Monitor the resynchronization and mirroring status of the plex until all mirrors are reestablished and all aggregates show mirrored, normal status: `storage aggregate show`
+
+== Reassigning disk ownership for root aggregates to replacement controller modules (MetroCluster FC configurations)
+
+[.lead]
+If one or both of the controller modules or NVRAM cards were replaced at the disaster site, the system ID has changed and you must reassign disks belonging to the root aggregates to the replacement controller modules.
+
+Because the nodes are in switchover mode and healing has been done, only the disks containing the root aggregates of pool1 of the disaster site will be reassigned in this section. They are the only disks still owned by the old system ID at this point.
+
+This section provides examples for two and four-node configurations. For two-node configurations, you can ignore references to the second node at each site. For eight-node configurations, you must account for the additional nodes on the second DR group. The examples make the following assumptions:
+
+* Site A is the disaster site.
+* node_A_1 has been replaced.
+* node_A_2 has been replaced.
++
+Present only in four-node MetroCluster configurations.
+
+* Site B is the surviving site.
+* node_B_1 is healthy.
+* node_B_2 is healthy.
++
+Present only in four-node MetroCluster configurations.
+
+The old and new system IDs were identified in link:task_replacing_hardware_and_booting_new_controllers.md#[Acquiring the new System ID].
+
+The examples in this procedure use controllers with the following system IDs:
+
+|===
+| Number of nodes| Node| Original system ID| New system ID
+a|
+Four
+a|
+node_A_1
+a|
+4068741258
+a|
+1574774970
+a|
+node_A_2
+a|
+4068741260
+a|
+1574774991
+a|
+node_B_1
+a|
+4068741254
+a|
+unchanged
+a|
+node_B_2
+a|
+4068741256
+a|
+unchanged
+a|
+Two
+a|
+node_A_1
+a|
+4068741258
+a|
+1574774970
+a|
+node_B_1
+a|
+4068741254
+a|
+unchanged
+|===
+
+. With the replacement node in Maintenance mode, reassign the root aggregate disks: `disk reassign -s old-system-ID -d new-system-ID`
++
+----
+*> disk reassign -s 4068741258 -d 1574774970
+----
+
+. View the disks to confirm the ownership change of the pool1 root aggr disks of the disaster site to the replacement node: `disk show`
++
+The output might show more or fewer disks, depending on how many disks are in the root aggregate and whether any of these disks failed and were replaced. If the disks were replaced, then Pool0 disks will not appear in the output.
++
+The pool1 root aggregate disks of the disaster site should now be assigned to the replacement node.
++
+----
+*> disk show
+Local System ID: 1574774970
+
+  DISK             OWNER             POOL   SERIAL NUMBER         HOME                DR HOME
+------------       -------------     -----  -------------         -------------       -------------
+sw_A_1:6.126L19 node_A_1(1574774970) Pool0  serial-number  node_A_1(1574774970)
+sw_A_1:6.126L3  node_A_1(1574774970) Pool0  serial-number  node_A_1(1574774970)
+sw_A_1:6.126L7  node_A_1(1574774970) Pool0  serial-number  node_A_1(1574774970)
+sw_B_1:6.126L8  node_A_1(1574774970) Pool1  serial-number  node_A_1(1574774970)
+sw_B_1:6.126L24 node_A_1(1574774970) Pool1  serial-number  node_A_1(1574774970)
+sw_B_1:6.126L2  node_A_1(1574774970) Pool1  serial-number  node_A_1(1574774970)
+
+*> aggr status
+         Aggr State           Status
+ node_A_1_root online          raid_dp, aggr
+                               mirror degraded
+                               64-bit
+*>
+----
+
+. View the aggregate status: `aggr status`
++
+The output might show more or fewer disks, depending on how many disks are in the root aggregate and whether any of these disks failed and were replaced. If disks were replaced, then Pool0 disks will not appear in output.
++
+----
+*> aggr status
+          Aggr State           Status
+  node_A_1_root online          raid_dp, aggr
+                                mirror degraded
+                                64-bit
+*>
+----
+
+. Delete the contents of the mailbox disks: `mailbox destroy local`
+. If the aggregate is not online, bring it online: `aggr online aggr_name`
+. Halt the node to display the LOADER prompt: `halt`
+
+== Booting the new controller modules (MetroCluster FC configurations)
+
+[.lead]
+After aggregate healing has been completed for both the data and root aggregates, you must boot the node or nodes at the disaster site.
+
+This task begins with the nodes showing the LOADER prompt.
+
+. Display the boot menu: `boot_ontap menu`
+. From the boot menu, select option 6, *Update flash from backup config*.
+. Respond y to the following prompt:This will replace all flash-based configuration with the last backup to disks. Are you sure you want to continue?: y
++
+The system will boot twice, the second time to load the new configuration.
++
+NOTE: If you did not clear the NVRAM contents of a used replacement controller, then you might see a panic with the following message: PANIC: NVRAM contents are invalid...
++
+If this occurs, repeat step 2 to boot the system to the ONTAP prompt. You will then need to perform a root recovery. Contact technical support for assistance.
+
+. Mirror the root aggregate on plex 0:
+ .. Assign three pool0 disks to the new controller module.
+ .. Mirror the root aggregate pool1 plex: `aggr mirror root-aggr-name`
+ .. Assign unowned disks to pool0 on the local node
+. Refresh the MetroCluster configuration:
+ .. Enter advanced privilege mode: `set -privilege advanced`
+ .. Refresh the configuration: `metrocluster configure -refresh true`
+ .. Return to admin privilege mode: `set -privilege admin`
+. If you have a four-node configuration, repeat the previous steps on the other node at the disaster site.
+
+Proceed to verify the licenses on the replaced nodes.
+
+link:task_completing_recovery.md#[Verifying licenses on the replaced nodes]

@@ -1,0 +1,471 @@
+---
+permalink: install-fc/task_cabling_the_fc_vi_and_hba_ports_to_switches_in_an_eight_node_fabric_attached_mcc_configuration_with_array_luns.html
+sidebar: sidebar
+keywords: 
+summary: 'If you are setting up an eight-node fabric-attached MetroCluster configuration with array LUNs, you must cable the FC-VI ports and the HBA ports to the switch ports.'
+---
+= Cabling the FC-VI and HBA ports in an eight-node fabric-attached MetroCluster configuration with array LUNs
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If you are setting up an eight-node fabric-attached MetroCluster configuration with array LUNs, you must cable the FC-VI ports and the HBA ports to the switch ports.
+
+* You must repeat this task for each controller at both of the MetroCluster sites.
+* If you plan to use disks in addition to array LUNs in your MetroCluster configuration, you must use the HBA ports and switch ports specified for configuration with disks.
+ ** xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
+ ** xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.adoc[Port assignments for FC switches when using ONTAP 9.0]
+
+. Cable the FC-VI ports and HBA ports from each controller to the ports on alternate FC switches.
++
+|===
+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+| MetroCluster 1 or DR Group 1
+| Component| Port| Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1, and DCX 8510-8| Brocade switch G720
+| Connects to FC_switch...| Connects to switch port...| Connects to switch port...
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+0
+a|
+0
+a|
+FC-VI port b
+a|
+2
+a|
+0
+a|
+0
+a|
+FC-VI port c
+a|
+1
+a|
+1
+a|
+1
+a|
+FC-VI port d
+a|
+2
+a|
+1
+a|
+1
+a|
+HBA port a
+a|
+1
+a|
+2
+a|
+8
+a|
+HBA port b
+a|
+2
+a|
+2
+a|
+8
+a|
+HBA port c
+a|
+1
+a|
+3
+a|
+9
+a|
+HBA port d
+a|
+2
+a|
+3
+a|
+9
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+1
+a|
+4
+a|
+4
+a|
+FC-VI port b
+a|
+2
+a|
+4
+a|
+4
+a|
+FC-VI port c
+a|
+1
+a|
+5
+a|
+5
+a|
+FC-VI port d
+a|
+2
+a|
+5
+a|
+5
+a|
+HBA port a
+a|
+1
+a|
+6
+a|
+12
+a|
+HBA port b
+a|
+2
+a|
+6
+a|
+12
+a|
+HBA port c
+a|
+1
+a|
+7
+a|
+13
+a|
+HBA port d
+a|
+2
+a|
+7
+a|
+13
+a|
+Stack 1
+a|
+bridge_x_1a
+a|
+FC1
+a|
+1
+a|
+8
+a|
+10
+a|
+FC2
+a|
+2
+a|
+8
+a|
+10
+a|
+bridge_x_1B
+a|
+FC1
+a|
+1
+a|
+9
+a|
+11
+a|
+FC2
+a|
+2
+a|
+9
+a|
+11
+a|
+Stack 2
+a|
+bridge_x_2a
+a|
+FC1
+a|
+1
+a|
+10
+a|
+14
+a|
+FC2
+a|
+2
+a|
+10
+a|
+14
+a|
+bridge_x_2B
+a|
+FC1
+a|
+1
+a|
+11
+a|
+15
+a|
+FC2
+a|
+2
+a|
+11
+a|
+15
+a|
+Stack 3
+a|
+bridge_x_3a
+a|
+FC1
+a|
+1
+a|
+12*
+a|
+16
+a|
+FC2
+a|
+2
+a|
+12*
+a|
+16
+a|
+bridge_x_3B
+a|
+FC1
+a|
+1
+a|
+13*
+a|
+17
+a|
+FC2
+a|
+2
+a|
+13*
+a|
+17
+a|
+Stack y
+a|
+bridge_x_ya
+a|
+FC1
+a|
+1
+a|
+14*
+a|
+20
+a|
+FC2
+a|
+2
+a|
+14*
+a|
+20
+a|
+bridge_x_yb
+a|
+FC1
+a|
+1
+a|
+15*
+a|
+21
+a|
+FC2
+a|
+2
+a|
+15*
+a|
+21
+a|
+* - Ports 12 through 15 are reserved for the second MetroCluster or DR group on the Brocade 7840 switch.    *Note:* Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1 and G630-1 switches.
++
+|===
+|===
+| Cisco 9250i*
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+1
+a|
+HBA port a
+a|
+2
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+2
+a|
+HBA port c
+a|
+3
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+3
+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+4
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+4
+a|
+HBA port a
+a|
+5
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+5
+a|
+HBA port c
+a|
+6
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+6
+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+7
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+7
+a|
+HBA port a
+a|
+8
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+8
+a|
+HBA port c
+a|
+9
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+9
+a|
+controller_x_4
+a|
+FC-VI port a
+a|
+10
+a|
+-
+a|
+FC-VI port b
+a|
+-
+a|
+10
+a|
+HBA port a
+a|
+11
+a|
+-
+a|
+HBA port b
+a|
+-
+a|
+11
+a|
+HBA port c
+a|
+13
+a|
+-
+a|
+HBA port d
+a|
+-
+a|
+13
+|===
+
+You should cable the ISLs between the FC switches across the MetroCluster sites.
