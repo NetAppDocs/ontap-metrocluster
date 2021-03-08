@@ -1,0 +1,28 @@
+---
+permalink: transition/task_verifying_the_heath_of_the_mcc_configuration_2n_mcc_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'You must verify the health and connectivity of the MetroCluster FC configuration prior to performing the transition'
+---
+= Verifying the health of the MetroCluster FC configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must verify the health and connectivity of the MetroCluster FC configuration prior to performing the transition
+
+This task is performed on the MetroCluster FC configuration.
+
+. Verify the operation of the MetroCluster configuration in ONTAP:
+ .. Check whether the system is multipathed:``node run -node node-name sysconfig -a``
+ .. Check for any health alerts on both clusters: `system health alert show`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
+ .. Perform a MetroCluster check: `metrocluster check run`
+ .. Display the results of the MetroCluster check: `metrocluster check show`
+ .. Check for any health alerts on the switches (if present): `storage switch show`
+ .. Run Config Advisor.
++
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+
+ .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+. Verify that the nodes are in non-HA mode: `storage failover show`

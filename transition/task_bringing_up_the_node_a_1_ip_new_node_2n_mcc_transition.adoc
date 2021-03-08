@@ -1,0 +1,62 @@
+---
+permalink: transition/task_bringing_up_the_node_a_1_ip_new_node_2n_mcc_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'You must boot the node with the correct transition option.'
+---
+= Bringing up node_A_1-IP
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must boot the node with the correct transition option.
+
+. Boot node_A_1-IP to the boot menu: `boot_ontap menu`
+. Issue the following command at the boot menu prompt to initiate transition: `boot_after_mcc_transition`
+ ** This command reassigns all the disks owned by node_A_1-FC to node_A_1-IP.
+  *** node_A_1-FC disks are assigned to node_A_1-IP
+  *** node_B_1-FC disks are assigned to node_B_1-IP
+ ** The command also automatically makes other required system ID reassignments so the MetroCluster IP nodes can boot to the ONTAP prompt.
+ ** If the boot_after_mcc_transition command fails for any reason, it should be re-run from the boot menu.
+*Note:*
+ ** If the following prompt is displayed, enter Ctrl-C to continue. Checking MCC DR state... [enter Ctrl-C(resume), S(status), L(link)]_
+ ** If the root volume was encrypted, the node halts with the following message. Halting the system, because root volume is encrypted (NetApp Volume Encryption) and the key import failed. If this cluster is configured with external (KMIP) key-manager, check the health of the key servers.
+
++
+----
+
+Please choose one of the following:
+(1) Normal Boot.
+(2) Boot without /etc/rc.
+(3) Change password.
+(4) Clean configuration and initialize all disks.
+(5) Maintenance mode boot.
+(6) Update flash from backup config.
+(7) Install new software first.
+(8) Reboot node.
+(9) Configure Advanced Drive Partitioning. Selection (1-9)? `boot_after_mcc_transition`
+This will replace all flash-based configuration with the last backup to disks. Are you sure you want to continue?: yes
+
+Metrocluster Transition: Name of the MetroCluster FC node: `node_A_1-FC`
+Metrocluster Transition: Please confirm if this is the correct value [yes|no]:? y
+Metrocluster Transition: Disaster Recovery partner sysid of MetroCluster FC node node_A_1-FC: `systemID-of-node_B_1-FC`
+Metrocluster Transition: Please confirm if this is the correct value [yes|no]:? y
+Metrocluster Transition: Disaster Recovery partner sysid of local Metrocluster IP node: `systemID-of-node_B_1-IP`
+Metrocluster Transition: Please confirm if this is the correct value [yes|no]:? y
+----
+. If data volumes are encrypted, restore the keys using the correct command for your key management configuration.
++
+|===
+| If you are using...| Use this command...
+a|
+*Onboard key management*
+a|
+security key-manager onboard sync     For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys].
+a|
+*External key management*
+a|
+security key-manager key query -node node-name     For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys].
++
+|===
+
+. If the root volume is encrypted, use the procedure in xref:task_recovering_key_management_if_the_root_volume_is_encrypted_2n_mcc_transition.adoc[Recovering key management if the root volume is encrypted].

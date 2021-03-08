@@ -1,0 +1,36 @@
+---
+permalink: transition/task_moving_a_system_volume_to_the_new_nodes_mcc_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'To improve resiliency, a system volume should be moved from controller node_A_1-IP to controller node_A_2-IP, and also from node_B_1-IP to node_B_2-IP. You must create a mirrored aggregate on the destination node for the system volume.'
+---
+= Moving a system volume to the new nodes
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+To improve resiliency, a system volume should be moved from controller node_A_1-IP to controller node_A_2-IP, and also from node_B_1-IP to node_B_2-IP. You must create a mirrored aggregate on the destination node for the system volume.
+
+System volumes have the name form MDV_CRS_*_A or MDV_CRS_*_B. _A and _B are unrelated to the site_A and site_B references used throughout this section; e.g., MDV_CRS_*_A is not associated with site_A.
+
+. Assign at least three pool 0 and three pool 1 disks each for controllers node_A_2-IP and node_B_2-IP as needed.
+. Enable disk auto-assignment.
+. Move the _B system volume from node_A_1-IP to node_A_2-IP using the following steps from site_A.
+ .. Create a mirrored aggregate on controller node_A_2-IP to hold the system volume: `aggr create -aggregate new_node_A_2-IP_aggr -diskcount 10 -mirror true -node nodename_node_A_2-IP``aggr show`
++
+The mirrored aggregate requires five pool 0 and five pool 1 spare disks owned by controller node_A_2-IP.
++
+The advanced option, "-force-small-aggregate true" can be used to limit disk use to 3 pool 0 and 3 pool 1 disks, if disks are in short supply.
+
+ .. List the system volumes associated with the admin SVM: `vserver show``volume show -vserver admin-vserver-name`
++
+You should identify volumes contained by aggregates owned by site_A. site_B system volumes will also be shown.
+. Move the MDV_CRS_*_B system volume for site_A to the mirrored aggregate created on controller node_A_2-IP
+ .. Check for possible destination aggregates: `volume move target-aggr show -vserver admin-vserver-name -volume system_vol_MDV_B`
++
+The newly created aggregate on node_A_2-IP should be listed.
+
+ .. Move the volume to the newly created aggregate on node_A_2-IP: `set advanced``volume move start -vserver admin-vserver -volume system_vol_MDV_B -destination-aggregate new_node_A_2-IP_aggr -cutover-window 40`
+ .. Check status for the move operation: `volume move show -vserver admin-vserver-name -volume system_vol_MDV_B`
+ .. When the move operation complete, verify the MDV_CRS_*_B system is contained by the new aggregate on node_A_2-IP: `set admin``volume show -vserver admin-vserver`
+. Repeat the above steps on site_B (node_B_1-IP and node_B_2-IP).

@@ -1,0 +1,491 @@
+---
+permalink: transition/task_mapping_ports_from_the_old_node_to_the_new_node_2n_mcc_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'You must adjust the port and LIF configuration of the MetroCluster FC node so it is compatible with that of the MetroCluster IP node that will replace it.'
+---
+= Mapping ports from the MetroCluster FC nodes to the MetroCluster IP nodes
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must adjust the port and LIF configuration of the MetroCluster FC node so it is compatible with that of the MetroCluster IP node that will replace it.
+
+When the new nodes are first booted during the upgrade process, each node uses the most recent configuration of the node it is replacing. When you boot node_A_1-IP, ONTAP attempts to host LIFs on the same ports that were used on node_A_1-FC.
+
+During the transition procedure, you will perform steps on both the old and new nodes to ensure correct cluster, management, and data LIF configuration.
+
+. Identify any conflicts between the existing MetroCluster FC port usage and the port usage for the MetroCluster IP interfaces on the new nodes.
++
+You must identify the MetroCluster IP ports on the new MetroCluster IP controllers using the table below. Then check and record if any data LIFs or cluster LIFs exist on those ports on the MetroCluster FC nodes.
++
+These conflicting data LIFs or cluster LIFs on the MetroCluster FC nodes will be moved at the appropriate step in the transition procedure.
++
+NOTE: On the AFF A220 and FAS2750 systems, the MetroCluster IP physical ports are also used as cluster interfaces. If the new MetroCluster IP nodes are AFF A220 or FAS2750 systems, existing cluster LIFs do not need to be moved.
++
+The following table shows the MetroCluster IP ports by platform model. You can ignore the VLAN ID column.
++
+|===
+| Platform model| MetroCluster IP port| VLAN ID|  
+a|
+AFF A800
+a|
+e0b
+a|
+Not used
+a|
+ 
+a|
+e1b
+a|
+ 
+a|
+AFF A700 and FAS9000
+a|
+e5a
+a|
+ 
+a|
+e5b
+a|
+ 
+a|
+AFF A320
+a|
+e0g
+a|
+ 
+a|
+e0h
+a|
+ 
+a|
+AFF A300 and FAS8200
+a|
+e1a
+a|
+ 
+a|
+e1b
+a|
+ 
+a|
+AFF A220 and FAS2750
+a|
+e0a
+a|
+10
+a|
+On these systems, these physical ports are also used as cluster interfaces.
+a|
+e0b
+a|
+20
+a|
+AFF A250 and FAS500f
+a|
+e0c
+a|
+10
+a|
+ 
+a|
+e0d
+a|
+20
+a|
+ 
+|===
+You can fill in the following table and refer to it later in the transition procedure.
++
+|===
+| Ports| Corresponding MetroCluster IP interface ports (from table above)| Conflicting LIFs on these ports on the MetroCluster FC nodes
+a|
+First MetroCluster IP port on node_A_1-FC
+a|
+ 
+a|
+ 
+a|
+Second MetroCluster IP port on node_A_1-FC
+a|
+ 
+a|
+ 
+a|
+First MetroCluster IP port on node_B_1-FC
+a|
+ 
+a|
+ 
+a|
+Second MetroCluster IP port on node_B_1-FC
+a|
+ 
+a|
+ 
+|===
+
+. Determine what physical ports are available on the new controllers and what LIFs can be hosted on the ports.
++
+The controller's port usage depends on the platform model and IP switch model you will use in the MetroCluster IP configuration. You can gather the port usage of the new platforms from the _NetApp Hardware Universe_.
++
+https://hwu.netapp.com[NetApp Hardware Universe]
+
+. If desired, record the port information for node_A_1-FC and node_A_1-IP.
++
+You will refer to the table as you carry out the transition procedure.
++
+In the columns for node_A_1-IP, add the physical ports for the new controller module and plan the IPspaces and broadcast domains for the new node.
++
+|===
+|  | node_A_1-FC| node_A_1-IP
+| LIF| Ports| IPspaces| Broadcast domains| Ports| IPspaces| Broadcast domains
+a|
+Cluster 1
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Cluster 2
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Cluster 3
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Cluster 4
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Node management
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Cluster management
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Data 1
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Data 2
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Data 3
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Data 4
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+SAN
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Intercluster port
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+|===
+
+. If desired, record all the port information for node_B_1-FC.
++
+You will refer to the table as you carry out the upgrade procedure.
++
+In the columns for node_B_1-IP, add the physical ports for the new controller module and plan the LIF port usage, IPspaces and broadcast domains for the new node.
++
+|===
+|  | node_B_1-FC| node_B_1-IP
+| LIF| Physical ports| IPspaces| Broadcast domains| Physical ports| IPspaces| Broadcast domains
+a|
+Cluster 1
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Cluster 2
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Cluster 3
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Cluster 4
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Node management
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Cluster management
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Data 1
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Data 2
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Data 3
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Data 4
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+SAN
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+Intercluster port
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+a|
+ 
+|===

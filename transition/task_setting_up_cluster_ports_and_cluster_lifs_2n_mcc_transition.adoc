@@ -1,0 +1,28 @@
+---
+permalink: transition/task_setting_up_cluster_ports_and_cluster_lifs_2n_mcc_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'You must set up cluster ports and LIFs. The following steps need to be performed on the site A nodes which were booted up with root aggregates.'
+---
+= Setting up cluster ports and cluster LIFs
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must set up cluster ports and LIFs. The following steps need to be performed on the site A nodes which were booted up with root aggregates.
+
+. Identify the list of LIFs using the desired Cluster port: `network interface show -curr-port portname``network interface show -home-port portname`
+. For each cluster port, change the home port of any of the LIFs on that port to another port,
+ .. Enter advanced privilege mode and enter y when prompted to continue: `set priv advanced`
+ .. If the LIF being modified is a data LIF: `vserver config override -command "network interface modify -lif lifname -vserver vservername -home-port new-datahomeport`
+ .. If the LIF is not a data LIF: `network interface modify -lif lifname -vserver vservername -home-port new-datahomeport`
+ .. Revert the modified LIFs to their home port: `network interface revert * -vserver vserver_name`
+ .. Verify that there are no LIFs on the cluster port: `network interface show -curr-port portname``network interface show -home-port portname`
+ .. Remove the port from the current broadcast domain: `network port broadcast-domain remove-ports -ipspace ipspacename -broadcast-domain bcastdomainname -ports node_name:port_name`
+ .. Add the port to the cluster IPspace and broadcast domain: `network port broadcast-domain add-ports -ipspace Cluster -broadcast-domain Cluster -ports node_name:port_name`
+ .. Verify that the port's role has changed: `network port show`
+ .. Repeat these substeps for each cluster port.
+ .. Return to admin mode: `set priv admin`
+. Create cluster LIFs on the new cluster ports:
+ .. For autoconfiguration using link-local address for cluster LIF, use the following command: `network interface create -vserver Cluster -lif cluster_lifname -service-policy default-cluster -home-node a1name -home-port clusterport -auto true`
+ .. To assign static IP address for the cluster LIF, use the following command: `network interface create -vserver Cluster -lif cluster_lifname -service-policy default-cluster -home-node a1name -home-port clusterport -address ip-address -netmask netmask -status-admin up`

@@ -1,0 +1,138 @@
+---
+permalink: transition/task_bringing_up_the_new_nodes_node_a_2_ip_and_node_b_2_ip.html
+sidebar: sidebar
+keywords: MetroCluster configurations
+summary: 'You must boot the new controller modules one at a time using the correct option at the boot menu.'
+---
+= Bringing up node_A_2-IP and node_B_2-IP
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must boot the new controller modules one at a time using the correct option at the boot menu.
+
+In these steps, you boot up the two brand new nodes, expanding what had been a two-node configuration into a four-node configuration.
+
+These steps are performed on the following nodes:
+
+* node_A_2-IP
+* node_B_2-IP
+
+image::../media/transition_2n_booting_a_2_and_b_2.png[]
+
+. Boot the new nodes using boot option `9c`.
++
+----
+Please choose one of the following:
+(1) Normal Boot.
+(2) Boot without /etc/rc.
+(3) Change password.
+(4) Clean configuration and initialize all disks.
+(5) Maintenance mode boot.
+(6) Update flash from backup config.
+(7) Install new software first.
+(8) Reboot node.
+(9) Configure Advanced Drive Partitioning. Selection (1-9)? 9c
+----
++
+The node initializes and boots to the node setup wizard, similar to the following.
++
+----
+Welcome to node setup
+You can enter the following commands at any time:
+"help" or "?" - if you want to have a question clarified,
+"back" - if you want to change previously answered questions, and
+"exit" or "quit" - if you want to quit the setup wizard.
+Any changes you made before quitting will be saved.
+To accept a default or omit a question, do not enter a value. .
+.
+.
+----
++
+If option `9c` does not succeed, take the following steps to avoid possible data loss:
+
+ ** Do not attempt to run option 9a.
+ ** Physically disconnect the existing shelves that contain data from the original MetroCluster FC configuration (shelf_A_1, shelf_A_2, shelf_B_1, shelf_B_2).
+ ** Contact technical support, referencing the KB article https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/MetroCluster_FC_to_IP_transition_-_Option_9c_Failing[MetroCluster FC to IP transition - Option 9c Failing].
++
+https://mysupport.netapp.com/site/global/dashboard[NetApp Support]
+
+. Enable the AutoSupport tool by following the directions provided by the wizard.
+. Respond to the prompts to configure the node management interface.
++
+----
+Enter the node management interface port: [e0M]:
+Enter the node management interface IP address: 10.228.160.229
+Enter the node management interface netmask: 225.225.252.0
+Enter the node management interface default gateway: 10.228.160.1
+----
+
+. Verify that the storage failover mode is set to HA: `storage failover show -fields mode`
++
+If the mode is not HA, set it: `storage failover modify -mode ha -node localhost`
++
+You must then reboot the node for the change to take effect.
+
+. List the ports in the cluster:``network port show``
++
+For complete command syntax, see the man page.
++
+The following example shows the network ports in cluster01:
++
+----
+
+cluster01::> network port show
+                                                             Speed (Mbps)
+Node   Port      IPspace      Broadcast Domain Link   MTU    Admin/Oper
+------ --------- ------------ ---------------- ----- ------- ------------
+cluster01-01
+       e0a       Cluster      Cluster          up     1500   auto/1000
+       e0b       Cluster      Cluster          up     1500   auto/1000
+       e0c       Default      Default          up     1500   auto/1000
+       e0d       Default      Default          up     1500   auto/1000
+       e0e       Default      Default          up     1500   auto/1000
+       e0f       Default      Default          up     1500   auto/1000
+cluster01-02
+       e0a       Cluster      Cluster          up     1500   auto/1000
+       e0b       Cluster      Cluster          up     1500   auto/1000
+       e0c       Default      Default          up     1500   auto/1000
+       e0d       Default      Default          up     1500   auto/1000
+       e0e       Default      Default          up     1500   auto/1000
+       e0f       Default      Default          up     1500   auto/1000
+----
+
+. Exit the Node Setup wizard: `exit`
+. Log into the admin account using the admin user name.
+. Join the existing cluster using the Cluster Setup wizard.
++
+----
+:> cluster setup
+Welcome to the cluster setup wizard.
+You can enter the following commands at any time:
+"help" or "?" - if you want to have a question clarified,
+"back" - if you want to change previously answered questions, and "exit" or "quit" - if you want to quit the cluster setup wizard.
+Any changes you made before quitting will be saved.
+You can return to cluster setup at any time by typing "cluster setup". To accept a default or omit a question, do not enter a value.
+Do you want to create a new cluster or join an existing cluster?
+{create, join}:
+join
+----
+
+. After you complete the Cluster Setup wizard and it exits, verify that the cluster is active and the node is healthy: `cluster show`
+. Disable disk autoassignment: `storage disk option modify -autoassign off -node node_A_2-IP`
+. If encryption is used, restore the keys using the correct command for your key management configuration.
++
+|===
+| If you are using...| Use this command...
+a|
+*Onboard key management*
+a|
+security key-manager onboard sync     For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys].
+a|
+*External key management*
+a|
+security key-manager key query -node node-name     For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys].
++
+|===
+
+. Repeat the above steps on the second new controller module (node_B_2-IP).

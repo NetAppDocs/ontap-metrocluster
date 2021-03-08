@@ -1,0 +1,96 @@
+---
+permalink: transition/task_recovering_key_management_if_the_root_volume_is_encrypted_2n_mcc_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'If the root volume is encrypted, you must use special boot commands to restore the key management.'
+---
+= Recovering key management if the root volume is encrypted
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If the root volume is encrypted, you must use special boot commands to restore the key management.
+
+You must have the passphrases gathered earlier.
+
+. If onboard key management is used, perform the following substeps to restore the configuration.
+ .. From the LOADER prompt, display the boot menu: `boot_ontap menu`
+ .. Select option (10) Set onboard key management recovery secrets from the boot menu.
++
+Respond as appropriate to the prompts:
++
+----
+This option must be used only in disaster recovery procedures. Are you sure? (y or n): `y`
+Enter the passphrase for onboard key management: `passphrase`
+Enter the passphrase again to confirm:`passphrase`
+
+Enter the backup data:`backup-key`
+----
++
+The system boots to the boot menu.
+
+ .. Enter option `6` at the boot menu.
++
+Respond as appropriate to the prompts:
++
+----
+This will replace all flash-based configuration with the last backup to
+disks. Are you sure you want to continue?: y
+
+Following this, the system will reboot a few times and the following prompt will be available continue by saying y
+
+WARNING: System ID mismatch. This usually occurs when replacing a boot device or NVRAM cards!
+Override system ID? {y|n} y
+----
++
+After the reboots, the system will be at the LOADER prompt.
+
+ .. From the LOADER prompt, display the boot menu: `boot_ontap menu`
+ .. Again elect option (10) Set onboard key management recovery secrets from the boot menu.
++
+Respond as appropriate to the prompts:
++
+----
+This option must be used only in disaster recovery procedures. Are you sure? (y or n): `y`
+Enter the passphrase for onboard key management: `passphrase`
+Enter the passphrase again to confirm:`passphrase`
+
+Enter the backup data:`backup-key`
+----
++
+The system boots to the boot menu.
+
+ .. Enter option `1` at the boot menu.
++
+If the following prompt is displayed, you can enter Ctrl+C to resume the process._Checking MCC DR state... [enter Ctrl-C(resume), S(status), L(link)]_
++
+The system boots to the ONTAP prompt.
+
+ .. Restore the onboard key management: `security key-manager onboard sync`
++
+Respond as appropriate to the prompts, using the passphrase you collected earlier:
++
+----
+cluster_A::> security key-manager onboard sync
+Enter the cluster-wide passphrase for onboard key management in Vserver "cluster_A":: passphrase
+----
+. If external key management is used, perform the following substeps to restore the configuration.
+ .. Set the required bootargs: `setenv bootarg.kmip.init.ipaddr ip-address``setenv bootarg.kmip.init.netmask netmask``setenv bootarg.kmip.init.gateway gateway-address``setenv bootarg.kmip.init.interface interface-id`
+ .. From the LOADER prompt, display the boot menu: `boot_ontap menu`
+ .. Select option (11) Configure node for external key management from the boot menu.
++
+The system boots to the boot menu.
+
+ .. Enter option `6` at the boot menu.
++
+The system boots multiple times. You can respond affirmatively when prompted to continue the boot process.
++
+After the reboots, the system will be at the LOADER prompt.
+
+ .. Set the required bootargs: `setenv bootarg.kmip.init.ipaddr ip-address``setenv bootarg.kmip.init.netmask netmask``setenv bootarg.kmip.init.gateway gateway-address``setenv bootarg.kmip.init.interface interface-id`
+ .. From the LOADER prompt, display the boot menu: `boot_ontap menu`
+ .. Again select option (11) Configure node for external key management from the boot menu and respond to the prompts as required.
++
+The system boots to the boot menu.
+
+ .. Restore the external key management: `security key-manager external restore`

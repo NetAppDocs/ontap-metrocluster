@@ -1,0 +1,21 @@
+---
+permalink: transition/task_sending_a_custom_autosupport_message_before_maintenance_2n_mcc_transition.html
+sidebar: sidebar
+keywords: AutoSupport
+summary: 'Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. This prevents them from opening a case on the assumption that a disruption has occurred.'
+---
+= Sending a custom AutoSupport message prior to maintenance
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. This prevents them from opening a case on the assumption that a disruption has occurred.
+
+This task must be performed on each MetroCluster site.
+
+. To prevent automatic support case generation, send an Autosupport message to indicate maintenance is underway.
+ .. Issue the following command: `system node autosupport invoke -node * -type all -message MAINT=maintenance-window-in-hours`
++
+maintenance-window-in-hours specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:``system node autosupport invoke -node * -type all -message MAINT=end``
+
+ .. Repeat the command on the partner cluster.

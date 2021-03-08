@@ -1,0 +1,43 @@
+---
+permalink: transition/task_setting_up_data_lifs_on_the_new_nodes_2n_mcc_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'You must configure data LIFs on the new nodes, node_A_2-IP and node_B_2-IP.'
+---
+= Setting up data LIFs on the new nodes
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must configure data LIFs on the new nodes, node_A_2-IP and node_B_2-IP.
+
+You must add any new ports available on new controllers to a broadcast domain if not already assigned to one. If required, create VLANs or interface groups on the new ports. See the _Network Management Guide_.
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Network and LIF management]
+
+. Run the following commands to identify the current port usage and broadcast domains: `network port show``network port broadcast-domain show`
+. Add ports to broadcast domains and VLANs as necessary.
+ .. View the IP spaces: `network ipspace show`
+ .. Create IP spaces and assign data ports as needed.
++
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-69120CF0-F188-434F-913E-33ACB8751A5D.html[Configuring IPspaces (cluster administrators only)]
+
+ .. View the broadcast domains: `network port broadcast-domain show`
+ .. Add any data ports to a broadcast domain as needed.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Adding or removing ports from a broadcast domain]
+
+ .. Recreate VLANs and interface groups as needed.
++
+VLAN and interface group membership might be different than that of the old node.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Creating a VLAN]
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups]
+. Verify that the LIFs are hosted on the appropriate node and ports on the MetroCluster IP nodes (including the SVM with -mc vserver) as needed.
++
+See the information gathered in xref:task_creating_the_network_configuration.adoc[Creating the network configuration].
+
+ .. Run the below command to check the home port of the LIFs: `network interface show -field home-port`
+ .. If necessary, modify the LIF configuration: `vserver config override -command "network interface modify -vserver vserver_name -home-port active_port_after_upgrade -lif lif_name -home- node new_node_name"`
+ .. Revert the LIFs to their home ports: `network interface revert * -vserver vserver_name`
