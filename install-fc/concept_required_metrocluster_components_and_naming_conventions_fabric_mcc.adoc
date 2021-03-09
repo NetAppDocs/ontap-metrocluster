@@ -1,0 +1,172 @@
+---
+permalink: install-fc/concept_required_metrocluster_components_and_naming_conventions_fabric_mcc.html
+sidebar: sidebar
+keywords: ATTO FibreBridge bridges,storage controllers
+summary: 'When planning your MetroCluster FC configuration, you must understand the required and supported hardware and software components. For convenience and clarity, you should also understand the naming conventions used for components in examples throughout the documentation. For example, one site is referred to as Site A and the other site is referred to as Site B.'
+---
+= Required MetroCluster FC components and naming conventions
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+When planning your MetroCluster FC configuration, you must understand the required and supported hardware and software components. For convenience and clarity, you should also understand the naming conventions used for components in examples throughout the documentation. For example, one site is referred to as Site A and the other site is referred to as Site B.
+
+== Supported software and hardware
+
+The hardware and software must be supported for the MetroCluster FC configuration.
+
+https://hwu.netapp.com[NetApp Hardware Universe]
+
+When using AFF systems, all controller modules in the MetroCluster configuration must be configured as AFF systems.
+
+NOTE: Long-wave SFPs are not supported in the MetroCluster storage switches. For a table of supported SPFs, see the MetroCluster Technical Report.
+
+== Hardware redundancy in the MetroCluster FC configuration
+
+Because of the hardware redundancy in the MetroCluster FC configuration, there are two of each component at each site. The sites are arbitrarily assigned the letters A and B and the individual components are arbitrarily assigned the numbers 1 and 2.
+
+== Requirement for two ONTAP clusters
+
+The fabric-attached MetroCluster FC configuration requires two ONTAP clusters, one at each MetroCluster site.
+
+Naming must be unique within the MetroCluster configuration.
+
+Example names:
+
+* Site A: cluster_A
+* Site B: cluster_B
+
+== Requirement for four FC switches
+
+The fabric-attached MetroCluster FC configuration requires four FC switches (supported Brocade or Cisco models).
+
+The four switches form two switch storage fabrics that provide the ISL between each of the clusters in the MetroCluster FC configuration.
+
+Naming must be unique within the MetroCluster configuration.
+
+== Requirement for two, four, or eight controller modules
+
+The fabric-attached MetroCluster FC configuration requires two, four, or eight controller modules.
+
+In a four or eight-node MetroCluster configuration, the controller modules at each site form one or two HA pairs. Each controller module has a DR partner at the other site.
+
+The controller modules must meet the following requirements:
+
+* Naming must be unique within the MetroCluster configuration.
+* All controller modules in the MetroCluster configuration must be running the same version of ONTAP.
+* All controller modules in a DR group must be of the same model.
++
+However, in configurations with two DR groups, each DR group can consist of different controller module models.
+
+* All controller modules in a DR group must use the same FC-VI configuration.
++
+Some controller modules support two options for FC-VI connectivity:
+
+ ** Onboard FC-VI ports
+ ** An FC-VI card in slot 1
+A mix of one controller module using onboard FC-VI ports and another using an add-on FC-VI card is not supported. For example, if one node uses onboard FC-VI configuration, then all other nodes in the DR group must use onboard FC-VI configuration as well.
+
+Example names:
+
+* Site A: controller_A_1
+* Site B: controller_B_1
+
+== Requirement for four cluster interconnect switches
+
+The fabric-attached MetroCluster FC configuration requires four cluster interconnect switches (if you are not using two-node switchless clusters)
+
+These switches provide cluster communication among the controller modules in each cluster. The switches are not required if the controller modules at each site are configured as a two-node switchless cluster.
+
+== Requirement for FC-to-SAS bridges
+
+The fabric-attached MetroCluster FC configuration requires one pair of FC-to-SAS bridges for each stack group of SAS shelves.
+
+NOTE: FibreBridge 6500N bridges are not supported in configurations running ONTAP 9.8 and later.
+
+* FibreBridge 7600N or 7500N bridges support up to four SAS stacks.
+* FibreBridge 6500N bridges support only one SAS stack.
+* Each stack can use different models of IOM.
++
+A mix of IOM12 modules and IOM3 modules is not supported within the same storage stack. A mix of IOM12 modules and IOM6 modules is supported within the same storage stack if your system is running a supported version of ONTAP.
++
+Supported IOM modules depend on the version of ONTAP you are running.
+
+* Naming must be unique within the MetroCluster configuration.
+
+The suggested names used as examples in this guide identify the controller module and stack that the bridge connects to, as shown below.
+
+== Pool and drive requirements (minimum supported)
+
+Eight SAS disk shelves are recommended (four shelves at each site) to allow disk ownership on a per-shelf basis.
+
+The MetroCluster configuration requires the minimum configuration at each site:
+
+* Each node has at least one local pool and one remote pool at the site.
++
+For example, in a four-node MetroCluster configuration with two nodes at each site, four pools are required at each site.
+
+* At least seven drives in each pool.
++
+In a four-node MetroCluster configuration with a single mirrored data aggregate per node, the minimum configuration requires 24 disks at the site.
+
+In a minimum supported configuration, each pool has the following drive layout:
+
+* Three root drives
+* Three data drives
+* One spare drive
+
+In a minimum supported configuration, at least one shelf is needed per site.
+
+MetroCluster configurations support RAID-DP and RAID4.
+
+== Drive location considerations for partially populated shelves
+
+For correct auto-assignment of drives when using shelves that are half populated (12 drives in a 24-drive shelf), drives should be located in slots 0-5 and 18-23.
+
+In a configuration with a partially populated shelf, the drives must be evenly distributed in the four quadrants of the shelf.
+
+== Mixing IOM12 and IOM 6 modules in a stack
+
+Your version of ONTAP must support shelf mixing. Refer to the Interoperability Matrix Tool (IMT) to see if your version of ONTAP supports shelf mixing. https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability]
+
+For further details on shelf mixing see: https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-ds-mix-hotadd/home.html[Hot-adding shelves with IOM12 modules to a stack of shelves with IOM6 modules]
+
+== Bridge naming conventions
+
+The bridges use the following example naming: bridge_site_stack grouplocation in pair
+
+|===
+| This portion of the name...| Identifies the...| Possible values...
+a|
+site
+a|
+Site on which the bridge pair physically resides.
+a|
+A or B
+a|
+stack group
+a|
+Number of the stack group to which the bridge pair connects.
+
+* FibreBridge 7600N or 7500N bridges support up to four stacks in the stack group.
++
+The stack group can contain no more than 10 storage shelves.
+
+* FibreBridge 6500N bridges support only a single stack in the stack group.
+
+a|
+1, 2, etc.
+a|
+location in pair
+a|
+Bridge within the bridge pair.A pair of bridges connect to a specific stack group.
+
+a|
+a or b
+|===
+Example bridge names for one stack group on each site:
+
+* bridge_A_1a
+* bridge_A_1b
+* bridge_B_1a
+* bridge_B_1b

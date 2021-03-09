@@ -1,0 +1,51 @@
+---
+permalink: upgrade/task_refreshing_controllers_in_a_four_node_metrocluster_fc_configuration.html
+sidebar: sidebar
+keywords: 
+summary: 'You can upgrade the controllers and storage in a four-node MetroCluster configuration by expanding the configuration to become an eight-node configuration and then removing the old disaster recovery \(DR\) group.'
+---
+= Refreshing a four-node MetroCluster FC configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You can upgrade the controllers and storage in a four-node MetroCluster configuration by expanding the configuration to become an eight-node configuration and then removing the old disaster recovery (DR) group.
+
+References to "old nodes" mean the nodes that you intend to replace.
+
+. Gather information from the old nodes.
++
+At this stage, the four-node configuration appears as shown in the following image:
++
+image::../media/mcc_dr_group_a.png[]
+
+. Perform all of the steps in the four-node expansion procedure for your MetroCluster type.
++
+xref:task_expanding_a_four_node_metrocluster_fc_configuration_to_an_eight_node_configuration.adoc[Expanding a four-node MetroCluster FC configuration to an eight-node configuration]
++
+When the expansion procedure is complete, the configuration appears as shown in the following image:
++
+image::../media/mcc_dr_group_b.png[]
+
+. Move the CRS volumes.
++
+Perform the steps in https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/task_moving_a_metadata_volume_in_metrocluster_configurations.html[Moving a metadata volume in MetroCluster configurations].
+
+. Move the data from the old nodes to new nodes using the following three procedures from the _Controller Hardware Upgrade Express Guide_.
++
+https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/home.html[Other platform procedures:Controller Hardware Upgrade Express Guide]
+
+ .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-AFE432F6-60AD-4A79-86C0-C7D12957FA63.html[Creating an aggregate and moving volumes to the new nodes].
++
+NOTE: You might choose to mirror the aggregate when or after it is created.
+
+ .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-95CA9262-327D-431D-81AA-C73DEFF3DEE2.html[Moving non-SAN data LIFs and cluster management LIFs to the new nodes].
+ .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-91EC7830-0C28-4C78-952F-6F956CC5A62F.html[Deleting SAN LIFs from the original nodes].
+
+. Follow the steps in the procedure for removing the old DR group.
++
+xref:concept_removing_a_disaster_recovery_group.adoc[Removing a Disaster Recovery group]
++
+Once you have removed the old DR group (DR group one), the configuration appears as shown in the following image:
++
+image::../media/mcc_dr_group_d.png[]

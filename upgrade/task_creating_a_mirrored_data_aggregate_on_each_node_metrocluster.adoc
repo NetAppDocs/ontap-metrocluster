@@ -1,0 +1,56 @@
+---
+permalink: upgrade/task_creating_a_mirrored_data_aggregate_on_each_node_metrocluster.html
+sidebar: sidebar
+keywords: 
+summary: 'You must create a mirrored data aggregate on each node in the DR group.'
+---
+= Creating a mirrored data aggregate on each node
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must create a mirrored data aggregate on each node in the DR group.
+
+* You should know what drives will be used in the new aggregate.
+* If you have multiple drive types in your system (heterogeneous storage), you should understand how you can ensure that the correct drive type is selected.
+* Drives are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
++
+In systems using ADP, aggregates are created using partitions in which each drive is partitioned in to P1, P2 and P3 partitions.
+
+* Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+
+. Display a list of available spares: `storage disk show -spare -owner node_name`
+. Create the aggregate by using the storage aggregate create -mirror true command.
++
+If you are logged in to the cluster on the cluster management interface, you can create an aggregate on any node in the cluster. To ensure that the aggregate is created on a specific node, use the -node parameter or specify drives that are owned by that node.
++
+You can specify the following options:
+
+ ** Aggregate's home node (that is, the node that owns the aggregate in normal operation)
+ ** List of specific drives that are to be added to the aggregate
+ ** Number of drives to include
++
+NOTE: In the minimum supported configuration, in which a limited number of drives are available, you must use the force-small-aggregate option to allow the creation of a three disk RAID-DP aggregate.
+
+ ** Checksum style to use for the aggregate
+ ** Type of drives to use
+ ** Size of drives to use
+ ** Drive speed to use
+ ** RAID type for RAID groups on the aggregate
+ ** Maximum number of drives that can be included in a RAID group
+ ** Whether drives with different RPM are allowed
+For more information about these options, see the storage aggregate create man page.
+
++
+The following command creates a mirrored aggregate with 10 disks:
++
+----
+cluster_A::> storage aggregate create aggr1_node_A_1 -diskcount 10 -node node_A_1 -mirror true
+[Job 15] Job is queued: Create aggr1_node_A_1.
+[Job 15] The job is starting.
+[Job 15] Job succeeded: DONE
+----
+
+. Verify the RAID group and drives of your new aggregate: `storage aggregate show-status -aggregate aggregate-name`

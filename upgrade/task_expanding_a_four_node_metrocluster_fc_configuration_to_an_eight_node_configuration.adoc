@@ -1,0 +1,36 @@
+---
+permalink: upgrade/task_expanding_a_four_node_metrocluster_fc_configuration_to_an_eight_node_configuration.html
+sidebar: sidebar
+keywords: 
+summary: 'Expanding a four-node MetroCluster FC configuration to an eight-node MetroCluster FC configuration involves adding two controllers to each cluster to form a second HA pair at each MetroCluster site, and then running the MetroCluster FC configuration operation.'
+---
+= Expanding a four-node MetroCluster FC configuration to an eight-node configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Expanding a four-node MetroCluster FC configuration to an eight-node MetroCluster FC configuration involves adding two controllers to each cluster to form a second HA pair at each MetroCluster site, and then running the MetroCluster FC configuration operation.
+
+* The nodes must be running ONTAP 9 in a MetroCluster FC configuration.
++
+This procedure is not supported on earlier versions of ONTAP or in MetroCluster IP configurations.
+
+* The existing MetroCluster FC configuration must be healthy.
+* The equipment you are adding must be supported and meet all the requirements described in the _Fabric-attached MetroCluster Installation and Configuration Guide_.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
+
+* You must have available FC switch ports to accommodate the new controllers and any new bridges.
+* You need the admin password and access to an FTP or SCP server.
+* This procedure applies only to MetroCluster FC configurations.
+* This procedure is nondisruptive and takes approximately one day to complete (excluding rack and stack) when disks are zeroed.
+
+Before performing this procedure, the MetroCluster FC configuration consists of four nodes, with one HA pair at each site:
+
+image::../media/mcc_dr_groups_4_node.gif[]
+
+At the conclusion of this procedure, the MetroCluster FC configuration consists of two HA pairs at each site:
+
+image::../media/mcc_dr_groups_8_node.gif[]
+
+Both sites must be expanded equally. A MetroCluster FC configuration cannot consist of an uneven number of nodes.
