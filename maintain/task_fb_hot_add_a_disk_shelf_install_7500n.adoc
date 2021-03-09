@@ -1,0 +1,141 @@
+---
+permalink: maintain/task_fb_hot_add_a_disk_shelf_install_7500n.html
+sidebar: sidebar
+keywords: 
+summary: 'You can hot-add a disk shelf when you want to increase storage without any reduction in performance.'
+---
+= Hot-adding a disk shelf
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You can hot-add a disk shelf when you want to increase storage without any reduction in performance.
+
+* The system must meet all of the requirements in link:task_fb_hot_add_shelf_prepare_7500n.md#[Preparing to hot-add SAS disk shelves].
+* Your environment must meet one of the following scenarios to hot-add a shelf:
+ ** You have two FibreBridge 7500N bridges connected to a stack of SAS disk shelves.
+ ** You have one FibreBridge 7500N bridge and one FibreBridge 6500N bridge connected to a stack of SAS disk shelves.
+ ** You have two FibreBridge 6500N bridges connected to a stack of SAS disk shelves.
+* This procedure is for hot-adding a disk shelf to the last disk shelf in a stack.
++
+This procedure is written with the assumption that the last disk shelf in a stack is connected from IOM A to bridge A and from IOM B to bridge B.
+
+* This is a nondisruptive procedure.
+* You should hot-add an equal number of disk shelves at each site.
+* If you are hot-adding more than one disk shelf, you must hot-add one disk shelf at a time.
++
+NOTE: Each pair of FibreBridge 7500N or 7600N bridges can support up to four stacks.
+
+IMPORTANT: Hot-adding a disk shelf requires you to update the disk drive firmware on the hot-added disk shelf by running the storage disk firmware update command in advanced mode. Running this command can be disruptive if the firmware on existing disk drives in your system is an older version.
+
+IMPORTANT: If you insert a SAS cable into the wrong port, when you remove the cable from a SAS port, you must wait at least 120 seconds before plugging the cable into a different SAS port. If you fail to do so, the system will not recognize that the cable has been moved to another port.
+
+. Properly ground yourself.
+. Verify disk shelf connectivity from the system console of either controller: `sysconfig -v`
++
+The output is similar to the following:
+
+ ** Each bridge on a separate line and under each FC port to which it is visible; for example, hot-adding a disk shelf to a set of FibreBridge 7500N bridges results in the following output:
++
+----
+FC-to-SAS Bridge:
+cisco_A_1-1:9.126L0: ATTO  FibreBridge7500N 2.10  FB7500N100189
+cisco_A_1-2:1.126L0: ATTO  FibreBridge7500N 2.10  FB7500N100162
+----
+
+ ** Each disk shelf on a separate line under each FC port to which it is visible:
++
+----
+Shelf   0: IOM6  Firmware rev. IOM6 A: 0173 IOM6 B: 0173
+Shelf   1: IOM6  Firmware rev. IOM6 A: 0173 IOM6 B: 0173
+----
+
+ ** Each disk drive on a separate line under each FC port to which it is visible:
++
+----
+cisco_A_1-1:9.126L1   : NETAPP   X421_HCOBD450A10 NA01 418.0GB (879097968 520B/sect)
+cisco_A_1-1:9.126L2   : NETAPP   X421_HCOBD450A10 NA01 418.0GB (879097968 520B/sect)
+----
+
+. Check whether your system has disk autoassignment enabled from the console of either controller: `storage disk option show`
++
+The autoassignment policy is shown in the Auto Assign column.
++
+----
+
+Node        BKg. FW. Upd.  Auto Copy   Auto Assign  Auto Assign Policy
+----------  -------------  ----------  -----------  ------------------
+node_A_1             on           on           on           default
+node_A_2             on           on           on           default
+2 entries were displayed.
+----
+
+. If your system does not have disk autoassignment enabled, or if disk drives in the same stack are owned by both controllers, assign disk drives to the appropriate pools.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
++
+NOTE: If you are splitting a single stack of disk shelves between two controllers, disk autoassignment must be disabled before you assign disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller and pool.
++
+The storage disk option modify -nodenode-name-autoassign off command disables disk autoassignment.
++
+NOTE: Disk drives must not be added to aggregates or volumes until the disk drive and disk shelf firmware have been updated.
+
+. Update the disk shelf firmware to the most current version by using the instructions for the downloaded firmware.
++
+You can run the commands in the procedure from the system console of either controller.
++
+https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware[NetApp Downloads: Disk Shelf Firmware]
+
+. Install and cable the disk shelf:
++
+Note the following considerations:
+
+ ** For FibreBridge 6500N bridges:
++
+Wait at least 10 seconds before connecting the port. The SAS cable connectors are keyed; when oriented correctly into a SAS port, the connector clicks into place and the disk shelf SAS port LNK LED illuminates green.For disk shelves, you insert a SAS cable connector with the pull tab oriented down (on the underside of the connector).
+
+ ** For FibreBridge 7500N bridges:
++
+Do not force a connector into a port. The mini-SAS cables are keyed; when oriented correctly into a SAS port, the SAS cable clicks into place and the disk shelf SAS port LNK LED illuminates green.For disk shelves, you insert a SAS cable connector with the pull tab oriented up (on the topside of the connector).
+
+
+ .. Install the disk shelf, power it on, and set the shelf ID.
++
+The _Installation Guide_ for your disk shelf model provides detailed information about installing disk shelves.
++
+NOTE: You must power-cycle the disk shelf and keep the shelf IDs unique for each SAS disk shelf within the entire storage system.
+
+ .. Disconnect the SAS cable from the IOM B port of the last shelf in the stack, and then reconnect it to the same port in the new shelf.
++
+The other end of this cable remains connected to bridge B.
+
+ .. Daisy-chain the new disk shelf by cabling the new shelf IOM ports (of IOM A and IOM B) to the last shelf IOM ports (of IOM A and IOM B).
+
++
+The _Installation Guide_ for your disk shelf model provides detailed information about daisy-chaining disk shelves.
+
+. Update the disk drive firmware to the most current version from the system console.
++
+https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware[NetApp Downloads: Disk Drive Firmware]
+
+ .. Change to the advanced privilege level: `set -privilege advanced`
++
+You need to respond with `y` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
+
+ .. Update the disk drive firmware to the most current version from the system console: `storage disk firmware update`
+ .. Return to the admin privilege level: `set -privilege admin`
+ .. Repeat the previous substeps on the other controller.
+
+. Verify the operation of the MetroCluster configuration in ONTAP:
+ .. Check whether the system is multipathed:``node run -node node-name sysconfig -a``
+ .. Check for any health alerts on both clusters: `system health alert show`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
+ .. Perform a MetroCluster check: `metrocluster check run`
+ .. Display the results of the MetroCluster check: `metrocluster check show`
+ .. Check for any health alerts on the switches (if present): `storage switch show`
+ .. Run Config Advisor.
++
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+
+ .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+. If you are hot-adding more than one disk shelf, repeat the steps, starting with step <<STEP_37AF8C1753774C0F9098DDE0D7D6ADDA,#STEP_37AF8C1753774C0F9098DDE0D7D6ADDA>>, for each disk shelf that you are hot-adding.

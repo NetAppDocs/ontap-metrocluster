@@ -1,0 +1,89 @@
+---
+permalink: maintain/task_rename_a_cisco_ip_switch.html
+sidebar: sidebar
+keywords: 
+summary: 'You might need to rename a Cisco IP switch to provide consistent naming throughout your configuration.'
+---
+= Renaming a Cisco IP switch
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You might need to rename a Cisco IP switch to provide consistent naming throughout your configuration.
+
+In the examples in this task, the switch name is changed from myswitch to IP_switch_A_1.
+
+. Enter global configuration mode: `configure terminal`
++
+The following example shows the configuration mode prompt. Both prompts show the switch name of myswitch.
++
+----
+myswitch# configure terminal
+myswitch(config)#
+----
+
+. Rename the switch: `switchname new-switch-name`
++
+If you are renaming both switches in the fabric, use the same command on each switch.
++
+The CLI prompt changes to reflect the new name:
++
+----
+myswitch(config)# switchname IP_switch_A_1
+IP_switch_A_1(config)#
+----
+
+. Exit configuration mode: `exit`
++
+The top-level switch prompt is displayed:
++
+----
+IP_switch_A_1(config)# exit
+IP_switch_A_1#
+----
+
+. Copy the current running configuration to the startup configuration file: `copy running-config startup-config`
+. Verify that the switch name change is visible from the ONTAP cluster prompt.
++
+Note that the new switch name is shown, and the old switch name (myswitch) does not appear.
+
+ .. Enter advanced privilege mode, pressing `y` when prompted: `set -privilege advanced`
+ .. Display the attached devices: `network device-discovery show`
+ .. Return to admin privilege mode: `set -privilege admin`
+
++
+The following example shows that the switch appears with the new name, IP_switch_A_1:
++
+----
+cluster_A::storage show> set advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by NetApp personnel.
+Do you want to continue? {y|n}: y
+
+cluster_A::storage show*> network device-discovery show
+Node/       Local  Discovered
+Protocol    Port   Device                    Interface         Platform
+----------- ------ ------------------------- ----------------  ----------------
+node_A_2/cdp
+            e0M    LF01-410J53.mycompany.com(SAL18516DZY)
+                                             Ethernet125/1/28  N9K-C9372PX
+            e1a    IP_switch_A_1(FOC21211RBU)
+                                             Ethernet1/2       N3K-C3232C
+            e1b    IP_switch_A_1(FOC21211RBU)
+                                             Ethernet1/10      N3K-C3232C
+.
+.
+.                                             Ethernet1/18      N9K-C9372PX
+node_A_1/cdp
+            e0M    LF01-410J53.mycompany.com(SAL18516DZY)
+                                             Ethernet125/1/26  N9K-C9372PX
+            e0a    IP_switch_A_2(FOC21211RB5)
+                                             Ethernet1/1       N3K-C3232C
+            e0b    IP_switch_A_2(FOC21211RB5)
+                                             Ethernet1/9       N3K-C3232C
+            e1a    IP_switch_A_1(FOC21211RBU)
+.
+.
+.
+16 entries were displayed.
+----

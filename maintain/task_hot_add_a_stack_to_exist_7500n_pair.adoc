@@ -1,0 +1,1224 @@
+---
+permalink: maintain/task_hot_add_a_stack_to_exist_7500n_pair.html
+sidebar: sidebar
+keywords: 
+summary: 'You can hot-add a stack of SAS disk shelves to an existing pair of FibreBridge 7500N bridges that have available ports.'
+---
+= Hot-adding a stack of SAS disk shelves to an existing pair of FibreBridge 7500N bridges
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You can hot-add a stack of SAS disk shelves to an existing pair of FibreBridge 7500N bridges that have available ports.
+
+* You must have downloaded the latest disk and disk shelf firmware.
+* All of the disk shelves in the MetroCluster configuration (both the new shelves and existing shelves) must be running the same firmware version.
++
+https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware[NetApp Downloads: Disk Drive Firmware]
++
+https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware[NetApp Downloads: Disk Shelf Firmware]
+
+* The FibreBridge 7500N bridges must be connected and have available SAS ports.
+
+This procedure is written with the assumption that you are using the recommended bridge management interfaces: the ATTO ExpressNAV GUI and the ATTO QuickNAV utility.
+
+You can use the ATTO ExpressNAV GUI to configure and manage a bridge, and to update the bridge firmware. You can use the ATTO QuickNAV utility to configure the bridge Ethernet management 1 port.
+
+You can use other management interfaces, if required. These options include using a serial port or Telnet to configure and manage a bridge and to configure the Ethernet management 1 port, and using FTP to update the bridge firmware. If you choose any of these management interfaces, you must meet the applicable requirements in xref:reference_requirements_for_using_other_interfaces_to_configure_and_manage_fibrebridge_bridges.adoc[Other bridge management interfaces].
+
+IMPORTANT: If you insert a SAS cable into the wrong port, when you remove the cable from a SAS port, you must wait at least 120 seconds before plugging the cable into a different SAS port. If you fail to do so, the system will not recognize that the cable has been moved to another port.
+
+. Properly ground yourself.
+. From the console of either controller, verify that your system has disk autoassignment enabled: `storage disk option show`
++
+The Auto Assign column indicates whether disk autoassignment is enabled.
++
+----
+
+Node        BKg. FW. Upd.  Auto Copy   Auto Assign  Auto Assign Policy
+----------  -------------  ----------  -----------  ------------------
+node_A_1             on           on           on           default
+node_A_2             on           on           on           default
+2 entries were displayed.
+----
+
+. Disable the switch ports for the new stack.
+. Update the FibreBridge firmware on each bridge.
++
+If the new bridge is the same type as the partner bridge upgrade to the same firmware as the partner bridge. If the new bridge is a different type to the partner bridge, upgrade to the latest firmware supported by the bridge and version of ONTAP. See the section "Updating firmware on a FibreBridge bridge" in the _MetroCluster Service Guide_.
+
+. On each bridge in the pair, enable the SAS port that will connect to the new stack: `SASPortEnable port-letter`
++
+The same SAS port (B, C, or D) must be used on both bridges.
+
+. Save the configuration and reboot each bridge: `SaveConfiguration Restart`
+. Cable the disk shelves to the bridges:
+ .. Daisy-chain the disk shelves in each stack.
++
+The _Installation and Service Guide_ for your disk shelf model provides detailed information about daisy-chaining disk shelves.
+
+ .. For each stack of disk shelves, cable IOM A of the first shelf to SAS port A on FibreBridge A, and then cable IOM B of the last shelf to SAS port A on FibreBridge B
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-stretch/home.html[Stretch MetroCluster installation and configuration]
+
++
+Each bridge has one path to its stack of disk shelves; bridge A connects to the A-side of the stack through the first shelf, and bridge B connects to the B-side of the stack through the last shelf.
++
+NOTE: The bridge SAS port B is disabled.
+. Verify that each bridge can detect all of the disk drives and disk shelves to which the bridge is connected.
++
+|===
+| If you are using the...| Then...
+a|
+ATTO ExpressNAV GUI
+a|
+
+ .. In a supported web browser, enter the IP address of a bridge in the browser box.
++
+You are brought to the ATTO FibreBridge home page, which has a link.
+
+ .. Click the link, and then enter your user name and the password that you designated when you configured the bridge.
++
+The ATTO FibreBridge status page appears with a menu to the left.
+
+ .. Click *Advanced* in the menu.
+ .. View the connected devices: `sastargets`
+ .. Click *Submit*.
+
+a|
+Serial port connection
+a|
+View the connected devices: `sastargets`
+|===
+The output shows the devices (disks and disk shelves) to which the bridge is connected. The output lines are sequentially numbered so that you can quickly count the devices.
++
+NOTE: If the text response truncated appears at the beginning of the output, you can use Telnet to connect to the bridge, and then view all of the output by using the sastargets command.
++
+The following output shows that 10 disks are connected:
++
+----
+Tgt VendorID ProductID        Type        SerialNumber
+  0 NETAPP   X410_S15K6288A15 DISK        3QP1CLE300009940UHJV
+  1 NETAPP   X410_S15K6288A15 DISK        3QP1ELF600009940V1BV
+  2 NETAPP   X410_S15K6288A15 DISK        3QP1G3EW00009940U2M0
+  3 NETAPP   X410_S15K6288A15 DISK        3QP1EWMP00009940U1X5
+  4 NETAPP   X410_S15K6288A15 DISK        3QP1FZLE00009940G8YU
+  5 NETAPP   X410_S15K6288A15 DISK        3QP1FZLF00009940TZKZ
+  6 NETAPP   X410_S15K6288A15 DISK        3QP1CEB400009939MGXL
+  7 NETAPP   X410_S15K6288A15 DISK        3QP1G7A900009939FNTT
+  8 NETAPP   X410_S15K6288A15 DISK        3QP1FY0T00009940G8PA
+  9 NETAPP   X410_S15K6288A15 DISK        3QP1FXW600009940VERQ
+----
+
+. Verify that the command output shows that the bridge is connected to all of the appropriate disks and disk shelves in the stack.
++
+|===
+| If the output is...| Then...
+a|
+Correct
+a|
+Repeat Step <<STEP_524EBC3334F54467B771D9E2FD2B2DDA,#STEP_524EBC3334F54467B771D9E2FD2B2DDA>> for each remaining bridge.
+a|
+Not correct
+a|
+
+ .. Check for loose SAS cables or correct the SAS cabling by repeating Step <<STEP_1F8F7E891D3B4CBD88176B312C6BC5CC,#STEP_1F8F7E891D3B4CBD88176B312C6BC5CC>>.
+ .. Repeat Step <<STEP_524EBC3334F54467B771D9E2FD2B2DDA,#STEP_524EBC3334F54467B771D9E2FD2B2DDA>>.
+
++
+|===
+
+. Cable each bridge to the local FC switches, using the cabling shown in the table for your configuration, switch model, and FC-to-SAS bridge model:
++
+NOTE: The Brocade and Cisco switches use different port numbering, as shown in the following tables
+
+ ** On Brocade switches, the first port is numbered "`0`".
+ ** On Cisco switches, the first port is numbered "`1`".
+|===
+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+| DR GROUP 1
+|  | Brocade 6505| Brocade 6510, Brocade DCX 8510-8| Brocade 6520| Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1| Brocade G720
+| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2
+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+| DR GROUP 2
+|  | Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1| Brocade 6510, Brocade DCX 8510-8| Brocade 6520| Brocade G720
+| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| switch 2
+| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+| DR GROUP 1
+|  | Brocade 6505| Brocade 6510, Brocade DCX 8510-8| Brocade 6520| Brocade G620, brocade G620-1, Brocade G630, Brocade G630-1| Brocade G720
+| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2
+| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+| DR GROUP 2
+|  | Brocade G720| Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1| Brocade 6510, Brocade DCX 8510-8| Brocade 6520
+a|
+Stack 1
+a|
+bridge_x_1a
+a|
+FC1
+a|
+8
+a|
+ 
+a|
+8
+a|
+ 
+a|
+8
+a|
+ 
+a|
+8
+a|
+ 
+a|
+10
+a|
+ 
+a|
+FC2
+a|
+-
+a|
+8
+a|
+-
+a|
+8
+a|
+-
+a|
+8
+a|
+-
+a|
+8
+a|
+-
+a|
+10
+a|
+bridge_x_1B
+a|
+FC1
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+11
+a|
+-
+a|
+FC2
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+11
+a|
+Stack 2
+a|
+bridge_x_2a
+a|
+FC1
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+14
+a|
+-
+a|
+FC2
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+14
+a|
+bridge_x_2B
+a|
+FC1
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+17
+a|
+-
+a|
+FC2
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+17
+a|
+Stack 3
+a|
+bridge_x_3a
+a|
+FC1
+a|
+12
+a|
+-
+a|
+12
+a|
+-
+a|
+12
+a|
+-
+a|
+12
+a|
+-
+a|
+18
+a|
+-
+a|
+FC2
+a|
+-
+a|
+12
+a|
+-
+a|
+12
+a|
+-
+a|
+12
+a|
+-
+a|
+12
+a|
+-
+a|
+18
+a|
+bridge_x_3B
+a|
+FC1
+a|
+13
+a|
+-
+a|
+13
+a|
+-
+a|
+13
+a|
+-
+a|
+13
+a|
+-
+a|
+19
+a|
+-
+a|
+FC2
+a|
+-
+a|
+13
+a|
+-
+a|
+13
+a|
+-
+a|
+13
+a|
+-
+a|
+13
+a|
+-
+a|
+19
+a|
+Stack y
+a|
+bridge_x_ya
+a|
+FC1
+a|
+14
+a|
+-
+a|
+14
+a|
+-
+a|
+14
+a|
+-
+a|
+14
+a|
+-
+a|
+20
+a|
+-
+a|
+FC2
+a|
+-
+a|
+14
+a|
+-
+a|
+14
+a|
+-
+a|
+14
+a|
+-
+a|
+14
+a|
+-
+a|
+20
+a|
+bridge_x_yb
+a|
+FC1
+a|
+15
+a|
+-
+a|
+15
+a|
+-
+a|
+15
+a|
+-
+a|
+15
+a|
+-
+a|
+21
+a|
+-
+a|
+FC2
+a|
+--
+a|
+15
+a|
+--
+a|
+15
+a|
+--
+a|
+15
+a|
+-
+a|
+15
+a|
+-
+a|
+21
+a|
+*Note:* Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1, and G630-1 switches.
+
+a|
+Stack 1
+a|
+bridge_x_51a
+a|
+FC1
+a|
+26
+a|
+-
+a|
+32
+a|
+-
+a|
+56
+a|
+-
+a|
+32
+a|
+-
+a|
+FC2
+a|
+-
+a|
+26
+a|
+-
+a|
+32
+a|
+-
+a|
+56
+a|
+-
+a|
+32
+a|
+bridge_x_51b
+a|
+FC1
+a|
+27
+a|
+-
+a|
+33
+a|
+-
+a|
+57
+a|
+-
+a|
+33
+a|
+-
+a|
+FC2
+a|
+-
+a|
+27
+a|
+-
+a|
+33
+a|
+-
+a|
+57
+a|
+-
+a|
+33
+a|
+Stack 2
+a|
+bridge_x_52a
+a|
+FC1
+a|
+30
+a|
+-
+a|
+34
+a|
+-
+a|
+58
+a|
+-
+a|
+34
+a|
+-
+a|
+FC2
+a|
+-
+a|
+30
+a|
+-
+a|
+34
+a|
+-
+a|
+58
+a|
+-
+a|
+34
+a|
+bridge_x_52b
+a|
+FC1
+a|
+31
+a|
+-
+a|
+35
+a|
+-
+a|
+59
+a|
+-
+a|
+35
+a|
+-
+a|
+FC2
+a|
+-
+a|
+31
+a|
+-
+a|
+35
+a|
+-
+a|
+59
+a|
+-
+a|
+35
+a|
+Stack 3
+a|
+bridge_x_53a
+a|
+FC1
+a|
+32
+a|
+-
+a|
+36
+a|
+-
+a|
+60
+a|
+-
+a|
+36
+a|
+-
+a|
+FC2
+a|
+-
+a|
+32
+a|
+-
+a|
+36
+a|
+-
+a|
+60
+a|
+-
+a|
+36
+a|
+bridge_x_53b
+a|
+FC1
+a|
+33
+a|
+-
+a|
+37
+a|
+-
+a|
+61
+a|
+-
+a|
+37
+a|
+-
+a|
+FC2
+a|
+-
+a|
+33
+a|
+-
+a|
+37
+a|
+-
+a|
+61
+a|
+-
+a|
+37
+a|
+Stack y
+a|
+bridge_x_5ya
+a|
+FC1
+a|
+34
+a|
+-
+a|
+38
+a|
+-
+a|
+62
+a|
+-
+a|
+38
+a|
+-
+a|
+FC2
+a|
+-
+a|
+34
+a|
+-
+a|
+38
+a|
+-
+a|
+62
+a|
+-
+a|
+38
+a|
+bridge_x_5yb
+a|
+FC1
+a|
+35
+a|
+-
+a|
+39
+a|
+-
+a|
+63
+a|
+-
+a|
+39
+a|
+-
+a|
+FC2
+a|
+-
+a|
+35
+a|
+-
+a|
+39
+a|
+-
+a|
+63
+a|
+-
+a|
+39
+a|
+    *Note:* Additional bridges can be cabled to ports 36 - 39 in G620, G630, G620-1, and G-630-1 switches.
+a|
+Stack 1
+a|
+bridge_x_1a
+a|
+8
+a|
+ 
+a|
+8
+a|
+ 
+a|
+8
+a|
+ 
+a|
+8
+a|
+ 
+a|
+10
+a|
+ 
+a|
+bridge_x_1b
+a|
+-
+a|
+8
+a|
+-
+a|
+8
+a|
+-
+a|
+8
+a|
+-
+a|
+8
+a|
+-
+a|
+10
+a|
+Stack 2
+a|
+bridge_x_2a
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+11
+a|
+-
+a|
+bridge_x_2b
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+9
+a|
+-
+a|
+11
+a|
+Stack 3
+a|
+bridge_x_3a
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+14
+a|
+-
+a|
+bridge_x_4b
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+10
+a|
+-
+a|
+14
+a|
+Stack y
+a|
+bridge_x_ya
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+15
+a|
+-
+a|
+bridge_x_yb
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+11
+a|
+-
+a|
+15
+a|
+    *Note:* Additional bridges can be cabled to ports 12 - 17, 20 and 21 in G620, G630, G620-1, and G630-1 switches. Additional bridges can be cabled to ports 16 - 17, 20 and 21 G720 switches.
+a|
+Stack 1
+a|
+bridge_x_51a
+a|
+32
+a|
+-
+a|
+26
+a|
+-
+a|
+32
+a|
+-
+a|
+56
+a|
+-
+a|
+bridge_x_51b
+a|
+-
+a|
+32
+a|
+-
+a|
+26
+a|
+-
+a|
+32
+a|
+-
+a|
+56
+a|
+Stack 2
+a|
+bridge_x_52a
+a|
+33
+a|
+-
+a|
+27
+a|
+-
+a|
+33
+a|
+-
+a|
+57
+a|
+-
+a|
+bridge_x_52b
+a|
+-
+a|
+33
+a|
+-
+a|
+27
+a|
+-
+a|
+33
+a|
+-
+a|
+57
+a|
+Stack 3
+a|
+bridge_x_53a
+a|
+34
+a|
+-
+a|
+30
+a|
+-
+a|
+34
+a|
+-
+a|
+58
+a|
+-
+a|
+bridge_x_54b
+a|
+-
+a|
+34
+a|
+-
+a|
+30
+a|
+-
+a|
+34
+a|
+-
+a|
+58
+a|
+Stack y
+a|
+bridge_x_ya
+a|
+35
+a|
+-
+a|
+31
+a|
+-
+a|
+35
+a|
+-
+a|
+59
+a|
+-
+a|
+bridge_x_yb
+a|
+-
+a|
+35
+a|
+-
+a|
+31
+a|
+-
+a|
+35
+a|
+-
+a|
+59
+a|
+    *Note:* Additional bridges can be cabled to ports 32 - 39 in G620, G630, G620-1, and G630-1 switches. Additional bridges can be cabled to ports 36 - 39 in G720 switches.
++
+|===
+
+. Update the disk drive firmware to the most current version from the system console: `disk_fw_update`
++
+You must run this command on both controllers.
++
+https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware[NetApp Downloads: Disk Drive Firmware]
+
+. Update the disk shelf firmware to the most current version by using the instructions for the downloaded firmware.
++
+You can run the commands in the procedure from the system console of either controller.
++
+https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware[NetApp Downloads: Disk Shelf Firmware]
+
+. If your system does not have disk autoassignment enabled, assign disk drive ownership.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
++
+NOTE: If you are splitting the ownership of a single stack of disk shelves among multiple controllers, you must disable disk autoassignment (storage disk option modify -autoassign off * from both nodes in the cluster) before assigning disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller and pool.
++
+NOTE: You must not add disk drives to aggregates or volumes until after the disk drive firmware and disk shelf firmware have been updated and the verification steps in this task have been completed.
+
+. Enable the switch ports for the new stack.
+. Verify the operation of the MetroCluster configuration in ONTAP:
+ .. Check whether the system is multipathed:``node run -node node-name sysconfig -a``
+ .. Check for any health alerts on both clusters: `system health alert show`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
+ .. Perform a MetroCluster check: `metrocluster check run`
+ .. Display the results of the MetroCluster check: `metrocluster check show`
+ .. Check for any health alerts on the switches (if present): `storage switch show`
+ .. Run Config Advisor.
++
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+
+ .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+. If applicable, repeat this procedure for the partner site.
