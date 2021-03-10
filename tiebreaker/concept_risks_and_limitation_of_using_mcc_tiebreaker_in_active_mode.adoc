@@ -1,0 +1,22 @@
+---
+permalink: tiebreaker/concept_risks_and_limitation_of_using_mcc_tiebreaker_in_active_mode.html
+sidebar: sidebar
+keywords: 
+summary: 'Switchover upon detection of a site failure happens automatically, with MetroCluster Tiebreaker in active mode. This mode can be used to supplement the ONTAP/FAS automatic switchover capability.'
+---
+= Risks and limitations of using MetroCluster Tiebreaker in active mode
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Switchover upon detection of a site failure happens automatically, with MetroCluster Tiebreaker in active mode. This mode can be used to supplement the ONTAP/FAS automatic switchover capability.
+
+When you implement MetroCluster Tiebreaker in active mode, the following known issues might lead to data loss:
+
+* When the inter-site link fails, the controllers on each site continue to serve the clients. However, the controllers will not be mirrored. Failure of a controller in one site is identified as a site failure and the MetroCluster Tiebreaker initiates a switchover. The data which is not mirrored after the inter-site link failure with the remote site will be lost.
+* A switchover occurs when the aggregates in remote site are in degraded state. The data will not be replicated if the switchover has occurred before aggregate resync.
+* A remote storage failure occurs when switchover is in progress.
+* The nonvolatile memory (NVRAM or NVMEM, depending on the platform model) in the storage controllers is not mirrored to the remote disaster recovery (DR) partner on the partner site.
+* Metadata is lost if the cluster peering network is down for an extended period and the metadata volumes are not online after a switchover.
+
+NOTE: You might encounter scenarios that are not mentioned. NetApp is not responsible for any damages that may arise out of use of MetroCluster Tiebreaker in active mode. Do not use MetroCluster Tiebreaker in active mode if the risks and limitations are not acceptable to you.

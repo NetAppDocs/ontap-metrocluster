@@ -1,0 +1,26 @@
+---
+permalink: upgrade/task_clear_the_configuration_on_a_controller_module_mcc.html
+sidebar: sidebar
+keywords: 
+summary: 'Before using a new controller module in the MetroCluster configuration, you must clear the configuration.'
+---
+= Clearing the configuration on a controller module
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Before using a new controller module in the MetroCluster configuration, you must clear the configuration.
+
+. If necessary, halt the node to display the LOADER prompt: `halt`
+. At the LOADER prompt, set the environmental variables to default values: `set-defaults`
+. Save the environment: `saveenv``bye`
+. At the LOADER prompt, launch the boot menu: `boot_ontap menu`
+. At the boot menu prompt, clear the configuration: `wipeconfig`
++
+Respond `yes` to the confirmation prompt.
++
+The node reboots and the boot menu is displayed again.
+
+. At the boot menu, select option *5* to boot the system into Maintenance mode.
++
+Respond `yes` to the confirmation prompt.

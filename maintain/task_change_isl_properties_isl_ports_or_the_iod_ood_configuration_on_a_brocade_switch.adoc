@@ -1,0 +1,288 @@
+---
+permalink: maintain/task_change_isl_properties_isl_ports_or_the_iod_ood_configuration_on_a_brocade_switch.html
+sidebar: sidebar
+keywords: 
+summary: 'You might need to add ISLs to a switch if you are adding or upgrading hardware such as additional or faster controllers or switches.'
+---
+= Changing ISL properties, ISL ports, or the IOD/OOD configuration on a Brocade switch
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You might need to add ISLs to a switch if you are adding or upgrading hardware such as additional or faster controllers or switches.
+
+Ensure that the system is properly configured, that all fabric switches are operational, and that no errors exist.
+
+If the equipment on the ISL link changes and the new link configuration no longer supports the current configuration----trunking and ordered delivery----then the fabric needs to be reconfigured for the correct routing policy: either in-order-deliver (IOD) or out-of-order-delivery (OOD).
+
+NOTE: To make changes to OOD from ONTAP software, use the following steps: https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/GUID-3585F8C5-BC36-410F-949F-BE23C7A60213.html[Configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
+
+. Disable the FCVI and storage HBA ports: `portcfgpersistentdisable port number`
++
+By default the first 8 ports (ports 0 through 7) are used for FCVI and Storage HBA. The ports must be persistently disabled so that the ports remain disabled in the event of a switch reboot.
++
+The following example shows ISL ports 0--7 being disabled on both switches:
++
+----
+
+    Switch_A_1:admin> portcfgpersistentdisable 0-7
+    Switch_B_1:admin> portcfgpersistentdisable 0-7
+----
+
+. Change the ISL ports as required.
++
+|===
+| Option| Step
+a|
+To change the speed of an ISL port...
+a|
+Use the `portcfgspeed port numberport speed` command on both switches on the fabric. In the following example, you change the ISL port speed from 40 Gbps to 16 Gbps: `brocade_switch_A_1:admin> portcfgspeed 40 16`    You can verify that the speed has changed using the switchshow command: `brocade_switch_A_1:admin> switchshow`
+
+You should see the following output:
+    `
+    . . .
+    	   40  40   062800   id    16G	   No_Sync     FC  Disabled
+    	. . .
+   `
+
+....
+a|
+To change the distance of an ISL port...
+a|
+Use the `portcfglongdistance port numberport distance` command on both switches in the fabric.
+a|
+To remove an ISL...
+a|
+Disconnect the link \(cable\).
+a|
+To add an ISL...
+a|
+Insert SFPs into the ports you are adding as ISL ports. Ensure that these ports are listed in the *Fabric-attached MetroCluster Installation and Configuration Guide* for the switch you are adding them to and cable them according to this guide.
+a|
+To relocate an ISL...
+a|
+Relocating an ISL is the same as removing and then adding an ISL. First, remove the ISL by disconnecting the link and then insert SFPs into the ports you are adding as ISL ports.
+|=== 3.  Reconfigure for out-of-order delivery \(OOD\) or in-order-delivery \(IOD\).
+
+**Note:** If the routing policies remain the same, you do not need to reconfigure and this step can be ignored. The ONTAP configuration needs to match the fabric configuration. If the fabric is configured for OOD, then ONTAP must also be configured for OOD. The same applies for IOD.
+
+This step should be executed in the following scenarios:
+
+
+-   More than one ISL formed a trunk before the change, but after the change, trunking is no longer supported. In this case, you must configure the fabric for OOD.
+-   There is one ISL before the change and multiple ISLs after the change.
+
+    -   If multiple ISLs form a trunk, configure the fabric for IOD.
+    -   If multiple ISLs **cannot** form a trunk, configure the fabric for OOD.
+
+1.  Persistently disable the switches using the `switchcfgpersistentdisable` command as shown in the following example:
+
+
+    ```
+
+       Switch_A_1:admin> switchcfgpersistentdisable
+       Switch_B_1:admin> switchcfgpersistentdisable
+    ```
+
+2.  Configure the trunking mode for each ISL `portcfgtrunkport`port number as shown in the following table:
+
+    |===
+    | Scenario| Steps
+    a|
+    Configure the ISL for trunking \(IOD\)
+    a|
+    Set the `portcfgtrunkport`port number to 1:
+    ```
+
+
+    FC_switch_A_1:admin> portcfgtrunkport 20 1
+    FC_switch_A_1:admin> portcfgtrunkport 21 1
+    FC_switch_B_1:admin> portcfgtrunkport 20 1
+    FC_switch_B_1:admin> portcfgtrunkport 21 1
+    ```
+
+
+    a|
+    Configure the ISL for trunking \(OOD\)
+    a|
+    Set the `portcfgtrunkport`port number to 0:
+    ```
+
+
+    FC_switch_A_1:admin> portcfgtrunkport 20 0
+    FC_switch_A_1:admin> portcfgtrunkport 21 0
+    FC_switch_B_1:admin> portcfgtrunkport 20 0
+    FC_switch_B_1:admin> portcfgtrunkport 21 0
+    ```
+
+
+    |===
+3.  Configure the fabric for IOD or OOD as required.
+
+    |===
+    | Scenario| Steps
+    a|
+    Configure the fabric for IOD
+    a|
+    Set the three settings of IOD, APT, and DLS using the `iodset`, `aptpolicypolicy`, and `dlsreset` commands as shown in the following example:
+    ```
+
+      Switch_A_1:admin> iodset
+      Switch_A_1:admin> aptpolicy 1
+      Policy updated successfully.
+      Switch_A_1:admin> dlsreset
+      FC_switch_A_1:admin>portcfgtrunkport 40 1
+      FC_switch_A_1:admin>portcfgtrunkport 41 1
+
+      Switch_B_1:admin> iodset
+      Switch_B_1:admin> aptpolicy 1
+      Policy updated successfully.
+      Switch_B_1:admin> dlsreset
+      FC_switch_B_1:admin>portcfgtrunkport 20 1
+      FC_switch_B_1:admin>portcfgtrunkport 21 1
+
+    ```
+
+
+    a|
+    Configure the fabric for OOD
+    a|
+    Set the three settings of IOD, APT, and DLS using the `iodreset`, `aptpolicypolicy`, and `dlsset` commands as shown in the following example:
+    ```
+
+      Switch_A_1:admin> iodreset
+      Switch_A_1:admin> aptpolicy 3
+      Policy updated successfully.
+      Switch_A_1:admin> dlsset
+      FC_switch_A_1:admin> portcfgtrunkport 40 0
+      FC_switch_A_1:admin> portcfgtrunkport 41 0
+
+
+      Switch_B_1:admin> iodreset
+      Switch_B_1:admin> aptpolicy 3
+      Policy updated successfully.
+      Switch_B_1:admin> dlsset
+      FC_switch_B_1:admin> portcfgtrunkport 40 0
+      FC_switch_B_1:admin> portcfgtrunkport 41 0
+
+    ```
+
+
+    |===
+4.  Enable the switches persistently using the `switchcfgpersistentenable` command.
+
+
+    ```
+
+      switch_A_1:admin>switchcfgpersistentenable
+      switch_B_1:admin>switchcfgpersistentenable
+
+    ```
+
+    If this command does not exist, use the `switchenable` command as shown in the following example:
+
+
+    ```
+
+      brocade_switch_A_1:admin>
+      switchenable
+    ```
+
+5.  Verify the OOD settings using the `iodshow`, `aptpolicy`, and `dlsshow` commands as shown in the following example:
+
+
+    ```
+
+      switch_A_1:admin> iodshow
+      IOD is not set
+
+      switch_A_1:admin> aptpolicy
+
+                Current Policy: 3 0(ap)
+
+                3 0(ap) : Default Policy
+                1: Port Based Routing Policy
+                3: Exchange Based Routing Policy
+                     0: AP Shared Link Policy
+                     1: AP Dedicated Link Policy
+                command aptpolicy completed
+
+      switch_A_1:admin> dlsshow
+      DLS is set by default with current routing policy
+    ```
+
+    **Note:** You must run these commands on both switches.
+
+6.  Verify the IOD settings using the `iodshow`, `aptpolicy`, and `dlsshow` commands as shown in the following example:
+
+
+    ```
+
+      switch_A_1:admin> iodshow
+      IOD is set
+
+      switch_A_1:admin> aptpolicy
+                    Current Policy: 1 0(ap)
+
+                    3 0(ap) : Default Policy
+                    1: Port Based Routing Policy
+                    3: Exchange Based Routing Policy
+                         0: AP Shared Link Policy
+                         1: AP Dedicated Link Policy
+                    command aptpolicy completed
+
+      switch_A_1:admin> dlsshow
+      DLS is not set
+
+    ```
+
+    **Note:** You must run these commands on both switches.
+....
+
+. Verify that the ISLs are online and trunked (if the linking equipment supports trunking) using the `islshow` and `trunkshow` commands.
++
+NOTE: If FEC is enabled, the deskew value of the last online port of the trunk group might show a difference of up to 36 although the cables are all of the same length.
++
+|===
+| Are ISLs trunked?| You see the following system output...
+a|
+Yes
+a|
+If the ISLs are trunked, only a single ISL appears in the output for the `islshow` command. Either port 40 or 41 can appear depending on which is the trunk master. The output of `trunkshow` should one trunk with ID '1' listing both the physical ISLs on ports 40 and 41. In the following example the ports 40 and 41 are configured for use as an ISL:
++
+----
+switch_A_1:admin> islshow 1:
+40-> 40 10:00:00:05:33:88:9c:68 2 switch_B_1 sp: 16.000G bw: 32.000G TRUNK CR_RECOV FEC
+switch_A_1:admin> trunkshow
+1: 40-> 40 10:00:00:05:33:88:9c:68 2 deskew 51 MASTER
+41-> 41 10:00:00:05:33:88:9c:68 2 deskew 15
+----
+a|
+No
+a|
+If the ISLs are not trunked, both ISLs appear separately in the outputs for `islshow` and `trunkshow`. Both commands list the ISLs with their ID of '1' and '2'. In the following example, the ports 40 and 41 are configured for use as an ISL:
++
+----
+switch_A_1:admin> islshow
+1: 40-> 40 10:00:00:05:33:88:9c:68 2 switch_B_1 sp: 16.000G bw: 16.000G TRUNK CR_RECOV FEC
+2: 41-> 41 10:00:00:05:33:88:9c:68 2 switch_B_1 sp: 16.000G bw: 16.000G TRUNK CR_RECOV FEC
+switch_A_1:admin> trunkshow
+1: 40-> 40 10:00:00:05:33:88:9c:68 2 deskew 51 MASTER
+2: 41-> 41 10:00:00:05:33:88:9c:68 2 deskew 48 MASTER
+----
++
+|===
+
+. Run the `spinfab` command on both switches to verify that the ISLs are healthy:
++
+----
+switch_A_1:admin> spinfab -ports 0/40 - 0/41
+----
+
+. Enable the ports that were disabled in step 1: `portenable port number`
++
+The following example shows ISL ports 0--7 being enabled:
++
+----
+brocade_switch_A_1:admin> portenable 0-7
+----

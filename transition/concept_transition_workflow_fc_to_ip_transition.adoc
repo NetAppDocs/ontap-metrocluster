@@ -1,0 +1,28 @@
+---
+permalink: transition/concept_transition_workflow_fc_to_ip_transition.html
+sidebar: sidebar
+keywords: 
+summary: 'You must follow the specific workflow to ensure a successful nondisruptive transition.'
+---
+= Workflow for nondisruptive MetroCluster transition
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must follow the specific workflow to ensure a successful nondisruptive transition.
+
+The transition process begins with a healthy four-node MetroCluster FC configuration.
+
+image::../media/transition_dr_group_1_fc_nodes.png[]
+
+The new MetroCluster IP nodes are added as a second DR group.
+
+image::../media/transition_dr_groups_fc_and_ip.png[]
+
+Data is transferred from the old DR group to the new DR group, and then the old nodes and their storage are removed from the configuration and decommissioned. The process ends with a four-node MetroCluster IP configuration.
+
+image::../media/transition_dr_group_2_ip.png[]
+
+You will use the following workflow to transition the MetroCluster configuration.
+
+image::../media/workflow_4n_transition_nondisruptive.png[]
