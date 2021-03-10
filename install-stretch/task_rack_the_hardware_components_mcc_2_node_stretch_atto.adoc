@@ -1,0 +1,40 @@
+---
+permalink: install-stretch/task_rack_the_hardware_components_mcc_2_node_stretch_atto.html
+sidebar: sidebar
+keywords: 
+summary: 'If you have not received the equipment already installed in cabinets, you must rack the components.'
+---
+= Racking the hardware components
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If you have not received the equipment already installed in cabinets, you must rack the components.
+
+This task must be performed on both MetroCluster sites.
+
+. Plan out the positioning of the MetroCluster components.
++
+The rack space depends on the platform model of the storage controllers, the switch types, and the number of disk shelf stacks in your configuration.
+
+. Properly ground yourself.
+. Install the storage controllers in the rack or cabinet.
++
+https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+
+. Install the disk shelves, power them on, and set the shelf IDs.
+ ** You must power-cycle each disk shelf.
+ ** Shelf IDs must be unique for each SAS disk shelf within each MetroCluster DR group (including both sites).
+. Install each FC-to-SAS bridge:
+ .. Secure the "`L`" brackets on the front of the bridge to the front of the rack (flush-mount) with the four screws.
++
+The openings in the bridge "`L`" brackets are compliant with rack standard ETA-310-X for 19-inch (482.6 mm) racks.
++
+For more information and an illustration of the installation, see the _ATTO FibreBridge Installation and Operation Manual for your bridge model_.
+
+ .. Connect each bridge to a power source that provides a proper ground.
+ .. Power on each bridge.
++
+NOTE: For maximum resiliency, bridges that are attached to the same stack of disk shelves must be connected to different power sources.
++
+The bridge Ready LED might take up to 30 seconds to illuminate, indicating that the bridge has completed its power-on self test sequence.

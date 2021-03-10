@@ -1,0 +1,43 @@
+---
+permalink: install-fc/reference_requirements_for_switch_zoning_in_a_mcc_configuration_with_array_luns.html
+sidebar: sidebar
+keywords: 
+summary: 'When using switch zoning in a MetroCluster configuration with array LUNs, you must ensure that certain basic requirements are followed.'
+---
+= Requirements for switch zoning in a MetroCluster configuration with array LUNs
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+When using switch zoning in a MetroCluster configuration with array LUNs, you must ensure that certain basic requirements are followed.
+
+The requirements for switch zoning in a MetroCluster configuration with array LUNs are as follows:
+
+* The MetroCluster configuration must follow the single-initiator to single-target zoning scheme.
++
+Single-initiator to single-target zoning limits each zone to a single FC initiator port and a single target port.
+
+* The FC-VI ports must be zoned end-to-end across the fabric.
+* Sharing of multiple initiator ports with a single target port can cause performance issues.
++
+Similarly, sharing of multiple target ports with a single initiator port can cause performance issues.
+
+* You must have performed a basic configuration of the FC switches used in the MetroCluster configuration.
++
+xref:task_fcsw_configure_the_cisco_or_brocade_fc_switches_manually.adoc[Configuring the Cisco or Brocade FC switches manually]
+
+== Shared initiator and shared target support for MetroCluster configuration with array LUNs
+
+Being able to share a given FC initiator port or target ports is useful for organizations that want to minimize the number of initiator or target ports used. For example, an organization that expects low I/O usage over an FC initiator port or target ports might prefer to share FC initiator port or target ports instead of dedicating each FC initiator port to a single target port.
+
+However sharing of initiator or target ports can adversely affect performance.
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/How_to_support_Shared_Initiator_and_Shared_Target_configuration_with_Array_LUNs_in_a_MetroCluster_environment[How to support Shared Initiator and Shared Target configuration with Array LUNs in a MetroCluster environment]
+
+*Related information*
+
+xref:concept_example_of_switch_zoning_in_a_two_node_mcc_configuration_with_array_luns.adoc[Example of switch zoning in a two-node MetroCluster configuration with array LUNs]
+
+xref:concept_example_of_switch_zoning_in_a_four_node_mcc_configuration_with_array_luns.adoc[Example of switch zoning in a four-node MetroCluster configuration with array LUNs]
+
+xref:concept_example_of_switch_zoning_in_an_eight_node_mcc_configuration_with_array_luns.adoc[Example of switch zoning in an eight-node MetroCluster configuration with array LUNs]

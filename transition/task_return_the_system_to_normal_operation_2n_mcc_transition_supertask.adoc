@@ -1,0 +1,69 @@
+---
+permalink: transition/task_return_the_system_to_normal_operation_2n_mcc_transition_supertask.html
+sidebar: sidebar
+keywords: 
+summary: ''
+---
+= Returning the system to normal operation
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must perform final configuration steps and return the MetroCluster configuration to normal operation.
+
+== Verifying MetroCluster operation and assigning drives after transition
+
+[.lead]
+You must verify that the MetroCluster is operating correctly and assign drives to the second pair of new nodes (node_A_2-IP and node_B_2-IP).
+
+. Confirm that the MetroCluster configuration-type is IP-fabric: `metrocluster show`
+. Perform a MetroCluster check.
+ .. Issue the following command: `metrocluster check run`
+ .. Display the results of the MetroCluster check: `metrocluster check show`
+. Confirm that the DR group with the MetroCluster IP nodes is configured: `metrocluster node show`
+. Create and mirror additional data aggregates for controllers node_A_2-IP and node_B_2-IP at each site as needed.
+
+== Installing licenses for the new controller module
+
+[.lead]
+You must add licenses for the new controller module for any ONTAP services that require standard (node-locked) licenses. For features with standard licenses, each node in the cluster must have its own key for the feature.
+
+For detailed information about licensing, see the knowledgebase article 3013749: Data ONTAP 8.2 Licensing Overview and References on the NetApp Support Site and the _System Administration Reference_.
+
+. If necessary, obtain license keys for the new node on the NetApp Support Site in the My Support section under Software licenses.
++
+If the site does not have the license keys you need, contact your sales or support representative.
+
+. Issue the following command to install each license key: `system license add -license-code license_key`
++
+The license_key is 28 digits in length.
++
+Repeat this step for each required standard (node-locked) license.
+
+== Completing configuration of the nodes
+
+[.lead]
+There are miscellaneous configuration steps that can be performed prior to completing the procedures. Some of these steps are optional.
+
+. Configure the service processor: `system service-processor network modify`
+. Set up autosupport on the new nodes: `system node autosupport modify`
+. The controllers can be optionally renamed as part of the transition. The following command is used to rename a controller: `system node rename -node <old-name> -newname <new-name>`
++
+The renaming operation can take a few minutes to complete. Confirm that any name changes have propagated to each node prior to continuing with other steps using the system show -fields node command.
+
+. Configure a monitoring service as desired.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-33D59B4E-6134-4CD4-9844-440E5114D1ED.html[Considerations for using ONTAP Mediator or MetroCluster Tiebreaker]
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-2A6C990C-E7D5-4184-844D-19142C89E67F.html[Configuring the ONTAP Mediator service for unplanned automatic switchover]
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/home.html[Tiebreaker Software Installation and Configuration Guide]
+
+== Sending a custom AutoSupport message after maintenance
+
+[.lead]
+After completing the transition, you should send an AutoSupport message indicating the end of maintenance, so automatic case creation can resume.
+
+. To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
+ .. Issue the following command: `system node autosupport invoke -node * -type all -message MAINT=end`
+ .. Repeat the command on the partner cluster.

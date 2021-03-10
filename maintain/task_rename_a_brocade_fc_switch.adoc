@@ -1,0 +1,129 @@
+---
+permalink: maintain/task_rename_a_brocade_fc_switch.html
+sidebar: sidebar
+keywords: 
+summary: 'You might need to rename a Brocade FC switch to ensure consistent naming throughout your configuration.'
+---
+= Renaming a Brocade FC switch
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You might need to rename a Brocade FC switch to ensure consistent naming throughout your configuration.
+
+. Persistently disable the switch or switches in one fabric: `switchcfgpersistentdisable`
++
+The following example shows the output for the `switchcfgpersistentdisable` command:
++
+----
+7840_FCIP_2:admin> switchcfgpersistentdisable
+Switch's persistent state set to 'disabled'
+2018/03/09-07:41:06, [ESM-2105], 146080, FID 128, INFO, 7840_FCIP_2, VE Tunnel 24 is DEGRADED.
+2018/03/09-07:41:06, [ESM-2104], 146081, FID 128, INFO, 7840_FCIP_2, VE Tunnel 24 is OFFLINE.
+
+7840_FCIP_2:admin>
+----
+
+. Rename the switch or switches: `switchname new-switch-name`
++
+If you are renaming both switches in the fabric, use the same command on each switch.
++
+The following example shows the output for the `switchname new-switch-name` command:
++
+----
+7840_FCIP_2:admin> switchname FC_switch_1_B
+Committing configuration...
+Done.
+Switch name has been changed.Please re-login into the switch for the change to be applied.
+2018/03/09-07:41:20, [IPAD-1002], 146082, FID 128, INFO, FC_switch_1_B, Switch name has been successfully changed to FC_switch_1_B.
+7840_FCIP_2:admin>
+----
+
+. Reboot the switch or switches: `reboot`
++
+If you are renaming both switches in the fabric, reboot both switches. Once the reboot is complete, the switch is renamed in all places.
++
+The following example shows the output for the `reboot` command:
++
+----
+7840_FCIP_2:admin> reboot
+Warning: This command would cause the switch to reboot
+and result in traffic disruption.
+Are you sure you want to reboot the switch [y/n]?y
+2018/03/09-07:42:08, [RAS-1007], 146083, CHASSIS, INFO, Brocade7840, System is about to reload.
+Rebooting! Fri Mar  9 07:42:11 CET 2018
+
+Broadcast message from root (ttyS0) Fri Mar  9 07:42:11 2018...
+
+The system is going down for reboot NOW !!
+INIT: Switching to runlevel: 6
+INIT:
+2018/03/09-07:50:48, [ESM-1013], 146104, FID 128, INFO, FC_switch_1_B, DP0 Configuration replay has completed.
+2018/03/09-07:50:48, [ESM-1011], 146105, FID 128, INFO, FC_switch_1_B, DP0 is ONLINE.
+
+*** CORE FILES WARNING (03/09/18 - 08:00:00 ) ***
+10248 KBytes in 1 file(s)
+use "supportsave" command to upload
+
+
+*** FFDC FILES WARNING (03/09/18 - 08:00:00 ) ***
+520 KBytes in 1 file(s)
+----
+
+. Persistently enable the switches: `switchcfgpersistentenable`
++
+The following example shows the output for the `switchcfgpersistentenable` command:
++
+----
+FC_switch_1_B:admin> switchcfgpersistentenable
+Switch's persistent state set to 'enabled'
+FC_switch_1_B:admin>
+FC_switch_1_B:admin>
+FC_switch_1_B:admin> 2018/03/09-08:07:07, [ESM-2105], 146106, FID 128, INFO, FC_switch_1_B, VE Tunnel 24 is DEGRADED.
+2018/03/09-08:07:10, [ESM-2106], 146107, FID 128, INFO, FC_switch_1_B, VE Tunnel 24 is ONLINE.
+
+FC_switch_1_B:admin>
+
+
+FC_switch_1_B:admin> switchshow
+switchName:     FC_switch_1_B
+switchType:     148.0
+switchState:    Online
+switchMode:     Native
+switchRole:     Subordinate
+switchDomain:   6
+switchId:       fffc06
+switchWwn:      10:00:50:eb:1a:9a:a5:79
+zoning:         ON (CFG_FAB_2_RCF_9_3)
+switchBeacon:   OFF
+FC Router:      OFF
+FC Router BB Fabric ID: 128
+Address Mode:   0
+HIF Mode:       OFF
+
+Index Port Address  Media Speed   State       Proto
+==================================================
+   0   0   060000   id    16G     Online      FC  F-Port  50:0a:09:81:06:a5:5a:08
+   1   1   060100   id    16G     Online      FC  F-Port  50:0a:09:83:06:a5:5a:08
+----
+
+. Verify that the switch name change is visible from the ONTAP cluster prompt: `storage switch show`
++
+The following example shows the output for the `storage switch show` command:
++
+----
+cluster_A::*> storage switch show
+  (storage switch show)
+                      Symbolic                                Is        Monitor
+Switch                Name     Vendor  Model Switch WWN       Monitored Status
+--------------------- -------- ------- ----- ---------------- --------- -------
+Brocade_172.20.7.90
+                      RTP-FC01-510Q40
+                               Brocade Brocade7840
+                                             1000c4f57c904bc8 true      ok
+Brocade_172.20.7.91
+                      RTP-FC02-510Q40
+                               Brocade Brocade7840
+                                             100050eb1a9aa579 true      ok
+Brocade_172.20.7.92
+----

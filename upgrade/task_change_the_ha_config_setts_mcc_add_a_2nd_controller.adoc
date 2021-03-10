@@ -1,0 +1,36 @@
+---
+permalink: upgrade/task_change_the_ha_config_setts_mcc_add_a_2nd_controller.html
+sidebar: sidebar
+keywords: ONTAP 9.2,MetroCluster configurations
+summary: 'When you expand a MetroCluster configuration, you must update the ha-config setting of the existing controller module and the new controller module. You must also determine the system ID of the new controller module.'
+---
+= Changing the ha-config setting on the existing and new controller modules
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+When you expand a MetroCluster configuration, you must update the ha-config setting of the existing controller module and the new controller module. You must also determine the system ID of the new controller module.
+
+This task is performed in Maintenance mode on both the existing and new controller modules.
+
+. Change the ha-config setting of the existing controller module:
+ .. Display the ha-config setting of the existing controller module and chassis: `ha-config show`
++
+The ha-config setting is mcc-2n for all components because the controller module was in a two-node MetroCluster configuration.
+
+ .. Change the ha-config setting of the existing controller module to mcc: `ha-config modify controller mcc`
+ .. Change the ha-config setting of the existing chassis to mcc: `ha-config modify chassis mcc`
+ .. Retrieve the system ID for the existing controller module: `sysconfig`
++
+Note the system ID. You need it when you set the partner ID on the new controller module.
+
+ .. Exit Maintenance mode to return to the LOADER prompt: `halt`
+. Change the ha-config setting and retrieve the system ID of the new controller module:
+ .. If the new controller module is not already in Maintenance mode, boot it to Maintenance mode: `boot_ontap maint`
+ .. Change the ha-config setting of the new controller module to mcc: `ha-config modify controller mcc`
+ .. Change the ha-config setting of the new chassis to mcc: `ha-config modify chassis mcc`
+ .. Retrieve the system ID for the new controller module: `sysconfig`
++
+Note the system ID. You need it when you set the partner ID and assign disks to the new controller module.
+
+ .. Exit Maintenance mode to return to the LOADER prompt: `halt`
