@@ -615,12 +615,15 @@ This task is performed on each of the new controller modules.
 . Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the ontap-version_image.tgz file on a web-accessible directory.
 . Change to the web-accessible directory and verify that the files you need are available.
 +
+[cols="1,2a" options="header"]
 |===
-| If the platform model is...| Then...
-a|
-FAS/AFF8000 series systems
-a|
-        Extract the contents of the ontap-version_image.tgzfile to the target directory: tar -zxvf ontap-version_image.tgz
+// header row
+| If the platform model is...
+| Then...
+
+// row 1
+| FAS/AFF8000 series systems
+| Extract the contents of the ontap-version_image.tgzfile to the target directory: tar -zxvf ontap-version_image.tgz
 +
 NOTE: If you are extracting the contents on Windows, use 7-Zip or WinRAR to extract the netboot image.Your directory listing should contain a netboot folder with a kernel file:netboot/kernel
 
@@ -629,35 +632,16 @@ Your directory listing should contain a netboot folder with a kernel file:
 +
 netboot/kernel
 
-a|
-All other systems
-a|
-        Your directory listing should contain a netboot folder with a kernel file:
-+
-                      ontap-version_image.tgz
+| All other systems
+| Your directory listing should contain a netboot folder with a kernel file: ontap-version_image.tgz
 +
 You do not need to extract the ontap-version_image.tgz file.
 +
 |===
 
 . At the LOADER prompt, configure the netboot connection for a management LIF:
-
-+
-|===
-| If IP addressing is...| Then...
-a|
-DHCP
-a|
-        Configure the automatic connection:
-
-`ifconfig e0M -auto`
-        a|
-        Static
-        a|
-                Configure the manual connection:
-
-`ifconfig e0M -addr=ip_addr -mask=netmask` `-gw=gateway`
-        |===
+** If IP addressing is DHCP, configure the automatic connection: `ifconfig e0M -auto`
+** If IP addressing is static, configure the manual connection: `ifconfig e0M -addr=ip_addr -mask=netmask` `-gw=gateway`
 
 . Perform the netboot.
 
