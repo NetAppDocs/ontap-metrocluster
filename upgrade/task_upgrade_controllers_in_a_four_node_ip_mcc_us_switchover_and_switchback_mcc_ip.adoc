@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html
 sidebar: sidebar
-keywords: 
+keywords:
 summary: ''
 ---
 = Upgrading controllers in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.8 and later)
@@ -156,7 +156,7 @@ When the new node is first booted during the upgrade process, it will replay the
 The following table shows examples of configuration changes related to the port requirements of the new nodes.
 
 |===
-| Cluster interconnect physical ports|  
+| Cluster interconnect physical ports|
 | Old controller| New controller| Required action
 a|
 e0a, e0b
@@ -194,171 +194,171 @@ You will refer to the table as you carry out the upgrade procedure.
 a|
 Cluster 1
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Cluster 2
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Cluster 3
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Cluster 4
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Node management
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Cluster management
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Data 1
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Data 2
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Data 3
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Data 4
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 SAN
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 Intercluster port
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 |===
 
 === Netbooting the new controllers
@@ -390,10 +390,7 @@ All other systems
 a|
         Your directory listing should contain a netboot folder with a kernel file:
 +
-----
-
-                      ontap-version_image.tgz
-----
+ontap-version_image.tgz
 +
 You do not need to extract the ontap-version_image.tgz file.
 +
@@ -455,22 +452,9 @@ a|
 
 === Clearing the configuration on a controller module
 
-[.lead]
-Before using a new controller module in the MetroCluster configuration, you must clear the configuration.
-
-. If necessary, halt the node to display the LOADER prompt: `halt`
-. At the LOADER prompt, set the environmental variables to default values: `set-defaults`
-. Save the environment: `saveenv``bye`
-. At the LOADER prompt, launch the boot menu: `boot_ontap menu`
-. At the boot menu prompt, clear the configuration: `wipeconfig`
-+
-Respond `yes` to the confirmation prompt.
-+
-The node reboots and the boot menu is displayed again.
-
-. At the boot menu, select option *5* to boot the system into Maintenance mode.
-+
-Respond `yes` to the confirmation prompt.
+// include reference
+include::_include/steps_clear_config_boot_to_maint_mode.adoc[]
+// end include reference
 
 === Verifying MetroCluster health before site upgrade
 

@@ -1,7 +1,7 @@
 ---
 permalink: transition/task_configure_the_new_nodes_and_complete_transition.html
 sidebar: sidebar
-keywords: 
+keywords:
 summary: ''
 ---
 = Configuring the new nodes and completing transition
@@ -17,7 +17,14 @@ With the new nodes added, you must complete the transition steps and configure t
 You must implement the MetroCluster IP connections, refresh the MetroCluster configuration, and disable transition mode.
 
 . Form the new nodes into a DR group by issuing the following commands from controller node_A_1-IP `metrocluster configuration-settings dr-group create -partner-cluster peer-cluster-name -local-node local-controller-name -remote-node remote-controller-name``metrocluster configuration-settings dr-group show`
-. Create MetroCluster IP interfaces (node_A_1-IP, node_A_2-IP, node_B_1-IP, node_B_2-IP) -- two interfaces need to be created per controller; eight interfaces in total, using the following command: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node controller-name -home-port port -address ip-address -netmask netmask``metrocluster configuration-settings interface show`
+. Create MetroCluster IP interfaces (node_A_1-IP, node_A_2-IP, node_B_1-IP, node_B_2-IP) -- two interfaces need to be created per controller; eight interfaces in total, using the following command: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node controller-name -home-port port -address ip-address -netmask netmask -vlan-id vlan-id``metrocluster configuration-settings interface show`
++
+The -vlan-id paramter is required only if you are not using the default VLAN IDs. Only certain systems support non-default VLAnN IDs.
++
+// include reference
+include::_include/models_supporting_vlan-id.adoc[]
+// end include reference
+
 . Perform the MetroCluster connect operation from controller node_A_1-IP to connect the MetroCluster sites -- this operation can take a few minutes to complete. `metrocluster configuration-settings connection connect`
 . Verify that the remote cluster disks are visible from each controller via the iSCSI connections: `disk show`
 +

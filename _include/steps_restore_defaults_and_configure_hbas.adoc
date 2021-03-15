@@ -1,0 +1,79 @@
+// used in
+//concept_configuring_the_mcc_software_in_ontap
+//concept_configure_the_mcc_software_in_ontap
+[.lead]
+To ensure a successful MetroCluster installation, reset and restore defaults on the controller modules. This task is only required for stretch configurations using FC-to-SAS bridges.
+
+. At the LOADER prompt, return the environmental variables to their default setting: `set-defaults`
+. Boot the node into Maintenance mode, and then configure the settings for any HBAs in the system:
+ .. Boot into Maintenance mode: `boot_ontap maint`
+ .. Check the current settings of the ports: `ucadmin show`
+ .. Update the port settings as needed.
+
++
+|===
+| If you have this type of HBA and desired mode...| Use this command...
+a|
+CNA FC
+a|
+ucadmin modify -m fc -t initiator adapter_name
+a|
+CNA Ethernet
+a|
+ucadmin modify -mode cna adapter_name
+a|
+FC target
+a|
+fcadmin config -t target adapter_name
+a|
+FC initiator
+a|
+fcadmin config -t initiator adapter_name
+|===
+. Exit Maintenance mode: `halt`
++
+After you run the command, wait until the node stops at the LOADER prompt.
+
+. Boot the node back into Maintenance mode to enable the configuration changes to take effect: `boot_ontap maint`
+. Verify the changes you made:
++
+|===
+| If you have this type of HBA...| Use this command...
+a|
+CNA
+a|
+ucadmin show
+a|
+FC
+a|
+fcadmin show
+|===
+
+. Exit Maintenance mode: `halt`
++
+After you run the command, wait until the node stops at the LOADER prompt.
+
+. Boot the node to the boot menu: `boot_ontap menu`
++
+After you run the command, wait until the boot menu is shown.
+
+. Clear the node configuration by typing wipeconfig at the boot menu prompt, and then press Enter.
++
+The following screen shows the boot menu prompt:
++
+ Please choose one of the following:
+
+     (1) Normal Boot.
+     (2) Boot without /etc/rc.
+     (3) Change password.
+     (4) Clean configuration and initialize all disks.
+     (5) Maintenance mode boot.
+     (6) Update flash from backup config.
+     (7) Install new software first.
+     (8) Reboot node.
+     (9) Configure Advanced Drive Partitioning.
+     Selection (1-9)?  wipeconfig
+ This option deletes critical system configuration, including cluster membership.
+ Warning: do not run this option on a HA node that has been taken over.
+ Are you sure you want to continue?: yes
+ Rebooting to finish wipeconfig request.
