@@ -1,7 +1,7 @@
 ---
 permalink: transition/task_transition_the_mcc_fc_nodes_2n_mcc_transition_supertask.html
 sidebar: sidebar
-keywords: 
+keywords:
 summary: ''
 ---
 = Transitioning the MetroCluster FC nodes
@@ -21,109 +21,14 @@ This task is performed on the existing nodes:
 * node_A_1-FC
 * node_B_1-FC
 
-. Gather the output from the following commands.
-+
+. Gather the output for the commands in the following table.
+
+// include reference
+[%header,format=csv]
 |===
-| Category| Commands
-a|
-License
-a|
-system license show
-a|
-Shelves, numbers of disks in each shelf, flash storage details, memory, NVRAM, and network cards
-a|
-system node run -node node_name sysconfig
-a|
-Cluster network and node management LIFs
-a|
-system node run -node node_name sysconfig network interface show -role cluster,node-mgmt,data
-a|
-SVM information
-a|
-vserver show
-a|
-Protocol information
-a|
-    nfs show
-+
-iscsi show
-+
-cifs show
-a|
-Physical ports
-a|
-    network port show -node node_name -type physical
-+
-network port show
-a|
-Failover Groups
-a|
-    network interface failover-groups show -vserver vserver_name
-+
-Record the names and ports of failover groups that are not clusterwide.
-a|
-VLAN configuration
-a|
-network port vlan show -node node_name     Record each network port and VLAN ID pairing.
-a|
-Interface group configuration
-a|
-network port ifgrp show -node node_name -instance     Record the names of the interface groups and the ports assigned to them.
-a|
-Broadcast domains
-a|
-network port broadcast-domain show
-a|
-IPspace
-a|
-network ipspace show
-a|
-Volume info
-a|
-    volume show
-+
-volume show -fields encrypt
-a|
-Aggregate Info
-a|
-    storage aggregate show
-+
-storage aggr encryption show
-+
-storage aggregate object-store show
-a|
-Disk ownership information
-a|
-    storage aggregate show
-+
-storage aggr encryption show
-
-storage aggregate object-store show
-    a|
-    Encryption
-    a|
-        storage failover mailbox-disk show
-
-....
- security key-manager backup show
-
- Also preserve the passphrase used to enable key-manager. In the case of external key-manager you will need the authentication information for the client and server.
-
- security key-manager show
-
- security key-manager external show
-
- systemshell local kenv kmip.init.ipaddr ip-address
-
- systemshell local kenv kmip.init.netmask netmask
-
- systemshell local kenv kmip.init.gateway gateway
-
- systemshell local kenv kmip.init.interface interface
-
-
+include::_include/transition-disruptive-gather-info.csv[]
+// end include reference
 |===
-....
 
 == Sending a custom AutoSupport message prior to maintenance
 
