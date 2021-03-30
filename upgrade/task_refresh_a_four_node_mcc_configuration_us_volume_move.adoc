@@ -32,6 +32,7 @@ If the maintenance is completed before the time has elapsed, you can invoke an A
  .. Repeat the command on the partner cluster.
 . Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
 +
+[cols=2*,options="header"]
 |===
 | If you are using...| Use this procedure...
 a|
@@ -85,6 +86,7 @@ image::../media/mcc_dr_group_d.png[]
  .. Display the results of the MetroCluster check: `metrocluster check show`
 . Restore monitoring if necessary, using the procedure for your configuration.
 +
+[cols=2*,options="header"]
 |===
 | If you are using...| Use this procedure
 a|
@@ -130,6 +132,7 @@ https://hwu.netapp.com[NetApp Hardware Universe]
 [.lead]
 This procedure uses example names throughout to identify the DR groups, nodes, and switches involved.
 
+[cols=3*,options="header"]
 |===
 | DR groups| cluster_A at site_A| cluster_B at site_B
 a|
@@ -283,6 +286,7 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker soft
 
 . Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
 +
+[cols=2*,options="header"]
 |===
 | If you are using...| Use this procedure...
 a|
@@ -482,34 +486,32 @@ cluster_A::>
 
 . Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes: `metrocluster configuration-settings interface create -cluster-name`
 +
-// include reference
-include::_include/models_supporting_vlan-id.adoc[]
-// end include reference
+include::../_include/models_supporting_vlan-id.adoc[]
 +
-NOTE: You can configure the MetroCluster IP interfaces from either cluster.
+*NOTE:* You can configure the MetroCluster IP interfaces from either cluster.
 +
 ----
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_1-new -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
 [Job 260] Job succeeded: Interface Create is successful.
-
++
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_1-new -home-port e1b -address 172.17.27.10 -netmask 255.255.255.0
 [Job 261] Job succeeded: Interface Create is successful.
-
++
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_2-new -home-port e1a -address 172.17.26.11 -netmask 255.255.255.0
 [Job 262] Job succeeded: Interface Create is successful.
-
++
 cluster_A::> :metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_2-new -home-port e1b -address 172.17.27.11 -netmask 255.255.255.0
 [Job 263] Job succeeded: Interface Create is successful.
-
++
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_1-new -home-port e1a -address 172.17.26.12 -netmask 255.255.255.0
 [Job 264] Job succeeded: Interface Create is successful.
-
++
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_1-new -home-port e1b -address 172.17.27.12 -netmask 255.255.255.0
 [Job 265] Job succeeded: Interface Create is successful.
-
++
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_2-new -home-port e1a -address 172.17.26.13 -netmask 255.255.255.0
 [Job 266] Job succeeded: Interface Create is successful.
-
++
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_2-new -home-port e1b -address 172.17.27.13 -netmask 255.255.255.0
 [Job 267] Job succeeded: Interface Create is successful.
 ----
@@ -573,7 +575,7 @@ cluster_A>
 
 . Connect the MetroCluster IP interfaces: `metrocluster configuration-settings connection connect`
 +
-NOTE: This command might take several minutes to complete.
+*NOTE:* This command might take several minutes to complete.
 +
 ----
 cluster_A::> metrocluster configuration-settings connection connect
@@ -742,7 +744,7 @@ cluster_A::>
 
 . Mirror the root aggregates: `storage aggregate mirror -aggregate aggr0_node_A_1-new`
 +
-NOTE: You must complete this step on each MetroCluster IP node.
+*NOTE:* You must complete this step on each MetroCluster IP node.
 +
 ----
 cluster_A::> aggr mirror -aggregate aggr0_node_A_1-new
@@ -806,7 +808,7 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 
 . Create mirrored data aggregates on each of the new MetroCluster nodes: `storage aggregate create -aggregate aggregate-name -node node-name -diskcount no-of-disks -mirror true`
 +
-NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
+*NOTE:* You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
 +
 The following example shows the creation of an aggregate on node_A_1-new.
 +
@@ -888,7 +890,7 @@ cluster_A::*>
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
  .. Display the volumes to identify the MDV volumes:
 +
-NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
+*NOTE:* If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
 The following example shows the MDV volumes in the volume show output:
 +
