@@ -1,7 +1,7 @@
 ---
 permalink: install-fc/task_fcsw_cisco_configure_a_cisco_switch_supertask.html
 sidebar: sidebar
-keywords: 
+keywords:
 summary: ''
 ---
 = Configuring the Cisco FC switches
@@ -239,8 +239,8 @@ You must configure the F-ports on the FC switch. In a MetroCluster configuration
 
 Refer to the following sections to identify the F-ports (switch-to-node) for your configuration:
 
-* link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.md#[Port assignments for FC switches when using ONTAP 9.1 and later]
-* link:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.md#[Port assignments for FC switches when using ONTAP 9.0]
+* xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
+* xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.adoc[Port assignments for FC switches when using ONTAP 9.0]
 
 This task must be performed on each switch in the MetroCluster configuration.
 
@@ -430,7 +430,7 @@ FC_switch_B_1# show vsan member
 +
 NOTE: The standard IOD settings are recommended. You should configure OOD only if necessary.
 +
-link:concept_prepare_for_the_mcc_installation.md#[Considerations for using TDM/WDM equipment with fabric-attached MetroCluster configurations]
+xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for using TDM/WDM equipment with fabric-attached MetroCluster configurations]
 
  ** The following steps must be performed to configure in-order delivery of frames:
   ... Enter configuration mode: `conf t`
@@ -495,7 +495,7 @@ FC_switch_B_1# copy running-config startup-config
 +
 NOTE: When configuring ONTAP on the controller modules, OOD must be explicitly configured on each controller module in the MetroCluster configuration.
 +
-link:concept_configure_the_mcc_software_in_ontap.md#[Configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
+xref:concept_configure_the_mcc_software_in_ontap.adoc[Configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
 
 . Set QoS policies for the FC-VI VSAN:
  .. Enter configuration mode: `conf t`
@@ -1211,7 +1211,7 @@ NOTE: On each switch, the IPStorage interfaces IPStorage1/1 and IPStorage1/2 mus
  .. Specify the MTU size as 2500: `switchport mtu 2500`
  .. Enable the port: `no shutdown`
  .. Exit configuration mode: `exit`
- .. Repeat steps link:task_fcsw_cisco_configure_a_cisco_switch_supertask.md#SUBSTEP_4717B5874EFB4B0897BFFFE2583F94D2[a] through link:task_fcsw_cisco_configure_a_cisco_switch_supertask.md#SUBSTEP_9D4A074A3183488C9D965EB8CDCD6F1A[f] to configure the IPStorage1/2 GbE interface with a different IP address.
+ .. Repeat steps xref:task_fcsw_cisco_configure_a_cisco_switch_supertask.adocSUBSTEP_4717B5874EFB4B0897BFFFE2583F94D2[a] through xref:task_fcsw_cisco_configure_a_cisco_switch_supertask.adocSUBSTEP_9D4A074A3183488C9D965EB8CDCD6F1A[f] to configure the IPStorage1/2 GbE interface with a different IP address.
 . Configure the FCIP profiles for FC-VI and storage traffic with the profile names given in the profile configuration table:
  .. Enter configuration mode: `conf t`
  .. Configure the FCIP profiles with the following profile names: `fcip profile FCIP-profile-name`
@@ -1307,7 +1307,7 @@ interface IPStorage1/2
 #  IP address:  b.b.b.b
 #  Mask:  y.y.y.y
   ip address <b.b.b.b   y.y.y.y>
-  switchport mtu 2500    	
+  switchport mtu 2500
   no shutdown
 exit
 
@@ -1582,7 +1582,7 @@ These steps must be performed on both FC switch fabrics.
 
 The following steps use the zoning described in the section Zoning for a FibreBridge 7500N in a four-node MetroCluster configuration.
 
-link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Zoning for FC-VI ports]
+xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FC-VI ports]
 
 . Clear the existing zones and zone set, if present.
  .. Determine which zones and zone sets are active: `show zoneset active`
@@ -1650,8 +1650,8 @@ These steps only need to be performed on one switch in each fabric.
 +
 The zoning depends on the model FC-to-SAS bridge you are using. For details, see the section for your model bridge. The examples show Brocade switch ports, so adjust your ports accordingly.
 
- ** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N or 7600N bridges using one FC port]
- ** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Zoning for FibreBridge 7500N bridges using both FC ports]
+ ** xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N or 7600N bridges using one FC port]
+ ** xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 7500N bridges using both FC ports]
 Each storage zone contains the HBA initiator ports from all controllers and one single port connecting an FC-to-SAS bridge.
 
 
@@ -1703,8 +1703,8 @@ These steps only need to be performed on one switch in each fabric.
 +
 The zoning depends on the model FC-to-SAS bridge you are using. For details, see the section for your model bridge. The examples show Brocade switch ports, so adjust your ports accordingly.
 
- ** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N or 7600N bridges using one FC port]
- ** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Zoning for FibreBridge 7500N bridges using both FC ports]
+ ** xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N or 7600N bridges using one FC port]
+ ** xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 7500N bridges using both FC ports]
 Each storage zone contains the HBA initiator ports from all controllers and one single port connecting an FC-to-SAS bridge.
 
 

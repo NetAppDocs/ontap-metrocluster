@@ -674,7 +674,7 @@ Automatic healing of aggregates after negotiated switchover is disabled during c
 You must move data LIFs to a common port, remove VLANs and interface groups on the old controllers and then physically uninstall the controllers.
 
 * These steps are performed on the old controllers (node_B_1-old, node_B_2-old).
-* See the information you gathered in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.md#[Mapping ports from the old nodes to the new nodes].
+* See the information you gathered in xref:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.adoc[Mapping ports from the old nodes to the new nodes].
 
 . Boot the old nodes and log in to the nodes: `boot_ontap`
 . Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
@@ -839,7 +839,7 @@ The HA state for all components should be mccip.
 [.lead]
 Certain MetroCluster IP bootarg values must be configured on the new controller modules. The values must match those configured on the old controller modules.
 
-In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.md#[Gathering information before the upgrade].
+In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in xref:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.adoc[Gathering information before the upgrade].
 
 . If the nodes being upgraded are AFF A400, FAS8300, or FAS8700 models, set the following bootargs at the LOADER prompt: `setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id``setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id`
 +
@@ -1060,7 +1060,7 @@ Rebooting to load the restored env file...
 
 . On LOADER, double-check the bootarg values and update the values as needed.
 +
-Use the steps in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.md#[Setting the MetroCluster IP bootarg variables].
+Use the steps in xref:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.adoc[Setting the MetroCluster IP bootarg variables].
 
 . Double-check that the partner-sysid is the correct: `printenv partner-sysid`
 +
@@ -1120,7 +1120,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EA
 Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the beginning of the upgrade procedure.
 
 * This task is performed on site_B.
-* See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.md#[Mapping ports from the old nodes to the new nodes].
+* See the port mapping plan you created in xref:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.adoc[Mapping ports from the old nodes to the new nodes].
 
 . Verify that LIFs are hosted on the appropriate node and ports prior to switchback.
  .. Change to the advanced privilege level: `set -privilege advanced`
@@ -1201,7 +1201,7 @@ This task can be performed on any node in the MetroCluster configuration.
 [.lead]
 You must repeat the upgrade tasks on cluster_A.
 
-. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.md#[Preparing for the upgrade].
+. Repeat the steps to upgrade the nodes on cluster_A, beginning with xref:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.adoc[Preparing for the upgrade].
 +
 As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
 
