@@ -13,24 +13,45 @@ When you expand a MetroCluster configuration, you must update the ha-config sett
 
 This task is performed in Maintenance mode on both the existing and new controller modules.
 
+.Steps
 . Change the ha-config setting of the existing controller module:
- .. Display the ha-config setting of the existing controller module and chassis: `ha-config show`
+ .. Display the ha-config setting of the existing controller module and chassis:
+ +
+`*ha-config show*`
 +
-The ha-config setting is mcc-2n for all components because the controller module was in a two-node MetroCluster configuration.
+The ha-config setting is `mcc-2n` for all components because the controller module was in a two-node MetroCluster configuration.
 
- .. Change the ha-config setting of the existing controller module to mcc: `ha-config modify controller mcc`
- .. Change the ha-config setting of the existing chassis to mcc: `ha-config modify chassis mcc`
- .. Retrieve the system ID for the existing controller module: `sysconfig`
+ .. Change the ha-config setting of the existing controller module to mcc:
+ +
+`*ha-config modify controller mcc*`
+ .. Change the ha-config setting of the existing chassis to mcc:
++
+`*ha-config modify chassis mcc*`
+ .. Retrieve the system ID for the existing controller module:
++
+`*sysconfig*`
 +
 Note the system ID. You need it when you set the partner ID on the new controller module.
 
- .. Exit Maintenance mode to return to the LOADER prompt: `halt`
+ .. Exit Maintenance mode to return to the LOADER prompt:
++
+`*halt*`
 . Change the ha-config setting and retrieve the system ID of the new controller module:
- .. If the new controller module is not already in Maintenance mode, boot it to Maintenance mode: `boot_ontap maint`
- .. Change the ha-config setting of the new controller module to mcc: `ha-config modify controller mcc`
- .. Change the ha-config setting of the new chassis to mcc: `ha-config modify chassis mcc`
- .. Retrieve the system ID for the new controller module: `sysconfig`
+ .. If the new controller module is not already in Maintenance mode, boot it to Maintenance mode:
+ +
+`*boot_ontap maint*`
+ .. Change the ha-config setting of the new controller module to mcc:
++
+`*ha-config modify controller mcc*`
+ .. Change the ha-config setting of the new chassis to mcc:
++
+`*ha-config modify chassis mcc*`
+ .. Retrieve the system ID for the new controller module:
++
+`*sysconfig*`
 +
 Note the system ID. You need it when you set the partner ID and assign disks to the new controller module.
 
- .. Exit Maintenance mode to return to the LOADER prompt: `halt`
+ .. Exit Maintenance mode to return to the LOADER prompt:
+ +
+`*halt*`

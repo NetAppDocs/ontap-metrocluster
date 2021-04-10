@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_verify_the_state_of_the_mcc_configuration_mcc_expansion.html
 sidebar: sidebar
-keywords: 
+keywords:
 summary: 'You should identify the existing controllers and confirm the disaster recovery \(DR\) relationships between them, that the controllers are in normal mode, and that the aggregates are mirrored.'
 ---
 = Verifying the state of the MetroCluster configuration
@@ -11,7 +11,10 @@ summary: 'You should identify the existing controllers and confirm the disaster 
 [.lead]
 You should identify the existing controllers and confirm the disaster recovery (DR) relationships between them, that the controllers are in normal mode, and that the aggregates are mirrored.
 
-. Display the details of the nodes in the MetroCluster configuration from any node in the configuration: `metrocluster node show -fields node,dr-partner,dr-partner-systemid`
+.Steps
+. Display the details of the nodes in the MetroCluster configuration from any node in the configuration:
++
+`*metrocluster node show -fields node,dr-partner,dr-partner-systemid*`
 +
 The following output shows that this MetroCluster configuration has a single DR group and one node in each cluster.
 +
@@ -25,7 +28,9 @@ dr-group-id  cluster         node            dr-partner      dr-partner-systemid
 2 entries were displayed.
 ----
 
-. Display the state of the MetroCluster configuration: `metrocluster show`
+. Display the state of the MetroCluster configuration:
++
+`*metrocluster show*`
 +
 The following output shows that the existing nodes in the MetroCluster configuration are in normal mode:
 +
@@ -46,7 +51,9 @@ Remote: controller_B_1_siteB
                                AUSO Failure Domain    auso-on-cluster-disaster
 ----
 
-. Check the state of the aggregates on each node in the MetroCluster configuration: `storage aggregate show`
+. Check the state of the aggregates on each node in the MetroCluster configuration:
++
+`*storage aggregate show*`
 +
 The following output shows that the aggregates on cluster_A are online and mirrored:
 +

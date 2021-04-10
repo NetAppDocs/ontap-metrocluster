@@ -18,7 +18,7 @@ The various MetroCluster configurations have key differences in the required com
 
 In all configurations, each of the two MetroCluster sites is configured as an ONTAP cluster. In a two-node MetroCluster configuration, each node is configured as a single-node cluster.
 
-[cols4*,options="header"]
+[cols4*, options="header"]
 |===
 | Feature| IP configurations| Fabric-attached configurations| Stretch configurations
 | Four- or eight-node| Two-node| Two-node bridge-attached| Two-node direct-attached
@@ -229,7 +229,7 @@ Firewalls and the intercluster firewall policy must allow the following protocol
 * TCP to the IP addresses of all the intercluster LIFs over the ports 10000, 11104, and 11105
 * Bidirectional HTTPS between the intercluster LIFs
 
-The default intercluster firewall policy allows access through the HTTPS protocol and from all IP addresses (0.0.0.0/0). You can modify or replace the policy if necessary.
+The default `intercluster` firewall policy allows access through the HTTPS protocol and from all IP addresses (0.0.0.0/0). You can modify or replace the policy if necessary.
 
 === Considerations when using dedicated ports
 
@@ -280,7 +280,7 @@ If you are using hierarchical namespaces, you should configure the junction path
 
 === Considerations for unmirrored aggregates and CRS metadata volume and data SVM root volumes
 
-The configuration replication service (CRS) metadata volume and data SVM root volumes must be on a mirrored aggregate. You cannot move these volumes to unmirrored aggregate. If they are on unmirrored aggregate, negotiated switchover and switchback operations are vetoed. The metrocluster check command provides a warning if this is the case.
+The configuration replication service (CRS) metadata volume and data SVM root volumes must be on a mirrored aggregate. You cannot move these volumes to unmirrored aggregate. If they are on unmirrored aggregate, negotiated switchover and switchback operations are vetoed. The `metrocluster check` command provides a warning if this is the case.
 
 === Considerations for unmirrored aggregates and SVMs
 
@@ -297,7 +297,7 @@ If you are using a firewall at a MetroCluster site, you must ensure access for c
 
 The following table shows TCP/UDP port usage in an external firewall positioned between two MetroCluster sites.
 
-[cols2*,options="header"]
+[cols2*, options="header"]
 |===
 | Traffic type| Port/services
 a|
