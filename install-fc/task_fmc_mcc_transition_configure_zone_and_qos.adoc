@@ -1,7 +1,7 @@
 ---
 permalink: install-fc/task_fmc_mcc_transition_configure_zone_and_qos.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, fabric, installation, delete, ti, zoning, tod, settings
 summary: 'You must delete the existing TI zoning and reconfigure in-order-delivery \(IOD\) settings on the switch fabric.'
 ---
 = Deleting TI zoning and configuring IOD settings
@@ -11,7 +11,9 @@ summary: 'You must delete the existing TI zoning and reconfigure in-order-delive
 [.lead]
 You must delete the existing TI zoning and reconfigure in-order-delivery (IOD) settings on the switch fabric.
 
-. Identify the TI zones that are configured on the fabric: `zone –-show`
+. Identify the TI zones that are configured on the fabric:
++
+`*zone –-show*`
 +
 The following example shows the zone FCVI_TI_FAB_2.
 +
@@ -24,7 +26,9 @@ Brocade-6510:admin> zone --show
    Enabled Status: Activated / Failover-Disabled
 ----
 
-. Delete the TI zones: `zone -–delete zone-name`
+. Delete the TI zones:
++
+`*zone -–delete zone-name*`
 +
 The following example shows the deletion of zone FCVI_TI_FAB_2.
 +
@@ -32,7 +36,9 @@ The following example shows the deletion of zone FCVI_TI_FAB_2.
 Brocade-6510:admin> zone --delete FCVI_TI_FAB_2
 ----
 
-. Confirm that the zones have been deleted: `zone –-show`
+. Confirm that the zones have been deleted:
++
+`*zone –-show*`
 +
 The output should be similar to the following:
 +
@@ -43,11 +49,25 @@ Brocade-6510:admin> zone -–show
     no TI zone configuration defined
 ----
 
-. Save the configuration: `cfgsave`
-. Enable in-order-delivery: `iodset`
-. Select Advanced Performance Tuning (APT) policy 1, the Port Based Routing Policy: `aptpolicy 1`
-. Disable Dynamic Load Sharing (DLS): `dlsreset`
-. Verify the IOD settings using the following commands: `iodshow``aptpolicy``dlsshow`
+. Save the configuration:
++
+`*cfgsave*`
+. Enable in-order-delivery:
++
+`*iodset*`
+. Select Advanced Performance Tuning (APT) policy 1, the Port Based Routing Policy:
++
+`*aptpolicy 1*`
+. Disable Dynamic Load Sharing (DLS):
++
+`*dlsreset*`
+. Verify the IOD settings using the following commands:
++
+`*iodshow*`
++
+`*aptpolicy*`
++
+`*dlsshow*`
 +
 The output should be similar to the following:
 +

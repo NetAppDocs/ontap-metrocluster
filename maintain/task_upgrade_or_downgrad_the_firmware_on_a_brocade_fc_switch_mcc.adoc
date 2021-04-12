@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_upgrade_or_downgrad_the_firmware_on_a_brocade_fc_switch_mcc.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, maintain, service, upgrade, downgrade, firmware, brocade, fc, switch
 summary: 'To upgrade or downgrade the firmware on a Brocade FC switch, you must use the Brocade-specific commands to disable the switch, perform and verify the firmware change, and reboot and reenable the switch.'
 ---
 = Upgrading or downgrading the firmware on a Brocade FC switch
@@ -26,23 +26,28 @@ This task must be performed on each of the switch fabrics in succession so that 
 
 NOTE: This procedure is nondisruptive and takes approximately one hour to complete.
 
+.Steps
 . Log in to each of the switches in the fabric.
 +
 The examples in the following steps use the switch `FC_switch_A_1`.
 
-. Disable each of the switches in the fabric: `switchCfgPersistentDisable`
+. Disable each of the switches in the fabric:
 +
-If this command is not available, then run the switchDisable command.
+`*switchCfgPersistentDisable*`
++
+If this command is not available, then run the `switchDisable` command.
 +
 ----
 FC_switch_A_1:admin> switchCfgPersistentDisable
 ----
 
-. Download the desired firmware version: `firmwareDownload`
+. Download the desired firmware version:
++
+`*firmwareDownload*`
 +
 When prompted for the file name, you must specify the subdirectory or relative path to the firmware file.
 +
-You can run the firmwareDownload command at the same time on both switches, but you must allow the firmware to download and commit properly before moving to the next step.
+You can run the `firmwareDownload` command at the same time on both switches, but you must allow the firmware to download and commit properly before moving to the next step.
 +
 ----
 FC_switch_A_1:admin> firmwaredownload
@@ -56,7 +61,9 @@ Checking system settings for firmwaredownload...
 System settings check passed.
 ----
 
-. Verify that the firmware was downloaded and committed to both partitions: `firmwareShow`
+. Verify that the firmware was downloaded and committed to both partitions:
++
+`*firmwareShow*`
 +
 The following example shows that the firmware download is complete as both images are updated:
 +
@@ -71,7 +78,9 @@ FOS      v7.3.1b
          v7.3.1b
 ----
 
-. Reboot the switches: `reboot`
+. Reboot the switches:
++
+`*reboot*`
 +
 Some firmware versions automatically perform an haReboot operation after the firmware download is finished. The reboot in this step is required even if the haReboot has been performed.
 +
@@ -83,27 +92,35 @@ FC_switch_A_1:admin> reboot
 +
 If the download is for the intermediate firmware level, then perform the previous two steps until the specified release is installed.
 
-. Enable the switches: `switchCfgPersistentEnable`
+. Enable the switches:
 +
-If this command is not available, then the switch should be in the enabled state after the reboot command is executed.
+`*switchCfgPersistentEnable*`
++
+If this command is not available, then the switch should be in the `enabled` state after the `reboot` command is executed.
 +
 ----
 FC_switch_A_1:admin> switchCfgPersistentEnable
 ----
 
-. Verify that the switches are online and that all of the devices are properly logged in: `switchShow`
+. Verify that the switches are online and that all of the devices are properly logged in:
++
+`*switchShow*`
 +
 ----
 FC_switch_A_1:admin> switchShow
 ----
 
-. Verify that the buffer usage information for a port group or all of the port groups in the switch is displayed properly: `portbuffershow`
+. Verify that the buffer usage information for a port group or all of the port groups in the switch is displayed properly:
++
+`*portbuffershow*`
 +
 ----
 FC_switch_A_1:admin> portbuffershow
 ----
 
-. Verify that the current configuration of a port is displayed properly: `portcfgshow`
+. Verify that the current configuration of a port is displayed properly:
++
+`*portcfgshow*`
 +
 ----
 FC_switch_A_1:admin> portcfgshow
@@ -112,12 +129,24 @@ FC_switch_A_1:admin> portcfgshow
 Verify the port settings, such as speed, mode, trunking, encryption, and compression, in the Inter-Switch Link (ISL) output. Verify that the port settings were not affected by the firmware download.
 
 . Verify the operation of the MetroCluster configuration in ONTAP:
- .. Check whether the system is multipathed:``node run -node node-name sysconfig -a``
- .. Check for any health alerts on both clusters: `system health alert show`
- .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
- .. Perform a MetroCluster check: `metrocluster check run`
- .. Display the results of the MetroCluster check: `metrocluster check show`
- .. Check for any health alerts on the switches (if present): `storage switch show`
+ .. Check whether the system is multipathed:
+ +
+`*node run -node _node-name_ sysconfig -a*`
+ .. Check for any health alerts on both clusters:
+ +
+`*system health alert show*`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
+ +
+`*metrocluster show*`
+ .. Perform a MetroCluster check:
+ +
+`*metrocluster check run*`
+ .. Display the results of the MetroCluster check:
+ +
+`*metrocluster check show*`
+ .. Check for any health alerts on the switches (if present):
+ +
+`*storage switch show*`
  .. Run Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]

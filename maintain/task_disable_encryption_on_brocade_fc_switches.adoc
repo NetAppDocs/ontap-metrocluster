@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_disable_encryption_on_brocade_fc_switches.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, maintain, service, disable, encryption, brocade, fc, switch
 summary: 'You might need to disable encryption on Brocade FC switches.'
 ---
 = Disabling encryption on Brocade FC switches
@@ -11,6 +11,7 @@ summary: 'You might need to disable encryption on Brocade FC switches.'
 [.lead]
 You might need to disable encryption on Brocade FC switches.
 
+.Steps
 . Send an AutoSupport message from both sites indicating the beginning of maintenance.
 +
 ----
@@ -22,26 +23,34 @@ cluster_B::> autosupport invoke -node * -type all -message MAINT=4h
 ----
 
 . Verify the operation of the MetroCluster configuration from Cluster A.
- .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
+ +
+`*metrocluster show*`
 +
 ----
 cluster_A::> metrocluster show
 ----
 
- .. Perform a MetroCluster check: `metrocluster check run`
+ .. Perform a MetroCluster check:
+ +
+`*metrocluster check run*`
 +
 [source,nolinebreak]
 ----
 cluster_A::> metrocluster check run
 ----
 
- .. Display the results of the MetroCluster check: `metrocluster check show`
+ .. Display the results of the MetroCluster check:
+ +
+`*metrocluster check show*`
 +
 [source,nolinebreak]
 ----
 cluster_A::> metrocluster check show
 ----
-. Check the status of both switches: `fabric show`
+. Check the status of both switches:
++
+`*fabric show*`
 +
 ----
 switch_A_1:admin> fabric show
@@ -51,7 +60,9 @@ switch_A_1:admin> fabric show
 switch_B_1:admin> fabric show
 ----
 
-. Disable both switches: `switchdisable`
+. Disable both switches:
++
+`*switchdisable*`
 +
 ----
 switch_A_1:admin> switchdisable
@@ -61,7 +72,9 @@ switch_A_1:admin> switchdisable
 switch_B_1:admin> switchdisable
 ----
 
-. Check the available paths for the nodes on each cluster: `sysconfig`
+. Check the available paths for the nodes on each cluster:
++
+`*sysconfig*`
 +
 ----
 cluster_A::> system node run -node node-name -command sysconfig -a
@@ -90,13 +103,17 @@ mirrored,normal
 ----
 
 . Repeat the following substeps from the admin prompt on both switches.
- .. Show which ports are encrypted: `portenccompshow`
+ .. Show which ports are encrypted:
+ +
+`*portenccompshow*`
 +
 ----
 switch_A_1:admin> portenccompshow
 ----
 
- .. Disable encryption on the encrypted ports: `portcfgencrypt – disable port-number`
+ .. Disable encryption on the encrypted ports:
+ +
+`*portcfgencrypt – disable _port-number_*`
 +
 ----
 switch_A_1:admin> portcfgencrypt --disable 40
@@ -105,48 +122,64 @@ switch_A_1:admin> portcfgencrypt --disable 42
 switch_A_1:admin> portcfgencrypt --disable 43
 ----
 
- .. Set the authentication type to all: `authUtil --set -a all`
+ .. Set the authentication type to all:
++
+`*authUtil --set -a all*`
 +
 ----
 switch_A_1:admin> authUtil --set -a all
 ----
 
- .. Set the authentication policy on the switch. to off: `authutil --policy -sw off`
+ .. Set the authentication policy on the switch. to off:
+ +
+`*authutil --policy -sw off*`
 +
 ----
 switch_A_1:admin> authutil --policy -sw off
 ----
 
- .. Set the authentication Diffie-Hellman group to *: `authutil --set -g *`
+ .. Set the authentication Diffie-Hellman group to +*+ :
+ +
+`*authutil --set -g **`
 +
 ----
 switch_A_1:admin> authUtil --set -g *
 ----
 
- .. Delete the secret key database: `secAuthSecret --remove -all`
+ .. Delete the secret key database:
+ +
+`*secAuthSecret --remove -all*`
 +
 ----
 switch_A_1:admin> secAuthSecret --remove -all
 ----
 
- .. Confirm that encryption is disabled on the ports: `portenccompshow`
+ .. Confirm that encryption is disabled on the ports:
+ +
+`*portenccompshow*`
 +
 ----
 switch_A_1:admin> portenccompshow
 ----
 
- .. Enable the switch: `switchenable`
+ .. Enable the switch:
+ +
+`*switchenable*`
 +
 ----
 switch_A_1:admin> switchenable
 ----
 
- .. Confirm the status of the ISLs: `islshow`
+ .. Confirm the status of the ISLs:
+ +
+`*islshow*`
 +
 ----
 switch_A_1:admin> islshow
 ----
-. Check the available paths for the nodes on each cluster: `sysconfig`
+. Check the available paths for the nodes on each cluster:
++
+`*sysconfig*`
 +
 ----
 cluster_A::> system node run -node * -command sysconfig -a
@@ -175,14 +208,18 @@ mirrored,normal
 ----
 
 . Verify the operation of the MetroCluster configuration from Cluster A.
- .. Perform a MetroCluster check: `metrocluster check run`
+ .. Perform a MetroCluster check:
+ +
+`*metrocluster check run*`
 +
 [source,nolinebreak]
 ----
 cluster_A::> metrocluster check run
 ----
 
- .. Display the results of the MetroCluster check: `metrocluster check show`
+ .. Display the results of the MetroCluster check:
+ +
+`*metrocluster check show*`
 +
 [source,nolinebreak]
 ----

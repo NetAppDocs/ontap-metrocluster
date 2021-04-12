@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_replace_a_shelf_nondisruptively_in_a_stretch_mcc_configuration.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, maintain, service, replace, shelf, nondisruptively, stretch, configuration
 summary: 'You can replace disk shelves without disruption in a stretch MetroCluster configuration with a fully populated disk shelf or a disk shelf chassis and transfer components from the shelf you are removing.'
 ---
 = Replacing a shelf nondisruptively in a stretch MetroCluster configuration
@@ -11,10 +11,10 @@ summary: 'You can replace disk shelves without disruption in a stretch MetroClus
 [.lead]
 You can replace disk shelves without disruption in a stretch MetroCluster configuration with a fully populated disk shelf or a disk shelf chassis and transfer components from the shelf you are removing.
 
-The disk shelf model you are installing must meet the storage system requirements specified in the _Hardware Universe_, which includes supported shelf models, supported disk drive types, the maximum number of disk shelves in a stack, and supported ONTAP versions.
+The disk shelf model you are installing must meet the storage system requirements specified in the link:https://hwu.netapp.com[Hardware Universe], which includes supported shelf models, supported disk drive types, the maximum number of disk shelves in a stack, and supported ONTAP versions.
+[NetApp Hardware Universe]
 
-https://hwu.netapp.com[NetApp Hardware Universe]
-
+.Steps
 . Properly ground yourself.
 . Identify all aggregates and volumes that have disks from the loop that contains the shelf you are replacing and make note of the affected plex name.
 +
@@ -22,12 +22,16 @@ Either node might contain disks from the loop of the affected shelf and host agg
 
 . Choose one of the following two options based on the replacement scenario you are planning.
  ** If you are replacing a complete disk shelf, including the shelf chassis, disks, and I/O modules (IOM), take the corresponding action as described in the table below:
+
+[options="header"]
 |===
 | Scenario| Action
 a|
 *The affected plex contains fewer disks from the affected shelf.*
 a|
-Replace the disks one-by-one on the affected shelf with spares from another shelf.     *Note:* You can take the plex offline after completing the disk replacement.
+Replace the disks one-by-one on the affected shelf with spares from another shelf.
+
+NOTE: You can take the plex offline after completing the disk replacement.
 
 a|
 *The affected plex contains more disks than are in the affected shelf.*
@@ -40,13 +44,19 @@ Move the plex offline but do not delete it.
 |===
  ** If you are replacing only the disk shelf chassis and no other components, perform the following steps:
 
- .. Offline the affected plexes from the controller where they are hosted: `aggregate offline`
- .. Verify that the plexes are offline: `aggregate status -r`
-. Identify the controller SAS ports to which the affected shelf loop is connected and disable the SAS ports on both site controllers:``storage port disable -node node_name -port SAS_port``
+ .. Offline the affected plexes from the controller where they are hosted:
+ +
+`*aggregate offline*`
+ .. Verify that the plexes are offline:
++
+`*aggregate status -r*`
+. Identify the controller SAS ports to which the affected shelf loop is connected and disable the SAS ports on both site controllers:
++
+`*storage port disable -node _node_name_ -port _SAS_port_*`
 +
 The affected shelf loop is connected to both sites.
 
-. Wait for ONTAP to recognize that the disk is missing. You can use the following commands to verify that the disk is missing:``sysconfig -a`` or `sysconfig -r`.
+. Wait for ONTAP to recognize that the disk is missing. You can use the following commands to verify that the disk is missing: `*sysconfig -a*` or `*sysconfig -r*`.
 . Turn off the power switch on the disk shelf.
 . Unplug all power cords from the disk shelf.
 . Make a record of the ports from which you unplug the cables so that you can cable the new disk shelf in the same way.
@@ -62,19 +72,23 @@ To make the disk shelf lighter and easier to maneuver, remove the power supplies
 . Change the disk shelf ID to a unique ID from 0 through 98.
 . Enable any SAS ports that you previously disabled and then wait for ONTAP to recognize that the disks are inserted.
 +
-You can use the following commands to verify that the disks are inserted: `sysconfig -a` or `sysconfig -r` .
+You can use the following commands to verify that the disks are inserted: `*sysconfig -a*` or `*sysconfig -r*` .
 
 . If you are replacing the complete disk shelf (disk shelf chassis, disks, IOM), perform the following steps:
 +
 NOTE: If you are replacing only the disk shelf chassis and no other components, go to Step 19.
 
- .. Use the `storage disk option modify -autoassign` command to determine whether disk auto assignment is enabled (on).
+ .. Use the `*storage disk option modify -autoassign*` command to determine whether disk auto assignment is enabled (on).
 +
 Disk assignment will occur automatically.
 
  .. If disk auto assignment is not enabled, assign disk ownership manually.
 
-. Move the plexes back online: `aggregate online plex name`
+. Move the plexes back online: `*aggregate online _plex name_*`
 . Recreate any plexes that were deleted by mirroring the aggregate.
-. Monitor the plexes as they begin resynchronizing: `aggregate status -r <aggregate name>`
-. Verify that the storage system is functioning as expected: `system health alert show`
+. Monitor the plexes as they begin resynchronizing:
++
+`*aggregate status -r <aggregate name>*`
+. Verify that the storage system is functioning as expected:
++
+`*system health alert show*`

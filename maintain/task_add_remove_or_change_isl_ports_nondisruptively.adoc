@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_add_remove_or_change_isl_ports_nondisruptively.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, maintain, service, add, remove, change, isl, ports, nondisruptively
 summary: 'You might need to add, remove, or change ISL ports. You can convert dedicated ISL ports to shared ISL ports, or change the speed of ISL ports on a switch. ISLs traveling greater distances might require lower speeds to improve quality. You also might need to increase the speed of ISL ports to take advantage of system upgrades and add ISLs to a Cisco IP switch if you are adding or upgrading hardware.'
 ---
 = Adding, removing, or changing ISL ports nondisruptively
@@ -19,6 +19,7 @@ You must complete all the steps on both switches to ensure ISL connectivity.
 
 The following procedure assumes you are replacing a 10-Gb ISL connected at switch port Eth1/24/1 with two 100-Gb ISLs that are connected to switch ports 17 and 18.
 
+.Steps
 . Disable the ISL ports of the ISLs on both switches in the fabric that you want to change.
 +
 NOTE: You only need to disable the current ISL ports if you are moving them to a different port, or the speed of the ISL is changing. If you are adding an ISL port with the same speed as the existing ISLs, go to Step 3.
@@ -43,6 +44,7 @@ switch_B_1#
 . Remove the existing cables and transceivers.
 . Change the ISL port as required.
 +
+[options="header"]
 |===
 | Option| Step
 a|
@@ -55,7 +57,9 @@ a|
 Insert QFSPs into the ports you are adding as ISL ports. Ensure they are listed in the _MetroCluster IP Installation and Configuration Guide_ and cable them according to this guide.
 |===
 
-. Enable all ISL ports (if not enabled) on both switches in the fabric beginning with the following command: `switch_A_1# conf t`
+. Enable all ISL ports (if not enabled) on both switches in the fabric beginning with the following command:
++
+`*switch_A_1# conf t*`
 +
 You must enter only one configuration command per line and press Ctrl-Z after you have entered all the commands:
 +
@@ -79,7 +83,9 @@ switch_B_1#
 switch_B_1# copy running-config startup-config
 ----
 
-. Verify that the ISLs are established between both switches: `switch_A_1# show int eth1/17,eth1/18 brief`
+. Verify that the ISLs are established between both switches:
++
+`*switch_A_1# show int eth1/17,eth1/18 brief*`
 +
 You should see the ISL interfaces in the command output as shown in the following example:
 +
