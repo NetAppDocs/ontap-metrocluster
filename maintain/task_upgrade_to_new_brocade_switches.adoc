@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_upgrade_to_new_brocade_switches.html
 sidebar: sidebar
-keywords: MetroCluster configurations
+keywords: metrocluster, maintain, service, cluster, new, brocade, fc, switches
 summary: 'If you are upgrading to new Brocade FC switches, you must replace the switches in the first fabric, verify that the MetroCluster configuration is fully operational, and then replace the switches in the second fabric.'
 ---
 = Upgrading to new Brocade FC switches
@@ -29,7 +29,9 @@ At the end of this procedure, all four switches will be upgraded to new switches
 
 image::../media/brocade_upgr_to_g620_replacement_completed.gif[]
 
-. Disable the first switch fabric: `FC_switch_A_1:admin> switchCfgPersistentDisable`
+. Disable the first switch fabric:
++
+`*FC_switch_A_1:admin> switchCfgPersistentDisable*`
 +
 ----
 FC_switch_A_1:admin> switchCfgPersistentDisable
@@ -43,7 +45,9 @@ image::../media/brocade_upgr_to_g620_fab_1_down.gif[]
 +
 image::../media/brocade_upgr_to_g620_replaced_a_1.gif[]
 
- .. Disable the new switches: `switchCfgPersistentDisable`
+ .. Disable the new switches:
+ +
+`*switchCfgPersistentDisable*`
 +
 The command disables both switches in the switch fabric.
 +
@@ -66,9 +70,13 @@ image::../media/brocade_upgr_to_g620_replaced_b_1.gif[]
 . Power up the new switches and let them boot up.
 . Download the RCF files for the new switch.
 . Apply the RCF files to both new switches in the fabric, following the directions on the download page.
-. Save the switch configuration: `cfgSave`
+. Save the switch configuration:
++
+`*cfgSave*`
 . Wait 10 minutes to allow the configuration to stabilize.
-. Confirm connectivity to the disks by entering the following command on any one of the MetroCluster nodes: `run local sysconfig -v`
+. Confirm connectivity to the disks by entering the following command on any one of the MetroCluster nodes:
++
+`*run local sysconfig -v*`
 +
 The output shows the disks attached to the initiator ports on the controller, and identifies the shelves connected to the FC-to-SAS bridges:
 +
@@ -119,19 +127,27 @@ slot 0: FC Host Adapter 0g (QLogic 8324 rev. 2, N-port, <UP>)**<=== Initiator po
 		.
 ----
 
-. Returning to the switch prompt, verify the switch firmware version: `firmwareShow`
+. Returning to the switch prompt, verify the switch firmware version:
++
+`*firmwareShow*`
 +
 The switches must be running the most recent supported firmware.
 +
 https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool]
 
 . Simulate a switchover operation:
- .. From any node's prompt, change to the advanced privilege level: `set -privilege advanced`
+ .. From any node's prompt, change to the advanced privilege level:
+ +
+`*set -privilege advanced*`
 +
-You need to respond with `y` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
+You need to respond with `*y*` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
- .. Perform the switchover operation with the -simulate parameter: `metrocluster switchover -simulate`
- .. Return to the admin privilege level: `set -privilege admin`
+ .. Perform the switchover operation with the `-simulate` parameter:
+ +
+`*metrocluster switchover -simulate*`
+ .. Return to the admin privilege level:
+ +
+`*set -privilege admin*`
 . Repeat the previous steps on the second switch fabric.
 
 After repeating the steps, all four switches have been upgraded and the MetroCluster configuration is in normal operation.

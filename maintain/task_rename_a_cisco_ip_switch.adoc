@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_rename_a_cisco_ip_switch.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, maintain, service, rename, cisco, ip, switch
 summary: 'You might need to rename a Cisco IP switch to provide consistent naming throughout your configuration.'
 ---
 = Renaming a Cisco IP switch
@@ -11,18 +11,22 @@ summary: 'You might need to rename a Cisco IP switch to provide consistent namin
 [.lead]
 You might need to rename a Cisco IP switch to provide consistent naming throughout your configuration.
 
-In the examples in this task, the switch name is changed from myswitch to IP_switch_A_1.
+In the examples in this task, the switch name is changed from `myswitch` to `IP_switch_A_1`.
 
-. Enter global configuration mode: `configure terminal`
+. Enter global configuration mode:
 +
-The following example shows the configuration mode prompt. Both prompts show the switch name of myswitch.
+`*configure terminal*`
++
+The following example shows the configuration mode prompt. Both prompts show the switch name of `myswitch`.
 +
 ----
 myswitch# configure terminal
 myswitch(config)#
 ----
 
-. Rename the switch: `switchname new-switch-name`
+. Rename the switch:
++
+`*switchname new-switch-name*`
 +
 If you are renaming both switches in the fabric, use the same command on each switch.
 +
@@ -33,7 +37,9 @@ myswitch(config)# switchname IP_switch_A_1
 IP_switch_A_1(config)#
 ----
 
-. Exit configuration mode: `exit`
+. Exit configuration mode:
++
+`*exit*`
 +
 The top-level switch prompt is displayed:
 +
@@ -42,17 +48,25 @@ IP_switch_A_1(config)# exit
 IP_switch_A_1#
 ----
 
-. Copy the current running configuration to the startup configuration file: `copy running-config startup-config`
+. Copy the current running configuration to the startup configuration file:
++
+`*copy running-config startup-config*`
 . Verify that the switch name change is visible from the ONTAP cluster prompt.
 +
-Note that the new switch name is shown, and the old switch name (myswitch) does not appear.
+Note that the new switch name is shown, and the old switch name (`myswitch`) does not appear.
 
- .. Enter advanced privilege mode, pressing `y` when prompted: `set -privilege advanced`
- .. Display the attached devices: `network device-discovery show`
- .. Return to admin privilege mode: `set -privilege admin`
+ .. Enter advanced privilege mode, pressing `*y*` when prompted:
+ +
+`*set -privilege advanced*`
+ .. Display the attached devices:
+ +
+`*network device-discovery show*`
+ .. Return to admin privilege mode:
+ +
+`*set -privilege admin*`
 
 +
-The following example shows that the switch appears with the new name, IP_switch_A_1:
+The following example shows that the switch appears with the new name, `IP_switch_A_1`:
 +
 ----
 cluster_A::storage show> set advanced

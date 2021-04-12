@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_assign_disk_ownership_in_aff_systems_mcc.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, upgrade, assign, disk, ownership, aff, systems
 summary: 'If you are using AFF systems in a configuration with mirrored aggregates and the nodes do not have the disks \(SSDs\) correctly assigned, you should assign half the disks on each shelf to one local node and the other half of the disks to its HA partner node. You should create a configuration in which each node has the same number of disks in its local and remote disk pools.'
 ---
 = Assigning disk ownership in AFF systems
@@ -19,12 +19,15 @@ This task is not required if disks were correctly assigned when received from th
 
 NOTE: Pool 0 always contains the disks that are found at the same site as the storage system that owns them, while Pool 1 always contains the disks that are remote to the storage system that owns them.
 
+.Steps
 . If you have not done so, boot each system into Maintenance mode.
 . Assign the disks to the nodes located at the first site (site A):
 +
 You should assign an equal number of disks to each pool.
 
- .. On the first node, systematically assign half the disks on each shelf to pool 0 and the other half to the HA partner's pool 0: `disk assign -disk disk-name -p pool -n number-of-disks`
+ .. On the first node, systematically assign half the disks on each shelf to pool 0 and the other half to the HA partner's pool 0:
+ +
+`*disk assign -disk _disk-name_ -p _pool_ -n _number-of-disks_*`
 +
 If storage controller Controller_A_1 has four shelves, each with 8 SSDs, you issue the following commands:
 +
@@ -36,7 +39,9 @@ If storage controller Controller_A_1 has four shelves, each with 8 SSDs, you iss
 *> disk assign -shelf FC_switch_B_1:1-4.shelf2 -p 1 -n 4
 ----
 
- .. Repeat the process for the second node at the local site, systematically assigning half the disks on each shelf to pool 1 and the other half to the HA partner's pool 1: `disk assign -disk disk-name -p pool`
+ .. Repeat the process for the second node at the local site, systematically assigning half the disks on each shelf to pool 1 and the other half to the HA partner's pool 1:
+ +
+`*disk assign -disk _disk-name_ -p _pool_*`
 +
 If storage controller Controller_A_1 has four shelves, each with 8 SSDs, you issue the following commands:
 +
@@ -52,7 +57,9 @@ If storage controller Controller_A_1 has four shelves, each with 8 SSDs, you iss
 +
 You should assign an equal number of disks to each pool.
 
- .. On the first node at the remote site, systematically assign half the disks on each shelf to pool 0 and the other half to the HA partner's pool 0: `disk assign -disk disk-name -p pool`
+ .. On the first node at the remote site, systematically assign half the disks on each shelf to pool 0 and the other half to the HA partner's pool 0:
+ +
+`*disk assign -disk _disk-name_ -p _pool_*`
 +
 If storage controller Controller_B_1 has four shelves, each with 8 SSDs, you issue the following commands:
 +
@@ -64,7 +71,9 @@ If storage controller Controller_B_1 has four shelves, each with 8 SSDs, you iss
 *> disk assign -shelf FC_switch_A_1:1-5.shelf2 -p 1 -n 4
 ----
 
- .. Repeat the process for the second node at the remote site, systematically assigning half the disks on each shelf to pool 1 and the other half to the HA partner's pool 1: `disk assign -disk disk-name -p pool`
+ .. Repeat the process for the second node at the remote site, systematically assigning half the disks on each shelf to pool 1 and the other half to the HA partner's pool 1:
+ +
+`*disk assign -disk _disk-name_ -p _pool_*`
 +
 If storage controller Controller_B_2 has four shelves, each with 8 SSDs, you issue the following commands:
 +
@@ -76,7 +85,13 @@ If storage controller Controller_B_2 has four shelves, each with 8 SSDs, you iss
 *> disk assign -shelf FC_switch_A_1:1-5.shelf4 -p 1 -n 4
 ----
 
-. Confirm the disk assignments: `storage show disk`
-. Exit Maintenance mode: `halt`
-. Display the boot menu: `boot_ontap menu`
+. Confirm the disk assignments:
++
+`*storage show disk*`
+. Exit Maintenance mode:
++
+`*halt*`
+. Display the boot menu:
++
+`*boot_ontap menu*`
 . On each node, select option *4* to initialize all disks.

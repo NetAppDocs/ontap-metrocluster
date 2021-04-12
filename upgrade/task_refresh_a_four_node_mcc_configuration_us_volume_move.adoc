@@ -1,8 +1,8 @@
 ---
 permalink: upgrade/task_refresh_a_four_node_mcc_configuration_us_volume_move.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: metrocluster, upgrade, refresh, four, node, ip, configuration, add, autosupport
+summary: 'Starting with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.'
 ---
 = Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
 :icons: font
@@ -16,6 +16,7 @@ Starting with ONTAP 9.8, you can upgrade the controllers and storage in a four-n
 * References to "old nodes" mean the nodes that you intend to replace.
 * This procedure is not supported on AFF A320 systems configured with Broadcom BES-53248 switches.
 
+.Steps
 . Gather information from the old nodes.
 +
 At this stage, the four-node configuration appears as shown in the following image:
@@ -23,11 +24,15 @@ At this stage, the four-node configuration appears as shown in the following ima
 image::../media/mcc_dr_group_a.png[]
 
 . To prevent automatic support case generation, send an Autosupport message to indicate the upgrade is underway.
- .. Issue the following command: `system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading old-model to new-model"`
+ .. Issue the following command:
+ +
+`*system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading _old-model_ to _new-model"_*`
 +
 Our example specifies a 10 hour maintenance window. You may want to allow additional time depending on your plan.
 +
-If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:``system node autosupport invoke -node * -type all -message MAINT=end``
+If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
++
+`*system node autosupport invoke -node * -type all -message MAINT=end*`
 
  .. Repeat the command on the partner cluster.
 . Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
@@ -42,7 +47,9 @@ http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/G
 a|
 *Mediator*
 a|
-Issue the following command from the ONTAP prompt: `metrocluster configuration-settings mediator remove`
+Issue the following command from the ONTAP prompt:
+
+`*metrocluster configuration-settings mediator remove*`
 a|
 *Third-party applications*
 a|
@@ -80,10 +87,18 @@ After you have removed the old DR group (DR group one), the configuration appear
 image::../media/mcc_dr_group_d.png[]
 
 . Confirm the operational mode of the MetroCluster configuration and perform a MetroCluster check.
- .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
- .. Confirm that all expected nodes are shown: `metrocluster node show`
- .. Issue the following command: `metrocluster check run`
- .. Display the results of the MetroCluster check: `metrocluster check show`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
++
+`*metrocluster show*`
+ .. Confirm that all expected nodes are shown:
++
+`*metrocluster node show*`
+ .. Issue the following command:
++
+`*metrocluster check run*`
+ .. Display the results of the MetroCluster check:
++
+`*metrocluster check show*`
 . Restore monitoring if necessary, using the procedure for your configuration.
 +
 [cols=2*,options="header"]
@@ -104,7 +119,9 @@ Refer to the product documentation.
 |===
 
 . To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
- .. Issue the following command: `system node autosupport invoke -node * -type all -message MAINT=end`
+ .. Issue the following command:
++
+`*system node autosupport invoke -node * -type all -message MAINT=end*`
  .. Repeat the command on the partner cluster.
 
 == Adding new nodes to the MetroCluster IP configuration
@@ -168,12 +185,17 @@ Before performing the maintenance, you should issue an AutoSupport message to no
 
 This task must be performed on each MetroCluster site.
 
+.Steps
 . To prevent automatic support case generation, send an Autosupport message to indicate the upgrade is underway.
- .. Issue the following command: `system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading old-model to new-model"`
+ .. Issue the following command:
++
+`*system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading _old-model_ to _new-model"_*`
 +
 Our example specifies a 10 hour maintenance window. You may want to allow additional time depending on your plan.
 +
-If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:``system node autosupport invoke -node * -type all -message MAINT=end``
+If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
++
+`*system node autosupport invoke -node * -type all -message MAINT=end*`
 
  .. Repeat the command on the partner cluster.
 
@@ -183,17 +205,29 @@ If the maintenance is completed before the time has elapsed, you can invoke an A
 You must verify the health and connectivity of the MetroCluster configuration prior to performing the transition
 
 . Verify the operation of the MetroCluster configuration in ONTAP:
- .. Check whether the system is multipathed:``node run -node node-name sysconfig -a``
- .. Check for any health alerts on both clusters: `system health alert show`
- .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
- .. Perform a MetroCluster check: `metrocluster check run`
- .. Display the results of the MetroCluster check: `metrocluster check show`
+ .. Check whether the system is multipathed:
++
+`*node run -node _node-name_ sysconfig -a*`
+ .. Check for any health alerts on both clusters:
+ +
+`*system health alert show*`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
+ +
+`*metrocluster show*`
+ .. Perform a MetroCluster check:
++
+`*metrocluster check run*`
+ .. Display the results of the MetroCluster check:
++
+`*metrocluster check show*`
  .. Run Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
 
  .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
-. Verify that the cluster is healthy: `cluster show -vserver Cluster`
+. Verify that the cluster is healthy:
++
+`*cluster show -vserver Cluster*`
 +
 ----
 cluster_A::> cluster show -vserver Cluster
@@ -205,7 +239,9 @@ node_A_2    true    true          false
 cluster_A::>
 ----
 
-. Verify that all cluster ports are up: `network port show -ipspace cluster`
+. Verify that all cluster ports are up:
++
+`*network port show -ipspace cluster*`
 +
 ----
 cluster_A::> network port show -ipspace cluster
@@ -231,7 +267,9 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 cluster_A::>
 ----
 
-. Verify that all cluster LIFs are up and operational: `network interface show -vserver Cluster`
+. Verify that all cluster LIFs are up and operational:
++
+`*network interface show -vserver Cluster*`
 +
 Each cluster LIF should display true for Is Home and have a Status Admin/Oper of up/up
 +
@@ -256,7 +294,9 @@ Cluster
 cluster_A::>
 ----
 
-. Verify that auto-revert is enabled on all cluster LIFs: `network interface show -vserver Cluster -fields auto-revert`
+. Verify that auto-revert is enabled on all cluster LIFs:
++
+`*network interface show -vserver Cluster -fields auto-revert*`
 +
 ----
 cluster_A::> network interface show -vserver Cluster -fields auto-revert
@@ -296,7 +336,9 @@ http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/G
 a|
 *Mediator*
 a|
-Issue the following command from the ONTAP prompt: `metrocluster configuration-settings mediator remove`
+Issue the following command from the ONTAP prompt:
+
+`*metrocluster configuration-settings mediator remove*`
 a|
 *Third-party applications*
 a|
@@ -321,6 +363,7 @@ This task must be performed on each of the new nodes:
 
 In these steps, you clear the configuration on the nodes and clear the mailbox region on new drives.
 
+.Steps
 . Rack the new controllers.
 . Cable the new MetroCluster IP nodes to the IP switches as shown in the _MetroCluster Installation and Configuration Guide._
 +
@@ -342,6 +385,7 @@ You must add the four new MetroCluster IP nodes to the existing MetroCluster con
 
 You must perform this task on both clusters.
 
+.Steps
 . Add the new MetroCluster IP nodes to the existing MetroCluster configuration.
  .. Join the first new MetroCluster IP node (node_A_1-new) to the existing MetroCluster IP configuration.
 +
@@ -424,7 +468,9 @@ http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/task_co
 +
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/task_configure_intercluster_lifs_to_share_data_ports.html[Configuring intercluster LIFs on shared data ports]
 
-. On each site, verify that cluster peering is configured: `cluster peer show`
+. On each site, verify that cluster peering is configured:
++
+`*cluster peer show*`
 +
 The following example shows the cluster peering configuration on cluster_A:
 +
@@ -445,7 +491,9 @@ cluster_A 1-80-000011 Available ok
 cluster_B::>
 ----
 
-. Create the DR group for the MetroCluster IP nodes: `metrocluster configuration-settings dr-group create -partner-cluster`
+. Create the DR group for the MetroCluster IP nodes:
++
+`*metrocluster configuration-settings dr-group create -partner-cluster*`
 +
 For more information on the MetroCluster configuration settings and connections, see the _MetroCluster IP Installation and Configuration Guide_.
 +
@@ -460,7 +508,9 @@ cluster_B -local-node node_A_1-new -remote-node node_B_1-new
 cluster_A::>
 ----
 
-. Verify that the DR group was created. `metrocluster configuration-settings dr-group show`
+. Verify that the DR group was created.
++
+`*metrocluster configuration-settings dr-group show*`
 +
 ----
 cluster_A::> metrocluster configuration-settings dr-group show
@@ -484,11 +534,13 @@ DR Group ID Cluster                    Node               DR Partner Node
 cluster_A::>
 ----
 
-. Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes: `metrocluster configuration-settings interface create -cluster-name`
+. Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes:
++
+`*metrocluster configuration-settings interface create -cluster-name*`
 +
 include::../_include/models_supporting_vlan-id.adoc[]
 +
-*NOTE:* You can configure the MetroCluster IP interfaces from either cluster.
+NOTE: You can configure the MetroCluster IP interfaces from either cluster.
 +
 ----
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_1-new -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
@@ -516,7 +568,9 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [Job 267] Job succeeded: Interface Create is successful.
 ----
 
-. Verify the MetroCluster IP interfaces are created: `metrocluster configuration-settings interface show`
+. Verify the MetroCluster IP interfaces are created:
++
+`*metrocluster configuration-settings interface show*`
 +
 ----
 cluster_A::>metrocluster configuration-settings interface show
@@ -573,9 +627,11 @@ Group Cluster Node    Network Address Netmask         Gateway         State
 cluster_A>
 ----
 
-. Connect the MetroCluster IP interfaces: `metrocluster configuration-settings connection connect`
+. Connect the MetroCluster IP interfaces:
 +
-*NOTE:* This command might take several minutes to complete.
+`*metrocluster configuration-settings connection connect*`
++
+NOTE: This command might take several minutes to complete.
 +
 ----
 cluster_A::> metrocluster configuration-settings connection connect
@@ -716,7 +772,9 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 cluster_A::>
 ----
 
-. Verify disk autoassignment and partitioning: `disk show -pool Pool1`
+. Verify disk autoassignment and partitioning:
++
+`*_disk show -pool Pool1_*`
 +
 ----
 cluster_A::> disk show -pool Pool1
@@ -742,9 +800,11 @@ Disk                   Size Shelf Bay Type    Type        Name      Owner
 cluster_A::>
 ----
 
-. Mirror the root aggregates: `storage aggregate mirror -aggregate aggr0_node_A_1-new`
+. Mirror the root aggregates:
 +
-*NOTE:* You must complete this step on each MetroCluster IP node.
+`*_storage aggregate mirror -aggregate aggr0_node_A_1-new_*`
++
+NOTE: You must complete this step on each MetroCluster IP node.
 +
 ----
 cluster_A::> aggr mirror -aggregate aggr0_node_A_1-new
@@ -769,7 +829,9 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ----
 
-. Verify that the root aggregates are mirrored: `storage aggregate show`
+. Verify that the root aggregates are mirrored:
++
+`*storage aggregate show*`
 +
 ----
 cluster_A::> aggr show
@@ -806,9 +868,11 @@ aggr_data_a2
 [.lead]
 You must incorporate the new DR group into the MetroCluster configuration and create mirrored data aggregates on the new nodes.
 
-. Create mirrored data aggregates on each of the new MetroCluster nodes: `storage aggregate create -aggregate aggregate-name -node node-name -diskcount no-of-disks -mirror true`
+. Create mirrored data aggregates on each of the new MetroCluster nodes:
 +
-*NOTE:* You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
+`%storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true*`
++
+NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
 +
 The following example shows the creation of an aggregate on node_A_1-new.
 +
@@ -850,8 +914,12 @@ cluster_A::>
 ----
 
 . Refresh the MetroCluster configuration:
- .. Enter advanced privilege mode: `set -privilege advanced`
- .. Refresh the MetroCluster configuration on one of the new nodes: `metrocluster configure`
+ .. Enter advanced privilege mode:
+ +
+`*set -privilege advanced*`
+ .. Refresh the MetroCluster configuration on one of the new nodes:
+ +
+`*metrocluster configure*`
 +
 The following example shows the MetroCluster configuration refreshed on both DR groups:
 +
@@ -861,7 +929,9 @@ cluster_A::*> metrocluster configure -refresh true
 [Job 726] Job succeeded: Configure is successful.
 ----
 
- .. Return to admin privilege mode: `set -privilege admin`
+ .. Return to admin privilege mode:
+ +
+`*set -privilege admin*`
 . Verify that the nodes are added to their DR group.
 +
 ----
@@ -890,9 +960,9 @@ cluster_A::*>
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
  .. Display the volumes to identify the MDV volumes:
 +
-*NOTE:* If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
+NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
-The following example shows the MDV volumes in the volume show output:
+The following example shows the MDV volumes in the `volume show` output:
 +
 ----
 cluster_A::> volume show
@@ -912,8 +982,12 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 11 entries were displayed.mple
 ----
 
- .. Set the advanced privilege level: `set -privilege advanced`
- .. Move the MDV volumes, one at a time: `volume move start -volume mdv-volume -destination-aggregate aggr-on-new-node -vserver vserver-name`
+ .. Set the advanced privilege level:
++
+`*set -privilege advanced*`
+ .. Move the MDV volumes, one at a time:
++
+`*volume move start -volume _mdv-volume_ -destination-aggregate _aggr-on-new-node_ -vserver _vserver-name_*`
 +
 The following example shows the command and output for moving MDV_CRS_d6b0b313ff5611e9837100a098544e51_A to aggregate data_a3 on node_A_3.
 +
@@ -927,7 +1001,9 @@ Warning: You are about to modify the system volume
 [Job 494] Job is queued: Move "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" in Vserver "cluster_A" to aggregate "data_a3". Use the "volume move show -vserver cluster_A -volume MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" command to view the status of this operation.
 ----
 
- .. Use the volume show command to check that the MDV volume has been successfully moved: `volume show mdv-name`
+ .. Use the volume show command to check that the MDV volume has been successfully moved:
++
+`*volume show _mdv-name_*`
 +
 The following output shows that the MDV volume has been successfully moved.
 +
@@ -939,9 +1015,13 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
                        aggr_a2      online     RW         10GB     9.50GB    0%
 ----
 
- .. Return to admin mode: `set -privilege admin`
+ .. Return to admin mode:
++
+`*set -privilege admin*`
 . Move epsilon from an old node to a new node:
- .. Identify which node currently has epsilon: `cluster show -fields epsilon`
+ .. Identify which node currently has epsilon:
+ +
+`*cluster show -fields epsilon*`
 +
 ----
 cluster_B::> cluster show -fields epsilon
@@ -954,9 +1034,15 @@ node_A_4-new      false
 4 entries were displayed.
 ----
 
- .. Set epsilon to false on the old node (node_A_1-old): `cluster modify -node old-node -epsilon false`
- .. Set epsilon to true on the new node (node_A_3-new): `cluster modify -node new-node -epsilon true`
- .. Verify that epsilon has moved to the correct node: `cluster show -fields epsilon`
+ .. Set epsilon to false on the old node (node_A_1-old):
++
+`*cluster modify -node _old-node_ -epsilon false*`
+ .. Set epsilon to true on the new node (node_A_3-new):
++
+`*cluster modify -node _new-node_ -epsilon true*`
+ .. Verify that epsilon has moved to the correct node:
++
+`*cluster show -fields epsilon*`
 +
 ----
 cluster_A::> cluster show -fields epsilon

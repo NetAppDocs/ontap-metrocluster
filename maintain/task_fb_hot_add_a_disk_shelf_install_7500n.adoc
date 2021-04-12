@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_fb_hot_add_a_disk_shelf_install_7500n.html
 sidebar: sidebar
-keywords:
+keywords: metrocluster, maintain, service, hot, add, disk, shelf
 summary: 'You can hot-add a disk shelf when you want to increase storage without any reduction in performance.'
 ---
 = Hot-adding a disk shelf
@@ -26,12 +26,15 @@ This procedure is written with the assumption that the last disk shelf in a stac
 +
 NOTE: Each pair of FibreBridge 7500N or 7600N bridges can support up to four stacks.
 
-IMPORTANT: Hot-adding a disk shelf requires you to update the disk drive firmware on the hot-added disk shelf by running the storage disk firmware update command in advanced mode. Running this command can be disruptive if the firmware on existing disk drives in your system is an older version.
+IMPORTANT: Hot-adding a disk shelf requires you to update the disk drive firmware on the hot-added disk shelf by running the `storage disk firmware update` command in advanced mode. Running this command can be disruptive if the firmware on existing disk drives in your system is an older version.
 
 IMPORTANT: If you insert a SAS cable into the wrong port, when you remove the cable from a SAS port, you must wait at least 120 seconds before plugging the cable into a different SAS port. If you fail to do so, the system will not recognize that the cable has been moved to another port.
 
+.Steps
 . Properly ground yourself.
-. Verify disk shelf connectivity from the system console of either controller: `sysconfig -v`
+. Verify disk shelf connectivity from the system console of either controller:
++
+`*sysconfig -v*`
 +
 The output is similar to the following:
 
@@ -57,7 +60,9 @@ cisco_A_1-1:9.126L1   : NETAPP   X421_HCOBD450A10 NA01 418.0GB (879097968 520B/s
 cisco_A_1-1:9.126L2   : NETAPP   X421_HCOBD450A10 NA01 418.0GB (879097968 520B/sect)
 ----
 
-. Check whether your system has disk autoassignment enabled from the console of either controller: `storage disk option show`
+. Check whether your system has disk autoassignment enabled from the console of either controller:
++
+`*storage disk option show*`
 +
 The autoassignment policy is shown in the Auto Assign column.
 +
@@ -74,9 +79,12 @@ node_A_2             on           on           on           default
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
 +
-NOTE: If you are splitting a single stack of disk shelves between two controllers, disk autoassignment must be disabled before you assign disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller and pool.
-+
-The storage disk option modify -nodenode-name-autoassign off command disables disk autoassignment.
+[NOTE]
+====
+If you are splitting a single stack of disk shelves between two controllers, disk autoassignment must be disabled before you assign disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller and pool.
+
+The `storage disk option modify -node _node-name_ -autoassign off` command disables disk autoassignment.
+====
 +
 NOTE: Disk drives must not be added to aggregates or volumes until the disk drive and disk shelf firmware have been updated.
 
@@ -118,21 +126,39 @@ The _Installation Guide_ for your disk shelf model provides detailed information
 +
 https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware[NetApp Downloads: Disk Drive Firmware]
 
- .. Change to the advanced privilege level: `set -privilege advanced`
+ .. Change to the advanced privilege level:
+ +
+`*set -privilege advanced*`
 +
-You need to respond with `y` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
+You need to respond with `*y*` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
- .. Update the disk drive firmware to the most current version from the system console: `storage disk firmware update`
- .. Return to the admin privilege level: `set -privilege admin`
+ .. Update the disk drive firmware to the most current version from the system console:
+ +
+`*storage disk firmware update*`
+ .. Return to the admin privilege level:
+ +
+`*set -privilege admin*`
  .. Repeat the previous substeps on the other controller.
 
 . Verify the operation of the MetroCluster configuration in ONTAP:
- .. Check whether the system is multipathed:``node run -node node-name sysconfig -a``
- .. Check for any health alerts on both clusters: `system health alert show`
- .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
- .. Perform a MetroCluster check: `metrocluster check run`
- .. Display the results of the MetroCluster check: `metrocluster check show`
- .. Check for any health alerts on the switches (if present): `storage switch show`
+ .. Check whether the system is multipathed:
++
+`*node run -node _node-name_ sysconfig -a*`
+ .. Check for any health alerts on both clusters:
+ +
+`*system health alert show*`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
+ +
+`*metrocluster show*`
+ .. Perform a MetroCluster check:
+ +
+`*metrocluster check run*`
+ .. Display the results of the MetroCluster check:
++
+`*metrocluster check show*`
+ .. Check for any health alerts on the switches (if present):
++
+`*storage switch show*`
  .. Run Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]

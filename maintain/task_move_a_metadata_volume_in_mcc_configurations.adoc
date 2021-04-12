@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_move_a_metadata_volume_in_mcc_configurations.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, maintain, service, move, metadata, volume, configuration
 summary: 'You can move a metadata volume from one aggregate to another aggregate in a MetroCluster configuration. You might want to move a metadata volume when the source aggregate is decommissioned or unmirrored, or for other reasons that make the aggregate ineligible.'
 ---
 = Moving a metadata volume in MetroCluster configurations
@@ -15,8 +15,13 @@ You can move a metadata volume from one aggregate to another aggregate in a Metr
 * The target aggregate must be mirrored and should not be in the degraded state.
 * The available space in the target aggregate must be larger than the metadata volume that you are moving.
 
-. Set the privilege level to advanced: `set -privilege advanced`
-. Identify the metadata volume that should be moved: `volume show MDV_CRS*`
+.Steps
+. Set the privilege level to advanced:
++
+`*set -privilege advanced*`
+. Identify the metadata volume that should be moved:
++
+`*volume show MDV_CRS**`
 +
 ----
 Cluster_A::*> volume show MDV_CRS*
@@ -43,7 +48,9 @@ Cluster_A
 Cluster_A::>
 ----
 
-. Identify an eligible target aggregate: `metrocluster check config-replication show-aggregate-eligibility`
+. Identify an eligible target aggregate:
++
+`*metrocluster check config-replication show-aggregate-eligibility*`
 +
 The following command identifies the aggregates in cluster_A that are eligible to host metadata volumes:
 +
@@ -67,7 +74,9 @@ Node_B_1_aggr4 - false NonLocal Aggregate
 +
 NOTE: In the previous example, Node_A_1_aggr2 and Node_A_2_aggr2 are eligible.
 
-. Start the volume move operation: `volume move start -vserver svm_name -volume metadata_volume_name -destination-aggregate destination_aggregate_name`
+. Start the volume move operation:
++
+`*volume move start -vserver _svm_name_ -volume _metadata_volume_name_ -destination-aggregate _destination_aggregate_name_*`
 +
 The following command moves metadata volume `MDV_CRS_14c00d4ac9f311e7922800a0984395f1` from `aggregate Node_A_1_aggr1` to `aggregate Node_A_1_aggr2`:
 +
@@ -85,5 +94,9 @@ Use the "volume move show -vserver svm_cluster_A -volume
 MDV_CRS_9da04864ca6011e7b82e0050568be9fe_A" command to view the status of this operation.
 ----
 
-. Verify the state of the volume move operation: `volume move show -volume vol_constituent_name`
-. Return to the admin privilege level: `set -privilege admin`
+. Verify the state of the volume move operation:
++
+`*volume move show -volume vol_constituent_name*`
+. Return to the admin privilege level:
++
+`*set -privilege admin*`

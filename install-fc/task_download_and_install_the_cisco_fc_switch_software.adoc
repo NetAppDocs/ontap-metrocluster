@@ -1,7 +1,7 @@
 ---
 permalink: install-fc/task_download_and_install_the_cisco_fc_switch_software.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, fabric, installation, download, cisco, fc, switch, nx, software
 summary: 'You must download the switch operating system file and RCF file to each switch in the MetroCluster fabric configuration.'
 ---
 = Downloading and installing the Cisco FC switch NX-OS software
@@ -25,9 +25,11 @@ NOTE: The outputs shown are for Cisco IP switches; however, these steps are also
 +
 https://software.cisco.com/download/home[Cisco download page]
 
-. Copy the switch software to the switch: `+copy sftp://root@server-ip-address/tftpboot/NX-OS-file-name bootflash: vrf management+`
+. Copy the switch software to the switch:
 +
-In this example, the nxos.7.0.3.I4.6.bin file is copied from SFTP server 10.10.99.99 to the local bootflash:
+`*+copy sftp://root@server-ip-address/tftpboot/NX-OS-file-name bootflash: vrf management+*`
++
+In this example, the `nxos.7.0.3.I4.6.bin` file is copied from SFTP server 10.10.99.99 to the local bootflash:
 +
 ----
 IP_switch_A_1# copy sftp://root@10.10.99.99/tftpboot/nxos.7.0.3.I4.6.bin bootflash: vrf management
@@ -41,9 +43,11 @@ sftp> exit
 Copy complete, now saving to disk (please wait)...
 ----
 
-. Verify on each switch that the switch NX-OS files are present in each switch's bootflash directory: `dir bootflash`
+. Verify on each switch that the switch NX-OS files are present in each switch's bootflash directory:
 +
-The following example shows that the files are present on IP_switch_A_1:
+`*dir bootflash*`
++
+The following example shows that the files are present on `IP_switch_A_1`:
 +
 ----
 IP_switch_A_1# dir bootflash:
@@ -62,7 +66,9 @@ Usage for bootflash://sup-local
 IP_switch_A_1#
 ----
 
-. Install the switch software: `install all system bootflash:nxos.version-number.bin kickstart bootflash:nxos.version-kickstart-number.bin`
+. Install the switch software:
++
+`*install all system bootflash:nxos.version-number.bin kickstart bootflash:nxos.version-kickstart-number.bin*`
 +
 ----
 IP_switch_A_1#  install all system bootflash:nxos.7.0.3.I4.6.bin kickstart bootflash:nxos.7.0.3.I4.6.bin
@@ -110,7 +116,9 @@ IP_switch_A_1#
 The switch software is now installed.
 ----
 
-. Verify that the switch software has been installed: `show version`
+. Verify that the switch software has been installed:
++
+`*show version*`
 +
 The following example shows the output:
 +

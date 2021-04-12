@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_refresh_the_mcc_configuration_mcc_configure_refresh.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, upgrade, refresh, configuration, new, controller
 summary: 'You must refresh the MetroCluster configuration when expanding it from a two-node configuration to a four-node configuration.'
 ---
 = Refreshing the MetroCluster configuration with new controllers
@@ -12,8 +12,12 @@ summary: 'You must refresh the MetroCluster configuration when expanding it from
 You must refresh the MetroCluster configuration when expanding it from a two-node configuration to a four-node configuration.
 
 . Refresh the MetroCluster configuration:
- .. Enter advanced privilege mode: `set -privilege advanced`
- .. Refresh the MetroCluster configuration: `metrocluster configure -refresh true`
+ .. Enter advanced privilege mode:
+ +
+`*set -privilege advanced*`
+ .. Refresh the MetroCluster configuration:
+ +
+`*metrocluster configure -refresh true*`
 +
 The following command refreshes the MetroCluster configuration on all of the nodes in the DR group that contains controller_A_1:
 +
@@ -23,8 +27,12 @@ controller_A_1::*> metrocluster configure -refresh true
 [Job 726] Job succeeded: Configure is successful.
 ----
 
- .. Return to admin privilege mode: `set -privilege admin`
-. Verify the networking status on site A: `network port show`
+ .. Return to admin privilege mode:
+ +
+`*set -privilege admin*`
+. Verify the networking status on site A:
++
+`*network port show*`
 +
 The following example shows the network port usage on a four-node MetroCluster configuration:
 +
@@ -53,7 +61,9 @@ controller_A_2
 ----
 
 . Verify the MetroCluster configuration from both sites in the MetroCluster configuration.
- .. Verify the configuration from site A: `metrocluster show`
+ .. Verify the configuration from site A:
++
+`*metrocluster show*`
 +
 ----
 cluster_A::> metrocluster show
@@ -67,7 +77,9 @@ Remote: cluster_B         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
- .. Verify the configuration from site B: `metrocluster show`
+ .. Verify the configuration from site B:
++
+`*metrocluster show*`
 +
 ----
 cluster_B::> metrocluster show
@@ -81,7 +93,9 @@ Remote: cluster_A         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
- .. Verify that the DR relationships have been created correctly: `metrocluster node show -fields dr-cluster,dr-auxiliary,node-object-limit,automatic-uso,ha-partner,dr-partner`
+ .. Verify that the DR relationships have been created correctly:
+ +
+`*metrocluster node show -fields dr-cluster,dr-auxiliary,node-object-limit,automatic-uso,ha-partner,dr-partner*`
 +
 ----
 metrocluster node show -fields dr-cluster,dr-auxiliary,node-object-limit,automatic-uso,ha-partner,dr-partner

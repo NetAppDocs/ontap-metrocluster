@@ -1,8 +1,8 @@
 ---
 permalink: install-fc/concept_considerations_when_using_ontap_in_a_mcc_configuration.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: metrocluster, fabric, installation, ontap, configuration
+summary: 'When using ONTAP in a MetroCluster configuration, you should be aware of certain considerations for licensing, peering to clusters outside the MetroCluster configuration, performing volume operations, NVFAIL operations, and other ONTAP operations.'
 ---
 = Considerations when using ONTAP in a MetroCluster configuration
 :icons: font
@@ -41,7 +41,7 @@ After a negotiated or unplanned switchover, any SVM FlexCache peering relationsh
 
 For example, SVMs vs1 (cache) and vs2 (origin) are on site_A. These SVMs are peered.
 
-After switchover, SVMs vs1-mc and vs2-mc are activated at the partner site (site_B). They must be manually repeered for FlexCache to work using the vserver peer repeer command.
+After switchover, SVMs vs1-mc and vs2-mc are activated at the partner site (site_B). They must be manually repeered for FlexCache to work using the `vserver peer repeer` command.
 
 === SVM repeering after switchover or switchback when a FlexCache destination is on a third cluster and in disconnected mode
 
@@ -202,7 +202,7 @@ You must consider the following guidelines when creating LIFs:
 
 ==== Verify LIF creation
 
-You can confirm the successful creation of a LIF in a MetroCluster configuration by running the metrocluster check lif show command. If you encounter any issues while creating the LIF, you can use the metrocluster check lif repair-placement command to fix the issues.
+You can confirm the successful creation of a LIF in a MetroCluster configuration by running the `metrocluster check lif` show command. If you encounter any issues while creating the LIF, you can use the `metrocluster check lif repair-placement` command to fix the issues.
 
 *Related information*
 
@@ -256,7 +256,9 @@ a|
 ONTAP categorizes the ports based on attributes such as adapter type and speed, and then selects the ports with matching attributes.If no ports with matching attributes are found, the LIF is placed on a random connected port on the DR partner.
 
 a|
-From the ports that are marked as reachable during the reachability check, ONTAP prefers ports that are in the broadcast domain that is associated with the subnet of the LIF.If there are no network ports available on the DR cluster that are in the broadcast domain that is associated with the subnet of the LIF, then ONTAP selects ports that have reachability to the source LIF.
+From the ports that are marked as reachable during the reachability check, ONTAP prefers ports that are in the broadcast domain that is associated with the subnet of the LIF.
+
+If there are no network ports available on the DR cluster that are in the broadcast domain that is associated with the subnet of the LIF, then ONTAP selects ports that have reachability to the source LIF.
 
 If there are no ports with reachability to the source LIF, a port is selected from the broadcast domain that is associated with the subnet of the source LIF, and if no such broadcast domain exists, a random port is selected.
 
@@ -274,17 +276,17 @@ From the selected ports, ONTAP selects the least loaded port for placement.
 
 When an iSCSI or FC LIF is created on a node whose DR partner has been taken over, the replicated LIF is placed on the DR auxiliary partner node. After a subsequent giveback operation, the LIFs are not automatically moved to the DR partner. This can lead to LIFs being concentrated on a single node in the partner cluster. During a MetroCluster switchover operation, subsequent attempts to map LUNs belonging to the storage virtual machine (SVM) fail.
 
-You should run the metrocluster check lif show command after a takeover operation or giveback operation to verify that the LIF placement is correct. If errors exist, you can run the metrocluster check lif repair-placement command to resolve the issues.
+You should run the `metrocluster check lif show` command after a takeover operation or giveback operation to verify that the LIF placement is correct. If errors exist, you can run the `metrocluster check lif repair-placement` command to resolve the issues.
 
 ==== LIF placement errors
 
-LIF placement errors that are displayed by the metrocluster check lif show command are retained after a switchover operation. If the network interface modify, network interface rename, or network interface delete command is issued for a LIF with a placement error, the error is removed and does not appear in the output of the metrocluster check lif show command.
+LIF placement errors that are displayed by the `metrocluster check lif show` command are retained after a switchover operation. If the network interface modify, network interface rename, or network interface delete command is issued for a LIF with a placement error, the error is removed and does not appear in the output of the `metrocluster check lif show` command.
 
 ==== LIF replication failure
 
-You can also check whether LIF replication was successful by using the metrocluster check lif show command. An EMS message is displayed if LIF replication fails.
+You can also check whether LIF replication was successful by using the `metrocluster check lif show` command. An EMS message is displayed if LIF replication fails.
 
-You can correct a replication failure by running the metrocluster check lif repair-placement command for any LIF that fails to find a correct port. You should resolve any LIF replication failures as soon as possible to verify the availability of LIF during a MetroCluster switchover operation.
+You can correct a replication failure by running the `metrocluster check lif repair-placement` command for any LIF that fails to find a correct port. You should resolve any LIF replication failures as soon as possible to verify the availability of LIF during a MetroCluster switchover operation.
 
 NOTE: Even if the source SVM is down, LIF placement might proceed normally if there is a LIF belonging to a different SVM in a port with the same IPspace and network in the destination SVM.
 
@@ -292,7 +294,7 @@ NOTE: Even if the source SVM is down, LIF placement might proceed normally if th
 
 If any change is made in the FC switch fabric to which the FC target ports of the source and DR nodes are connected, then the FC LIFs that are placed at the DR partner might become inaccessible to the hosts after a switchover operation.
 
-You should run the metrocluster check lif repair-placement command on the source as well as the DR nodes after a change is made in the FC switch fabric to verify the host connectivity of LIFs. The changes in the switch fabric might result in LIFs getting placed in different target FC ports at the DR partner node.
+You should run the `metrocluster check lif repair-placement` command on the source as well as the DR nodes after a change is made in the FC switch fabric to verify the host connectivity of LIFs. The changes in the switch fabric might result in LIFs getting placed in different target FC ports at the DR partner node.
 
 *Related information*
 
@@ -305,7 +307,7 @@ xref:concept_considerations_when_using_ontap_in_a_mcc_configuration.adoc[Require
 [.lead]
 The system does not allow the creation of new volumes on the root aggregate (an aggregate with an HA policy of CFO) of a node in a MetroCluster configuration.
 
-Because of this restriction, root aggregates cannot be added to an SVM using the vserver add-aggregates command.
+Because of this restriction, root aggregates cannot be added to an SVM using the `vserver add-aggregates` command.
 
 == SVM disaster recovery in a MetroCluster configuration
 
@@ -334,9 +336,7 @@ image::../media/svm_dr_image_2.gif[]
 +
 However, after the switchover or switchback process completes, the next SVM DR scheduled updates will succeed.
 
-See the section "`Replicating the SVM configuration`" in the _Data Protection Power Guide_ for details on configuring an SVM DR relationship.
-
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-dap/home.html[Data protection]
+See the section "`Replicating the SVM configuration`" in the link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-dap/home.html[Data Protection Power Guide] for details on configuring an SVM DR relationship.
 
 === SVM resynchronization at a disaster recovery site
 
@@ -362,7 +362,7 @@ To successfully perform the switchback process, the resynchronization relationsh
 == Output for the storage aggregate plex show command is indeterminate after a MetroCluster switchover
 
 [.lead]
-When you run the storage aggregate plex show command after a MetroCluster switchover, the status of plex0 of the switched over root aggregate is indeterminate and is displayed as failed. During this time, the switched over root is not updated. The actual status of this plex can only be determined after the MetroCluster healing phase.
+When you run the `storage aggregate plex show` command after a MetroCluster switchover, the status of plex0 of the switched over root aggregate is indeterminate and is displayed as `failed`. During this time, the switched over root is not updated. The actual status of this plex can only be determined after the MetroCluster healing phase.
 
 == Modifying volumes to set the NVFAIL flag in case of switchover
 
@@ -371,4 +371,6 @@ You can modify a volume so that the NVFAIL flag is set on the volume in the even
 
 NOTE: In ONTAP versions earlier than 9.0, the NVFAIL flag is used for each switchover. In ONTAP 9.0 and later versions, the unplanned switchover (USO) is used.
 
-. Enable MetroCluster configuration to trigger NVFAIL on switchover by setting the vol -dr-force-nvfail parameter to on: `vol modify -vserver vserver-name -volume volume-name -dr-force-nvfail on`
+. Enable MetroCluster configuration to trigger NVFAIL on switchover by setting the `vol -dr-force-nvfail` parameter to `on`:
++
+`*vol modify -vserver _vserver-name_ -volume _volume-name_ -dr-force-nvfail on*`

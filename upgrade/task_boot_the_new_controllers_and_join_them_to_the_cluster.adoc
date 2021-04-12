@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_boot_the_new_controllers_and_join_them_to_the_cluster.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, upgrade, boot, new, controller, join, cluster
 summary: 'To join the new controllers to the cluster, you must boot each new controller module and use the ONTAP cluster setup wizard to identify the cluster will join.'
 ---
 = Booting the new controllers and joining them to the cluster
@@ -17,9 +17,12 @@ You must not have configured the Service Processor prior to performing this task
 
 This task must be performed on each of the new controllers at both clusters in the MetroCluster configuration.
 
+.Steps
 . If you have not already done so, power up each node and let them boot completely.
 +
-If the system is in Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the following command from the LOADER prompt: `boot_ontap`
+If the system is in Maintenance mode, issue the `*halt*` command to exit Maintenance mode, and then issue the following command from the LOADER prompt:
++
+`*boot_ontap*`
 +
 The controller module enters the node setup wizard.
 +
@@ -52,13 +55,19 @@ Enter the node management interface netmask: 225.225.252.0
 Enter the node management interface default gateway: 10.228.160.1
 ----
 
-. Confirm that nodes are configured in high-availability mode: `storage failover show -fields mode`
+. Confirm that nodes are configured in high-availability mode:
 +
-If not, you must issue the following command on each node, and then reboot the node: `storage failover modify -mode ha -node localhost`
+`*storage failover show -fields mode*`
 +
-This command configures high availability mode but does not enable storage failover. Storage failover is automatically enabled when you issue the metrocluster configure command later in the configuration process.
+If not, you must issue the following command on each node, and then reboot the node:
++
+`*storage failover modify -mode ha -node localhost*`
++
+This command configures high availability mode but does not enable storage failover. Storage failover is automatically enabled when you issue the `metrocluster configure` command later in the configuration process.
 
-. Confirm that you have four ports configured as cluster interconnects: `network port show`
+. Confirm that you have four ports configured as cluster interconnects:
++
+`*network port show*`
 +
 The following example shows output for two controllers in cluster_A. If it is a two-node MetroCluster configuration, the output shows only one node.
 +
@@ -86,9 +95,11 @@ node_A_2
 14 entries were displayed.
 ----
 
-. Because you are using the CLI to set up the cluster, exit the Node Setup wizard: `exit`
-. Log in to the admin account by using the `admin` user name.
-. Start the Cluster Setup wizard, and then join the existing cluster: `cluster setup`
+. Because you are using the CLI to set up the cluster, exit the Node Setup wizard:
++
+`*exit*`
+. Log in to the admin account by using the `*admin*` user name.
+. Start the Cluster Setup wizard, and then join the existing cluster: `*cluster setup*`
 +
 ----
 ::> cluster setup
@@ -108,7 +119,9 @@ To accept a default or omit a question, do not enter a value.
 Do you want to create a new cluster or join an existing cluster? {create, join}:`join`
 ----
 
-. After you complete the Cluster Setup wizard and it exits, verify that the cluster is active and the node is healthy: `cluster show`
+. After you complete the *Cluster Setup* wizard and it exits, verify that the cluster is active and the node is healthy:
++
+`*cluster show*`
 +
 The following example shows a cluster in which the first node (cluster1-01) is healthy and eligible to participate:
 +
@@ -121,4 +134,4 @@ node_A_2           true    true
 node_A_3           true    true
 ----
 +
-If it becomes necessary to change any of the settings you entered for the admin SVM or node SVM, you can access the Cluster Setup wizard by using the cluster setup command.
+If it becomes necessary to change any of the settings you entered for the admin SVM or node SVM, you can access the *Cluster Setup* wizard by using the `*cluster setup command*`.

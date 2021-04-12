@@ -1,7 +1,7 @@
 ---
 permalink: install-stretch/task_enable_ip_port_access_on_the_fibrebridge_7600n_bridge_guides.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, stretch, installation, enable, ip, port, access, bridge, fibrebridge
 summary: 'If you are using an ONTAP version prior to 9.5, or otherwise plan to use out-of-band access to the FibreBridge 7600N bridge using telnet or other IP port protocols and services \(FTP, ExpressNAV, ICMP, or QuickNAV\), you can enable the access services via the console port.'
 ---
 = Enabling IP port access on the FibreBridge 7600N bridge if necessary
@@ -19,16 +19,23 @@ Starting with ONTAP 9.8, _in-band management_ of the bridges is supported by def
 
 This task is required if you are *not* using in-band management to manage the bridges. In this case, you need to configure the bridge via the Ethernet management port.
 
+.Steps
 . Access the bridge's console interface by connecting a serial cable to the serial port on the FibreBridge 7600N bridge.
-. Using the console, enable the access services, and then save the configuration: `set closeport none``saveconfiguration`
+. Using the console, enable the access services, and then save the configuration:
 +
-The set closeport none command enables all access services on the bridge.
+`*set closeport none*`
++
+`*saveconfiguration*`
++
+The `set closeport none` command enables all access services on the bridge.
 
-. Disable a service, if desired, by issuing the set closeport and repeating the command as necessary until all desired services are disabled: `set closeport service`
+. Disable a service, if desired, by issuing the `set closeport` and repeating the command as necessary until all desired services are disabled:
 +
-The set closeport command disables a single service at a time.
+`*set closeport _service_*`
 +
-service can specify one of the following:
+The `set closeport` command disables a single service at a time.
++
+`_service_` can specify one of the following:
 
  ** expressnav
  ** ftp
@@ -36,10 +43,14 @@ service can specify one of the following:
  ** quicknav
  ** snmp
  ** telnet
-You can check whether a specific protocol is enabled or disabled by using the get closeport command.
+You can check whether a specific protocol is enabled or disabled by using the `get closeport` command.
 
-. If you are enabling SNMP, you must also issue the set SNMP enabled command: `set SNMP enabled`
+. If you are enabling SNMP, you must also issue the set SNMP enabled command:
++
+`*set SNMP enabled*`
 +
 SNMP is the only protocol that requires a separate enable command.
 
-. Save the configuration: `saveconfiguration`
+. Save the configuration:
++
+`*saveconfiguration*`
