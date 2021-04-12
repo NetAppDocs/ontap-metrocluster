@@ -1,8 +1,9 @@
 ---
 permalink: install-ip/concept_configure_the_mcc_software_in_ontap.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: metrocluster, configuration, ontap, node-level, configuration, node, site, relationship, configuring, configure
+keywords: metrocluster, configuration, ontap, node-level, configuration, node, site, relationship, configuring, configure, similarities, difference, standard, cluster, verify, ha-config, state, component, restoring, restore, controller, module, manual, drive, pool, set, up
+summary: You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites.
 ---
 = Configuring the MetroCluster software in ONTAP
 :icons: font
@@ -29,6 +30,7 @@ You must obtain IP addresses and other network information for the first MetroCl
 
 When you cable the system, you need a host name and management IP address for each cluster switch.
 
+[options="header"]
 |===
 | Cluster switch| Host name| IP address| Network mask| Default gateway
 a|
@@ -77,11 +79,13 @@ a|
 
 When you first create the cluster, you need the following information:
 
+[options="header"]
 |===
 | Type of information| Your values
 a|
-Cluster nameExample used in this guide: site_A
+Cluster name
 
+Example used in this guide: site_A
 a|
 
 a|
@@ -106,6 +110,7 @@ a|
 
 For each node in the cluster, you need a management IP address, a network mask, and a default gateway.
 
+[options="header"]
 |===
 | Node| Port| IP address| Network mask| Default gateway
 a|
@@ -138,6 +143,7 @@ For each node in the cluster, you need the IP addresses of two MetroCluster IP L
 
 xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for MetroCluster IP configuration]
 
+[options="header"]
 |===
 | Node| Port| IP address of MetroCluster IP LIF| Network mask| Default gateway
 a|
@@ -186,6 +192,7 @@ a|
 
 For each node in the cluster, you need the IP addresses of two intercluster LIFs, including a network mask and a default gateway. The intercluster LIFs are used to peer the clusters.
 
+[options="header"]
 |===
 | Node| Port| IP address of intercluster LIF| Network mask| Default gateway
 a|
@@ -234,6 +241,7 @@ a|
 
 You must synchronize the time, which requires one or more NTP time servers.
 
+[options="header"]
 |===
 | Node| Host name| IP address| Network mask| Default gateway
 a|
@@ -262,8 +270,9 @@ a|
 
 You must configure AutoSupport on each node, which requires the following information:
 
+[options="header"]
 |===
-| Type of information| Your values
+2+| Type of information| Your values
 a|
 From email address
 a|
@@ -276,7 +285,7 @@ a|
 IP addresses or names
 a|
 
-a|
+.2+a|
 Transport protocol
 a|
 HTTP, HTTPS, or SMTP
@@ -286,7 +295,7 @@ a|
 Proxy server
 a|
 
-a|
+.3+a|
 Recipient email addresses or distribution lists
 a|
 Full-length messages
@@ -306,6 +315,7 @@ a|
 
 You must enable access to the Service Processor (SP) of each node for troubleshooting and maintenance, which requires the following network information for each node:
 
+[options="header"]
 |===
 | Node| IP address| Network mask| Default gateway
 a|
@@ -327,6 +337,7 @@ You must obtain IP addresses and other network information for the second MetroC
 
 When you cable the system, you need a host name and management IP address for each cluster switch.
 
+[options="header"]
 |===
 | Cluster switch| Host name| IP address| Network mask| Default gateway
 a|
@@ -375,11 +386,13 @@ a|
 
 When you first create the cluster, you need the following information:
 
+[options="header"]
 |===
 | Type of information| Your values
 a|
-Cluster nameExample used in this guide: site_B
+Cluster name
 
+Example used in this guide: site_B
 a|
 
 a|
@@ -404,6 +417,7 @@ a|
 
 For each node in the cluster, you need a management IP address, a network mask, and a default gateway.
 
+[options="header"]
 |===
 | Node| Port| IP address| Network mask| Default gateway
 a|
@@ -436,6 +450,7 @@ For each node in the cluster, you need the IP addresses of two MetroCluster IP L
 
 xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for MetroCluster IP configuration]
 
+[options="header"]
 |===
 | Node| Port| IP address of MetroCluster IP LIF| Network mask| Default gateway
 a|
@@ -484,6 +499,7 @@ a|
 
 For each node in the cluster, you need the IP addresses of two intercluster LIFs, including a network mask and a default gateway. The intercluster LIFs are used to peer the clusters.
 
+[options="header"]
 |===
 | Node| Port| IP address of intercluster LIF| Network mask| Default gateway
 a|
@@ -532,6 +548,7 @@ a|
 
 You must synchronize the time, which requires one or more NTP time servers.
 
+[options="header"]
 |===
 | Node| Host name| IP address| Network mask| Default gateway
 a|
@@ -560,8 +577,9 @@ a|
 
 You must configure AutoSupport on each node, which requires the following information:
 
+[options="header"]
 |===
-| Type of information| Your values
+2+| Type of information| Your values
 a|
 From email address
 a|
@@ -574,7 +592,7 @@ a|
 IP addresses or names
 a|
 
-a|
+.2+a|
 Transport protocol
 a|
 HTTP, HTTPS, or SMTP
@@ -584,7 +602,7 @@ a|
 Proxy server
 a|
 
-a|
+.3+a|
 Recipient email addresses or distribution lists
 a|
 Full-length messages
@@ -604,6 +622,7 @@ a|
 
 You must enable access to the Service Processor (SP) of each node for troubleshooting and maintenance, which requires the following network information for each node:
 
+[options="header"]
 |===
 | Node| IP address| Network mask| Default gateway
 a|
@@ -623,6 +642,7 @@ The configuration of the nodes in each cluster in a MetroCluster configuration i
 
 The MetroCluster configuration is built on two standard clusters. Physically, the configuration must be symmetrical, with each node having the same hardware configuration, and all of the MetroCluster components must be cabled and configured. However, the basic software configuration for nodes in a MetroCluster configuration is the same as that for nodes in a standard cluster.
 
+[options="header"]
 |===
 | Configuration step| Standard cluster configuration| MetroCluster configuration
 a|
@@ -1270,6 +1290,7 @@ cluster01
 
 . Create intercluster LIFs on the system SVM and assign them to the failover group.
 +
+[options="header"]
 |===
     a|
 *In ONTAP 9.6 and later:*
@@ -1296,6 +1317,7 @@ policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.
 
 . Verify that the intercluster LIFs were created:
 +
+[options="header"]
 |===
     a|
 *In ONTAP 9.6 and later:*
@@ -1322,6 +1344,7 @@ cluster01
 
 . Verify that the intercluster LIFs are redundant:
 +
+[options="header"]
 |===
     a|
 *In ONTAP 9.6 and later:*
@@ -1385,6 +1408,7 @@ cluster01-02
 
 . Create intercluster LIFs on the system SVM:
 +
+[options="header"]
 |===
     a|
 *In ONTAP 9.6 and later:*
@@ -1412,6 +1436,7 @@ policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.
 
 . Verify that the intercluster LIFs were created:
 +
+[options="header"]
 |===
     a|
 *In ONTAP 9.6 and later:*
@@ -1438,6 +1463,7 @@ cluster01
 
 . Verify that the intercluster LIFs are redundant:
 +
+[options="header"]
 |===
     a|
 *In ONTAP 9.6 and later:*
@@ -1628,9 +1654,10 @@ include::_include/models_supporting_vlan-id.adoc[]
 
 The following IP addresses and subnets are used in the examples:
 
+[options="header"]
 |===
 | Node| Interface| IP address| Subnet
-a|
+.2+a|
 node_A_1
 a|
 MetroCluster IP interface 1
@@ -1644,7 +1671,7 @@ a|
 10.1.2.1
 a|
 10.1.2/24
-a|
+.2+a|
 node_A_2
 a|
 MetroCluster IP interface 1
@@ -1658,7 +1685,7 @@ a|
 10.1.2.2
 a|
 10.1.2/24
-a|
+.2+a|
 node_B_1
 a|
 MetroCluster IP interface 1
@@ -1672,7 +1699,7 @@ a|
 10.1.2.3
 a|
 10.1.2/24
-a|
+.2+a|
 node_B_2
 a|
 MetroCluster IP interface 1
@@ -1689,13 +1716,14 @@ a|
 |===
 The physical ports used by the MetroCluster IP interfaces depends on the platform model, as shown in the following table.
 
+[options="header"]
 |===
 | Platform model| MetroCluster IP port| VLAN ID|
-a|
+.2+a|
 AFF A800
 a|
 e0b
-a|
+.10+a|
 Not used
 a|
 
@@ -1703,7 +1731,7 @@ a|
 e1b
 a|
 
-a|
+.2+a|
 AFF A700 and FAS9000
 a|
 e5a
@@ -1713,7 +1741,7 @@ a|
 e5b
 a|
 
-a|
+.2+a|
 AFF A400
 a|
 e3a
@@ -1723,7 +1751,7 @@ a|
 e3b
 a|
 
-a|
+.2+a|
 AFF A320
 a|
 e0g
@@ -1733,7 +1761,7 @@ a|
 e0h
 a|
 
-a|
+.2+a|
 AFF A300 and FAS8200
 a|
 e1a
@@ -1743,19 +1771,19 @@ a|
 e1b
 a|
 
-a|
+.2+a|
 AFF A220 and FAS2750
 a|
 e0a
 a|
 10
-a|
+.2+a|
 On these systems, these physical ports are also used as cluster interfaces.
 a|
 e0b
 a|
 20
-a|
+.2+a|
 AFF A250 and FAS500f
 a|
 e0c
@@ -2096,6 +2124,7 @@ cluster_B::>
 [.lead]
 Depending on the storage configuration, you must either verify pool 1 drive assignment or manually assign drives to pool 1 for each node in the MetroCluster IP configuration. The procedure you use depends on the version of ONTAP you are using.
 
+[options="header"]
 |===
 | Configuration type| Procedure
 a|
@@ -2577,6 +2606,7 @@ The metrocluster configure command automatically pairs the two nodes with the lo
 
 . Configure the MetroCluster in the following format:
 +
+[options="header"]
 |===
 | If your MetroCluster configuration has...| Then do this...
 a|
