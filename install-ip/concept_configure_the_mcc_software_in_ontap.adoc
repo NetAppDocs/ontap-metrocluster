@@ -141,7 +141,7 @@ a|
 
 For each node in the cluster, you need the IP addresses of two MetroCluster IP LIFs, including a network mask and a default gateway. The MetroCluster IP LIFs are used for MetroCluster IP back-end connectivity.
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for MetroCluster IP configuration]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration]
 
 [options="header"]
 |===
@@ -448,7 +448,7 @@ a|
 
 For each node in the cluster, you need the IP addresses of two MetroCluster IP LIFs, including a network mask and a default gateway. The MetroCluster IP LIFs are used for MetroCluster IP back-end connectivity.
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for MetroCluster IP configuration]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration]
 
 [options="header"]
 |===
@@ -775,7 +775,7 @@ The drives should be assigned symmetrically, so each node has an equal number of
 . Display the boot menu: `boot_ontap menu`
 . Select option 4 from the boot menu and let the system boot.
 . Repeat these steps on the other nodes in the MetroCluster IP configuration.
-. Proceed to xref:concept_configure_the_mcc_software_in_ontap.adoc[Setting up ONTAP].
+. Proceed to xref:concept_configure_the_mcc_software_in_ontap.html#setting-up-ontap[Setting up ONTAP].
 
 === Manually assigning drives for pool 0 (ONTAP 9.3)
 
@@ -1072,7 +1072,7 @@ This task is not required in ONTAP 9.5 and later.
 
 This task does not apply to an AFF A800 system with an internal shelf and no external shelves.
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
 
 . Disable automatic drive assignment: `storage disk option modify -node node_name -autoassign off`
 +
@@ -1085,7 +1085,7 @@ You must verify that the remote drives are visible to the nodes and have been as
 
 Automatic assignment depends on the storage system platform model and drive shelf arrangement.
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
 
 . Verify that pool 0 drives are assigned automatically: `disk show`
 +
@@ -1189,9 +1189,9 @@ The clusters in the MetroCluster configuration must be in a peer relationship so
 
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-clus-peer/home.html[Cluster and SVM peering express configuration]
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations when using dedicated ports]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-when-using-dedicated-ports[Considerations when using dedicated ports]
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations when sharing data ports]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-when-sharing-data-ports[Considerations when sharing data ports]
 
 ==== Configuring intercluster LIFs
 
@@ -1375,7 +1375,7 @@ cluster01
 
 *Related information*
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations when using dedicated ports]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-when-using-dedicated-ports[Considerations when using dedicated ports]
 
 ===== Configuring intercluster LIFs on shared data ports
 
@@ -1494,7 +1494,7 @@ cluster01
 
 *Related information*
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations when sharing data ports]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-when-sharing-data-ports[Considerations when sharing data ports]
 
 ==== Creating a cluster peer relationship
 
@@ -1646,7 +1646,7 @@ You must create all MetroCluster IP interface 'A' ports in the same VLAN and all
 
 NOTE: You must choose the MetroCluster IP addresses carefully because you cannot change them after initial configuration.
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for MetroCluster IP configuration]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration]
 
 // include reference
 include::_include/models_supporting_vlan-id.adoc[]
@@ -2130,15 +2130,15 @@ Depending on the storage configuration, you must either verify pool 1 drive assi
 a|
 The systems meet the requirements for automatic drive assignment or, if running ONTAP 9.3, were received from the factory.
 a|
-xref:concept_configure_the_mcc_software_in_ontap.adoc[Verifying disk assignment for pool 1 disks]
+xref:concept_configure_the_mcc_software_in_ontap.html#verifying-disk-assignment-for-pool-1-disks[Verifying disk assignment for pool 1 disks]
 a|
 The configuration includes either three shelves, or, if it contains more than four shelves, has an uneven multiple of four shelves (for example, seven shelves), and is running ONTAP 9.5.
 a|
-xref:concept_configure_the_mcc_software_in_ontap.adoc[Manually assigning drives for pool 1 (ONTAP 9.4 or later)]
+xref:concept_configure_the_mcc_software_in_ontap.html#verifying-or-manually-performing-pool-1-drives-assignment[Manually assigning drives for pool 1 (ONTAP 9.4 or later)]
 a|
 The configuration does not include four storage shelves per site and is running ONTAP 9.4
 a|
-xref:concept_configure_the_mcc_software_in_ontap.adoc[Manually assigning drives for pool 1 (ONTAP 9.4 or later)]
+xref:concept_configure_the_mcc_software_in_ontap.html#verifying-or-manually-performing-pool-1-drives-assignment[Manually assigning drives for pool 1 (ONTAP 9.4 or later)]
 a|
 The systems were not received from the factory and are running ONTAP 9.3Systems received from the factory are pre-configured with assigned drives.
 
@@ -2155,7 +2155,7 @@ You must wait at least ten minutes for disk auto-assignment to complete after th
 
 Command output will show disk names in the form: node-name:0m.i1.0L1
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
 
 . Verify pool 1 disks are auto-assigned: `disk show`
 +
@@ -2345,7 +2345,7 @@ If the system was not preconfigured at the factory and does not meet the require
 
 This procedure applies to configurations running ONTAP 9.4 or later.
 
-Details for determining whether your system requires manual disk assignment are included in xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
+Details for determining whether your system requires manual disk assignment are included in xref:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
 
 If the configuration has fewer than four external shelves per site, you must check that automatic drive assignment on all nodes is disabled and manually assign the drives.
 
@@ -2383,7 +2383,7 @@ disk-id must identify a drive on a remote shelf of owner-node-name.
 
  .. Confirm that the drives were assigned to pool 1: `disk show -host-adapter 0m -container-type unassigned`
 +
-NOTE: The iSCSI connection used to access the remote drives appears as device 0m.
+*NOTE*: The iSCSI connection used to access the remote drives appears as device 0m.
 +
 The following output shows that the drives on shelf 23 were assigned because they no longer appear in the list of unassigned drives:
 +
@@ -2457,7 +2457,7 @@ The ONTAP disk autoassignment feature assigns all disks on the remote shelf that
 
  .. After waiting at least 60 seconds for disk autoassignment to take place, verify that the remote disks on the shelf were auto-assigned to pool 1: `disk show -host-adapter 0m -container-type unassigned`
 +
-NOTE: The iSCSI connection used to access the remote disks appears as device 0m.
+*Note*: The iSCSI connection used to access the remote disks appears as device 0m.
 +
 The following output shows that the disks on shelf 23 have now been assigned and no longer appear:
 +
@@ -2503,7 +2503,7 @@ cluster_A::>
 [.lead]
 In ONTAP 9.4, if you disabled automatic drive assignment as directed previously in this procedure, you must reenable it on all nodes.
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
 
 . Enable automatic drive assignment: `storage disk option modify -node node_name -autoassign on`
 +
@@ -2890,7 +2890,7 @@ If you are connecting to an existing Tiebreaker or ONTAP Mediator instance, you 
 
 If you must install a new instance of the ONTAP Mediator, follow the directions to install and configure the software.
 
-xref:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.adoc[Configuring the ONTAP Mediator service for unplanned automatic switchover]
+xref:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.delete_me_mcc_ip_cabling_a_aff_a250_or_fas500f_to_a_broadcom_bes_53248_switch[Configuring the ONTAP Mediator service for unplanned automatic switchover]
 
 If you must install a new instance of the Tiebreaker software, follow the directions to install and configure the software.
 
@@ -2898,7 +2898,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/
 
 You cannot use both the MetroCluster Tiebreaker software and the ONTAP Mediator with the same MetroCluster configuration.
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for using ONTAP Mediator or MetroCluster Tiebreaker]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-using-ontap-mediator-or-metrocluster-tiebreaker[Considerations for using ONTAP Mediator or MetroCluster Tiebreaker]
 
 . Configure the ONTAP Mediator service or the Tiebreaker software:
  ** If you are using an existing instance of the ONTAP Mediator, add the ONTAP Mediator service to ONTAP using the following command:``metrocluster configuration-settings mediator add -mediator-address ip-address-of-mediator-host``
