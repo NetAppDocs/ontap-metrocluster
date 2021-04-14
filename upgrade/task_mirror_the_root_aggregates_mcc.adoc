@@ -1,0 +1,35 @@
+---
+permalink: upgrade/task_mirror_the_root_aggregates_mcc.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, mirror, root, aggregate
+summary: 'You must mirror the root aggregates to provide data protection.'
+---
+= Mirroring the root aggregates
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must mirror the root aggregates to provide data protection.
+
+By default, the root aggregate is created as RAID-DP type aggregate. You can change the root aggregate from RAID-DP to RAID4 type aggregate. The following command modifies the root aggregate for RAID4 type aggregate:
+
+----
+storage aggregate modify –aggregate aggr_name -raidtype raid4
+----
+
+NOTE: On non-ADP systems, the RAID type of the aggregate can be modified from the default RAID-DP to RAID4 before or after the aggregate is mirrored.
+
+.Steps
+. Mirror the root aggregate:
++
+`*storage aggregate mirror _aggr_name_*`
++
+The following command mirrors the root aggregate for controller_A_1:
++
+----
+controller_A_1::> storage aggregate mirror aggr0_controller_A_1
+----
++
+This mirrors the aggregate, so it consists of a local plex and a remote plex located at the remote MetroCluster site.
+
+. Repeat the previous step for each node in the MetroCluster configuration.

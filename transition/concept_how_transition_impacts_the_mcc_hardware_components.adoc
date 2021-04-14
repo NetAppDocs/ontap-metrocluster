@@ -1,0 +1,34 @@
+---
+permalink: transition/concept_how_transition_impacts_the_mcc_hardware_components.html
+sidebar: sidebar
+keywords: complete, completing, transition, procedure, key, component, exist, metrocluster, configuration, replace, reconfigure, impact, hardware, component
+summary: After completing the transition procedure, key components of the existing MetroCluster configuration have been replaced or reconfigured.
+---
+= How transition impacts the MetroCluster hardware components
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+After completing the transition procedure, key components of the existing MetroCluster configuration have been replaced or reconfigured.
+
+* *Controller modules*
++
+The existing controller modules are replaced by new controller modules. The existing controller modules are decommissioned at the end of the transition procedures.
+
+* *Storage shelves*
++
+Data is moved from the old shelves to the new shelves. The old shelves are decommissioned at the end of the transition procedures.
+
+* *MetroCluster (back-end) and cluster switches*
++
+The back-end switch functionality is replaced by the IP switch fabric. If the MetroCluster FC configuration included FC switches and FC-to-SAS bridges, they are decommissioned at the end of this procedure.
++
+If the MetroCluster FC configuration used cluster switches for the cluster interconnect, in some cases they can be reused to provide the back-end IP switch fabric. Reused cluster switches must be reconfigured with platform and switch-specific RCFs. procedures.
++
+If the MetroCluster FC configuration did not use cluster switches, new IP switches are added to provide the backend switch fabric.
++
+xref:concept_considerations_for_using_existing_ip_switches.adoc[Considerations for IP switches]
+
+* *Cluster peering network*
++
+The existing customer-provided cluster peering network can be used for the new MetroCluster IP configuration. Cluster peering is configured on the MetroCluster IP nodes as part of the transition procedure.

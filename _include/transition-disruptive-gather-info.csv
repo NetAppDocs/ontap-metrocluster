@@ -1,0 +1,25 @@
+Category,Commands,Notes
+License,system license show,
+Shelves and numbers of disks in each shelf and flash storage details and memory and NVRAM and and network cards,system node run -node node_name sysconfig,
+Cluster network and node management LIFs,"system node run -node node_name sysconfig network interface show -role ""cluster,node-mgmt,data""",
+SVM information,vserver show,
+Protocol information,"nfs show
+iscsi show
+cifs show",
+Physical ports,"network port show -node node_name -type physical
+network port show",
+Failover Groups,network interface failover-groups show -vserver vserver_name ,Record the names and ports of failover groups that are not clusterwide.
+VLAN configuration,network port vlan show -node node_name ,Record each network port and VLAN ID pairing.
+Interface group configuration,network port ifgrp show -node node_name -instance ,Record the names of the interface groups and the ports assigned to them.
+Broadcast domains,network port broadcast-domain show,
+IPspace,network ipspace show,
+Volume info,volume show and volume show -fields encrypt,
+Aggregate Info,storage aggregate show and storage aggr encryption show andstorage aggregate object-store show,
+Disk ownership information,storage aggregate show and storage aggr encryption show andstorage aggregate object-store show,
+Encryption,storage failover mailbox-disk show and security key-manager backup show ,Also preserve the passphrase used to enable key-manager. In the case of external key-manager you will need the authentication information for the client and server.
+Encryption,security key-manager show,
+Encryption,security key-manager external show,
+Encryption,systemshell local kenv kmip.init.ipaddr ip-address,
+Encryption,systemshell local kenv kmip.init.netmask netmask,
+Encryption,systemshell local kenv kmip.init.gateway gateway,
+Encryption,systemshell local kenv kmip.init.interface interface,

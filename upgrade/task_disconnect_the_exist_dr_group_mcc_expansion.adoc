@@ -1,0 +1,22 @@
+---
+permalink: upgrade/task_disconnect_the_exist_dr_group_mcc_expansion.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, disconnect, existing, dr, group, fabric
+summary: 'You must disconnect the existing controller modules from the FC switches in the fabric.'
+---
+= Disconnecting the existing DR group from the fabric
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must disconnect the existing controller modules from the FC switches in the fabric.
+
+This task must be performed at each MetroCluster site.
+
+.Steps
+. Disable the HBA ports that connect the existing controller modules to the switch fabric undergoing maintenance:
++
+`*storage port disable -node _node-name_ -port _port-number_*`
+. On the local FC switches, remove the cables from the ports for the existing controller module's HBA, FC-VI, and ATTO bridges.
++
+You should label the cables for easy identification when you recable them. Only the ISL ports should remain cabled.

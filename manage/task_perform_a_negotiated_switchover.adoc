@@ -1,0 +1,77 @@
+---
+permalink: manage/task_perform_a_negotiated_switchover.html
+sidebar: sidebar
+keywords: negotiate, switchover, clean, shut, down, partner, site, operation, metrocluster, perform
+summary: A negotiated switchover cleanly shuts down processes on the partner site, and then switches over operations from the partner site. You can use a negotiated switchover to perform maintenance on a MetroCluster site or to test the switchover functionality.
+---
+= Performing a negotiated switchover
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+A negotiated switchover cleanly shuts down processes on the partner site, and then switches over operations from the partner site. You can use a negotiated switchover to perform maintenance on a MetroCluster site or to test the switchover functionality.
+
+* All previous configuration changes must be completed before performing a switchback operation.
++
+This is to avoid competition with the negotiated switchover or switchback operation.
+
+* Any nodes that were previously down must be booted and in cluster quorum.
++
+The _System Administration Reference_ has more information about cluster quorum in the "`Understanding quorum and epsilon`" section.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[System administration]
+
+* The cluster peering network must be available from both sites.
+* All of the nodes in the MetroCluster configuration must be running the same version of ONTAP software.
+* The option replication.create_data_protection_rels.enable must be set to ON on both of the sites in a MetroCluster configuration before creating a new SnapMirror relationship.
+* For a two-node MetroCluster configuration, a new SnapMirror relationship should not be created during an upgrade when there are mismatched versions of ONTAP between the sites.
+* For a four-node MetroCluster configuration, the mismatched versions of ONTAP between the sites are not supported.
+
+The recovering site can take a few hours to be able to perform the switchback operation.
+
+The metrocluster switchover command switches over the nodes in all DR groups in the MetroCluster configuration. For example, in an eight-node MetroCluster configuration, it switches over the nodes in both DR groups.
+
+While preparing for and executing a negotiated switchover, you must not make configuration changes to either cluster or perform any takeover or giveback operations.
+
+For MetroCluster FC configurations:
+
+* Mirrored aggregates will remain in normal state if the remote storage is accessible.
+* Mirrored aggregates will become degraded after the negotiated switchover if access to the remote storage is lost.
+* Unmirrored aggregates that are located at the disaster site will become unavailable if access to the remote storage is lost. This might lead to a controller outage.
+
+For MetroCluster IP configurations:
+
+* For ONTAP 9.4 and earlier:
+ ** Mirrored aggregates will become degraded after the negotiated switchover.
+* For ONTAP 9.5 and later:
+ ** Mirrored aggregates will remain in normal state if the remote storage is accessible.
+ ** Mirrored aggregates will become degraded after the negotiated switchover if access to the remote storage is lost.
+* For ONTAP 9.8 and later:
+ ** Unmirrored aggregates that are located at the disaster site will become unavailable if access to the remote storage is lost. This might lead to a controller outage.
+
+. Use the metrocluster check run, metrocluster check show and metrocluster check config-replication show commands to make sure no configuration updates are in progress or pending.
+. Enter the following command to implement the switchover: `metrocluster switchover`
++
+The operation can take several minutes to complete.
++
+IMPORTANT:
+
+. Monitor the completion of the switchover: `metrocluster operation show`
++
+----
+cluster_A::*> metrocluster operation show
+  Operation: Switchover
+ Start time: 10/4/2012 19:04:13
+      State: in-progress
+   End time: -
+     Errors:
+
+cluster_A::*> metrocluster operation show
+  Operation: Switchover
+ Start time: 10/4/2012 19:04:13
+      State: successful
+   End time: 10/4/2012 19:04:22
+     Errors: -
+----
+
+. Reestablish any SnapMirror or SnapVault configurations.

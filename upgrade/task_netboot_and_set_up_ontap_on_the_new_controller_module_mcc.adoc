@@ -1,0 +1,182 @@
+---
+permalink: upgrade/task_netboot_and_set_up_ontap_on_the_new_controller_module_mcc.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, netboot, set, up, ontap, new, controller, module
+summary: 'You must perform a specific sequence of steps to netboot and install the ONTAP operating system on the new controller module when adding controller modules to an existing MetroCluster configuration.'
+---
+= Netbooting and setting up ONTAP on the new controller module
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must perform a specific sequence of steps to netboot and install the ONTAP operating system on the new controller module when adding controller modules to an existing MetroCluster configuration.
+
+* This task starts at the LOADER prompt of the new controller module.
+* This task includes initializing disks.
++
+The amount of time you need to initialize the disks depends on the size of the disks.
+
+* The system automatically assigns two disks to the new controller module.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+
+.Steps
+. At the LOADER prompt, configure the IP address of the new controller module based on DHCP availability:
++
+[options="header"]
+|===
+| If DHCP is...| Then enter the following command...
+a|
+Available
+a|
+`*ifconfig e0M -auto*`
+a|
+Not available
+a|
+`*ifconfig e0M -addr=__filer_addr__ -mask=__netmask__ -gw=__gateway__ -dns=__dns_addr__ -domain=__dns_domain__*`
+
+`filer_addr` is the IP address of the storage system.
+
+`netmask` is the network mask of the storage system.
+
+`gateway` is the gateway for the storage system.
+
+`dns_addr` is the IP address of a name server on your network.
+
+`dns_domain` is the Domain Name System (DNS) domain name. If you use this optional parameter, you do not need a fully qualified domain name in the netboot server URL; you need only the server's host name.
+
+NOTE: Other parameters might be necessary for your interface. For details, use the `help ifconfig` command at the LOADER prompt.
+
+|===
+
+. At the LOADER prompt, netboot the new node:
++
+[options="header"]
+|===
+| For...| Then...
+a|
+*FAS2200, FAS2500, FAS3200, FAS6200, FAS/AFF8000 series systems*
+a|
+`*netboot http://__web_server_ip/path_to_web-accessible_directory__/netboot/kernel*`
+a|
+*All other systems*
+a|
+`*netboot http://__web_server_ip/path_to_web-accessible_directory__/<ontap_version>_image.tgz*`
+|===
+
+The `_path_to_the_web-accessible_directory_` is the location of the downloaded `<ontap_version>_image.tgz` file.
+
+. Select the *Install new software first* option from the displayed menu.
++
+This menu option downloads and installs the new ONTAP image to the boot device.
+
+ ** You should enter `*y`* when prompted with the message that this procedure is not supported for nondisruptive upgrade on an HA pair.
+ ** You should enter `*y*` when warned that this process replaces the existing ONTAP software with new software.
+ ** You should enter the path as follows when prompted for the URL of the image.tgz file:
+ +
+ `*http://__path_to_the_web-accessible_directory__/image.tgz*`
+
+. Enter `*y*` when prompted regarding nondisruptive upgrade or replacement of the software.
+. Enter the path to the image.tgz file when prompted for the URL of the package.
++
+----
+What is the URL for the package? `http://path_to_web-accessible_directory/image.tgz`
+----
+
+. Enter `*n*` to skip the backup recovery when prompted to restore the backup configuration.
++
+----
+****************************************************************
+*             Restore Backup Configuration                     *
+*  This procedure only applies to storage controllers that     *
+*  are configured as an HA pair.                               *
+*                                                              *
+*  Choose Yes to restore the "varfs" backup configuration      *
+*  from the SSH server.  Refer to the Boot Device Replacement  *
+*  guide for more details.                                     *
+*  Choose No to skip the backup recovery and return to the     *
+*  boot menu.                                                  *
+****************************************************************
+
+Do you want to restore the backup configuration
+now? {y|n} `n`
+----
+
+. Enter `*y*` when prompted to reboot now.
++
+----
+The node must be rebooted to start using the newly installed software. Do you want to
+reboot now? {y|n} `y`
+----
+
+. If necessary, select the option to *Clean configuration and initialize all disks* after the node has booted.
++
+Because you are configuring a new controller module and the new controller module's disks are empty, you can respond `*y*` when the system warns you that this will erase all disks.
++
+NOTE: The amount of time needed to initialize disks depends on the size of your disks and configuration.
+
+. After the disks are initialized and the Cluster Setup wizard starts, set up the node:
+ .. Enter the node management LIF information on the console.
+. Log in to the node, and enter the `*cluster setup*` and then enter `*join*` when prompted to join the cluster.
++
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}: `join`
+----
+
+. Respond to the remaining prompts as appropriate for your site.
++
+The link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ssg/home.html[Software Setup Guide] for your version of ONTAP contains additional details.
+
+. If the system is in a two-node switchless cluster configuration, create the cluster interfaces on the existing node using the network interface create command to create cluster LIFs on the cluster ports.
++
+The following is an example command for creating a cluster LIF on one of the node's cluster ports. The -auto parameter configures the LIF to use a link-local IP address.
++
+----
+cluster_A::> network interface create -vserver Cluster -lif clus1 -role cluster -home-node node_A_1 -home-port e1a -auto true
+----
+
+. After setup is complete, verify that the node is healthy and eligible to participate in the cluster:
++
+`*cluster show*`
++
+The following example shows a cluster after the second node (cluster1-02) has been joined to it:
++
+----
+cluster_A::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node_A_1              true    true
+node_A_2              true    true
+----
++
+You can access the Cluster Setup wizard to change any of the values you entered for the admin storage virtual machine (SVM) or node SVM by using the cluster setup command.
+
+. Confirm that you have four ports configured as cluster interconnects:
++
+`*network port show*`
++
+The following example shows output for two controller modules in cluster_A:
++
+----
+cluster_A::> network port show
+                                                             Speed (Mbps)
+Node   Port      IPspace      Broadcast Domain Link   MTU    Admin/Oper
+------ --------- ------------ ---------------- ----- ------- ------------
+node_A_1
+       **e0a       Cluster      Cluster          up       9000  auto/1000
+       e0b       Cluster      Cluster          up       9000  auto/1000**
+       e0c       Default      Default          up       1500  auto/1000
+       e0d       Default      Default          up       1500  auto/1000
+       e0e       Default      Default          up       1500  auto/1000
+       e0f       Default      Default          up       1500  auto/1000
+       e0g       Default      Default          up       1500  auto/1000
+node_A_2
+       **e0a       Cluster      Cluster          up       9000  auto/1000
+       e0b       Cluster      Cluster          up       9000  auto/1000**
+       e0c       Default      Default          up       1500  auto/1000
+       e0d       Default      Default          up       1500  auto/1000
+       e0e       Default      Default          up       1500  auto/1000
+       e0f       Default      Default          up       1500  auto/1000
+       e0g       Default      Default          up       1500  auto/1000
+14 entries were displayed.
+----

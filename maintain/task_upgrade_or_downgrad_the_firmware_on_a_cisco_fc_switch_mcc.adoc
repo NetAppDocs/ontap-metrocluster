@@ -1,0 +1,94 @@
+---
+permalink: maintain/task_upgrade_or_downgrad_the_firmware_on_a_cisco_fc_switch_mcc.html
+sidebar: sidebar
+keywords: metrocluster, maintain, service, upgrade, downgrade, firmware, cisco, fc, switch
+summary: 'To upgrade or downgrade the firmware on a Cisco FC switch you must use the Cisco-specific commands to disable the switch, perform and verify the upgrade, and reboot and reenable the switch.'
+---
+= Upgrading or downgrading the firmware on a Cisco FC switch
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+To upgrade or downgrade the firmware on a Cisco FC switch you must use the Cisco-specific commands to disable the switch, perform and verify the upgrade, and reboot and reenable the switch.
+
+* The system must be properly cabled.
+* All paths to the storage shelves must be available.
+* The disk shelf stacks must be stable.
+* The FC switch fabric must be healthy.
+* All components in the system must be healthy.
+* The system must be operating normally.
+* You need the admin password and access to an FTP or SCP server.
+
+The switch fabric is disabled during the firmware upgrade or downgrade and the MetroCluster configuration relies on the second fabric to continue operation.
+
+You must repeat this task on each of the switch fabrics in succession to ensure that all switches are running the same firmware version.
+
+You must have the firmware files.
+
+NOTE: This procedure is nondisruptive and takes approximately one hour to complete.
+
+.Steps
+. Log in to each of the switches in the fabric.
++
+In the examples, the switches are called FC_switch_A_1 and FC_switch_B_1.
+
+. Determine whether there is enough space in the bootflash directory on each switch:
++
+`*dir bootflash*`
++
+If not, delete the unwanted firmware files by using the `delete bootflash:file_name` command.
+
+. Copy the kickstart and system files to the switches:
++
+`*copy _source_filetarget_file_*`
++
+In the following example, the kickstart file (`m9200-s2ek9-kickstart-mz.5.2.1.bin`) and the system file (`m9200-s2ek9-mz.5.2.1.bin`) are located on the FTP server 10.10.10.55 in the `/firmware/` path.
++
+The following example shows the commands issued on FC_switch_A_1:
++
+----
+FC_switch_A_1# copy ftp://10.10.10.55/firmware/m9200-s2ek9-kickstart-mz.5.2.1.bin bootflash:m9200-s2ek9-kickstart-mz.5.2.1.bin
+FC_switch_A_1# copy ftp://10.10.10.55/firmware/m9200-s2ek9-mz.5.2.1.bin bootflash:m9200-s2ek9-mz.5.2.1.bin
+----
+
+. Disable all the VSANs on both the switches in this fabric.
+. Install the desired firmware on the switches:
++
+`*install all system bootflash:__systemfile_name__ kickstart bootflash:__kickstartfile_name__*`
++
+The following example shows the commands issued on FC_switch_A_1:
++
+----
+FC_switch_A_1# install all system bootflash:m9200-s2ek9-mz.5.2.1.bin kickstart bootflash:m9200-s2ek9-kickstart-mz.5.2.1.bin
+Enter Yes to confirm the installation.
+----
+
+. Check the version of the firmware on each switch to make sure the correct version was installed:
++
+`*show version*`
+. Enable all the VSANs on both the switches in this fabric.
+. Verify the operation of the MetroCluster configuration in ONTAP:
+ .. Check whether the system is multipathed:
+ +
+ `*node run -node _node-name_ sysconfig -a*`
+ .. Check for any health alerts on both clusters:
+ +
+ `*system health alert show*`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
+ +
+ `*metrocluster show*`
+ .. Perform a MetroCluster check:
+ +
+ `*metrocluster check run*`
+ .. Display the results of the MetroCluster check:
+ +
+ `*metrocluster check show*`
+ .. Check for any health alerts on the switches (if present):
+ +
+ `*storage switch show*`
+ .. Run Config Advisor.
++
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+
+ .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+. Repeat this procedure for the second switch fabric.

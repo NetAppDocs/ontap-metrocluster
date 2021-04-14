@@ -1,0 +1,27 @@
+---
+permalink: upgrade/task_install_licenses_on_the_new_controller_module_cluster_mode.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, install, license, new, controller, module
+summary: 'You must add licenses for the new controller module for any ONTAP services that require standard \(node-locked\) licenses. For features with standard licenses, each node in the cluster must have its own key for the feature.'
+---
+= Installing licenses for the new controller module
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must add licenses for the new controller module for any ONTAP services that require standard (node-locked) licenses. For features with standard licenses, each node in the cluster must have its own key for the feature.
+
+For detailed information about licensing, see the knowledgebase article 3013749: Data ONTAP 8.2 Licensing Overview and References on the NetApp Support Site and the _System Administration Reference_.
+
+.Steps
+. If necessary, obtain license keys for the new node on the NetApp Support Site in the My Support section under Software licenses.
++
+If the site does not have the license keys you need, contact your sales or support representative.
+
+. Issue the following command to install each license key:
++
+`*system license add -license-code _license_key_*`
++
+The `_license_key_` is 28 digits in length.
++
+Repeat this step for each required standard (node-locked) license.

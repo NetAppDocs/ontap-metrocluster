@@ -1,0 +1,68 @@
+//used in concept_configure_the_mcc_software_in_ontap
+[.lead]
+Reset and restore defaults on the controller modules.
+
+. At the LOADER prompt, return the environmental variables to their default setting: `set-defaults`
+. Boot the node to the boot menu: `boot_ontap menu`
++
+After you run the command, wait until the boot menu is shown.
+
+. Clear the node configuration:
+ ** If you are using systems configured for ADP, select option `9a` from the boot menu, and respond `yes` when prompted.
++
+NOTE: This process is disruptive.
++
+The following screen shows the boot menu prompt:
++
+----
+
+Please choose one of the following:
+
+    (1) Normal Boot.
+    (2) Boot without /etc/rc.
+    (3) Change password.
+    (4) Clean configuration and initialize all disks.
+    (5) Maintenance mode boot.
+    (6) Update flash from backup config.
+    (7) Install new software first.
+    (8) Reboot node.
+    (9) Configure Advanced Drive Partitioning.
+    Selection (1-9)?  9a
+########## WARNING ##########
+
+    This is a disruptive operation and will result in the
+    loss of all filesystem data. Before proceeding further,
+    make sure that:
+    1) This option (9a) has been executed or will be executed
+    on the HA partner node, prior to reinitializing either
+    system in the HA-pair.
+    2) The HA partner node is currently in a halted state or
+    at the LOADER prompt.
+
+
+    Do you still want to continue (yes/no)? yes
+----
+
+ ** If your system is not configured for ADP, type wipeconfig at the boot menu prompt, and then press Enter.
++
+The following screen shows the boot menu prompt:
++
+----
+
+Please choose one of the following:
+
+    (1) Normal Boot.
+    (2) Boot without /etc/rc.
+    (3) Change password.
+    (4) Clean configuration and initialize all disks.
+    (5) Maintenance mode boot.
+    (6) Update flash from backup config.
+    (7) Install new software first.
+    (8) Reboot node.
+    (9) Configure Advanced Drive Partitioning.
+    Selection (1-9)?  wipeconfig
+This option deletes critical system configuration, including cluster membership.
+Warning: do not run this option on a HA node that has been taken over.
+Are you sure you want to continue?: yes
+Rebooting to finish wipeconfig request.
+----

@@ -1,0 +1,57 @@
+---
+permalink: manage/task_heal_the_data_aggregates_after_negotiated_switchover.html
+sidebar: sidebar
+keywords: heal, data, aggregate, completing, complete, maintenance, test, process, resynchronize, prepare, disaster, operation, root, negotiate, switchover
+summary: You must heal the data aggregates after completing any maintenance or testing. This process resynchronizes the data aggregates and prepares the disaster site for normal operation. You must heal the data aggregates prior to healing the root aggregates.
+---
+= Healing the data aggregates after negotiated switchover
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must heal the data aggregates after completing any maintenance or testing. This process resynchronizes the data aggregates and prepares the disaster site for normal operation. You must heal the data aggregates prior to healing the root aggregates.
+
+All configuration updates in the remote cluster successfully replicate to the local cluster. You power up the storage on the disaster site as part of this procedure, but you do not and must not power up the controller modules on the disaster site.
+
+. Ensure that switchover has been completed by running the metrocluster operation show command.
++
+----
+controller_A_1::> metrocluster operation show
+  Operation: switchover
+      State: successful
+ Start Time: 7/25/2014 20:01:48
+   End Time: 7/25/2014 20:02:14
+     Errors: -
+----
+
+. Resynchronize the data aggregates by running the metrocluster heal -phase aggregates command from the surviving cluster.
++
+----
+controller_A_1::> metrocluster heal -phase aggregates
+[Job 130] Job succeeded: Heal Aggregates is successful.
+----
++
+If the healing is vetoed, you have the option of reissuing the metrocluster heal command with the --override-vetoes parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
+
+. Verify that the operation has been completed by running the metrocluster operation show command.
++
+----
+controller_A_1::> metrocluster operation show
+    Operation: heal-aggregates
+      State: successful
+Start Time: 7/25/2014 18:45:55
+   End Time: 7/25/2014 18:45:56
+     Errors: -
+----
+
+. Check the state of the aggregates by running the storage aggregate show command.
++
+----
+controller_A_1::> storage aggregate show
+Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
+--------- -------- --------- ----- ------- ------ ---------------- ------------
+...
+aggr_b2    227.1GB   227.1GB    0% online       0 mcc1-a2          raid_dp, mirrored, normal...
+----
+
+. If storage has been replaced at the disaster site, you might need to remirror the aggregates.

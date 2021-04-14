@@ -1,0 +1,33 @@
+---
+permalink: install-stretch/concept_parts_of_a_two_node_sas_attached_stretch_mcc_configuration.html
+sidebar: sidebar
+keywords: metrocluster, stretch, installation, parts, two, node, sas, attached, configuration
+summary: 'The two-node MetroCluster SAS-attached configuration requires a number of parts, including two single-node clusters in which the storage controllers are directly connected to the storage using SAS cables.'
+---
+= Parts of a two-node SAS-attached stretch MetroCluster configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+The two-node MetroCluster SAS-attached configuration requires a number of parts, including two single-node clusters in which the storage controllers are directly connected to the storage using SAS cables.
+
+The MetroCluster configuration includes the following key hardware elements:
+
+* Storage controllers
++
+The storage controllers connect directly to the storage using SAS cables.
++
+Each storage controller is configured as a DR partner to a storage controller on the partner site.
+
+ ** Copper SAS cables can be used for shorter distances.
+ ** Optical SAS cables can be used for longer distances.
++
+NOTE: In systems using E-Series array LUNs, the storage controllers can be directly connected to the E-Series storage arrays. For other array LUNs, connections via FC switches are required.
++
+https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool]
++
+In the IMT, you can use the Storage Solution field to select your MetroCluster solution. You use the *Component Explorer* to select the components and ONTAP version to refine your search. You can click *Show Results* to display the list of supported configurations that match the criteria.
+
+* Cluster peering network
++
+The cluster peering network provides connectivity for mirroring of the storage virtual machine (SVM) configuration. The configuration of all SVMs on one cluster is mirrored to the partner cluster.

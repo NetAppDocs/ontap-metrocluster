@@ -1,0 +1,37 @@
+---
+permalink: upgrade/task_shut_down_the_exist_controller_when_add_a_2nd_controller_in_c_mode.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, shut, down, existing, controller, module
+summary: 'You must perform a clean shutdown of the existing controller module to verify that all of the data has been written to disk. You must also disconnect the power supplies.'
+---
+= Shutting down the existing controller module
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must perform a clean shutdown of the existing controller module to verify that all of the data has been written to disk. You must also disconnect the power supplies.
+
+. Halt the node from the existing controller module prompt: `*halt local -inhibit-takeover true*`
++
+If you are prompted to continue the halt procedure, enter `y` when prompted, and then wait until the system stops at the LOADER prompt.
++
+IMPORTANT: You must perform a clean system shutdown before replacing the system components to avoid losing unwritten data in the NVRAM or NVMEM.
+
+ ** In an 80xx system, the NVRAM LED is located on the controller module to the right of the network ports, marked with a battery symbol.
+This LED blinks if there is unwritten data in the NVRAM. If this LED is flashing amber after you enter the halt command, you need to reboot your system and try halting it again.
+
+. If you are not already grounded, properly ground yourself.
+. Turn off the power supplies and disconnect the power, using the correct method for your system and power-supply type:
++
+[options="header"]
+|===
+| If your system uses...| Then...
+a|
+AC power supplies
+a|
+Unplug the power cords from the power source, and then remove the power cords.
+a|
+DC power supplies
+a|
+Remove the power at the DC source, and then remove the DC wires, if necessary.
+|===

@@ -1,0 +1,44 @@
+---
+permalink: install-fc/task_rack_the_hardware_components_mcc_fabric_and_ip.html
+sidebar: sidebar
+keywords: metrocluster, fabric, installation, rack, hardware, components
+summary: 'If you have not received the equipment already installed in cabinets, you must rack the components.'
+---
+= Racking the hardware components
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If you have not received the equipment already installed in cabinets, you must rack the components.
+
+This task must be performed on both MetroCluster sites.
+
+.Steps
+. Plan out the positioning of the MetroCluster components.
++
+The rack space depends on the platform model of the controller modules, the switch types, and the number of disk shelf stacks in your configuration.
+
+. Properly ground yourself.
+. Install the controller modules in the rack or cabinet.
++
+https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+
+. Install the FC switches in the rack or cabinet.
+. Install the disk shelves, power them on, and then set the shelf IDs.
+ ** You must power-cycle each disk shelf.
+ ** Shelf IDs must be unique for each SAS disk shelf within each MetroCluster DR group (including both sites).
+. Install each FC-to-SAS bridge:
+ .. Secure the "`L`" brackets on the front of the bridge to the front of the rack (flush-mount) with the four screws.
++
+The openings in the bridge "`L`" brackets are compliant with rack standard ETA-310-X for 19-inch (482.6 mm) racks.
++
+The _ATTO FibreBridge Installation and Operation Manual_ for your bridge model contains more information and an illustration of the installation.
++
+NOTE: For adequate port space access and FRU serviceability, you must leave 1U space below the bridge pair and cover this space with a tool-less blanking panel.
+
+ .. Connect each bridge to a power source that provides a proper ground.
+ .. Power on each bridge.
++
+NOTE: For maximum resiliency, bridges that are attached to the same stack of disk shelves must be connected to different power sources.
++
+The bridge Ready LED might take up to 30 seconds to illuminate, indicating that the bridge has completed its power-on self test sequence.

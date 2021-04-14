@@ -1,0 +1,48 @@
+---
+permalink: maintain/concept_using_fibrebridge_7500n_bridges_in_mcc_configurations.html
+sidebar: sidebar
+keywords: metrocluster, maintain, service, support, fibrebridge, configurations
+summary: 'The FibreBridge 7500N bridge is supported as a replacement for the FibreBridge 6500N bridge or for when adding new storage to the MetroCluster configuration. The supported configurations have zoning requirements and restrictions regarding use of the bridge’s FC ports and stack and storage shelf limits.'
+---
+= Support for FibreBridge 7500N bridges in MetroCluster configurations
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+The FibreBridge 7500N bridge is supported as a replacement for the FibreBridge 6500N bridge or for when adding new storage to the MetroCluster configuration. The supported configurations have zoning requirements and restrictions regarding use of the bridge's FC ports and stack and storage shelf limits.
+
+NOTE: FibreBridge 6500N bridges are not supported in configurations running ONTAP 9.8 and later.
+
+[options="header"]
+|===
+| Use case| Zoning changes needed?| Restrictions| Procedure
+a|
+Replacing a single FibreBridge 6500N bridge with a single FibreBridge 7500N bridge
+a|
+No
+a|
+The FibreBridge 7500N bridge must be configured exactly the same as the FibreBridge 6500N bridge, using a single FC port and attaching to a single stack. The second FC port on the FibreBridge 7500N must not be used.
+a|
+xref:task_replace_a_sle_fc_to_sas_bridge.adoc[Hot-swapping a FibreBridge 6500N bridge with a FibreBridge 7600N or 7500N bridge]
+a|
+Consolidating multiple stacks by replacing multiple pairs of FibreBridge 6500N bridges with a single pair of FibreBridge 7500N bridges
+a|
+Yes
+a|
+In this case, you take the FibreBridge 6500N bridges out of service and replace them with a single pair of FibreBridge 7500N bridges.Each pair of FibreBridge 7500N or 7600N bridges can support up to four stacks.
+
+At the end of the procedure, both the top and bottom of the stacks must be connected to corresponding ports on the FibreBridge 7500N bridges.
+
+a|
+xref:task_fb_consolidate_replace_a_pair_of_fibrebridge_6500n_bridges_with_7500n_bridges.adoc[Replacing a pair of FibreBridge 6500N bridges with 7600N or 7500N bridges]
+a|
+Adding new storage through adding a new pair of FibreBridge 7500N bridges
+a|
+YesYou must add storage zones for each of the FC ports of the new bridges.
+
+a|
+You must have available ports on the FC switch fabric (in a fabric-attached MetroCluster configuration) or on the storage controllers (in a stretch MetroCluster configuration).Each pair of FibreBridge 7500N or 7600N bridges can support up to four stacks.
+
+a|
+xref:task_fb_hot_add_stack_of_shelves_and_bridges.adoc[Hot-adding a stack of SAS disk shelves and bridges to a MetroCluster system]
+|===

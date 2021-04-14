@@ -1,0 +1,99 @@
+---
+permalink: upgrade/concept_choosing_an_upgrade_method_mcc.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, choose, upgrade, refresh, method
+summary: 'The upgrade or refresh procedure you use depends on the platform model, scope of the upgrade, and type of MetroCluster configuration.'
+---
+= Choosing an upgrade or refresh method
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+The upgrade or refresh procedure you use depends on the platform model, scope of the upgrade, and type of MetroCluster configuration.
+
+There are different types of upgrade and refresh procedures.
+
+* Upgrade procedures apply only to the controller modules. The controllers are replaced with a new controller model.
++
+The storage shelf models are not upgraded.
+
+ ** In switchover and switchback procedures, the MetroCluster switchover operation is used to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded.
+ ** In an ARL-based controller upgrade procedure, the aggregate relocation operations are used to nondisruptively move data from the old configuration to the new, upgraded configuration.
+
+* Refresh procedures apply to the controllers and the storage shelves.
++
+In the refresh procedures, new controllers and shelves are added to the MetroCluster configuration, creating a second DR group, and then data is nondisruptively migrated to the new nodes.
++
+The original controllers are then retired.
+
+[options="header"]
+|===
+| Type of upgrade or refresh| MetroCluster type| First ONTAP version support| Procedure
+.2+a|
+
+* Scope: Platform (controller modules) only
+* Method: Switchover/switchback
+
+a|
+FC
+a|
+9.8
+a|
+xref:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.adoc[Upgrading controllers in a MetroCluster FC configuration using switchover and switchback]
+a|
+IP
+a|
+9.8
+a|
+xref:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.adoc[Upgrading controllers in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.8 and later)]
+.2+a|
+
+* Scope: Platform (controller modules) and storage shelves
+* Method: Expand the MetroCluster configuration and then remove the old nodes
+
+a|
+FC
+a|
+9.6 and later
+a|
+xref:task_refresh_controllers_in_a_four_node_mcc_fc_configuration.adoc[Refreshing a four-node MetroCluster FC configuration]
+a|
+IP
+a|
+9.8
+a|
+xref:task_refresh_a_four_node_mcc_configuration_us_volume_move.adoc[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)]
+.4+a|
+
+* Scope: Platform (controller modules)
+* Method: Aggregate relocation (ARL)
+
+.2+a|
+Using `system controller replace` commands
+.2+a|
+FC
+a|
+9.8 and later
+a|
+https://docs.netapp.com/us-en/ontap-systems/upgrade-arl-auto-app/[Using "`system controller replace`" Commands to Upgrade Controller Hardware Running ONTAP 9.8]
+
+a|
+9.5 through 9.7
+a|
+https://library.netapp.com/ecm/ecm_download_file/ECMLP2848956[Using "`system controller replace`" Commands to Upgrade Controller Hardware Running ONTAP 9.5 to ONTAP 9.7]
+
+.2+a|
+Using manual ARL commands
+.2+a|
+FC
+a|
+9.8
+a|
+https://library.netapp.com/ecm/ecm_download_file/ECMLP2659356[Using Aggregate Relocation to Manually Upgrade Controller Hardware Running ONTAP 9.8 and Later]
+
+a|
+9.7 and earlier
+a|
+https://library.netapp.com/ecm/ecm_download_file/ECMLP2875250[Upgrading Controllers with Aggregate Relocation to Manually Upgrade Controller Hardware Running ONTAP 9.7 and Earlier]
+
+|===

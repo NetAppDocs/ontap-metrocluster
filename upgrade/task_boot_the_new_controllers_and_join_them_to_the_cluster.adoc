@@ -1,0 +1,137 @@
+---
+permalink: upgrade/task_boot_the_new_controllers_and_join_them_to_the_cluster.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, boot, new, controller, join, cluster
+summary: 'To join the new controllers to the cluster, you must boot each new controller module and use the ONTAP cluster setup wizard to identify the cluster will join.'
+---
+= Booting the new controllers and joining them to the cluster
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+To join the new controllers to the cluster, you must boot each new controller module and use the ONTAP cluster setup wizard to identify the cluster will join.
+
+You must have cabled the MetroCluster configuration.
+
+You must not have configured the Service Processor prior to performing this task.
+
+This task must be performed on each of the new controllers at both clusters in the MetroCluster configuration.
+
+.Steps
+. If you have not already done so, power up each node and let them boot completely.
++
+If the system is in Maintenance mode, issue the `*halt*` command to exit Maintenance mode, and then issue the following command from the LOADER prompt:
++
+`*boot_ontap*`
++
+The controller module enters the node setup wizard.
++
+The output should be similar to the following:
++
+----
+Welcome to node setup
+
+You can enter the following commands at any time:
+  "help" or "?" - if you want to have a question clarified,
+  "back" - if you want to change previously answered questions, and
+  "exit" or "quit" - if you want to quit the setup wizard.
+				Any changes you made before quitting will be saved.
+
+To accept a default or omit a question, do not enter a value.
+.
+.
+.
+----
+
+. Enable the AutoSupport tool by following the directions provided by the system.
+. Respond to the prompts to configure the node management interface.
++
+The prompts are similar to the following:
++
+----
+Enter the node management interface port: [e0M]:
+Enter the node management interface IP address: 10.228.160.229
+Enter the node management interface netmask: 225.225.252.0
+Enter the node management interface default gateway: 10.228.160.1
+----
+
+. Confirm that nodes are configured in high-availability mode:
++
+`*storage failover show -fields mode*`
++
+If not, you must issue the following command on each node, and then reboot the node:
++
+`*storage failover modify -mode ha -node localhost*`
++
+This command configures high availability mode but does not enable storage failover. Storage failover is automatically enabled when you issue the `metrocluster configure` command later in the configuration process.
+
+. Confirm that you have four ports configured as cluster interconnects:
++
+`*network port show*`
++
+The following example shows output for two controllers in cluster_A. If it is a two-node MetroCluster configuration, the output shows only one node.
++
+----
+cluster_A::> network port show
+                                                             Speed (Mbps)
+Node   Port      IPspace      Broadcast Domain Link   MTU    Admin/Oper
+------ --------- ------------ ---------------- ----- ------- ------------
+node_A_1
+       **e0a       Cluster      Cluster          up       1500  auto/1000
+       e0b       Cluster      Cluster          up       1500  auto/1000**
+       e0c       Default      Default          up       1500  auto/1000
+       e0d       Default      Default          up       1500  auto/1000
+       e0e       Default      Default          up       1500  auto/1000
+       e0f       Default      Default          up       1500  auto/1000
+       e0g       Default      Default          up       1500  auto/1000
+node_A_2
+       **e0a       Cluster      Cluster          up       1500  auto/1000
+       e0b       Cluster      Cluster          up       1500  auto/1000**
+       e0c       Default      Default          up       1500  auto/1000
+       e0d       Default      Default          up       1500  auto/1000
+       e0e       Default      Default          up       1500  auto/1000
+       e0f       Default      Default          up       1500  auto/1000
+       e0g       Default      Default          up       1500  auto/1000
+14 entries were displayed.
+----
+
+. Because you are using the CLI to set up the cluster, exit the Node Setup wizard:
++
+`*exit*`
+. Log in to the admin account by using the `*admin*` user name.
+. Start the Cluster Setup wizard, and then join the existing cluster: `*cluster setup*`
++
+----
+::> cluster setup
+
+Welcome to the cluster setup wizard.
+
+You can enter the following commands at any time:
+  "help" or "?" - if you want to have a question clarified,
+  "back" - if you want to change previously answered questions, and
+  "exit" or "quit" - if you want to quit the cluster setup wizard.
+     Any changes you made before quitting will be saved.
+
+You can return to cluster setup at any time by typing "cluster setup".
+To accept a default or omit a question, do not enter a value.
+
+
+Do you want to create a new cluster or join an existing cluster? {create, join}:`join`
+----
+
+. After you complete the *Cluster Setup* wizard and it exits, verify that the cluster is active and the node is healthy:
++
+`*cluster show*`
++
+The following example shows a cluster in which the first node (cluster1-01) is healthy and eligible to participate:
++
+----
+cluster_A::> cluster show
+Node               Health  Eligibility
+------------------ ------- ------------
+node_A_1           true    true
+node_A_2           true    true
+node_A_3           true    true
+----
++
+If it becomes necessary to change any of the settings you entered for the admin SVM or node SVM, you can access the *Cluster Setup* wizard by using the `*cluster setup command*`.
