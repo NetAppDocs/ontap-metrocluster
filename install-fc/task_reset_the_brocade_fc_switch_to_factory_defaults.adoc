@@ -1,7 +1,7 @@
 ---
 permalink: install-fc/task_reset_the_brocade_fc_switch_to_factory_defaults.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, fabric, installation, reset, brocade, fc, switch, factory, defaults
 summary: 'Before installing a new software version and RCF files, you must erase the current switch configuration and perform basic configuration.'
 ---
 = Resetting the Brocade FC switch to factory defaults
@@ -14,7 +14,7 @@ Before installing a new software version and RCF files, you must erase the curre
 You must repeat these steps on each of the FC switches in the MetroCluster fabric configuration.
 
 . Log in to the switch as an administrator.
-. Disable the Brocade Virtual Fabrics (VF) feature: `fosconfig options`
+. Disable the Brocade Virtual Fabrics (VF) feature: `*fosconfig options*`
 +
 ----
 FC_switch_A_1:admin> fosconfig --disable vf
@@ -23,13 +23,13 @@ Would you like to continue  [Y/N]: y
 ----
 
 . Disconnect the ISL cables from the ports on the switch.
-. Disable the switch: `switchcfgpersistentdisable`
+. Disable the switch: `*switchcfgpersistentdisable*`
 +
 ----
 FC_switch_A_1:admin> switchcfgpersistentdisable
 ----
 
-. Disable the configuration: `cfgDisable`
+. Disable the configuration: `*cfgDisable*`
 +
 ----
 FC_switch_A_1:admin> cfgDisable
@@ -39,7 +39,7 @@ Updating flash ...
 Effective configuration is empty. "No  Access" default zone mode is ON.
 ----
 
-. Clear the configuration: `cfgClear`
+. Clear the configuration: `*cfgClear*`
 +
 ----
 FC_switch_A_1:admin> cfgClear
@@ -50,7 +50,7 @@ cancel the transaction.
 Do you really want to clear all configurations?  (yes, y, no, n): [no] y
 ----
 
-. Save the configuration: `cfgSave`
+. Save the configuration: `*cfgSave*`
 +
 ----
 FC_switch_A_1:admin> cfgSave
@@ -60,7 +60,7 @@ Do you want to save the Defined zoning configuration only?  (yes, y, no, n): [no
 Updating flash ...
 ----
 
-. Set the default configuration: `configDefault`
+. Set the default configuration: `*configDefault*`
 +
 ----
 FC_switch_A_1:admin> configDefault
@@ -78,7 +78,9 @@ The switch has to be rebooted to allow the changes to take effect.
 2020/10/05-08:04:12, [CONF-1031], 1022, FID 128, INFO, FC_switch_A_1, configDefault completed successfully for switch.
 ----
 
-. Set the port configuration to default for all ports: `portcfgdefault port-number`
+. Set the port configuration to default for all ports:
++
+`*portcfgdefault _port-number_*`
 +
 ----
 FC_switch_A_1:admin> portcfgdefault <port number>
@@ -90,7 +92,7 @@ You must complete this step for each port.
 +
 NOTE: For Brocade Fabric OS versions before 8.0, you run the following commands as admin, and for versions 8.0 and later, you run them as root.
 
- .. Run the command `licenseport --show`
+ .. Run the command `*licenseport --show*`
 +
 ----
 FC_switch_A_1:admin> licenseport -show
@@ -106,7 +108,7 @@ FC_switch_A_1:admin> userconfig --change root -e yes
 FC_switch_A_1:admin> rootaccess --set consoleonly
 ----
 
- .. Run the license command: `licenseport --show`
+ .. Run the license command: `*licenseport --show*`
 +
 ----
 FC_switch_A_1:root> licenseport -show
@@ -115,7 +117,7 @@ Full POD license is installed
 Dynamic POD method is in use
 ----
 
- .. Change the license method to dynamic: `licenseport --method dynamic`
+ .. Change the license method to dynamic: `*licenseport --method dynamic*`
 +
 NOTE: If the dynamic POD method is not in use (if POD method is in static) you must change the license assignment method to dynamic. Skip this step if the dynamic POD method is in use.
 +
@@ -125,7 +127,7 @@ The POD method has been changed to dynamic.
 Please reboot the switch now for this change to take effect
 ----
 
-. Reboot the switch: `fastBoot`
+. Reboot the switch: `*fastBoot*`
 +
 ----
 FC_switch_A_1:admin> fastboot
@@ -134,7 +136,7 @@ and result in traffic disruption.
 Are you sure you want to reboot the switch [y/n]?y
 ----
 
-. Confirm that the default settings have been implemented: `switchShow`
-. Verify that the IP address is set correctly: `ipAddrShow`
+. Confirm that the default settings have been implemented: `*switchShow*`
+. Verify that the IP address is set correctly: `*ipAddrShow*`
 +
-You can set the IP address with the following command, if required: `ipAddrSet`
+You can set the IP address with the following command, if required: `*ipAddrSet*`

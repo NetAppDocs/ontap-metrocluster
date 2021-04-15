@@ -1,7 +1,7 @@
 ---
 permalink: install-fc/task_assign_ownership_of_array_luns.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, fabric, installation, assigning, ownership, array, luns
 summary: 'Array LUNs must be owned by a node before they can be added to an aggregate to be used as storage.'
 ---
 = Assigning ownership of array LUNs
@@ -27,8 +27,13 @@ ONTAP issues an error message if you try to assign ownership of an array LUN wit
 
 ONTAP alerts you if you try to assign an array LUN with a redundancy error: for example, all paths to this array LUN are connected to the same controller or only one path to the array LUN. You can fix a redundancy error before or after assigning ownership of the LUN.
 
-. Enter the following command to see the array LUNs that have not yet been assigned to a node:``storage disk show -container-type unassigned``
-. Enter the following command to assign an array LUN to this node:``storage disk assign -disk arrayLUNname -owner nodename``
+.Steps
+. Enter the following command to see the array LUNs that have not yet been assigned to a node:
++
+`*storage disk show -container-type unassigned*`
+. Enter the following command to assign an array LUN to this node:
++
+`*storage disk assign -disk array _LUNname_ -owner _nodename_*`
 +
 If you want to fix a redundancy error after disk assignment instead of before, you must use the -force parameter with the storage disk assign command.
 

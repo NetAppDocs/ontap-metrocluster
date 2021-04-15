@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/concept_removing_a_disaster_recovery_group.html
 sidebar: sidebar
-keywords: 
+keywords:
 summary: 'Starting with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.'
 ---
 = Removing a Disaster Recovery group
@@ -26,7 +26,7 @@ image::../media/delete_me3_mcc_dr_groups_4_node.gif[]
 == Removing the DR group nodes from each cluster
 
 * You must perform this step on both clusters.
-* The metrocluster remove-dr-group command is supported only on ONTAP 9.8 and later.
+* The `metrocluster remove-dr-group` command is supported only on ONTAP 9.8 and later.
 
 . Prepare for the removal of the DR group, if you haven't already.
  .. Move all data volumes to another DR group.
@@ -43,8 +43,16 @@ ClusterB::> aggr delete -aggregate aggregate_name
 +
 NOTE: Root aggregates are not deleted.
 
- .. Migrate all data LIFs to home nodes in another DR group. `network interface show -home-node old_node``network interface modify -vserver svm-name -lifdata-lif -home-port port-id`
- .. Migrate the cluster management LIF to a home node in another DR group. `network interface show -role cluster-mgmt``network interface modify -vserver svm-name -lif data-lif -home-port port-id`
+ .. Migrate all data LIFs to home nodes in another DR group.
+ +
+`*network interface show -home-node _old_node_*`
++
+`*network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_*`
+ .. Migrate the cluster management LIF to a home node in another DR group.
+ +
+ `*network interface show -role cluster-mgmt*`
++
+`*network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_*`
 +
 Node management and inter-cluster LIFs are not migrated.
 
@@ -64,8 +72,12 @@ ClusterB::*> cluster modify -node nodename -epsilon true
 ClusterB::*> set admin
 ----
 . Identify and remove the DR group.
- .. Identify the correct DR group for removal: `metrocluster node show`
- .. Remove the DR group nodes: `metrocluster remove-dr-group -dr-group-id 1`
+ .. Identify the correct DR group for removal:
+ +
+`*metrocluster node show*`
+ .. Remove the DR group nodes:
+ +
+`*metrocluster remove-dr-group -dr-group-id 1*`
 +
 The following example shows the removal of the DR group configuration on cluster_A.
 +
@@ -106,22 +118,36 @@ cluster_A::*>
 +
 These commands can be issued from either cluster and apply to the entire DR group spanning both the clusters.
 
- .. Disconnect the connections: `metrocluster configuration-settings connection disconnect dr-group-id`
- .. Delete the MetroCluster interfaces on the nodes of the old DR group: `metrocluster configuration-settings interface delete`
- .. Delete the old DR group's configuration.`metrocluster configuration-settings dr-group delete`
+ .. Disconnect the connections:
+ +
+`*metrocluster configuration-settings connection disconnect _dr-group-id_*`
+ .. Delete the MetroCluster interfaces on the nodes of the old DR group:
+ +
+`*metrocluster configuration-settings interface delete*`
+ .. Delete the old DR group's configuration.
+ +
+`*metrocluster configuration-settings dr-group delete*`
 
 . Unjoin the nodes in the old DR group.
 +
 You must perform this step on each cluster.
 
- .. Set the advanced privilege level: `set -privilege advanced`
- .. Unjoin the node: `cluster unjoin -node node-name`
+ .. Set the advanced privilege level:
+ +
+`*set -privilege advanced*`
+ .. Unjoin the node:
+ +
+`*cluster unjoin -node _node-name_*`
 +
 Repeat this step for the other local node in the old DR group.
 
- .. Set the admin privilege level: `set -privilege admin`
+ .. Set the admin privilege level:
+ +
+`*set -privilege admin*`
 
-. Re-enable cluster HA in the new DR group: `cluster ha modify -configured true`
+. Re-enable cluster HA in the new DR group:
++
+`*cluster ha modify -configured true*`
 +
 You must perform this step on each cluster.
 

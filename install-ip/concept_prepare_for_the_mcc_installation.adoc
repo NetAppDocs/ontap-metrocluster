@@ -1,8 +1,8 @@
 ---
 permalink: install-ip/concept_prepare_for_the_mcc_installation.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: prepare, metrocluster, installation, hardware, architecture, require, component, preparing, difference, ontap, configuration, consideration, mediator, tiebreaker, ip, automatic, drive, assignment, adp, system, san, array, system, configuring, configure, cluster, peer, isl, sharing, share, private, layer, network, compliant, switch, virtualand, border, gateway, protocol, tdm, wdm, encryption, equipment, unmirrored, aggregate, firewall, site, usage, preconfigure, setting, system, factory
+summary: As you prepare for the MetroCluster installation, you should understand the MetroCluster hardware architecture and required components.
 ---
 = Preparing for the MetroCluster installation
 :icons: font
@@ -18,6 +18,7 @@ The various MetroCluster configurations have key differences in the required com
 
 In all configurations, each of the two MetroCluster sites is configured as an ONTAP cluster. In a two-node MetroCluster configuration, each node is configured as a single-node cluster.
 
+[cols=3*,options="header"]
 |===
 | Feature| IP configurations| Fabric-attached configurations| Stretch configurations
 | Four- or eight-node| Two-node| Two-node bridge-attached| Two-node direct-attached
@@ -195,9 +196,7 @@ NOTE: MAUSO is initiated only if nonvolatile cache mirroring (_DR mirroring_) an
 +
 In these configurations, the Tiebreaker initiates unplanned switchover after a complete site failure.
 +
-Before using the Tiebreaker software, review the _Tiebreaker Software Installation and Configuration Guide_.
-+
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/home.html[MetroCluster Tiebreaker Software Installation and Configuration Guide]
+Before using the Tiebreaker software, review the link:../tiebreaker/index.html[MetroCluster Tiebreaker Software Installation and Configuration Guide]
 
 === Interoperability of ONTAP Mediator with other applications and appliances
 
@@ -234,6 +233,7 @@ They must not overlap with any IP space in the environment.
 
 For example, the nodes might be configured with the following IP addresses:
 
+[cols=4*,options="header"]
 |===
 | Node| Interface| IP address| Subnet
 a|
@@ -347,6 +347,7 @@ If you are using a single shelf at each site (or just the internal shelf on an A
 
 The following table shows an example of how to place 24 disks in a 48 drive internal shelf. The ownership for the drives is also shown.
 
+[cols=2*,options="header"]
 |===
 | The 48 drive bays are divided into four quarters:| Install six drives in the first six bays in each quarter...
 a|
@@ -432,6 +433,7 @@ https://hwu.netapp.com[NetApp Hardware Universe]
 
 ==== ADP and disk assignment on AFF A320 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -466,6 +468,7 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 ==== ADP and disk assignment on AFF A220 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -518,6 +521,7 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 ==== ADP and disk assignment on AFF A250 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -552,6 +556,7 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 ==== ADP and disk assignment on AFF A300 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -585,7 +590,8 @@ Each of the two plexes in the root aggregate includes the following partitions:
 |===
 
 ==== ADP and disk assignment on AFF A400 systems
-// BURT 1384407 
+// BURT 1384407
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -618,6 +624,7 @@ Each of the two plexes in the root aggregate includes:
 
 ==== ADP and disk assignment on AFF A700 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -650,6 +657,7 @@ Each of the two plexes in the root aggregate includes:
 
 ==== ADP and disk assignment on AFF A800 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root aggregate
 a|
@@ -687,6 +695,7 @@ Each of the two plexes in the root aggregate includes:
 
 ==== Disk assignment on FAS2750 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -707,6 +716,7 @@ Manual assignment required.
 
 ==== Disk assignment on FAS8200 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -727,6 +737,7 @@ Manual assignment required.
 
 ==== Disk assignment on FAS500f systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -747,6 +758,7 @@ The drives are divided into four equal groups. Each quarter-shelf is automatical
 
 ==== Disk assignment on FAS9000 systems
 
+[cols=4*,options="header"]
 |===
 | Guideline| Shelves per site| Drive assignment rules| ADP layout for root partition
 a|
@@ -958,7 +970,7 @@ For all the platforms mentioned previously, you can only specify the VLAN during
 
 +
 NOTE: The RcfFileGenerator does not allow the creation of an RCF file using VLANs that are not supported by the platform.
-+
+
 NOTE: The RcfFileGenerator might restrict the use of certain VLAN IDs (for example, if they are intended for future use). Generally, reserved VLANs are up to and including 100.
 
 * The MTU size must be set to 9216 on all devices in the end-to-end network.
@@ -970,12 +982,13 @@ NOTE: The RcfFileGenerator might restrict the use of certain VLAN IDs (for examp
 [.lead]
 When using shared ISLs in a MetroCluster IP configuration, you must be aware of the requirements for the end-to-end MetroCluster ISL running from controller ports on site A to controller ports on site B.
 
-NOTE: You must follow the basic ISL requirements: link:concept_prepare_for_the_mcc_installation.md#[Considerations for ISLs]
+NOTE: You must follow the basic ISL requirements: xref:concept_prepare_for_the_mcc_installation.html#considerations-for-isls[Considerations for ISLs]
 
 ==== Number of ISLs and breakout cables in the shared network
 
 The number of ISLs connecting the MetroCluster IP switches to the shared network varies depending on the switch model and port type.
 
+[cols=3*,options="header"]
 |===
 | MetroCluster IP switch model| Port type| Number of ISLs
 a|
@@ -1220,7 +1233,7 @@ MetroCluster One is a MetroCluster configuration using NetApp validated switches
 
 NOTE: The intermediate switches must be compliant with NetApp specifications.
 
-link:concept_prepare_for_the_mcc_installation.md#[Considerations for using MetroCluster compliant switches]
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-using-metrocluster-compliant-switches[Considerations for using MetroCluster compliant switches]
 
 The example is simplified for illustration purposes only:
 
@@ -1243,7 +1256,7 @@ Connecting local cluster connections to a MetroCluster compliant switch is not s
 * The speed of the switch ports must be 25 Gbps for FAS8200 and AFF A300 platforms, and at least 40 Gbps for all other platforms (40 Gbps or 100 Gbps).
 * The ISLs must be 10 Gbps or higher and must be sized appropriately for the load on the MetroCluster configuration.
 * The MetroCluster configuration must be connected to two networks. Connecting both the MetroCluster interfaces to the same network or switch is not supported. Each MetroCluster node must be connected to two network switches.
-* The network must meet the requirements as outlined in the sections link:concept_prepare_for_the_mcc_installation.md#[MetroCluster ISL requirements in shared networks], link:concept_prepare_for_the_mcc_installation.md#[ISL cabling requirements], and link:concept_prepare_for_the_mcc_installation.md#[Required settings on intermediate switches].
+* The network must meet the requirements as outlined in the sections xref:concept_prepare_for_the_mcc_installation.html#metrocluster-isl-requirements-in-shared-networks[MetroCluster ISL requirements in shared networks], xref:concept_prepare_for_the_mcc_installation.html#isl-cabling-requirements[ISL cabling requirements], and xref:concept_prepare_for_the_mcc_installation.html#required-settings-on-intermediate-switches[Required settings on intermediate switches].
 * In MetroCluster IP configurations using open networks, reverting to ONTAP 9.6 or earlier is not supported.
 * The MTU of 9216 must be configured on all switches that carry MetroCluster IP traffic.
 
@@ -1260,8 +1273,8 @@ Connecting local cluster connections to a MetroCluster compliant switch is not s
 Any configuration or feature that requires that the local cluster connections are connected to a switch is not supported. For example, the following configurations and procedures are not supported:
 
 * Eight-node MetroCluster configurations
-* http://ie-docs.rtp.openeng.netapp.com/ontap-9_dugong/topic/com.netapp.doc.dot-mcc-upgrade/GUID-1DFA9DC8-005A-4732-A704-C13C91CCB2E9.html[Transitioning from MetroCluster FC to MetroCluster IP configurations]
-* http://ie-docs.rtp.openeng.netapp.com/ontap-9_dugong/topic/com.netapp.doc.dot-mcc-upgrade/GUID-52C1C2E5-4782-41B4-B88C-36459B914EF9.html[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)]
+* xref:/transition/task_transition_from_mcc_fc_to_mcc_ip_configurations.html[Transitioning from MetroCluster FC to MetroCluster IP configurations]
+* xref:/upgrade/task_refresh_a_four_node_mcc_configuration_us_volume_move.html[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)]
 
 === Platform-specific network speeds for MetroCluster compliant switches
 
@@ -1269,6 +1282,7 @@ The following table provides platform-specific network speeds for MetroCluster c
 
 NOTE: Missing values indicate that the platform is not supported.
 
+[cols=2*,options="header"]
 |===
 | Platform| Network Speed (Gbps)
 a|
@@ -1617,7 +1631,7 @@ The ISLs on one fabric should all be the same speed and length.
 
 The ISLs on one fabric should all have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they should all use WDM.
 
-If you are sharing ISLs with a non-MetroCluster network, you must follow the guidelines in the section link:concept_prepare_for_the_mcc_installation.md#[Considerations for sharing private layer 2 networks].
+If you are sharing ISLs with a non-MetroCluster network, you must follow the guidelines in the section xref:concept_prepare_for_the_mcc_installation.html#considerations-for-sharing-private-layer-2-networks[Considerations for sharing private layer 2 networks].
 
 The maximum supported difference in distance between fabric 1 and fabric 2 is 20 km.
 
@@ -1667,6 +1681,7 @@ If you are using a firewall at a MetroCluster site, you must ensure access for c
 
 The following table shows TCP/UDP port usage in an external firewall positioned between two MetroCluster sites.
 
+[cols=2*,options="header"]
 |===
 | Traffic type| Port/services
 a|
@@ -1711,6 +1726,7 @@ Nodes received with the new MetroCluster configuration are preconfigured with a 
 [.lead]
 You need to know which hardware setup steps were completed at the factory and which steps you need to complete at each MetroCluster site.
 
+[cols=3*,options="header"]
 |===
 | Step| Completed at factory| Completed by you
 a|

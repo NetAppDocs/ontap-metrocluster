@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_fb_hot_add_stack_of_shelves_and_bridges.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, maintain, service, hot, add, stack, sas, disk, shelves, bridges, system
 summary: ''
 ---
 = Hot-adding a stack of SAS disk shelves and bridges to a MetroCluster system
@@ -39,6 +39,7 @@ NOTE: You might need to upgrade the FC switch depending on the FC switch compati
 +
 The _ATTO Product Release Notes_ have an up-to-date list of supported web browsers. You can access this document using the information in the steps.
 
+.Steps
 . Download or view the following documents from the NetApp Support Site:
  ** https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool]
  ** The _Installation and Service Guide_ for your disk shelf model.
@@ -50,14 +51,14 @@ The _ATTO Product Release Notes_ have an up-to-date list of supported web browse
  .. Go to the ATTO FibreBridge Firmware Download page by clicking *Continue* at the end of the ATTO FibreBridge Description page, and then do the following:
   *** Download the bridge firmware file as directed on the download page.
 +
-In this step, you are only completing the download portion of the instructions provided in the links. You update the firmware on each bridge later, when instructed to do so in the link:task_fb_hot_add_stack_of_shelves_and_bridges.md#[Hot-adding the stack of shelves] section.
+In this step, you are only completing the download portion of the instructions provided in the links. You update the firmware on each bridge later, when instructed to do so in the xref:task_fb_hot_add_stack_of_shelves_and_bridges.adoc[Hot-adding the stack of shelves] section.
 
   *** Make a copy of the ATTO FibreBridge Firmware Download page and release notes for reference later.
 . Download the latest disk and disk shelf firmware, and make a copy of the installation portion of the instructions for reference later.
 +
 All disk shelves in the MetroCluster configuration (both the new shelves and existing shelves) must be running the same firmware version.
 +
-NOTE: In this step, you are only completing the download portion of the instructions provided in the links and making a copy of the installation instructions. You update the firmware on each disk and disk shelf later, when instructed to do so in the link:task_fb_hot_add_stack_of_shelves_and_bridges.md#[Hot-adding the stack of shelves] section.
+NOTE: In this step, you are only completing the download portion of the instructions provided in the links and making a copy of the installation instructions. You update the firmware on each disk and disk shelf later, when instructed to do so in the xref:task_fb_hot_add_stack_of_shelves_and_bridges.adoc[Hot-adding the stack of shelves] section.
 
  .. Download the disk firmware and make a copy of the disk firmware instructions for reference later.
 +
@@ -92,13 +93,13 @@ You can hot-add a stack of SAS disk shelves and bridges to increase the capacity
 
 The system must meet all of the requirements to hot-add a stack of SAS disk shelves and bridges.
 
-link:task_fb_hot_add_stack_of_shelves_and_bridges.md#[Preparing to hot-add a stack of SAS disk shelves and bridges]
+xref:task_fb_hot_add_stack_of_shelves_and_bridges.adoc[Preparing to hot-add a stack of SAS disk shelves and bridges]
 
 * Hot-adding a stack of SAS disk shelves and bridges is a nondisruptive procedure if all of the interoperability requirements are met.
 +
 https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool]
 +
-link:concept_using_the_interoperability_matrix_tool_to_find_mcc_information.md#[Using the Interoperability Matrix Tool to find MetroCluster information]
+xref:concept_using_the_interoperability_matrix_tool_to_find_mcc_information.adoc[Using the Interoperability Matrix Tool to find MetroCluster information]
 
 * Multipath HA is the only supported configuration for MetroCluster systems that are using bridges.
 +
@@ -107,12 +108,14 @@ Both controller modules must have access through the bridges to the disk shelves
 * You should hot-add an equal number of disk shelves at each site.
 * If you will be using in-band management of the bridge rather than IP management, the steps for configuring the Ethernet port and IP settings can be skipped, as noted in the relevant steps.
 
-NOTE: Starting with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
+NOTE: Starting with ONTAP 9.8, the `*storage bridge*` command is replaced with `*system bridge*`. The following steps show the `*storage bridge*` command, but if you are running ONTAP 9.8 or later, the `*system bridge*` command is preferred.
 
 IMPORTANT: If you insert a SAS cable into the wrong port, when you remove the cable from a SAS port, you must wait at least 120 seconds before plugging the cable into a different SAS port. If you fail to do so, the system will not recognize that the cable has been moved to another port.
 
 . Properly ground yourself.
-. From the console of either controller module, check whether your system has disk autoassignment enabled: `storage disk option show`
+. From the console of either controller module, check whether your system has disk autoassignment enabled:
++
+`*storage disk option show*`
 +
 The Auto Assign column indicates whether disk autoassignment is enabled.
 +
@@ -150,7 +153,17 @@ NOTE: Do not configure time synchronization on ATTO FibreBridge 7600N or 7500N. 
 +
 To set the IP address without the QuickNAV utility, you need to have a serial connection to the FibreBridge.
 +
-If using the CLI, you must run the following commands:``set ipaddress mp1 ip-address```set ipsubnetmask mp1 subnet-mask``set ipgateway mp1 x.x.x.x``set ipdhcp mp1 disabled``set ethernetspeed mp1 1000`
+If using the CLI, you must run the following commands:
++
+`*set ipaddress mp1 _ip-address_*`
++
+`*set ipsubnetmask mp1 _subnet-mask_*`
++
+`*set ipgateway mp1 x.x.x.x*`
++
+`*set ipdhcp mp1 disabled*`
++
+`*set ethernetspeed mp1 1000*`
 
  .. Configure the bridge name.
 +
@@ -162,9 +175,13 @@ Example bridge names for one stack group on each site:
   *** bridge_A_1b
   *** bridge_B_1a
   *** bridge_B_1b
-If using the CLI, you must run the following command:``set bridgename bridgename``
+If using the CLI, you must run the following command:
++
+`*set bridgename _bridgename_*`
 
- .. If running ONTAP 9.4 or earlier, enable SNMP on the bridge: `set SNMP enabled`
+ .. If running ONTAP 9.4 or earlier, enable SNMP on the bridge:
+ +
+`*set SNMP enabled*`
 +
 In systems running ONTAP 9.5 or later, in-band management can be used to access the bridge via the FC ports rather than the Ethernet port. Starting with ONTAP 9.8, only in-band management is supported and SNMP management is deprecated.
 
@@ -176,39 +193,58 @@ The supported FC data rate depends on your model bridge.
   *** The FibreBridge 7600 bridge supports up to 32, 16, or 8 Gbps.
   *** The FibreBridge 7500 bridge supports up to 16, 8, or 4 Gbps.
   *** The FibreBridge 6500 bridge supports up to 8, 4, or 2 Gbps.
-*Note:* The FCDataRate speed you select is limited to the maximum speed supported by both the bridge and the switch to which the bridge port connects. Cabling distances must not exceed the limitations of the SFPs and other hardware.
++
+NOTE: The FCDataRate speed you select is limited to the maximum speed supported by both the bridge and the switch to which the bridge port connects. Cabling distances must not exceed the limitations of the SFPs and other hardware.
 
 +
-If using the CLI, you must run the following command: `set FCDataRate port-numberport-speed`
+If using the CLI, you must run the following command:
++
+`*set FCDataRate _port-number port-speed_*`
 
  .. If you are configuring a FibreBridge 7500N or 6500N bridge, configure the connection mode that the port uses to ptp.
 +
 NOTE: The FCConnMode setting is not required when configuring a FibreBridge 7600N bridge.
 +
-If using the CLI, you must run the following command: `set FCConnMode port-number ptp`
+If using the CLI, you must run the following command:
++
+`*set FCConnMode _port-number_ ptp*`
 
  .. If you are configuring a FibreBridge 7600N or 7500N bridge, you must configure or disable the FC2 port.
   *** If you are using the second port, you must repeat the previous substeps for the FC2 port.
-  *** If you are not using the second port, then you must disable the port: `FCPortDisable port-number`
- .. If you are configuring a FibreBridge 7600N or 7500N bridge, disable the unused SAS ports: `SASPortDisable sas-port```
+  *** If you are not using the second port, then you must disable the port:
+  +
+`*FCPortDisable _port-number_*`
+ .. If you are configuring a FibreBridge 7600N or 7500N bridge, disable the unused SAS ports:
+ +
+`*SASPortDisable _sas-port_*`
 +
 NOTE: SAS ports A through D are enabled by default. You must disable the SAS ports that are not being used. If only SAS port A is used, then SAS ports B, C, and D must be disabled.
 . Secure access to the bridge and save the bridge's configuration.
- .. From the controller prompt check the status of the bridges: `storage bridge show`
+ .. From the controller prompt check the status of the bridges:
++
+`*storage bridge show*`
 +
 The output shows which bridge is not secured.
 
- .. Check the status of the unsecured bridge's ports: `info`
+ .. Check the status of the unsecured bridge's ports:
+ +
+`*info*`
 +
 The output shows the status of Ethernet ports MP1 and MP2.
 
- .. If Ethernet port MP1 is enabled, run the following command: `set EthernetPort mp1 disabled`
+ .. If Ethernet port MP1 is enabled, run the following command:
+ +
+`*set EthernetPort mp1 disabled*`
 +
 NOTE: If Ethernet port MP2 is also enabled, repeat the previous substep for port MP2.
 
  .. Save the bridge's configuration.
 +
-You must run the following commands: `SaveConfiguration``FirmwareRestart`
+You must run the following commands:
++
+`*SaveConfiguration*`
++
+`*FirmwareRestart*`
 +
 You are prompted to restart the bridge.
 . Update the FibreBridge firmware on each bridge.
@@ -232,6 +268,7 @@ Each bridge has one path to its stack of disk shelves; bridge A connects to the 
 NOTE: The bridge SAS port B is disabled.
 . Verify that each bridge can detect all of the disk drives and disk shelves to which the bridge is connected.
 +
+[options="header"]
 |===
 | If you are using the...| Then...
 a|
@@ -247,13 +284,17 @@ You are brought to the ATTO FibreBridge home page, which has a link.
 The ATTO FibreBridge status page appears with a menu to the left.
 
  .. Click *Advanced* in the menu.
- .. View the connected devices: `sastargets`
+ .. View the connected devices:
+ +
+`*sastargets*`
  .. Click *Submit*.
 
 a|
 Serial port connection
 a|
-View the connected devices: `sastargets`
+View the connected devices:
+
+`*sastargets*`
 |===
 The output shows the devices (disks and disk shelves) to which the bridge is connected. The output lines are sequentially numbered so that you can quickly count the devices.
 +
@@ -277,18 +318,19 @@ Tgt VendorID ProductID        Type        SerialNumber
 
 . Verify that the command output shows that the bridge is connected to all of the appropriate disks and disk shelves in the stack.
 +
+[options="header"]
 |===
 | If the output is...| Then...
 a|
 Correct
 a|
-Repeat Step link:task_fb_hot_add_stack_of_shelves_and_bridges.md#STEP_524EBC3334F54467B771D9E2FD2B2DDA[task_fb_hot_add_stack_of_shelves_and_bridges.md#STEP_524EBC3334F54467B771D9E2FD2B2DDA] for each remaining bridge.
+Repeat Step xref:task_fb_hot_add_stack_of_shelves_and_bridges.adocSTEP_524EBC3334F54467B771D9E2FD2B2DDA[11] for each remaining bridge.
 a|
 Not correct
 a|
 
- .. Check for loose SAS cables or correct the SAS cabling by repeating Step link:task_fb_hot_add_stack_of_shelves_and_bridges.md#STEP_1F8F7E891D3B4CBD88176B312C6BC5CC[task_fb_hot_add_stack_of_shelves_and_bridges.md#STEP_1F8F7E891D3B4CBD88176B312C6BC5CC].
- .. Repeat Step link:task_fb_hot_add_stack_of_shelves_and_bridges.md#STEP_524EBC3334F54467B771D9E2FD2B2DDA[task_fb_hot_add_stack_of_shelves_and_bridges.md#STEP_524EBC3334F54467B771D9E2FD2B2DDA].
+ .. Check for loose SAS cables or correct the SAS cabling by repeating Step xref:task_fb_hot_add_stack_of_shelves_and_bridges.adocSTEP_1F8F7E891D3B4CBD88176B312C6BC5CC[10].
+ .. Repeat Step xref:task_fb_hot_add_stack_of_shelves_and_bridges.adocSTEP_524EBC3334F54467B771D9E2FD2B2DDA[11].
 
 +
 |===
@@ -299,48 +341,39 @@ NOTE: Brocade and Cisco switches use different port numbering, as shown in the f
 
  ** On Brocade switches, the first port is numbered "`0`".
  ** On Cisco switches, the first port is numbered "`1`".
+
+[options="header"]
 |===
-| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
-| DR GROUP 1
-|  | Brocade 6505| Brocade 6510, Brocade DCX 8510-8| Brocade 6520| Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1| Brocade G720
-| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2
-| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
-| DR GROUP 2
-|  | Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1| Brocade 6510, Brocade DCX 8510-8| Brocade 6520| Brocade G720
-| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| switch 2
-| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
-| DR GROUP 1
-|  | Brocade 6505| Brocade 6510, Brocade DCX 8510-8| Brocade 6520| Brocade G620, brocade G620-1, Brocade G630, Brocade G630-1| Brocade G720
-| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2
-| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
-| DR GROUP 2
-|  | Brocade G720| Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1| Brocade 6510, Brocade DCX 8510-8| Brocade 6520
-a|
+13+^| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+13+^| DR GROUP 1
+3+|  2+| Brocade 6505 2+| Brocade 6510, Brocade DCX 8510-8 2+| Brocade 6520 2+| Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1 2+| Brocade G720
+2+| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2
+.4+a|
 Stack 1
-a|
+.2+a|
 bridge_x_1a
 a|
 FC1
 a|
 8
 a|
- 
+
 a|
 8
 a|
- 
+
 a|
 8
 a|
- 
+
 a|
 8
 a|
- 
+
 a|
 10
 a|
- 
+
 a|
 FC2
 a|
@@ -363,7 +396,7 @@ a|
 -
 a|
 10
-a|
+.2+a|
 bridge_x_1B
 a|
 FC1
@@ -409,9 +442,9 @@ a|
 -
 a|
 11
-a|
+.4+a|
 Stack 2
-a|
+.2+a|
 bridge_x_2a
 a|
 FC1
@@ -457,7 +490,7 @@ a|
 -
 a|
 14
-a|
+.2+a|
 bridge_x_2B
 a|
 FC1
@@ -503,9 +536,9 @@ a|
 -
 a|
 17
-a|
+.4+a|
 Stack 3
-a|
+.2+a|
 bridge_x_3a
 a|
 FC1
@@ -551,7 +584,7 @@ a|
 -
 a|
 18
-a|
+.2+a|
 bridge_x_3B
 a|
 FC1
@@ -597,9 +630,9 @@ a|
 -
 a|
 19
-a|
+.4+a|
 Stack y
-a|
+.2+a|
 bridge_x_ya
 a|
 FC1
@@ -645,7 +678,7 @@ a|
 -
 a|
 20
-a|
+.2+a|
 bridge_x_yb
 a|
 FC1
@@ -691,12 +724,19 @@ a|
 -
 a|
 21
-a|
-*Note:* Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1, and G630-1 switches.
+13+a|
+NOTE: Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1, and G630-1 switches.
 
-a|
+|===
+[options="header"]
+|===
+11+^| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+11+^| DR GROUP 2
+3+|  2+| Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1 2+| Brocade 6510, Brocade DCX 8510-8 2+| Brocade 6520 2+| Brocade G720
+2+| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| switch 2
+.4+a|
 Stack 1
-a|
+.2+a|
 bridge_x_51a
 a|
 FC1
@@ -734,7 +774,7 @@ a|
 -
 a|
 32
-a|
+.2+a|
 bridge_x_51b
 a|
 FC1
@@ -772,9 +812,9 @@ a|
 -
 a|
 33
-a|
+.4+a|
 Stack 2
-a|
+.2+a|
 bridge_x_52a
 a|
 FC1
@@ -812,7 +852,7 @@ a|
 -
 a|
 34
-a|
+.2+a|
 bridge_x_52b
 a|
 FC1
@@ -850,9 +890,9 @@ a|
 -
 a|
 35
-a|
+.4+a|
 Stack 3
-a|
+.2+a|
 bridge_x_53a
 a|
 FC1
@@ -890,7 +930,7 @@ a|
 -
 a|
 36
-a|
+.2+a|
 bridge_x_53b
 a|
 FC1
@@ -928,9 +968,9 @@ a|
 -
 a|
 37
-a|
+.4+a|
 Stack y
-a|
+.2+a|
 bridge_x_5ya
 a|
 FC1
@@ -968,7 +1008,7 @@ a|
 -
 a|
 38
-a|
+.2+a|
 bridge_x_5yb
 a|
 FC1
@@ -1006,32 +1046,41 @@ a|
 -
 a|
 39
-a|
-    *Note:* Additional bridges can be cabled to ports 36 - 39 in G620, G630, G620-1, and G-630-1 switches.
-a|
+11+a|
+NOTE: Additional bridges can be cabled to ports 36 - 39 in G620, G630, G620-1, and G-630-1 switches.
+
+|===
+[options="header"]
+|===
+12+^| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+12+^| DR GROUP 1
+2+|  2+| Brocade 6505 2+| Brocade 6510, Brocade DCX 8510-8 2+| Brocade 6520 2+| Brocade G620, brocade G620-1, Brocade G630, Brocade G630-1 2+| Brocade G720
+| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2
+
+.2+a|
 Stack 1
 a|
 bridge_x_1a
 a|
 8
 a|
- 
+
 a|
 8
 a|
- 
+
 a|
 8
 a|
- 
+
 a|
 8
 a|
- 
+
 a|
 10
 a|
- 
+
 a|
 bridge_x_1b
 a|
@@ -1054,7 +1103,7 @@ a|
 -
 a|
 10
-a|
+.2+a|
 Stack 2
 a|
 bridge_x_2a
@@ -1100,7 +1149,7 @@ a|
 -
 a|
 11
-a|
+.2+a|
 Stack 3
 a|
 bridge_x_3a
@@ -1146,7 +1195,7 @@ a|
 -
 a|
 14
-a|
+.2+a|
 Stack y
 a|
 bridge_x_ya
@@ -1192,9 +1241,16 @@ a|
 -
 a|
 15
-a|
-    *Note:* Additional bridges can be cabled to ports 12 - 17, 20 and 21 in G620, G630, G620-1, and G630-1 switches. Additional bridges can be cabled to ports 16 - 17, 20 and 21 G720 switches.
-a|
+12+a|
+NOTE: Additional bridges can be cabled to ports 12 - 17, 20 and 21 in G620, G630, G620-1, and G630-1 switches. Additional bridges can be cabled to ports 16 - 17, 20 and 21 G720 switches.
+
+|===
+[options="header"]
+|===
+10+^| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+10+^| DR GROUP 2
+2+|  2+| Brocade G720 2+| Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1 2+| Brocade 6510, Brocade DCX 8510-8 2+| Brocade 6520
+.2+a|
 Stack 1
 a|
 bridge_x_51a
@@ -1232,7 +1288,7 @@ a|
 -
 a|
 56
-a|
+.2+a|
 Stack 2
 a|
 bridge_x_52a
@@ -1270,7 +1326,7 @@ a|
 -
 a|
 57
-a|
+.2+a|
 Stack 3
 a|
 bridge_x_53a
@@ -1308,7 +1364,7 @@ a|
 -
 a|
 58
-a|
+.2+a|
 Stack y
 a|
 bridge_x_ya
@@ -1346,16 +1402,18 @@ a|
 -
 a|
 59
-a|
-    *Note:* Additional bridges can be cabled to ports 32 - 39 in G620, G630, G620-1, and G630-1 switches. Additional bridges can be cabled to ports 36 - 39 in G720 switches.
-+
+10+a|
+NOTE: Additional bridges can be cabled to ports 32 - 39 in G620, G630, G620-1, and G630-1 switches. Additional bridges can be cabled to ports 36 - 39 in G720 switches.
+
 |===
 
 . If you are configuring a bridge-attached MetroCluster system, cable each bridge to the controller modules:
  .. Cable FC port 1 of the bridge to a 16 Gb or 8 Gb FC port on the controller module in cluster_A.
  .. Cable FC port 2 of the bridge to the same speed FC port of the controller module in cluster_A.
  .. Repeat these substeps on other subsequent bridges until all of the bridges have been cabled.
-. Update the disk drive firmware to the most current version from the system console: `disk_fw_update`
+. Update the disk drive firmware to the most current version from the system console:
++
+`*disk_fw_update*`
 +
 You must run this command on both controller modules.
 +
@@ -1371,18 +1429,30 @@ https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware[NetApp 
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
 +
-NOTE: If you are splitting the ownership of a single stack of disk shelves among multiple controller modules, you must disable disk autoassignment on both nodes in the cluster (storage disk option modify -autoassign off *) before assigning disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller module and pool.
+NOTE: If you are splitting the ownership of a single stack of disk shelves among multiple controller modules, you must disable disk autoassignment on both nodes in the cluster (`storage disk option modify -autoassign off *`) before assigning disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller module and pool.
 +
 NOTE: You must not add disk drives to aggregates or volumes until after the disk drive firmware and disk shelf firmware have been updated and the verification steps in this task have been completed.
 
 . Enable the switch ports for the new stack.
 . Verify the operation of the MetroCluster configuration in ONTAP:
- .. Check whether the system is multipathed:``node run -node node-name sysconfig -a``
- .. Check for any health alerts on both clusters: `system health alert show`
- .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
- .. Perform a MetroCluster check: `metrocluster check run`
- .. Display the results of the MetroCluster check: `metrocluster check show`
- .. Check for any health alerts on the switches (if present): `storage switch show`
+ .. Check whether the system is multipathed:
+ +
+`*node run -node _node-name_ sysconfig -a*`
+ .. Check for any health alerts on both clusters:
+ +
+`*system health alert show*`
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
+ +
+`*metrocluster show*`
+ .. Perform a MetroCluster check:
+ +
+`*metrocluster check run*`
+ .. Display the results of the MetroCluster check:
+ +
+`*metrocluster check show*`
+ .. Check for any health alerts on the switches (if present):
+ +
+`*storage switch show*`
  .. Run Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
@@ -1392,4 +1462,4 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 *Related information*
 
-link:concept_in_band_management_of_the_fc_to_sas_bridges.md#[In-band management of the FC-to-SAS bridges]
+xref:concept_in_band_management_of_the_fc_to_sas_bridges.adoc[In-band management of the FC-to-SAS bridges]

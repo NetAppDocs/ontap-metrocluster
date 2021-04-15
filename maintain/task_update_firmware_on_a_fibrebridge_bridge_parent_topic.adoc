@@ -1,8 +1,8 @@
 ---
 permalink: maintain/task_update_firmware_on_a_fibrebridge_bridge_parent_topic.html
 sidebar: sidebar
-keywords: 
-summary: ''
+keywords: metrocluster, maintain, service, update, firmware, fibrebridge, bridge, update, configuration
+summary: 'The procedure for updating the bridge firmware depends on your bridge model and ONTAP version.'
 ---
 = Updating firmware on a FibreBridge bridge
 :icons: font
@@ -31,11 +31,15 @@ In the IMT, you can use the Storage Solution field to select your MetroCluster s
 
 NOTE: This procedure is nondisruptive and takes approximately 30 minutes to complete.
 
-NOTE: Starting with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
+NOTE: Starting with ONTAP 9.8, the `*storage bridge*` command is replaced with `*system bridge*`. The following steps show the `*storage bridge*` command, but if you are running ONTAP 9.8 or later, the `*system bridge*` command is preferred.
 
-. Invoke an AutoSupport message indicating the start of the maintenance: `system node autosupport invoke -node * -type all -message MAINT=maintenance-window-in-hours`
+. Invoke an AutoSupport message indicating the start of the maintenance:
 +
-maintenance-window-in-hours specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period: `system node autosupport invoke -node * -type all -message MAINT=end`
+`*system node autosupport invoke -node * -type all -message MAINT=__maintenance-window-in-hours__*`
++
+maintenance-window-in-hours specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
++
+`*system node autosupport invoke -node * -type all -message MAINT=end*`
 
 . Go to the ATTO FibreBridge page and select the appropriate firmware for your bridge.
 +
@@ -46,18 +50,26 @@ https://mysupport.netapp.com/site/products/all/details/atto-fibrebridge/download
 +
 You can enter the commands in the remaining steps from the console of either controller module.
 
-. Change to the advanced privilege level: `set -privilege advanced`
+. Change to the advanced privilege level:
 +
-You must respond with `y` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
+`*set -privilege advanced*`
++
+You must respond with `*y*` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
-. Update the bridge firmware by using the following command: `storage bridge firmware update -bridge name -uri URL-of-firmware-package`
+. Update the bridge firmware by using the following command:
++
+`*storage bridge firmware update -bridge name -uri _URL-of-firmware-package_*`
 +
 ----
 cluster_A> storage bridge firmware update -bridge bridge_A_1a -uri http://192.168.132.97/firmware.spf
 ----
 
-. Return to the admin privilege level: `set -privilege admin`
-. Verify that the firmware upgrade is complete: `job show -name Storage bridge firmware update`
+. Return to the admin privilege level:
++
+`*set -privilege admin*`
+. Verify that the firmware upgrade is complete:
++
+`*job show -name _Storage bridge firmware update_*`
 +
 The following example shows that the job is still running:
 +
@@ -91,7 +103,7 @@ Description: Storage bridge firmware update job
 
 . Complete the steps according to whether in-band management is enabled and which version of ONTAP your system is running:
  ** If you are running ONTAP 9.4, in-band management is not supported and the command must be issued from the bridge console:
-  ... Run the `flashimages` command on the console of the bridge and confirm that the correct firmware versions are displayed.
+  ... Run the `*flashimages*` command on the console of the bridge and confirm that the correct firmware versions are displayed.
 +
 NOTE: The example shows that primary flash image shows the new firmware image, while the secondary flash image shows the old image.
 +
@@ -105,9 +117,9 @@ Secondary 3.15 002S
 Ready.
 ----
 
-  ... Reboot the bridge by running the `firmwarerestart` command from the bridge.
+  ... Reboot the bridge by running the `*firmwarerestart*` command from the bridge.
  ** If you are running ONTAP 9.5 or later, in-band management is supported and the command can be issued from the cluster prompt:
-  ... Run the `storage bridge run-cli -name bridge-name -command FlashImages` command.
+  ... Run the `*storage bridge run-cli -name _bridge-name_ -command FlashImages*` command.
 +
 NOTE: The example shows that primary flash image shows the new firmware image, while the secondary flash image shows the old image.
 +
@@ -126,10 +138,12 @@ Ready.
 [Job 2257] Job succeeded.
 ----
 
-  ... If necessary, restart the bridge: `storage bridge run-cli -name ATTO_7500N_IB_1 -command FirmwareRestart`
+  ... If necessary, restart the bridge: `*storage bridge run-cli -name ATTO_7500N_IB_1 -command FirmwareRestart*`
 +
 NOTE: Starting with ATTO firmware version 2.95 the bridge will restart automatically and this step is not required.
-. Verify that the bridge restarted correctly: `sysconfig`
+. Verify that the bridge restarted correctly:
++
+`*sysconfig*`
 +
 The system should be cabled for multipath high availability (both controllers have access through the bridges to the disk shelves in each stack).
 +
@@ -142,7 +156,9 @@ System Rev: A4
 System Storage Configuration: Quad-Path HA
 ----
 
-. Verify that the FibreBridge firmware was updated: `storage bridge show -fields fw-version,symbolic-name`
+. Verify that the FibreBridge firmware was updated:
++
+`*storage bridge show -fields fw-version,symbolic-name*`
 +
 ----
 cluster_A> storage bridge show -fields fw-version,symbolic-name
@@ -155,7 +171,9 @@ ATTO_20000010affeaffa 3.10 A06X bridge_A_2b
 4 entries were displayed.
 ----
 
-. Verify the partitions are updated from the bridge's prompt: `flashimages`
+. Verify the partitions are updated from the bridge's prompt:
++
+`*flashimages*`
 +
 The primary flash image displays the new firmware image, while the secondary flash image displays the old image.
 +
@@ -172,7 +190,9 @@ flashimages
 ----
 
 . Repeat steps 5 to 10 to ensure that both flash images are updated to the same version.
-. Verify that both flash images are updated to the same version.`flashimages`
+. Verify that both flash images are updated to the same version.
++
+`*flashimages*`
 +
 The output should show the same version for both partitions.
 +
@@ -207,15 +227,20 @@ In the IMT, you can use the Storage Solution field to select your MetroCluster s
 
 You can use this task with either FibreBridge 7500N or 6500N bridges. Starting with ONTAP 9.3, you can use the ONTAP storage bridge firmware update command to update bridge firmware on FibreBridge 7500N bridges.
 
-link:task_update_firmware_on_a_fibrebridge_bridge_parent_topic.md#[Updating firmware on FibreBridge 7600N or 7500N bridges on configurations running ONTAP 9.4 and later]
+xref:task_update_firmware_on_a_fibrebridge_bridge_parent_topic.adoc[Updating firmware on FibreBridge 7600N or 7500N bridges on configurations running ONTAP 9.4 and later]
 
 You must perform this task on each FibreBridge bridge in the MetroCluster configuration, so that all of the bridges are running the same firmware version.
 
 NOTE: This procedure is nondisruptive and takes approximately 30 minutes to complete.
 
-. Invoke an AutoSupport message indicating the start of the maintenance: `system node autosupport invoke -node * -type all -message MAINT=maintenance-window-in-hours`
+.Steps
+. Invoke an AutoSupport message indicating the start of the maintenance:
 +
-maintenance-window-in-hours specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period: `system node autosupport invoke -node * -type all -message MAINT=end`
+`*system node autosupport invoke -node * -type all -message MAINT=__maintenance-window-in-hours__*`
++
+`_maintenance-window-in-hours_` specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
++
+`*system node autosupport invoke -node * -type all -message MAINT=end*`
 
 . Go to the ATTO FibreBridge page and select the appropriate firmware for your bridge.
 +
@@ -232,7 +257,9 @@ https://mysupport.netapp.com/site/products/all/details/atto-fibrebridge/download
 
 +
 The bridge should restart.
- .. From the console of either controller, verify that the bridge restarted correctly: `sysconfig`
+ .. From the console of either controller, verify that the bridge restarted correctly:
+ +
+`*sysconfig*`
 +
 The system should be cabled for multipath high availability (both controllers have access through the bridges to the disk shelves in each stack).
 +
@@ -245,7 +272,9 @@ System Rev: A4
 System Storage Configuration: Quad-Path HA
 ----
 
- .. From the console of either controller, verify that the FibreBridge firmware was updated: `storage bridge show -fields fw-version,symbolic-name`
+ .. From the console of either controller, verify that the FibreBridge firmware was updated:
+ +
+`*storage bridge show -fields fw-version,symbolic-name*`
 +
 ----
 cluster_A::> storage bridge show -fields fw-version,symbolic-name
@@ -259,7 +288,9 @@ cluster_A::> storage bridge show -fields fw-version,symbolic-name
 ----
 
  .. Repeat the previous substeps on the same bridge to update the second partition.
- .. Verify that both partitions are updated: `flashimages`
+ .. Verify that both partitions are updated:
+ +
+`*flashimages*`
 +
 The output should show the same version for both partitions.
 +

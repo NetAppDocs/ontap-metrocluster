@@ -1,8 +1,8 @@
 ---
 permalink: disaster-recovery/task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: perform, task, order, prepare, metrocluster, ip, configuration, switchback, operation, preparing, setting, require, environmental, variable, power, equipment, disaster, site, configure, configuring, switch, verify, storage, connectivity, remote, assign, disk, ownership, pool, disk, boot, ontap, replacement, controller, module, restore, restoring, surviving, survive, node, automatic, assignment, manual, drive, adp, system, non-adp, deleting, delete, fail, plex, own, aggregate, heal, mirror
+summary: You must perform certain tasks in order to prepare the MetroCluster IP configuration for the switchback operation.
 ---
 = Preparing for switchback in a MetroCluster IP configuration
 :icons: font
@@ -26,6 +26,7 @@ The nodes in these examples have the following IP addresses for their MetroClust
 
 NOTE: These examples are for an AFF A700 or FAS9000 system. The interfaces vary by platform model.
 
+[cols=3*,options="header"]
 |===
 | Node| Port| IP address
 a|
@@ -71,6 +72,7 @@ a|
 |===
 The following table summarizes the relationships between the nodes and each node's MetroCluster IP addresses.
 
+[options="header"]
 |===
 | Node| HA partner| DR partner| DR auxiliary partner
 a|
@@ -172,6 +174,7 @@ node_A_1
 |===
 The following table lists the platform models that use VLAN IDs on the MetroCluster IP interfaces. These models may require additional steps if you are not using the default VLAN IDs.
 
+[options="header"]
 |===
 | Platform models that use VLAN IDs with the MetroCluster IP interfaces
 a|
@@ -319,6 +322,7 @@ dr-group-id cluster     node     node-uuid                            node-clust
 cluster_A::*>
 ----
 +
+[options="header"]
 |===
 | Node| UUID
 a|
@@ -390,7 +394,7 @@ setenv bootarg.mcc.lun_part true
 ----
 . If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, set the original system ID (*not* the system ID of the replacement controller module) and the system ID of the DR partner of the node: `setenv bootarg.mcc.local_config_id original-sysID``setenv bootarg.mcc.dr_partner dr_partner-sysID`
 +
-link:task_replace_hardware_and_boot_new_controllers.md#[Determining the system IDs and VLAN IDs of the old controller modules]
+xref:task_replace_hardware_and_boot_new_controllers.html#determining-the-system-ids-of-the-replacement-controller-modules[Determining the system IDs and VLAN IDs of the old controller modules]
 
  .. Set the variables on node_A_1.
 +
@@ -456,12 +460,12 @@ You can use the procedures in the following sections:
 +
 The following examples show the commands for a Broadcom IP switch or a Cisco IP switch.
 +
+[options="header"]
 |===
 | Switch vendor| Commands
 a|
 Broadcom
 a|
-+
 ----
 (IP_Switch_A_1)> enable
 (IP_switch_A_1)# configure
@@ -473,7 +477,6 @@ a|
 a|
 Cisco
 a|
-+
 ----
 IP_switch_A_1# conf t
 IP_switch_A_1(config)# int eth1/15-eth1/20
@@ -481,19 +484,18 @@ IP_switch_A_1(config)# no shutdown
 IP_switch_A_1(config)# copy running startup
 IP_switch_A_1(config)# show interface brief
 ----
-+
 |===
 
  .. Enable the of the ISL interfaces on the partner switch: `no shutdown`
 +
 The following examples show the commands for a Broadcom IP switch or a Cisco IP switch.
 +
+[options="header"]
 |===
 | Switch vendor| Commands
 a|
 Broadcom
 a|
-+
 ----
 (IP_Switch_A_2)> enable
 (IP_switch_A_2)# configure
@@ -505,7 +507,6 @@ a|
 a|
 Cisco
 a|
-+
 ----
 IP_switch_A_2# conf t
 IP_switch_A_2(config)# int eth1/15-eth1/20
@@ -513,7 +514,6 @@ IP_switch_A_2(config)# no shutdown
 IP_switch_A_2(config)# copy running startup
 IP_switch_A_2(config)# show interface brief
 ----
-+
 |===
 
  .. Verify that the interfaces are enabled: `show interface brief`
@@ -547,7 +547,7 @@ Eth1/20    10   eth   access  down   none   auto(D) --
 IP_switch_A_2#
 ----
 
-Proceed to link:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.md#[Preparing for switchback in a MetroCluster IP configuration].
+Proceed to xref:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.adoc[Preparing for switchback in a MetroCluster IP configuration].
 
 == Verify storage connectivity to the remote site (MetroCluster IP configurations)
 
@@ -599,10 +599,11 @@ The examples make the following assumptions:
 * node_B_1 is healthy.
 * node_B_2 is healthy.
 
-The old and new system IDs were identified in link:task_replace_hardware_and_boot_new_controllers.md#[Acquiring the new System ID].
+The old and new system IDs were identified in xref:task_replace_hardware_and_boot_new_controllers.adocl#determining-the-system-ids-of-the-replacement-controller-modules[Determining the new System IDs of the replacement controller modules].
 
 The examples in this procedure use controllers with the following system IDs:
 
+[options="header"]
 |===
 | Node| Original system ID| New system ID
 a|
@@ -635,6 +636,7 @@ unchanged
 +
 You can proceed with the reassignment when prompted.
 +
+[options="header"]
 |===
 | System is using ADP| Use this command for disk reassignment:
 a|
@@ -1502,4 +1504,4 @@ cluster_B::>
 
 Proceed to verify the licenses on the replaced nodes.
 
-link:task_complete_recovery.md#[Verifying licenses on the replaced nodes]
+xref:task_complete_recovery.html#verifying-licenses-on-the-replaced-nodes[Verifying licenses on the replaced nodes]

@@ -1,8 +1,8 @@
 ---
 permalink: manage/concept_understanding_mcc_data_protection_and_disaster_recovery.html
 sidebar: sidebar
-keywords: 
-summary: ''
+keywords: helpful, metrocluster, protect, data, transparent, recovery, failure, manage, switchover, switchback, understand, disaster, eight-node, four-node, local, failover, configuration, configuration, disaster, recovery, method, nondisruptive, operation, two-node, node, configuration, overview, fc, ip, automatic, heal, aggregate, svm
+summary: It is helpful to understand how MetroCluster protects data and provides transparent recovery from failures so that you can manage your switchover and switchback activities easily and efficiently.
 ---
 = Understanding MetroCluster data protection and disaster recovery
 :icons: font
@@ -107,6 +107,7 @@ IMPORTANT:
 
 The following table shows the state (online or offline) of an unmirrored aggregate after a switchover:
 
+[options="header"]
 |===
 | Type of switchover| State
 a|
@@ -147,6 +148,7 @@ In an HA pair that is not part of a MetroCluster configuration, each storage con
 
 In a four-node MetroCluster configuration, the nonvolatile cache of each storage controller is divided into four partitions. In a two-node MetroCluster configuration, the HA partner partition and DR auxiliary partition are not used, because the storage controllers are not configured as an HA pair.
 
+[options="header"]
 |===
 | Nonvolatile caches for a storage controller
 | In a MetroCluster configuration| In a non-MetroCluster HA pair
@@ -217,6 +219,7 @@ The following table shows failure types, and the corresponding disaster recovery
 
 NOTE: AUSO (automatic unscheduled switchover) is not supported on MetroCluster IP configurations.
 
+[options="header"]
 |===
 | Failure type| DR mechanism| Summary of recovery method
 | Four-node configuration| Two-node configuration| Four-node configuration| Two-node configuration
@@ -298,7 +301,7 @@ For two-node configurations, the same events that trigger an automatic storage f
 
 *Related information*
 
-link:concept_understanding_mcc_data_protection_and_disaster_recovery.md#[Automatic unplanned switchover in MetroCluster FC configurations]
+xref:concept_understanding_mcc_data_protection_and_disaster_recovery.adoc[Automatic unplanned switchover in MetroCluster FC configurations]
 
 == Overview of the switchover process
 
@@ -330,6 +333,7 @@ NOTE: This procedure should be only used if the other site is stable and not int
 
 The following table shows the availability of commands during switchover:
 
+[options="header"]
 |===
 | Command| Availability
 a|
@@ -437,6 +441,7 @@ In the MetroCluster configuration, in the event of a switchover, a node can take
 
 As the state of the system changes, the values of the fields change, as shown in the following table:
 
+[options="header"]
 |===
 |  | Value during...
 | Field| Normal operation| Local HA takeover| MetroCluster switchover| Takeover during switchover
@@ -475,6 +480,7 @@ The following illustration and table provide an example of how ownership changes
 
 image::../media/mcc_disk_ownership.gif[]
 
+[options="header"]
 |===
 | MetroCluster state| Owner| Home owner| DR Home owner| Notes
 a|
@@ -486,7 +492,7 @@ node_A_1
 a|
 not applicable
 a|
- 
+
 a|
 Local HA takeover, node_A_2 has taken over disks belonging to its HA partner node_A_1.
 a|
@@ -496,7 +502,7 @@ node_A_1
 a|
 not applicable
 a|
- 
+
 a|
 DR switchover, node_B_1 has taken over disks belong to its DR partner, node_A_1.
 a|
@@ -528,7 +534,7 @@ node_A_1
 a|
 not applicable
 a|
- 
+
 |===
 
 === Considerations when using unmirrored aggregates
@@ -608,7 +614,7 @@ When switchover occurs, the AUSO setting is disabled internally because if a sit
 
 To recover from an AUSO, you perform the same steps as for a planned switchover.
 
-link:task_perform_switchover_for_tests_or_maintenance.md#[Performing switchover for tests or maintenance]
+xref:task_perform_switchover_for_tests_or_maintenance.adoc[Performing switchover for tests or maintenance]
 
 === Mediator-assisted automatic unplanned switchover in MetroCluster IP configurations
 

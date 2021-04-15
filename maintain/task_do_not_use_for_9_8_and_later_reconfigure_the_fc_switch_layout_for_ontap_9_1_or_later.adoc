@@ -1,8 +1,8 @@
 ---
 permalink: maintain/task_do_not_use_for_9_8_and_later_reconfigure_the_fc_switch_layout_for_ontap_9_1_or_later.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: metrocluster, maintain, service, reconfigure, fc, switch, layout, configured
+summary: 'If your existing FC switch layout was configured prior to ONTAP 9.1, you must reconfigure the port layout and apply the latest Reference Configuration Files (RCFs). This procedure applies only to MetroCluster FC configurations.'
 ---
 = Reconfiguring an FC switch layout configured before ONTAP 9.x
 :icons: font
@@ -26,10 +26,15 @@ Before reconfiguring your switches, you should issue an AutoSupport message to n
 
 This task must be performed on each MetroCluster site.
 
+.Steps
 . Log in to the cluster.
-. Invoke an AutoSupport message indicating the start of the maintenance: `system node autosupport invoke -node * -type all -message MAINT=maintenance-window-in-hours`
+. Invoke an AutoSupport message indicating the start of the maintenance:
 +
-maintenance-window-in-hours specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:``system node autosupport invoke -node * -type all -message MAINT=end``
+`system node autosupport invoke -node * -type all -message MAINT=__maintenance-window-in-hours__*`
++
+maintenance-window-in-hours specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
++
+`*system node autosupport invoke -node * -type all -message MAINT=end*`
 
 . Repeat these steps on the partner site.
 
@@ -38,7 +43,10 @@ maintenance-window-in-hours specifies the length of the maintenance window, with
 [.lead]
 You should check the health of the MetroCluster configuration to verify proper operation.
 
-. Verify that the MetroCluster components are healthy: `metrocluster check run`
+.Steps
+. Verify that the MetroCluster components are healthy:
++
+`*metrocluster check run*`
 +
 ----
 cluster_A::*> metrocluster check run
@@ -70,8 +78,12 @@ volumes             ok
 7 entries were displayed.
 ----
 
-. To check the status of the running MetroCluster check operation, use the command: `metrocluster operation history show -job-id 38`
-. Verify that there are no health alerts: `system health alert show`
+. To check the status of the running MetroCluster check operation, use the command:
++
+`*metrocluster operation history show -job-id 38*`
+. Verify that there are no health alerts:
++
+`*system health alert show*`
 
 == Checking for MetroCluster configuration errors
 
@@ -95,9 +107,10 @@ You must disable the switches in the fabric persistently so that you can modify 
 
 You disable the switches by running the commands on the switch command line; the commands used for this are not ONTAP commands.
 
+.Steps
 . Persistently disable the switch:
- ** For Brocade switches, use the switchCfgPersistentDisable command.
- ** For Cisco switches, use the suspend command.
+ ** For Brocade switches, use the `switchCfgPersistentDisable` command.
+ ** For Cisco switches, use the `suspend` command.
 The following command disables a Brocade switch persistently:
 
 +
@@ -118,6 +131,7 @@ You must determine the cabling for the new controller modules and any new disk s
 
 This task must be performed at each MetroCluster site.
 
+.Steps
 . Use the _Fabric-attached MetroCluster Installation and Configuration Guide_ to determine the cabling layout for your switch type, using the port usage for an eight-node MetroCluster configuration.
 +
 The FC switch port usage must match the usage described in the guide so that the Reference Configuration Files (RCFs) can be used.
@@ -135,6 +149,7 @@ The FC switch port usage must match the usage described in the _Fabric-attached 
 
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
 
+.Steps
 . Locate the RCF files for your configuration.
 +
 You must use the RCF files that match your switch model.
@@ -143,19 +158,24 @@ You must use the RCF files that match your switch model.
 . Verify that the switch configuration is saved.
 . Cable both of the FC-to-SAS bridges to the FC switches, using the cabling layout you created in the "`Determining the new cabling layout`" section.
 . Verify that the ports are online:
- ** For Brocade switches, use the switchshow command.
- ** For Cisco switches, use the show interface brief command.
+ ** For Brocade switches, use the `switchshow` command.
+ ** For Cisco switches, use the `show interface brief` command.
 . Cable the FC-VI ports from the controllers to the switches.
-. From the existing nodes, verify that the FC-VI ports are online: `metrocluster interconnect adapter show``metrocluster interconnect mirror show`
+. From the existing nodes, verify that the FC-VI ports are online:
++
+`*metrocluster interconnect adapter show*`
++
+`*metrocluster interconnect mirror show*`
 
 == Persistently enable the switches
 
 [.lead]
 You must enable the switches in the fabric persistently.
 
+.Steps
 . Persistently enable the switch:
- ** For Brocade switches, use the switchCfgPersistentenable command.
- ** For Cisco switches, use the no suspend command.
+ ** For Brocade switches, use the `switchCfgPersistentenable` command.
+ ** For Cisco switches, use the no `suspend` command.
 The following command persistently enables a Brocade switch:
 
 +

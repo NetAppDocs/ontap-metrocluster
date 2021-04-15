@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_assign_disks_to_the_new_controller_mcc_expansion.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, upgrade, assign, disks, new, controller, module
 summary: 'Before you complete the configuration of the new controller module through netboot, you must assign disks to it.'
 ---
 = Assigning disks to the new controller module
@@ -13,15 +13,24 @@ Before you complete the configuration of the new controller module through netbo
 
 You must have made sure that there are enough spares, unassigned disks, or assigned disks that are not part of an existing aggregate.
 
-link:task_prepare_for_the_upgrade_add_2nd_controller_to_create_ha_pair.md#[Preparing for the upgrade]
+xref:task_prepare_for_the_upgrade_add_2nd_controller_to_create_ha_pair.adoc[Preparing for the upgrade]
 
 These steps are performed on the existing controller module.
 
-. Assign the root disk to the new controller module: `storage disk assign -disk disk_name -sysid new_controller_sysID -force true`
+.Steps
+. Assign the root disk to the new controller module:
 +
-If your platform model uses the Advanced Drive Partitioning (ADP) feature, you must include the -root true parameter: `storage disk assign -disk disk_name -root true -sysid new_controller_sysID -force true`
+`*storage disk assign -disk _disk_name_ -sysid _new_controller_sysID_ -force true*`
++
+If your platform model uses the Advanced Drive Partitioning (ADP) feature, you must include the -root true parameter:
++
+`*storage disk assign -disk _disk_name_ -root true -sysid _new_controller_sysID_ -force true*`
 
-. Assign the remaining required disks to the new controller module by entering the following command for each disk: `storage disk assign -disk disk_name -sysid new_controller_sysID -force true`
-. Verify that the disk assignments are correct: `storage disk show -partitionownership`
+. Assign the remaining required disks to the new controller module by entering the following command for each disk:
++
+`*storage disk assign -disk _disk_name_ -sysid _new_controller_sysID_ -force true*`
+. Verify that the disk assignments are correct:
++
+`*storage disk show -partitionownership*`
 +
 NOTE: Ensure that you have assigned all disks that you intend to assign to the new node.

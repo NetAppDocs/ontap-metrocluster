@@ -1,7 +1,7 @@
 ---
 permalink: install-stretch/task_fb_new_install_cable_the_fc_to_sas_bridges_to_the_controller_module_in_a_two_node_bridge_attached_configuration.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, stretch, installation, cable, fc, sas, bridge, controller, module, two, node, configuration
 summary: 'You must cable the bridges to the controller module in a two-node bridge-attached MetroCluster configuration.'
 ---
 = Cabling the FC-to-SAS bridges to the controller module in a two-node bridge-attached MetroCluster configuration
@@ -11,8 +11,10 @@ summary: 'You must cable the bridges to the controller module in a two-node brid
 [.lead]
 You must cable the bridges to the controller module in a two-node bridge-attached MetroCluster configuration.
 
+.Steps
 . Verify that each bridge can detect all of the disk drives and disk shelves to which the bridge is connected.
 +
+[options="header"]
 |===
 | If you are using the...| Then...
 a|
@@ -28,16 +30,20 @@ You are brought to the ATTO FibreBridge homepage of the bridge for which you ent
 The ATTO FibreBridge status page of the bridge appears with a menu to the left.
 
  .. Click *Advanced* in the menu.
- .. Run the following command, and then click *Submit*: `sastargets`
+ .. Run the following command, and then click *Submit*:
+ +
+`*sastargets*`
 
 a|
 Serial port connection
 a|
-Run the following command: `sastargets`
+Run the following command:
+
+`*sastargets*`
 |===
-The sastargets command output shows the devices (disks and disk shelves) that the bridge is connected to. Output lines are sequentially numbered so that you can quickly count the devices.
+The `sastargets` command output shows the devices (disks and disk shelves) that the bridge is connected to. Output lines are sequentially numbered so that you can quickly count the devices.
 +
-NOTE: If the text response truncated appears at the beginning of the output, you can use Telnet to connect to the bridge and run the same command to view all of the output.
+NOTE: If the `text response` truncated appears at the beginning of the output, you can use Telnet to connect to the bridge and run the same command to view all of the output.
 +
 The following output shows that 10 disks are connected:
 +
@@ -57,6 +63,7 @@ Tgt VendorID ProductID        Type        SerialNumber
 
 . Verify that the command output shows that the bridge is connected to all of the disks and disk shelves in the stack that it is supposed to be connected to.
 +
+[options="header"]
 |===
 | If the output is...| Then...
 a|
@@ -69,11 +76,11 @@ a|
 
  .. Check for loose SAS cables or correct the SAS cabling by recabling the disk shelves to the bridges.
 +
-link:task_fb_new_install_cabl.md#[Cabling disk shelves to the bridges]
+xref:task_fb_new_install_cabl.adoc[Cabling disk shelves to the bridges]
 
  .. Repeat <<STEP_524EBC3334F54467B771D9E2FD2B2DDA,Step 1>> for each remaining bridge.
 
-+
+
 |===
 
 . Cable each bridge to the controller modules:

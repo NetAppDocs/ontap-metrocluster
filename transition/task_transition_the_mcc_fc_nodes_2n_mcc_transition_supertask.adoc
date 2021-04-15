@@ -1,8 +1,8 @@
 ---
 permalink: transition/task_transition_the_mcc_fc_nodes_2n_mcc_transition_supertask.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: information, exist, metrocluster, fc, node, autosupport, message, announcing, announce, maintenance, transition, node, gather, controller, module, send, custom, message, prior, shut, down, removing, remove
+summary: You must gather information from the existing MetroCluster FC nodes, send an autosupport message announcing the start of maintenance, and transition the nodes.
 ---
 = Transitioning the MetroCluster FC nodes
 :icons: font
@@ -104,7 +104,7 @@ No LIFs should appear in the output.
 
 . Move any LIFs as required to resolve conflicts with the MetroCluster IP interface ports.
 +
-You must move the LIFs identified in step 1 of link:concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.md#[Mapping ports from the MetroCluster FC nodes to the MetroCluster IP nodes].
+You must move the LIFs identified in step 1 of xref:concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.adoc[Mapping ports from the MetroCluster FC nodes to the MetroCluster IP nodes].
 
  .. Move any LIFs hosted on the desired port to another port: `network interface modify -lif lifname -vserver vserver-name -home-port new-homeport``network interface revert -lif lifname -vserver vservername`
  .. If necessary, move the destination port to an appropriate IPspace and broadcast domain. `network port broadcast-domain remove-ports -ipspace current-ipspace -broadcast-domain current-broadcast-domain -ports controller-name:current-port``network port broadcast-domain add-ports -ipspace new-ipspace -broadcast-domain new-broadcast-domain -ports controller-name:new-port`

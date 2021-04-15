@@ -1,7 +1,7 @@
 ---
 permalink: install-fc/concept_switch_ports_required_for_a_eight_node_mcc_configuration_with_array_luns.html
 sidebar: sidebar
-keywords: 
+keywords: ontap, metrocluster,
 summary: 'When you are connecting ONTAP systems to FC switches for setting up a MetroCluster configuration with array LUNs, you must connect FC-VI and HBA ports from each controller to specific switch ports.'
 ---
 = Switch ports required for a MetroCluster configuration with array LUNs
@@ -40,17 +40,17 @@ NOTE: Port usage for the Brocade 6505 switch in an eight-node MetroCluster confi
 
 The following table shows the cabling for the first DR group:
 
+[cols=4*,options="header"]
 |===
-|  | Brocade 6520, 6510, 6505, G620, G610, or 7840 switch
-| Component| Port| Switch 1| Switch 2
-a|
-controller_x_1
+2+|  2+| Brocade 6520, 6510, 6505, G620, G610, or 7840 switch
+| *Component* | *Port* | *Switch 1* | *Switch 2*
+.8+| controller_x_1
 a|
 FC-VI port a
 a|
 0
 a|
- 
+
 a|
 FC-VI port b
 a|
@@ -93,8 +93,7 @@ a|
 -
 a|
 3
-a|
-controller_x_2
+.8+| controller_x_2
 a|
 FC-VI port a
 a|
@@ -144,13 +143,14 @@ a|
 a|
 7
 |===
+
 The following table shows the cabling for the second DR group:
 
+[cols=*8,options="header"]
 |===
-|  | Brocade 6510| Brocade 6520| Brocade G620
-| Component| Port| Switch 1| Switch 2| Switch 1| Switch 2| Switch 1| Switch 2
-a|
-controller_x_3
+2+|  2+| Brocade 6510 2+| Brocade 6520 2+| Brocade G620
+| *Component* | *Port* | *Switch 1* | *Switch 2* | *Switch 1* | *Switch 2* | *Switch 1* | *Switch 2*
+.8+| controller_x_3
 a|
 FC-VI port a
 a|
@@ -263,8 +263,7 @@ a|
 -
 a|
 25
-a|
-controller_x_4
+.8+| controller_x_4
 a|
 FC-VI port a
 a|
@@ -377,20 +376,20 @@ a|
 -
 a|
 29
-a|
+.2+|
 *ISLs*
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
- 
+
 a|
 ISL 1
 a|
@@ -453,7 +452,7 @@ a|
 44
 a|
 44
-a|
+.4+|
 Not supported
 a|
 44
@@ -495,11 +494,11 @@ a|
 
 The tables show the maximum supported configuration, with eight controller modules in two DR groups. For smaller configurations, ignore the rows for the additional controller modules.
 
+[cols=4*,options="header"]
 |===
-| Cisco 9396S
-| Component| Port| Switch 1| Switch 2
-a|
-controller_x_1
+4+| Cisco 9396S
+| *Component* | *Port* | *Switch 1* | *Switch 2*
+.8+| controller_x_1
 a|
 FC-VI port a
 a|
@@ -548,8 +547,7 @@ a|
 -
 a|
 4
-a|
-controller_x_2
+.8+| controller_x_2
 a|
 FC-VI port a
 a|
@@ -598,14 +596,13 @@ a|
 -
 a|
 8
-a|
-controller_x_3
+.8+| controller_x_3
 a|
 FC-VI port a
 a|
 49
 a|
- 
+
 a|
 FC-VI port b
 a|
@@ -617,7 +614,7 @@ FC-VI port c
 a|
 50
 a|
- 
+
 a|
 FC-VI port d
 a|
@@ -629,7 +626,7 @@ HBA port a
 a|
 51
 a|
- 
+
 a|
 HBA port b
 a|
@@ -641,15 +638,14 @@ HBA port c
 a|
 52
 a|
- 
+
 a|
 HBA port d
 a|
 -
 a|
 52
-a|
-controller_x_4
+.8+| controller_x_4
 a|
 FC-VI port a
 a|
@@ -699,11 +695,12 @@ a|
 a|
 56
 |===
+
+[cols=4*,header="options"]
 |===
-| Cisco 9148S
-| Component| Port| Switch 1| Switch 2
-a|
-controller_x_1
+4+| Cisco 9148S
+| *Component* | *Port* | *Switch 1* | *Switch 2*
+.8+| controller_x_1
 a|
 FC-VI port a
 a|
@@ -752,8 +749,7 @@ a|
 -
 a|
 4
-a|
-controller_x_2
+.8+| controller_x_2
 a|
 FC-VI port a
 a|
@@ -802,14 +798,13 @@ a|
 -
 a|
 8
-a|
-controller_x_3
+.8+| controller_x_3
 a|
 FC-VI port a
 a|
 25
 a|
- 
+
 a|
 FC-VI port b
 a|
@@ -852,8 +847,7 @@ a|
 -
 a|
 28
-a|
-controller_x_4
+.8+| controller_x_4
 a|
 FC-VI port a
 a|
@@ -903,12 +897,13 @@ a|
 a|
 32
 |===
+
+[cols=4*,options="header"]
 |===
-| Cisco 9132T
-| MDS module 1
-| Component| Port| Switch 1| Switch 2
-a|
-controller_x_1
+4+| Cisco 9132T
+4+| MDS module 1
+| *Component* | *Port* | *Switch 1* | *Switch 2*
+.8+| controller_x_1
 a|
 FC-VI port a
 a|
@@ -957,8 +952,7 @@ a|
 -
 a|
 4
-a|
-controller_x_2
+.8+| controller_x_2
 a|
 FC-VI port a
 a|
@@ -1007,18 +1001,17 @@ a|
 -
 a|
 8
++4|
+*MDS module 2*
 a|
-MDS module 2
+*Component*
 a|
-Component
+*Port*
 a|
-Port
+*Switch 1*
 a|
-Switch 1
-a|
-Switch 2
-a|
-controller_x_3
+*Switch 2*
+.8+| controller_x_3
 a|
 FC-VI port a
 a|
@@ -1067,8 +1060,7 @@ a|
 -
 a|
 4
-a|
-controller_x_4
+.8+| controller_x_4
 a|
 FC-VI port a
 a|
@@ -1120,11 +1112,11 @@ a|
 |===
 *Note:* The following table shows systems with two FC-VI ports. AFF A700 and FAS9000 systems have four FC-VI ports (a, b, c, and d). If using an AFF A700 or FAS9000 system, the port assignments move along by one position. For example, FC-VI ports c and d go to switch port 2 and HBA ports a and b go to switch port 3.
 
+[cols=4*,options="header"]
 |===
-| Cisco 9250i*
-| Component| Port| Switch 1| Switch 2
-a|
-controller_x_1
+4+| Cisco 9250i*
+| *Component* | *Port* | *Switch 1* | *Switch 2*
+.6+| controller_x_1
 a|
 FC-VI port a
 a|
@@ -1161,8 +1153,7 @@ a|
 -
 a|
 3
-a|
-controller_x_2
+.6+| controller_x_2
 a|
 FC-VI port a
 a|
@@ -1199,8 +1190,7 @@ a|
 -
 a|
 6
-a|
-controller_x_3
+.6+| controller_x_3
 a|
 FC-VI port a
 a|
@@ -1237,8 +1227,7 @@ a|
 -
 a|
 9
-a|
-controller_x_4
+.6+| controller_x_4
 a|
 FC-VI port a
 a|
@@ -1276,7 +1265,7 @@ a|
 a|
 13
 |===
-* - The Cisco 9250i switch is not supported for eight-node MetroCluster configurations.
+*Note*: The Cisco 9250i switch is not supported for eight-node MetroCluster configurations.
 
 == Shared initiator and shared target support for MetroCluster configuration with array LUNs
 

@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_check_the_mcc_configuration.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, upgrade, check, configuration
 summary: 'You can check that the components and relationships in the MetroCluster configuration are working correctly. You should do a check after initial configuration and after making any changes to the MetroCluster configuration. You should also do a check before a negotiated \(planned\) switchover or a switchback operation.'
 ---
 = Checking the MetroCluster configuration
@@ -11,9 +11,12 @@ summary: 'You can check that the components and relationships in the MetroCluste
 [.lead]
 You can check that the components and relationships in the MetroCluster configuration are working correctly. You should do a check after initial configuration and after making any changes to the MetroCluster configuration. You should also do a check before a negotiated (planned) switchover or a switchback operation.
 
-If the metrocluster check run command is issued twice within a short time on either or both clusters, a conflict can occur and the command might not collect all data. Subsequent metrocluster check show commands do not show the expected output.
+If the `metrocluster check run` command is issued twice within a short time on either or both clusters, a conflict can occur and the command might not collect all data. Subsequent `metrocluster check show` commands do not show the expected output.
 
-. Check the configuration: `metrocluster check run`
+.Steps
+. Check the configuration:
++
+`*metrocluster check run*`
 +
 The command runs as a background job and might not be completed immediately.
 +
@@ -40,11 +43,21 @@ connections         ok
 6 entries were displayed.
 ----
 
-. Display more detailed results from the most recent metrocluster check run command: `metrocluster check aggregate show``metrocluster check cluster show``metrocluster check config-replication show``metrocluster check lif show``metrocluster check node show`
+. Display more detailed results from the most recent `metrocluster check run` command:
 +
-The metrocluster check show commands show the results of the most recent metrocluster check run command. You should always run the metrocluster check run command prior to using the metrocluster check show commands so that the information displayed is current.
+`*metrocluster check aggregate show*`
 +
-The following example shows the metrocluster check aggregate show command output for a healthy four-node MetroCluster configuration:
+`*metrocluster check cluster show*`
++
+`*metrocluster check config-replication show*`
++
+`*metrocluster check lif show*`
++
+`*metrocluster check node show*`
++
+The `metrocluster check show` commands show the results of the most recent `metrocluster check run` command. You should always run the `metrocluster check run` command prior to using the `metrocluster check show` commands so that the information displayed is current.
++
+The following example shows the `metrocluster check aggregate show` command output for a healthy four-node MetroCluster configuration:
 +
 ----
 cluster_A::> metrocluster check aggregate show
@@ -83,7 +96,7 @@ controller_A_2        controller_A_2_aggr0
 18 entries were displayed.
 ----
 +
-The following example shows the metrocluster check cluster show command output for a healthy four-node MetroCluster configuration. It indicates that the clusters are ready to perform a negotiated switchover if necessary.
+The following example shows the `metrocluster check cluster show` command output for a healthy four-node MetroCluster configuration. It indicates that the clusters are ready to perform a negotiated switchover if necessary.
 +
 ----
 Last Checked On: 9/13/2017 20:47:04

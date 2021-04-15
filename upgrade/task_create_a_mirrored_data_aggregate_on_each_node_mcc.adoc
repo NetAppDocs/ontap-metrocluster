@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_create_a_mirrored_data_aggregate_on_each_node_mcc.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, upgrade, create, mirrored, data, aggregate, node
 summary: 'You must create a mirrored data aggregate on each node in the DR group.'
 ---
 = Creating a mirrored data aggregate on each node
@@ -21,10 +21,12 @@ In systems using ADP, aggregates are created using partitions in which each driv
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
 
-. Display a list of available spares: `storage disk show -spare -owner node_name`
-. Create the aggregate by using the storage aggregate create -mirror true command.
+. Display a list of available spares:
 +
-If you are logged in to the cluster on the cluster management interface, you can create an aggregate on any node in the cluster. To ensure that the aggregate is created on a specific node, use the -node parameter or specify drives that are owned by that node.
+`*storage disk show -spare -owner _node_name_*`
+. Create the aggregate by using the `storage aggregate create -mirror true` command.
++
+If you are logged in to the cluster on the cluster management interface, you can create an aggregate on any node in the cluster. To ensure that the aggregate is created on a specific node, use the `-node` parameter or specify drives that are owned by that node.
 +
 You can specify the following options:
 
@@ -41,7 +43,7 @@ NOTE: In the minimum supported configuration, in which a limited number of drive
  ** RAID type for RAID groups on the aggregate
  ** Maximum number of drives that can be included in a RAID group
  ** Whether drives with different RPM are allowed
-For more information about these options, see the storage aggregate create man page.
+For more information about these options, see the `storage aggregate create` man page.
 
 +
 The following command creates a mirrored aggregate with 10 disks:
@@ -53,4 +55,6 @@ cluster_A::> storage aggregate create aggr1_node_A_1 -diskcount 10 -node node_A_
 [Job 15] Job succeeded: DONE
 ----
 
-. Verify the RAID group and drives of your new aggregate: `storage aggregate show-status -aggregate aggregate-name`
+. Verify the RAID group and drives of your new aggregate:
++
+`*storage aggregate show-status -aggregate _aggregate-name_*`

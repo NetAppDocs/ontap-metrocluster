@@ -1,7 +1,7 @@
 ---
 permalink: install-fc/task_fmc_mcc_transition_ensure_isls_are_in_the_same_port_group_and_configure_zon.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, fabric, installation, ensure, port, group, configure, zoning
 summary: 'You must make sure that the Inter-Switch Links \(ISLs\) are in the same port group and configure zoning for the MetroCluster configurations to successfully share the switch fabrics.'
 ---
 = Ensuring ISLs are in the same port group and configuring zoning
@@ -11,26 +11,27 @@ summary: 'You must make sure that the Inter-Switch Links \(ISLs\) are in the sam
 [.lead]
 You must make sure that the Inter-Switch Links (ISLs) are in the same port group and configure zoning for the MetroCluster configurations to successfully share the switch fabrics.
 
+.Steps
 . If the ISLs are not in the same port group, move one of the ISL ports to the same port group as the other one.
 +
 You can use any available port except 32 through 45, which are used by the new MetroCluster configuration. The recommended ISL ports are 46 and 47.
 
 . Follow the steps in the Configuring zoning on a Brocade FC switch section to enable trunking and the QoS zone.
 +
-link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Configuring zoning on Brocade FC switches]
+xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Configuring zoning on Brocade FC switches]
 +
 The port numbers when sharing fabrics are different than those shown in the section. When sharing, use ports 46 and 47 for the ISL ports. If you moved your ISL ports, you need to use the procedure in the Configuring the E-ports (ISL ports) on a Brocade FC switch section to configure the ports.
 +
-link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Configuring the E-ports (ISL ports) on a Brocade FC switch]
+xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Configuring the E-ports (ISL ports) on a Brocade FC switch]
 
 . Follow the steps in the Configuring the non-E ports on the Brocade switch section to configure the non-E ports.
 +
-link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Configuring the non-E ports on the Brocade switch]
+xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Configuring the non-E ports on the Brocade switch]
 
 . Do not delete the zones or zone sets that already exist in the backend switches (for the 7-Mode fabric MetroCluster) except the Traffic Isolation (TI) zones in Step 3.
 . Follow the steps in the Configuring the E-ports (ISL ports) on a Brocade FC switch section to add the zones required by the new MetroCluster to the existing zone sets.
 +
-link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.md#[Configuring the E-ports (ISL ports) on a Brocade FC switch]
+xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Configuring the E-ports (ISL ports) on a Brocade FC switch]
 +
 The following example shows the commands and system output for creating the zones:
 +

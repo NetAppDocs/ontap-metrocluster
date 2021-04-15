@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_rename_a_brocade_fc_switch.html
 sidebar: sidebar
-keywords: 
+keywords: rename, metrocluster, maintain, service, brocade, fc, switch
 summary: 'You might need to rename a Brocade FC switch to ensure consistent naming throughout your configuration.'
 ---
 = Renaming a Brocade FC switch
@@ -11,9 +11,11 @@ summary: 'You might need to rename a Brocade FC switch to ensure consistent nami
 [.lead]
 You might need to rename a Brocade FC switch to ensure consistent naming throughout your configuration.
 
-. Persistently disable the switch or switches in one fabric: `switchcfgpersistentdisable`
+. Persistently disable the switch or switches in one fabric:
 +
-The following example shows the output for the `switchcfgpersistentdisable` command:
+`*switchcfgpersistentdisable*`
++
+The following example shows the output for the `*switchcfgpersistentdisable*` command:
 +
 ----
 7840_FCIP_2:admin> switchcfgpersistentdisable
@@ -24,11 +26,13 @@ Switch's persistent state set to 'disabled'
 7840_FCIP_2:admin>
 ----
 
-. Rename the switch or switches: `switchname new-switch-name`
+. Rename the switch or switches:
++
+`*switchname _new-switch-name_*`
 +
 If you are renaming both switches in the fabric, use the same command on each switch.
 +
-The following example shows the output for the `switchname new-switch-name` command:
+The following example shows the output for the `*switchname _new-switch-name_*` command:
 +
 ----
 7840_FCIP_2:admin> switchname FC_switch_1_B
@@ -39,11 +43,13 @@ Switch name has been changed.Please re-login into the switch for the change to b
 7840_FCIP_2:admin>
 ----
 
-. Reboot the switch or switches: `reboot`
+. Reboot the switch or switches:
++
+`*reboot*`
 +
 If you are renaming both switches in the fabric, reboot both switches. Once the reboot is complete, the switch is renamed in all places.
 +
-The following example shows the output for the `reboot` command:
+The following example shows the output for the `*reboot*` command:
 +
 ----
 7840_FCIP_2:admin> reboot
@@ -70,9 +76,9 @@ use "supportsave" command to upload
 520 KBytes in 1 file(s)
 ----
 
-. Persistently enable the switches: `switchcfgpersistentenable`
+. Persistently enable the switches: `*switchcfgpersistentenable*`
 +
-The following example shows the output for the `switchcfgpersistentenable` command:
+The following example shows the output for the `*switchcfgpersistentenable*` command:
 +
 ----
 FC_switch_1_B:admin> switchcfgpersistentenable
@@ -107,9 +113,11 @@ Index Port Address  Media Speed   State       Proto
    1   1   060100   id    16G     Online      FC  F-Port  50:0a:09:83:06:a5:5a:08
 ----
 
-. Verify that the switch name change is visible from the ONTAP cluster prompt: `storage switch show`
+. Verify that the switch name change is visible from the ONTAP cluster prompt:
 +
-The following example shows the output for the `storage switch show` command:
+`*storage switch show*`
++
+The following example shows the output for the `*storage switch show*` command:
 +
 ----
 cluster_A::*> storage switch show

@@ -1,7 +1,7 @@
 ---
 permalink: install-fc/task_test_the_mcc_configuration.html
 sidebar: sidebar
-keywords: 
+keywords:
 summary: ''
 ---
 = Testing the MetroCluster configuration
@@ -22,9 +22,9 @@ This test should take about 30 minutes.
 
 This procedure has the following expected results:
 
-* The metrocluster switchover command will present a warning prompt.
+* The `metrocluster switchover` command will present a warning prompt.
 +
-If you respond `yes` to the prompt, the site the command is issued from will switch over the partner site.
+If you respond `*yes*` to the prompt, the site the command is issued from will switch over the partner site.
 
 For MetroCluster IP configurations:
 
@@ -36,7 +36,9 @@ For MetroCluster IP configurations:
 * For ONTAP 9.8 and later:
  ** Unmirrored aggregates that are located at the disaster site will become unavailable if access to the remote storage is lost. This might lead to a controller outage.
 
-. Confirm that all nodes are in the configured state and normal mode: `metrocluster node show`
+. Confirm that all nodes are in the configured state and normal mode:
++
+`*metrocluster node show*`
 +
 ----
 cluster_A::>  metrocluster node show
@@ -47,7 +49,9 @@ Cluster                        Configuration State    Mode
 Remote: cluster_B               configured             normal
 ----
 
-. Begin the switchover operation: `metrocluster switchover`
+. Begin the switchover operation:
++
+`*metrocluster switchover*`
 +
 ----
 cluster_A::> metrocluster switchover
@@ -55,7 +59,9 @@ Warning: negotiated switchover is about to start. It will stop all the data Vser
 automatically re-start them on cluster "cluster_A". It will finally gracefully shutdown cluster "cluster_B".
 ----
 
-. Confirm that the local cluster is in the configured state and switchover mode: `metrocluster node show`
+. Confirm that the local cluster is in the configured state and switchover mode:
++
+`*metrocluster node show*`
 +
 ----
 cluster_A::>  metrocluster node show
@@ -67,7 +73,9 @@ Remote: cluster_B               not-reachable          -
               configured             normal
 ----
 
-. Confirm that the switchover operation was successful: `metrocluster operation show`
+. Confirm that the switchover operation was successful:
++
+`*metrocluster operation show*`
 +
 ----
 cluster_A::>  metrocluster operation show
@@ -80,7 +88,7 @@ cluster_A::> metrocluster operation show
      Errors: -
 ----
 
-. Use the vserver show and network interface show commands to verify that DR SVMs and LIFs have come online.
+. Use the `vserver show` and `network interface show` commands to verify that DR SVMs and LIFs have come online.
 
 == Verifying healing and manual switchback
 
@@ -581,7 +589,7 @@ node_A_1_data01_mirrored
             4.15TB    3.40TB   18% online       3 node_A_1       raid_dp,
                                                                    mirrored,
                                                                    normal
-node_A_1_root 	
+node_A_1_root
            707.7GB   34.29GB   95% online       1 node_A_1       raid_dp,
                                                                    mirrored,
                                                                    normal

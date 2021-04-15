@@ -1,16 +1,17 @@
 ---
 permalink: maintain/task_upgrade_firmware_on_mcc_ip_switches.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: metrocluster, maintain, service, upgrade, firmware. ip, switches
+summary: 'Upgrading firmware on MetroCluster IP switches.'
 ---
 = Upgrading firmware on MetroCluster IP switches
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
+.Steps
 . Check the health of the configuration.
- .. Check that the MetroCluster is configured and in normal mode on each cluster: `metrocluster show`
+ .. Check that the MetroCluster is configured and in normal mode on each cluster: `*metrocluster show*`
 +
 ----
 cluster_A::> metrocluster show
@@ -24,7 +25,7 @@ Remote: cluster_B         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
- .. Check that mirroring is enabled on each node: `metrocluster node show`
+ .. Check that mirroring is enabled on each node: `*metrocluster node show*`
 +
 ----
 cluster_A::> metrocluster node show
@@ -38,7 +39,7 @@ Group Cluster Node           State          Mirroring Mode
 2 entries were displayed.
 ----
 
- .. Check that the MetroCluster components are healthy: `metrocluster check run`
+ .. Check that the MetroCluster components are healthy: `*metrocluster check run*`
 +
 ----
 cluster_A::> metrocluster check run
@@ -57,7 +58,7 @@ Command completed. Use the "metrocluster check show -instance" command or sub-co
 To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
 ----
 
- .. Check that there are no health alerts: `system health alert show`
+ .. Check that there are no health alerts: `*system health alert show*`
 . Install the software on the first switch.
 +
 Follow the steps for installing switch software in the relevant section in the _MetroCluster IP Installation and Configuration Guide_ depending on whether the switch type is Cisco or Broadcom:

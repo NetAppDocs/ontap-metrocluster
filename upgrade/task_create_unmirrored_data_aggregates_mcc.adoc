@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_create_unmirrored_data_aggregates_mcc.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, upgrade, create, unmirrored, data, aggregates
 summary: 'You can optionally create unmirrored data aggregates for data that does not require the redundant mirroring provided by MetroCluster configurations.'
 ---
 = Creating unmirrored data aggregates
@@ -24,16 +24,24 @@ NOTE: The unmirrored aggregates must be local to the node owning them.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
 * The _Disks and Aggregates Power Guide_ contains more information about mirroring aggregates.
 
-. Enable unmirrored aggregate deployment: `metrocluster modify -enable-unmirrored-aggr-deployment true`
-. Verify that disk autoassignment is disabled: `disk option show`
+. Enable unmirrored aggregate deployment:
++
+`*metrocluster modify -enable-unmirrored-aggr-deployment true*`
+. Verify that disk autoassignment is disabled:
++
+`*disk option show*`
 . Install and cable the disk shelves that will contain the unmirrored aggregates.
 +
 You can use the procedures in the Installation and Setup documentation for your platform and disk shelves.
 +
 https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
 
-. Manually assign all disks on the new shelf to the appropriate node: `disk assign -disk disk-id -owner owner-node-name`
-. Create the aggregate: `storage aggregate create`
+. Manually assign all disks on the new shelf to the appropriate node:
++
+`*disk assign -disk _disk-id_ -owner _owner-node-name_*`
+. Create the aggregate:
++
+`*storage aggregate create*`
 +
 If you are logged in to the cluster on the cluster management interface, you can create an aggregate on any node in the cluster. To verify that the aggregate is created on a specific node, you should use the -node parameter or specify drives that are owned by that node.
 +
@@ -51,7 +59,7 @@ You can specify the following options:
  ** RAID type for RAID groups on the aggregate
  ** Maximum number of drives or array LUNs that can be included in a RAID group
  ** Whether drives with different RPM are allowed
-For more information about these options, see the storage aggregate create man page.
+For more information about these options, see the `storage aggregate create` man page.
 
 +
 The following command creates a unmirrored aggregate with 10 disks:
@@ -63,9 +71,15 @@ controller_A_1::> storage aggregate create aggr1_controller_A_1 -diskcount 10 -n
 [Job 15] Job succeeded: DONE
 ----
 
-. Verify the RAID group and drives of your new aggregate: `storage aggregate show-status -aggregate aggregate-name`
-. Disable unmirrored aggregate deployment: `metrocluster modify -enable-unmirrored-aggr-deployment false`
-. Verify that disk autoassignment is enabled: `disk option show`
+. Verify the RAID group and drives of your new aggregate:
++
+`*storage aggregate show-status -aggregate _aggregate-name_*`
+. Disable unmirrored aggregate deployment:
++
+`*metrocluster modify -enable-unmirrored-aggr-deployment false*`
+. Verify that disk autoassignment is enabled:
++
+`*disk option show*`
 
 *Related information*
 

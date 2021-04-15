@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_replace_an_ip_switch.html
 sidebar: sidebar
-keywords: 
+keywords: metrocluster, maintain, service, replace, ip, switch
 summary: 'You might need to replace a failed switch, or upgrade or downgrade a switch. The new switch can be the same as the old switch when a switch has failed, or you can change the switch type \(upgrade or downgrade the switch\).'
 ---
 = Replacing an IP switch
@@ -19,8 +19,9 @@ This procedure is for Cisco or Broadcom switches. If you want to change the swit
 
 If you upgrade or downgrade the networks, you must repeat this procedure for the second network.
 
+.Steps
 . Check the health of the configuration.
- .. Check that the MetroCluster is configured and in normal mode on each cluster: `metrocluster show`
+ .. Check that the MetroCluster is configured and in normal mode on each cluster: `*metrocluster show*`
 +
 ----
 cluster_A::> metrocluster show
@@ -34,7 +35,7 @@ Remote: cluster_B         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
- .. Check that mirroring is enabled on each node: `metrocluster node show`
+ .. Check that mirroring is enabled on each node: `*metrocluster node show*`
 +
 ----
 cluster_A::> metrocluster node show
@@ -48,7 +49,7 @@ Group Cluster Node           State          Mirroring Mode
 2 entries were displayed.
 ----
 
- .. Check that the MetroCluster components are healthy: `metrocluster check run`
+ .. Check that the MetroCluster components are healthy: `*metrocluster check run*`
 +
 ----
 cluster_A::> metrocluster check run
@@ -67,20 +68,20 @@ Command completed. Use the "metrocluster check show -instance" command or sub-co
 To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
 ----
 
- .. Check that there are no health alerts: `system health alert show`
+ .. Check that there are no health alerts: `*system health alert show*`
 . Configure the new switch before installation.
 +
 NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
 +
-Follow the steps in the section _Configuring the IP switches_ in the _MetroCluster IP Installation and Configuration Guide._
-+
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP installation and configuration]
+Follow the steps in the section _Configuring the IP switches_ in the link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP Installation and Configuration Guide.]
 +
 Make sure that you apply the correct RCF file for switch _A_1, _A_2, _B_1 or _B_2. If the new switch is the same as the old switch, you need to apply the same RCF file.
 +
 If you upgrade or downgrade a switch, apply the latest supported RCF file for the new switch.
 
-. Run the port show command to view information about the network ports: `network port show`
+. Run the port show command to view information about the network ports:
++
+`*network port show*`
 . Disconnect the ISL connections from the remote switch that connect to the old switch.
 +
 You should disconnect the ISL connections from the ports on the IP_switch_A_1 that connect to IP_switch_B_1.
@@ -88,13 +89,14 @@ You should disconnect the ISL connections from the ports on the IP_switch_A_1 th
 . Power off the switch, remove the cables and physically remove IP_switch_B_1.
 . Install the new switch.
 +
-Cable the new switch first (including the ISLs) according to the steps in the _Cabling the IP switches_ section in the _MetroCluster IP Installation and Configuration Guide._
+Cable the new switch first (including the ISLs) according to the steps in the _Cabling the IP switches_ section in the link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP Installation and Configuration Guide].
 +
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP installation and configuration]
-+
-NOTE: The used ports might be different from those on the old switch if the switch type is different.
+[NOTE]
+====
+The used ports might be different from those on the old switch if the switch type is different.
 +
 If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs. Only cable the local ISLs if you are upgrading or downgrading the switches in the second network and both switches at one site are the same type.
+====
 
 . Power up the switch or switches.
 +

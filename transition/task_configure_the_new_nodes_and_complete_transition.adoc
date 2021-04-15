@@ -1,8 +1,8 @@
 ---
 permalink: transition/task_configure_the_new_nodes_and_complete_transition.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: node, complete, transition, configure, metrocluster, ip, node, configuring, disabling, disable, data, set, up, lif, bring, svm, moving, move, system, volume
+summary: With the new nodes added, you must complete the transition steps and configure the MetroCluster IP nodes.
 ---
 = Configuring the new nodes and completing transition
 :icons: font
@@ -22,7 +22,7 @@ You must implement the MetroCluster IP connections, refresh the MetroCluster con
 The -vlan-id paramter is required only if you are not using the default VLAN IDs. Only certain systems support non-default VLAnN IDs.
 +
 // include reference
-include::_include/models_supporting_vlan-id.adoc[]
+include::../_include/models_supporting_vlan-id.adoc[]
 // end include reference
 
 . Perform the MetroCluster connect operation from controller node_A_1-IP to connect the MetroCluster sites -- this operation can take a few minutes to complete. `metrocluster configuration-settings connection connect`
@@ -52,6 +52,7 @@ The resync can take some time but must complete before proceeding with the follo
  .. Go to advanced privilege mode and enter y when prompted to continue: `set priv advanced`
  .. Refresh the configuration:
 +
+[options="header"]
 |===
 | If you have configured...| Issue this command...
 a|
@@ -100,7 +101,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-58
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups]
 . Verify that the LIFs are hosted on the appropriate node and ports on the MetroCluster IP nodes (including the SVM with -mc vserver) as needed.
 +
-See the information gathered in link:task_connect_the_mcc_ip_controller_modules_2n_mcc_transition_supertask.md#[Creating the network configuration].
+See the information gathered in xref:task_connect_the_mcc_ip_controller_modules_2n_mcc_transition_supertask.adoc[Creating the network configuration].
 
  .. Run the below command to check the home port of the LIFs: `network interface show -field home-port`
  .. If necessary, modify the LIF configuration: `vserver config override -command "network interface modify -vserver vserver_name -home-port active_port_after_upgrade -lif lif_name -home- node new_node_name"`
