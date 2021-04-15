@@ -1,8 +1,8 @@
 ---
 permalink: disaster-recovery/task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html
 sidebar: sidebar
-keywords: perform, certain, task, prepare, metrocluster, fc, configuration, operation, switchback, verify, port, configure, configuring, fc-to-sas, sas, bridge, switch, brocade, cisco, site, disaster, assignment, ontap, overall, cabling, guideline, usage, controller, connection, eight-node, run, isl, four-node, two-node, storage, power, equipment, assign, ownership, replace, drive, perform, aggregate, heal, restoring, mirror, disk, root, replacement, boot, module
-summary: You must perform certain tasks in order to prepare the MetroCluster FC configuration for the switchback operation.
+keywords:
+summary: ''
 ---
 = Preparing for switchback in a MetroCluster FC configuration
 :icons: font
@@ -26,7 +26,6 @@ If you only want to use one of a port pair in the initiator configuration, enter
 
 . Take one of the following actions, depending on your configuration:
 +
-[options="header"]
 |===
 | If the FC port configuration is...| Then...
 a|
@@ -192,13 +191,13 @@ If you have replaced the FC switches in the disaster site, you must configure th
 
 *Related information*
 
-xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#configuring-a-brocade-fc-switch-after-site-disaster[Configuring a Brocade FC switch after site disaster]
+xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Configuring a Brocade FC switch after site disaster]
 
-xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#configuring-a-cisco-fc-switch-after-site-disaster[Configuring a Cisco FC switch after site disaster]
+xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Configuring a Cisco FC switch after site disaster]
 
-xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#port-assignments-for-fc-switches-when-using-ontap-9-0[Port assignments for FC switches when using ONTAP 9.0]
+xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Port assignments for FC switches when using ONTAP 9.0]
 
-xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#port-assignments-for-fc-switches-when-using-ontap-9-1-and-later[Port assignments for FC switches when using ONTAP 9.1 and later]
+xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
 
 === Configuring a Brocade FC switch after site disaster
 
@@ -524,12 +523,11 @@ The cabling is the same for each FC switch in the switch fabric.
 
 The following table shows controller port usage on Brocade switches:
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster eight-node configuration
-.2+| *Component* .2+| *Port* 2+| *Brocade 6505, 6510, or DCX 8510-8*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.6+|
+| MetroCluster eight-node configuration
+| Component| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
 controller_x_1
 a|
 FC-VI port a
@@ -567,7 +565,8 @@ a|
 -
 a|
 2
-.6+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -604,7 +603,8 @@ a|
 -
 a|
 5
-.6+| controller_x_3
+a|
+controller_x_3
 a|
 FC-VI port a
 a|
@@ -641,7 +641,8 @@ a|
 -
 a|
 8
-.6+| controller_x_4
+a|
+controller_x_4
 a|
 FC-VI port a
 a|
@@ -684,13 +685,12 @@ a|
 
 The following table shows bridge port usage when using FibreBridge 7500 bridges:
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster eight-node configuration
-.2+| *FibreBridge 7500 bridge* .2+| *Port*
-.2+| *Brocade 6505, 6510, or DCX 8510-8*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.2+| bridge_x_1a
+| MetroCluster eight-node configuration
+| FibreBridge 7500 bridge| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -703,7 +703,8 @@ a|
 -
 a|
 12
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -716,7 +717,8 @@ a|
 -
 a|
 13
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -729,7 +731,8 @@ a|
 -
 a|
 14
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -742,7 +745,8 @@ a|
 -
 a|
 15
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -755,7 +759,8 @@ a|
 -
 a|
 16
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -768,7 +773,8 @@ a|
 -
 a|
 17
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -781,7 +787,8 @@ a|
 -
 a|
 18
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -797,11 +804,10 @@ a|
 |===
 The following table shows bridge port usage when using FibreBridge 6500 bridges:
 
-[options="header"]
 |===
-4+| MetroCluster eight-node configuration
-.2+| *FibreBridge 6500 bridge* .2+| *Port* 2+| *Brocade 6505, 6510, or DCX 8510-8*
-| *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster eight-node configuration
+| FibreBridge 6500 bridge| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
 a|
 bridge_x_1a
 a|
@@ -936,11 +942,10 @@ a|
 
 The following table shows ISL port usage:
 
-[cols-3*,options="header"]
 |===
-3+| MetroCluster eight-node configuration
-.2+| *ISL port* 2+| *Brocade 6505, 6510, or DCX 8510-8*
-| *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster eight-node configuration
+| ISL port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
 a|
 ISL port 1
 a|
@@ -971,12 +976,12 @@ a|
 
 The cabling is the same for each FC switch in the switch fabric.
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster four-node configuration
-.2+| *Component* .2+| *Port* 2+| *Brocade 6505, 6510, or DCX 8510-8*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.6+| controller_x_1
+| MetroCluster four-node configuration
+| Component| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -1013,7 +1018,8 @@ a|
 -
 a|
 2
-.6+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -1058,12 +1064,12 @@ The cabling is the same for each FC switch in the switch fabric.
 
 The following table shows bridge port usage up to port 17 when using FibreBridge 7500 bridges. Additional bridges can be cabled to ports 18 through 23.
 
-[cols=6*,options="header"]
 |===
-6+| MetroCluster four-node configuration
-.2+| *FibreBridge 7500 bridge* .2+| *Port* 2+| *Brocade 6510 or DCX 8510-8* 2+| *Brocade 6505*
-| *FC_switch_x_1* | *FC_switch_x_2* | *FC_switch_x_1* | *FC_switch_x_2*
-.2+| bridge_x_1a
+| MetroCluster four-node configuration
+| FibreBridge 7500 bridge| Port| Brocade 6510 or DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -1084,7 +1090,8 @@ a|
 -
 a|
 6
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -1105,7 +1112,8 @@ a|
 -
 a|
 7
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -1126,7 +1134,8 @@ a|
 -
 a|
 12
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -1147,7 +1156,8 @@ a|
 -
 a|
 13
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -1168,7 +1178,8 @@ a|
 -
 a|
 14
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -1189,7 +1200,8 @@ a|
 -
 a|
 15
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -1210,7 +1222,8 @@ a|
 -
 a|
 16
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -1235,15 +1248,16 @@ a|
 
 a|
 
-2+| additional bridges can be cabled through port 19, then ports 24 through 47
-2+|additional bridges can be cabled through port 23
+a|
+additional bridges can be cabled through port 19, then ports 24 through 47
+a|
+additional bridges can be cabled through port 23
 |===
 The following table shows bridge port usage when using FibreBridge 6500 bridges:
 
-[cols=6*,options="header"]
 |===
-.2+| FibreBridge 6500 bridge .2+| Port 2+| Brocade 6510, DCX 8510-8 2+| Brocade 6505
-| *FC_switch_x_1* | *FC_switch_x_2* | *FC_switch_x_1* | *FC_switch_x_2*
+| FibreBridge 6500 bridge| Port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
 a|
 bridge_x_1a
 a|
@@ -1440,19 +1454,20 @@ a|
 
 a|
 
-2+| additional bridges can be cabled through port 19, then ports 24 through 47
-2+| additional bridges can be cabled through port 23
+a|
+additional bridges can be cabled through port 19, then ports 24 through 47
+a|
+additional bridges can be cabled through port 23
 |===
 
 ==== Brocade port usage for ISLs in a four-node MetroCluster configuration running ONTAP 9.0
 
 The following table shows ISL port usage:
 
-[cols=5*,options="header"]
 |===
-5+| MetroCluster four-node configuration
-.2+| *ISL port* 2+| *Brocade 6510, DCX 8510-8* 2+| *Brocade 6505*
-| *FC_switch_x_1* | *FC_switch_x_2* | *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster four-node configuration
+| ISL port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
 a|
 ISL port 1
 a|
@@ -1499,12 +1514,11 @@ a|
 
 The cabling is the same for each FC switch in the switch fabric.
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster two-node configuration
-.2+| *Component* .2+| *Port* | *Brocade 6505, 6510, or DCX 8510-8*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.6+|
+| MetroCluster two-node configuration
+| Component| Port| Brocade 6505, 6510, or DCX 8510-8
+| FC_switch_x_1| FC_switch_x_2
+a|
 controller_x_1
 a|
 FC-VI port a
@@ -1550,12 +1564,12 @@ The cabling is the same for each FC switch in the switch fabric.
 
 The following table shows bridge port usage up to port 17 when using FibreBridge 7500 bridges. Additional bridges can be cabled to ports 18 through 23.
 
-[cols=6*,options="header"]
 |===
-6+| MetroCluster two-node configuration
-.2+| *FibreBridge 7500 bridge* .2+| *Port* 2+| *Brocade 6510, DCX 8510-8* 2+| *Brocade 6505*
-| *FC_switch_x_1* | *FC_switch_x_2* | *FC_switch_x_1* | *FC_switch_x_2*
-.2+| bridge_x_1a
+| MetroCluster two-node configuration
+| FibreBridge 7500 bridge| Port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -1576,7 +1590,8 @@ a|
 -
 a|
 6
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -1597,7 +1612,8 @@ a|
 -
 a|
 7
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -1618,7 +1634,8 @@ a|
 -
 a|
 12
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -1639,7 +1656,8 @@ a|
 -
 a|
 13
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -1660,7 +1678,8 @@ a|
 -
 a|
 14
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -1681,7 +1700,8 @@ a|
 -
 a|
 15
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -1702,7 +1722,8 @@ a|
 -
 a|
 16
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -1727,16 +1748,17 @@ a|
 
 a|
 
-2+| additional bridges can be cabled through port 19, then ports 24 through 47
-2+| additional bridges can be cabled through port 23
+a|
+additional bridges can be cabled through port 19, then ports 24 through 47
+a|
+additional bridges can be cabled through port 23
 |===
 The following table shows bridge port usage when using FibreBridge 6500 bridges:
 
-[cols=6*,options="header"]
 |===
-6+| MetroCluster two-node configuration
-.2+| *FibreBridge 6500 bridge* .2+| *Port* 2+| *Brocade 6510, DCX 8510-8* 2+| *Brocade 6505*
-| *FC_switch_x_1* | *FC_switch_x_2* | *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster two-node configuration
+| FibreBridge 6500 bridge| Port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
 a|
 bridge_x_1a
 a|
@@ -1933,19 +1955,20 @@ a|
 
 a|
 
-2+| additional bridges can be cabled through port 19, then ports 24 through 47
-2+| additional bridges can be cabled through port 23
+a|
+additional bridges can be cabled through port 19, then ports 24 through 47
+a|
+additional bridges can be cabled through port 23
 |===
 
 ==== Brocade port usage for ISLs in a two-node MetroCluster configuration running ONTAP 9.0
 
 The following table shows ISL port usage:
 
-[cols=5*,options="header"]
 |===
-5+| MetroCluster two-node configuration
-.2+| *ISL port* 2+| *Brocade 6510, DCX 8510-8* 2+| *Brocade 6505*
-| *FC_switch_x_1* | *FC_switch_x_2* | *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster two-node configuration
+| ISL port| Brocade 6510, DCX 8510-8| Brocade 6505
+| FC_switch_x_1| FC_switch_x_2| FC_switch_x_1| FC_switch_x_2
 a|
 ISL port 1
 a|
@@ -1992,12 +2015,12 @@ a|
 
 The following table shows controller port usage on Cisco switches:
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster eight-node configuration
-.2+| *Component* .2+| *Port* 2+| *Cisco 9148 or 9148S*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.6+| controller_x_1
+| MetroCluster eight-node configuration
+| Component| Port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -2034,7 +2057,8 @@ a|
 -
 a|
 3
-.6+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -2071,7 +2095,8 @@ a|
 -
 a|
 6
-.6+| controller_x_3
+a|
+controller_x_3
 a|
 FC-VI port a
 a|
@@ -2108,7 +2133,8 @@ a|
 -
 a|
 9
-.6+| controller_x_4
+a|
+controller_x_4
 a|
 FC-VI port a
 a|
@@ -2151,12 +2177,12 @@ a|
 
 The following table shows bridge port usage up to port 23 when using FibreBridge 7500 bridges. Additional bridges can be attached using ports 25 through 48.
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster eight-node configuration
-.2+| *FibreBridge 7500 bridge* .2+| *Port* 2+| *Cisco 9148 or 9148S*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.2+| bridge_x_1a
+| MetroCluster eight-node configuration
+| FibreBridge 7500 bridge| Port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -2169,7 +2195,8 @@ a|
 -
 a|
 -
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -2182,7 +2209,8 @@ a|
 -
 a|
 -
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -2195,7 +2223,8 @@ a|
 -
 a|
 -
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -2208,7 +2237,8 @@ a|
 -
 a|
 -
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -2221,7 +2251,8 @@ a|
 -
 a|
 -
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -2234,7 +2265,8 @@ a|
 -
 a|
 -
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -2247,7 +2279,8 @@ a|
 -
 a|
 -
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -2260,15 +2293,14 @@ a|
 -
 a|
 -
-4+|
+a|
 Additional bridges can be attached using ports 25 through 48 following the same pattern.
 |===
 The following table shows bridge port usage up to port 23 when using FibreBridge 6500 bridges. Additional bridges can be attached using ports 25-48.
 
-[cols=4*,options="header"]
 |===
-.2+| FibreBridge 6500 bridge .2+| Port 2+| Cisco 9148 or 9148S
-| *FC_switch_x_1* | *FC_switch_x_2*
+| FibreBridge 6500 bridge| Port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
 a|
 bridge_x_1a
 a|
@@ -2397,18 +2429,18 @@ a|
 -
 a|
 23
-4+| Additional bridges can be attached using ports 25 through 48 following the same pattern.
+a|
+Additional bridges can be attached using ports 25 through 48 following the same pattern.
 |===
 
 ==== Cisco port usage for ISLs in an eight-node MetroCluster configuration running ONTAP 9.0
 
 The following table shows ISL port usage:
 
-[cols=2*,options="header"]
 |===
-2+| MetroCluster eight-node configuration
-.2+| *ISL port* 2+| *Cisco 9148 or 9148S*
-| *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster eight-node configuration
+| ISL port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
 a|
 ISL port 1
 a|
@@ -2441,12 +2473,12 @@ The cabling is the same for each FC switch in the switch fabric.
 
 The following table shows controller port usage on Cisco switches:
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster four-node configuration
-.2+| *Component* .2+| *Port* 2| *Cisco 9148, 9148S, or 9250i*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.6+| controller_x_1
+| MetroCluster four-node configuration
+| Component| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -2483,7 +2515,8 @@ a|
 -
 a|
 3
-.6+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -2526,12 +2559,12 @@ a|
 
 The following table shows bridge port usage up to port 14 when using FibreBridge 7500 bridges. Additional bridges can be attached to ports 15 through 32 following the same pattern.
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster four-node configuration
-.2+| *FibreBridge 7500 bridge* .2+| *Port* | *Cisco 9148, 9148S, or 9250i*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.2+| bridge_x_1a
+| MetroCluster four-node configuration
+| FibreBridge 7500 bridge| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -2544,7 +2577,8 @@ a|
 -
 a|
 7
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -2557,7 +2591,8 @@ a|
 -
 a|
 8
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -2570,7 +2605,8 @@ a|
 -
 a|
 9
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -2583,7 +2619,8 @@ a|
 -
 a|
 10
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -2596,7 +2633,8 @@ a|
 -
 a|
 11
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -2609,7 +2647,8 @@ a|
 -
 a|
 12
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -2622,7 +2661,8 @@ a|
 -
 a|
 13
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -2638,10 +2678,9 @@ a|
 |===
 The following table shows bridge port usage when using FibreBridge 6500 bridges up to port 14. Additional bridges can be attached to ports 15 through 32 following the same pattern.
 
-[cols=4*,options="header"]
 |===
-.2+| FibreBridge 6500 bridge .2+| Port 2+| Cisco 9148, 9148S, or 9250i
-| *FC_switch_x_1* | *FC_switch_x_2*
+| FibreBridge 6500 bridge| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
 a|
 bridge_x_1a
 a|
@@ -2770,7 +2809,8 @@ a|
 -
 a|
 14
-4+| Additional bridges can be attached to ports 15 through 32 following the same pattern.
+a|
+Additional bridges can be attached to ports 15 through 32 following the same pattern.
 |===
 
 ==== Cisco 9148 and 9148S port usage for ISLs on a four-node MetroCluster configuration running ONTAP 9.0
@@ -2779,11 +2819,10 @@ The cabling is the same for each FC switch in the switch fabric.
 
 The following table shows ISL port usage:
 
-[cols=3*,options="header"]
 |===
-3+| MetroCluster four-node configuration
-.2+| *ISL port* 2+| *Cisco 9148 or 9148S*
-| *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster four-node configuration
+| ISL port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
 a|
 ISL port 1
 a|
@@ -2822,12 +2861,12 @@ The cabling is the same for each FC switch in the switch fabric.
 
 The following table shows controller port usage on Cisco switches:
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster two-node configuration
-.2+| *Component* .2+| *Port* | *Cisco 9148, 9148S, or 9250i*
-| *FC_switch_x_1* | *FC_switch_x_2*
-6+| controller_x_1
+| MetroCluster two-node configuration
+| Component| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -2870,12 +2909,12 @@ a|
 
 The following table shows bridge port usage up to port 14 when using FibreBridge 7500 bridges. Additional bridges can be attached to ports 15 through 32 following the same pattern.
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster two-node configuration
-.2+| *FibreBridge 7500 bridge* .2+| *Port* 2+| *Cisco 9148, 9148S, or 9250i*
-| *FC_switch_x_1* | *FC_switch_x_2*
-.2+| bridge_x_1a
+| MetroCluster two-node configuration
+| FibreBridge 7500 bridge| Port| Cisco 9148, 9148S, or 9250i
+| FC_switch_x_1| FC_switch_x_2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -2888,7 +2927,8 @@ a|
 -
 a|
 7
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -2901,7 +2941,8 @@ a|
 -
 a|
 8
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -2914,7 +2955,8 @@ a|
 -
 a|
 9
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -2927,7 +2969,8 @@ a|
 -
 a|
 10
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -2940,7 +2983,8 @@ a|
 -
 a|
 11
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -2953,7 +2997,8 @@ a|
 -
 a|
 12
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -2966,7 +3011,8 @@ a|
 -
 a|
 13
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -2982,11 +3028,10 @@ a|
 |===
 The following table shows bridge port usage when using FibreBridge 6500 bridges up to port 14. Additional bridges can be attached to ports 15 through 32 following the same pattern.
 
-[cols=4*,options="header"]
 |===
-4+| MetroCluster two-node configuration
-.2+| *FibreBridge 6500 bridge* .2+| *Port* | *Cisco 9148, 9148S, or 9250i* |
-| *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster two-node configuration
+| FibreBridge 6500 bridge| Port| Cisco 9148, 9148S, or 9250i|
+| FC_switch_x_1| FC_switch_x_2
 a|
 bridge_x_1a
 a|
@@ -3115,7 +3160,8 @@ a|
 -
 a|
 14
-4+| Additional bridges can be attached to ports 15 through 32 following the same pattern.
+a|
+Additional bridges can be attached to ports 15 through 32 following the same pattern.
 |===
 
 ==== Cisco 9148 or 9148S port usage for ISLs on a two-node MetroCluster configuration running ONTAP 9.0
@@ -3124,11 +3170,10 @@ The cabling is the same for each FC switch in the switch fabric.
 
 The following table shows ISL port usage:
 
-[cols=3*,options="header"]
 |===
-3+| MetroCluster two-node configuration
-.2+| *ISL port* 2+| *Cisco 9148 or 9148S*
-| *FC_switch_x_1* | *FC_switch_x_2*
+| MetroCluster two-node configuration
+| ISL port| Cisco 9148 or 9148S
+| FC_switch_x_1| FC_switch_x_2
 a|
 ISL port 1
 a|
@@ -3202,13 +3247,12 @@ NOTE: Port usage for the Brocade 6505 and Brocade G610 switches in an eight-node
 
 NOTE: The Brocade DCX 8510-8 switch can use the same port layout as the 6510 switch *or* the 7840 switch.
 
-[col=5*,options="header"]
 |===
-5+| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
-5+| *MetroCluster 1 or DR Group 1*
-.2+| *Component* .2+| *Port* 2+| *Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1 and DCX 8510-8* | *Brocade switch model G720*
-| *Connects to FC switch...* | *Connects to switch port...* | *Connects to switch port...*
-.8+|
+| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+| MetroCluster 1 or DR Group 1
+| Component| Port| Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1 and DCX 8510-8| Brocade switch model G720
+| Connects to FC switch...| Connects to switch port...| Connects to switch port...
+a|
 controller_x_1
 a|
 FC-VI port a
@@ -3274,7 +3318,8 @@ a|
 3
 a|
 9
-.8+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -3339,7 +3384,8 @@ a|
 7
 a|
 13
-.2+| Stack 1
+a|
+Stack 1
 a|
 bridge_x_1a
 a|
@@ -3356,7 +3402,8 @@ a|
 8
 a|
 10
-.2+| Stack 2
+a|
+Stack 2
 a|
 bridge_x_2a
 a|
@@ -3373,7 +3420,8 @@ a|
 9
 a|
 11
-.2+| Stack 3
+a|
+Stack 3
 a|
 bridge_x_3a
 a|
@@ -3390,7 +3438,8 @@ a|
 10
 a|
 14
-.2+| Stack y
+a|
+Stack y
 a|
 bridge_x_ya
 a|
@@ -3415,13 +3464,13 @@ a|
 * On G720 switches, additional bridges can be cabled to ports 16 - 17, 20 and 21.
 
 |===
-[cols=8*,options="header"]
 |===
-8+| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
-8+| *MetroCluster 2 or DR Group 2*
-|  |  |  5+| *Brocade switch model*
-| *Component* | *Port* | *Connects to FC_switch...* | *6510, DCX 8510-8* | *6520* | *7840, DCX 8510-8* | *G620, G620-1, G630, G630-1* | *G720*
-.8+| controller_x_3
+| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+| MetroCluster 2 or DR Group 2
+|  |  |  | Brocade switch model
+| Component| Port| Connects to FC_switch...| 6510, DCX 8510-8| 6520| 7840, DCX 8510-8| G620, G620-1, G630, G630-1| G720
+a|
+controller_x_3
 a|
 FC-VI port a
 a|
@@ -3534,7 +3583,8 @@ a|
 25
 a|
 27
-.8+| controller_x_4
+a|
+controller_x_4
 a|
 FC-VI port a
 a|
@@ -3647,7 +3697,8 @@ a|
 29
 a|
 31
-.2+| Stack 1
+a|
+Stack 1
 a|
 bridge_x_51a
 a|
@@ -3676,7 +3727,8 @@ a|
 26
 a|
 32
-.2+| Stack 2
+a|
+Stack 2
 a|
 bridge_x_52a
 a|
@@ -3705,7 +3757,8 @@ a|
 27
 a|
 33
-.2| Stack 3
+a|
+Stack 3
 a|
 bridge_x_53a
 a|
@@ -3734,7 +3787,8 @@ a|
 30
 a|
 34
-.2+| Stack y
+a|
+Stack y
 a|
 bridge_x_ya
 a|
@@ -3769,13 +3823,13 @@ a|
 * On G720 switches, additional bridges can be cabled to ports 36-39.
 
 |===
-[cols=6*,options="header"]
 |===
-6+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
-6+| *MetroCluster 1 or DR Group 1*
-2.2+| *Component* .2+| *Port* 2+| *Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1, and DCX 8510-8* | *Brocade switch G720*
-| *Connects to FC_switch...* | *Connects to switch port...* | *Connects to switch port...*
-2.8+| controller_x_1
+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+| MetroCluster 1 or DR Group 1
+| Component| Port| Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1, and DCX 8510-8| Brocade switch G720
+| Connects to FC_switch...| Connects to switch port...| Connects to switch port...
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -3840,7 +3894,8 @@ a|
 3
 a|
 9
-2.8+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -3905,8 +3960,10 @@ a|
 7
 a|
 13
-.4+| Stack 1
-.2+| bridge_x_1a
+a|
+Stack 1
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -3923,7 +3980,8 @@ a|
 8
 a|
 10
-.2+| bridge_x_1B
+a|
+bridge_x_1B
 a|
 FC1
 a|
@@ -3940,8 +3998,10 @@ a|
 9
 a|
 11
-.4+| Stack 2
-.2+| bridge_x_2a
+a|
+Stack 2
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -3958,7 +4018,8 @@ a|
 10
 a|
 14
-.2+| bridge_x_2B
+a|
+bridge_x_2B
 a|
 FC1
 a|
@@ -3975,8 +4036,10 @@ a|
 11
 a|
 15
-.4+| Stack 3
-.2+| bridge_x_3a
+a|
+Stack 3
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -3993,7 +4056,8 @@ a|
 12*
 a|
 16
-.2+| bridge_x_3B
+a|
+bridge_x_3B
 a|
 FC1
 a|
@@ -4010,8 +4074,10 @@ a|
 13*
 a|
 17
-.4+| Stack y
-.2+| bridge_x_ya
+a|
+Stack y
+a|
+bridge_x_ya
 a|
 FC1
 a|
@@ -4028,7 +4094,8 @@ a|
 14*
 a|
 20
-.2+| bridge_x_yb
+a|
+bridge_x_yb
 a|
 FC1
 a|
@@ -4046,16 +4113,16 @@ a|
 a|
 21
 a|
-* Ports 12 through 15 are reserved for the second MetroCluster or DR group on the Brocade 7840 switch.*Note:* Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1 and G630-1 switches.
+* - Ports 12 through 15 are reserved for the second MetroCluster or DR group on the Brocade 7840 switch.*Note:* Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1 and G630-1 switches.
 
 |===
-[cols=9*,options="header"]
 |===
-9+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
-9+| *MetroCluster 2 or DR Group 2*
-2.2+| *Component* .2+| *Port* 6+| *Brocade switch model*
-| *Connects to FC_switch...* | *6510, DCX 8510-8* | *6520* | *7840, DCX 8510-8* | *G620, G620-1, G630, G630-1* | *G720*
-2.8+| controller_x_3
+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+| MetroCluster 2 or DR Group 2
+| Component| Port| Brocade switch model
+| Connects to FC_switch...| 6510, DCX 8510-8| 6520| 7840, DCX 8510-8| G620, G620-1, G630, G630-1| G720
+a|
+controller_x_3
 a|
 FC-VI port a
 a|
@@ -4168,7 +4235,8 @@ a|
 25
 a|
 27
-2.8+| controller_x_4
+a|
+controller_x_4
 a|
 FC-VI port a
 a|
@@ -4281,8 +4349,10 @@ a|
 29
 a|
 31
-.4+| Stack 1
-.2+| bridge_x_51a
+a|
+Stack 1
+a|
+bridge_x_51a
 a|
 FC1
 a|
@@ -4311,7 +4381,8 @@ a|
 26
 a|
 32
-.2+| bridge_x_51b
+a|
+bridge_x_51b
 a|
 FC1
 a|
@@ -4340,8 +4411,10 @@ a|
 27
 a|
 33
-.4+| Stack 2
-.2+| bridge_x_52a
+a|
+Stack 2
+a|
+bridge_x_52a
 a|
 FC1
 a|
@@ -4370,7 +4443,8 @@ a|
 30
 a|
 34
-.2+| bridge_x_52b
+a|
+bridge_x_52b
 a|
 FC1
 a|
@@ -4399,8 +4473,10 @@ a|
 31
 a|
 35
-.4+| Stack 3
-.2+| bridge_x_53a
+a|
+Stack 3
+a|
+bridge_x_53a
 a|
 FC1
 a|
@@ -4429,7 +4505,8 @@ a|
 32
 a|
 36
-.2+| bridge_x_53b
+a|
+bridge_x_53b
 a|
 FC1
 a|
@@ -4458,8 +4535,10 @@ a|
 33
 a|
 37
-.4+| Stack y
-.2+| bridge_x_5ya
+a|
+Stack y
+a|
+bridge_x_5ya
 a|
 FC1
 a|
@@ -4488,7 +4567,8 @@ a|
 34
 a|
 38
-.2+| bridge_x_5yb
+a|
+bridge_x_5yb
 a|
 FC1
 a|
@@ -4530,10 +4610,10 @@ The following table shows ISL port usage for the Brocade switches.
 
 NOTE: AFF A700 or FAS9000 systems support up to eight ISLs for improved performance. Eight ISLs are supported on the Brocade 6510 and G620 switches.
 
-[cols=3*,options="header"]
 |===
-| *Switch model* | *ISL port* | *Switch port*
-.4+| Brocade 6520
+| Switch model| ISL port| Switch port
+a|
+Brocade 6520
 a|
 ISL port 1
 a|
@@ -4550,7 +4630,8 @@ a|
 ISL port 4
 a|
 95
-.4+| Brocade 6505
+a|
+Brocade 6505
 a|
 ISL port 1
 a|
@@ -4567,7 +4648,7 @@ a|
 ISL port 4
 a|
 23
-.8+|
+a|
 Brocade 6510 and Brocade DCX 8510-8
 a|
 ISL port 1
@@ -4601,7 +4682,7 @@ a|
 ISL port 8
 a|
 47
-.6+|
+a|
 Brocade 7810
 a|
 ISL port 1
@@ -4627,7 +4708,7 @@ a|
 ISL port 6
 a|
 ge7 (10-Gbps)
-.4+|
+a|
 Brocade 7840**Note:** The Brocade 7840 switch supports either two 40 Gbps VE-ports or up to four 10 Gbps VE-ports per switch for the creation of FCIP ISLs.
 
 a|
@@ -4646,7 +4727,8 @@ a|
 ISL port 4
 a|
 ge11 (10-Gbps)
-.4+| Brocade G610
+a|
+Brocade G610
 a|
 ISL port 1
 a|
@@ -4663,7 +4745,7 @@ a|
 ISL port 4
 a|
 23
-.8+|
+a|
 Brocade G620, G620-1, G630, G630-1, G720
 a|
 ISL port 1
@@ -4703,11 +4785,11 @@ a|
 
 The tables show the maximum supported configuration, with eight controller modules in two DR groups. For smaller configurations, ignore the rows for the additional controller modules.
 
-[cols=4*,options="header"]
 |===
-4+| Cisco 9396S
-| *Component* | *Port* | *Switch 1* | *Switch 2*
-.8+| controller_x_1
+| Cisco 9396S
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -4756,7 +4838,8 @@ a|
 -
 a|
 4
-.8+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -4805,7 +4888,8 @@ a|
 -
 a|
 8
-.8+| controller_x_3
+a|
+controller_x_3
 a|
 FC-VI port a
 a|
@@ -4854,7 +4938,8 @@ a|
 -
 a|
 52
-.8+| controller_x_4
+a|
+controller_x_4
 a|
 FC-VI port a
 a|
@@ -4904,11 +4989,11 @@ a|
 a|
 56
 |===
-[cols=4*,options="header"]
 |===
-4+| Cisco 9148S
-| *Component* | *Port* | *Switch 1* | *Switch 2*
-.8+| controller_x_1
+| Cisco 9148S
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -4957,7 +5042,8 @@ a|
 -
 a|
 4
-.8+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -5006,7 +5092,8 @@ a|
 -
 a|
 8
-.8+| controller_x_3
+a|
+controller_x_3
 a|
 FC-VI port a
 a|
@@ -5055,7 +5142,8 @@ a|
 -
 a|
 28
-.8+| controller_x_4
+a|
+controller_x_4
 a|
 FC-VI port a
 a|
@@ -5105,12 +5193,12 @@ a|
 a|
 32
 |===
-[cols=4*,options="header"]
 |===
-4+| Cisco 9132T
-4+| *MDS module 1*
-| *Component* | *Port* | *Switch 1* | *Switch 2*
-.8+| controller_x_1
+| Cisco 9132T
+| MDS module 1
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -5159,7 +5247,8 @@ a|
 -
 a|
 4
-.8+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -5208,16 +5297,17 @@ a|
 -
 a|
 8
-4+| MDS module 2
 a|
-*Component*
+MDS module 2
 a|
-*Port*
+Component
 a|
-*Switch 1*
+Port
 a|
-*Switch 2*
-.8+|
+Switch 1
+a|
+Switch 2
+a|
 controller_x_3
 a|
 FC-VI port a
@@ -5267,7 +5357,7 @@ a|
 -
 a|
 4
-.8+|
+a|
 controller_x_4
 a|
 FC-VI port a
@@ -5320,11 +5410,11 @@ a|
 |===
 *Note:* The following table shows systems with two FC-VI ports. AFF A700 and FAS9000 systems have four FC-VI ports (a, b, c, and d). If using an AFF A700 or FAS9000 system, the port assignments move along by one position. For example, FC-VI ports c and d go to switch port 2 and HBA ports a and b go to switch port 3.
 
-[cols=4*,options="header"]
 |===
-4+| Cisco 9250i*
-| *Component* | *Port* | *Switch 1* | *Switch 2*
-.6+| controller_x_1
+| Cisco 9250i*
+| Component| Port| Switch 1| Switch 2
+a|
+controller_x_1
 a|
 FC-VI port a
 a|
@@ -5361,7 +5451,8 @@ a|
 -
 a|
 3
-.6+| controller_x_2
+a|
+controller_x_2
 a|
 FC-VI port a
 a|
@@ -5398,7 +5489,8 @@ a|
 -
 a|
 6
-.6+| controller_x_3
+a|
+controller_x_3
 a|
 FC-VI port a
 a|
@@ -5435,7 +5527,8 @@ a|
 -
 a|
 9
-.6+| controller_x_4
+a|
+controller_x_4
 a|
 FC-VI port a
 a|
@@ -5473,15 +5566,15 @@ a|
 a|
 13
 |===
-* The Cisco 9250i switch is not supported for eight-node MetroCluster configurations.
+* - The Cisco 9250i switch is not supported for eight-node MetroCluster configurations.
 
 ==== Cisco port usage for FC-to-SAS bridges in a MetroCluster configuration running ONTAP 9.1 or later
 
-[cols=4*,options="header"]
 |===
-4+| Cisco 9396S
-| *FibreBridge 7500 using two FC ports* | *Port* | *Switch 1* | *Switch 2*
-.2+| bridge_x_1a
+| Cisco 9396S
+| FibreBridge 7500 using two FC ports| Port| Switch 1| Switch 2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -5494,7 +5587,8 @@ a|
 -
 a|
 9
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -5507,7 +5601,8 @@ a|
 -
 a|
 10
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -5520,7 +5615,8 @@ a|
 -
 a|
 11
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -5533,7 +5629,8 @@ a|
 -
 a|
 12
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -5546,7 +5643,8 @@ a|
 -
 a|
 13
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -5559,7 +5657,8 @@ a|
 -
 a|
 14
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -5572,7 +5671,8 @@ a|
 -
 a|
 15
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -5585,15 +5685,17 @@ a|
 -
 a|
 16
-2+|
-2+| Additional bridges can be attached using ports 17 through 40 and 57 through 88 following the same pattern.
+a|
+
+a|
+Additional bridges can be attached using ports 17 through 40 and 57 through 88 following the same pattern.
 |===
-[cols=4*,options="header"]
 |===
-4+| Cisco 9148S
-.2+| *FibreBridge 7500 using two FC ports* .2+| *Port* 2+|
-| *Switch 1* | *Switch 2*
-.2+| bridge_x_1a
+| Cisco 9148S
+| FibreBridge 7500 using two FC ports| Port|
+| Switch 1| Switch 2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -5606,7 +5708,8 @@ a|
 -
 a|
 9
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -5619,7 +5722,8 @@ a|
 -
 a|
 10
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -5632,7 +5736,8 @@ a|
 -
 a|
 11
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -5645,7 +5750,8 @@ a|
 -
 a|
 12
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -5658,7 +5764,8 @@ a|
 -
 a|
 13
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -5671,7 +5778,8 @@ a|
 -
 a|
 14
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -5684,7 +5792,8 @@ a|
 -
 a|
 15
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -5697,15 +5806,17 @@ a|
 -
 a|
 16
-2+|
-2+| Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 33 through 40 following the same pattern.
+a|
+
+a|
+Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 33 through 40 following the same pattern.
 |===
-[col=4*,options="header"]
 |===
 | Cisco 9132T
-.2+| *FibreBridge 7500 using two FC ports* .2+| *Port* |
-| *Switch 1* | *Switch 2*
-.2+| bridge_x_1a
+| FibreBridge 7500 using two FC ports| Port|
+| Switch 1| Switch 2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -5718,7 +5829,8 @@ a|
 -
 a|
 9
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -5731,7 +5843,8 @@ a|
 -
 a|
 10
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -5744,7 +5857,8 @@ a|
 -
 a|
 11
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -5757,16 +5871,17 @@ a|
 -
 a|
 12
-2+|
-2+| Additional bridges for a second DR group or second MetroCluster configuration can be attached using the same port numbers on the second MDS module.
-|===
+a|
 
-[cols=4*,options="header"]
+a|
+Additional bridges for a second DR group or second MetroCluster configuration can be attached using the same port numbers on the second MDS module.
 |===
-4+| Cisco 9250i
-.2+| *FibreBridge 7500 using two FC ports* .2+| *Port* 2+|
-| *Switch 1* | *Switch 2*
-.2+| bridge_x_1a
+|===
+| Cisco 9250i
+| FibreBridge 7500 using two FC ports| Port|
+| Switch 1| Switch 2
+a|
+bridge_x_1a
 a|
 FC1
 a|
@@ -5779,7 +5894,8 @@ a|
 -
 a|
 14
-.2+| bridge_x_1b
+a|
+bridge_x_1b
 a|
 FC1
 a|
@@ -5792,7 +5908,8 @@ a|
 -
 a|
 15
-.2+| bridge_x_2a
+a|
+bridge_x_2a
 a|
 FC1
 a|
@@ -5805,7 +5922,8 @@ a|
 -
 a|
 17
-.2+| bridge_x_2b
+a|
+bridge_x_2b
 a|
 FC1
 a|
@@ -5818,7 +5936,8 @@ a|
 -
 a|
 18
-.2+| bridge_x_3a
+a|
+bridge_x_3a
 a|
 FC1
 a|
@@ -5831,7 +5950,8 @@ a|
 -
 a|
 19
-.2+| bridge_x_3b
+a|
+bridge_x_3b
 a|
 FC1
 a|
@@ -5844,7 +5964,8 @@ a|
 -
 a|
 21
-.2+| bridge_x_4a
+a|
+bridge_x_4a
 a|
 FC1
 a|
@@ -5857,7 +5978,8 @@ a|
 -
 a|
 22
-.2+| bridge_x_4b
+a|
+bridge_x_4b
 a|
 FC1
 a|
@@ -5870,15 +5992,16 @@ a|
 -
 a|
 23
-2|
-2| Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 25 through 48 following the same pattern.
+a|
+
+a|
+Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 25 through 48 following the same pattern.
 |===
 The following tables show bridge port usage when using FibreBridge 6500 bridges or FibreBridge 7500 bridges using one FC port (FC1 or FC2) only. For FibreBridge 7500 bridges using one FC port, either FC1 or FC2 can be cabled to the port indicated as FC1. Additional bridges can be attached using ports 25-48.
 
-[cols=4*,options="header"]
 |===
-.2+| FibreBridge 6500 bridge or FibreBridge 7500 using one FC port .2+| Port 2+| Cisco 9396S
-| *Switch 1*| *Switch 2*
+| FibreBridge 6500 bridge or FibreBridge 7500 using one FC port| Port| Cisco 9396S
+| Switch 1| Switch 2
 a|
 bridge_x_1a
 a|
@@ -6007,14 +6130,14 @@ a|
 -
 a|
 16
-2+|
-2+| Additional bridges can be attached using ports 17 through 40 and 57 through 88 following the same pattern.
-|===
+a|
 
-[cols=4*,options="header"]
+a|
+Additional bridges can be attached using ports 17 through 40 and 57 through 88 following the same pattern.
 |===
-.2+| FibreBridge 6500 bridge or FibreBridge 7500 using one FC port .2+| Port 2+| Cisco 9148S
-| *Switch 1*| *Switch 2*
+|===
+| FibreBridge 6500 bridge or FibreBridge 7500 using one FC port| Port| Cisco 9148S
+| Switch 1| Switch 2
 a|
 bridge_x_1a
 a|
@@ -6143,14 +6266,14 @@ a|
 -
 a|
 16
-2+|
-2+| Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 25 through 48 following the same pattern.
-|===
+a|
 
-[cols=4*,options="header"]
+a|
+Additional bridges for a second DR group or second MetroCluster configuration can be attached using ports 25 through 48 following the same pattern.
 |===
-4+| Cisco 9250i
-| *FibreBridge 6500 bridge or FibreBridge 7500 using one FC port* | *Port* | *Switch 1* | *Switch 2*
+|===
+| Cisco 9250i
+| FibreBridge 6500 bridge or FibreBridge 7500 using one FC port| Port| Switch 1| Switch 2
 a|
 bridge_x_1a
 a|
@@ -6279,18 +6402,20 @@ a|
 -
 a|
 23
-2+|
-2+| Additional bridges can be attached using ports 25 through 48 following the same pattern.
+a|
+
+a|
+Additional bridges can be attached using ports 25 through 48 following the same pattern.
 |===
 
 ==== Cisco port usage for ISLs in an eight-node configuration in a MetroCluster configuration running ONTAP 9.1 or later
 
 The following table shows ISL port usage. ISL port usage is the same on all switches in the configuration.
 
-[cols=3*,options="header"]
 |===
-| Switch model | ISL port | Switch port
-.4+| Cisco 9396S
+| Switch model| ISL port| Switch port
+a|
+Cisco 9396S
 a|
 ISL 1
 a|
@@ -6307,7 +6432,8 @@ a|
 ISL 4
 a|
 96
-.4+| Cisco 9250i with 24 port license
+a|
+Cisco 9250i with 24 port license
 a|
 ISL 1
 a|
@@ -6324,7 +6450,8 @@ a|
 ISL 4
 a|
 24
-.4+| Cisco 9148S
+a|
+Cisco 9148S
 a|
 ISL 1
 a|
@@ -6341,7 +6468,8 @@ a|
 ISL 4
 a|
 48
-.4+| Cisco 9132T
+a|
+Cisco 9132T
 a|
 ISL 1
 a|
@@ -6426,7 +6554,6 @@ node_B_2       on            on          off             default
 . If any disks were replaced, leave the controllers powered off or at the LOADER prompt.
 . In a fabric-attached MetroCluster configuration, enable the non-ISL ports on the FC switches.
 +
-[options="header"]
 |===
 | If the switch vendor is...| Then use these steps to enable the ports...
 a|
@@ -6514,9 +6641,8 @@ Present only in four-node MetroCluster configurations.
 
 The controller modules have the following original system IDs:
 
-[cols=3*,options="header"]
 |===
-| Number of nodes in MetroCluster configuration | Node | Original system ID
+| Number of nodes in MetroCluster configuration| Node| Original system ID
 a|
 Four
 a|
@@ -6638,6 +6764,8 @@ node_B_2       on            on          on             default
 
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
 
+link:[How MetroCluster configurations use SyncMirror to provide data redundancy]
+
 == Performing aggregate healing and restoring mirrors (MetroCluster FC configurations)
 
 [.lead]
@@ -6653,7 +6781,6 @@ cluster_B::> metrocluster heal -phase root aggregates
 
 . Monitor the healing and verify that the aggregates are in either the resyncing or mirrored state: `storage aggregate show -node local`
 +
-[cols=2*,options="header"]
 |===
 | If the aggregate shows this state...| Then...
 a|
@@ -6663,7 +6790,7 @@ No action is required.    Let the aggregate complete resyncing.
 a|
 mirror degraded
 a|
-Proceed to step 3.
+Proceed to step xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adocSTEP_0192B6F128114A77837D1BB5AAB8A770[3].
 a|
 mirrored, normal
 a|
@@ -6697,7 +6824,6 @@ cluster_B::>
 +
 In the following examples, the three aggregates are each in a different state:
 +
-[cols=2*,options="header"]
 |===
 | Node| State
 a|
@@ -6778,10 +6904,10 @@ The old and new system IDs were identified in xref:task_replace_hardware_and_boo
 
 The examples in this procedure use controllers with the following system IDs:
 
-[cols=4*,options="header"]
 |===
-| Number of nodes | Node | Original system ID | New system ID
-.4+| Four
+| Number of nodes| Node| Original system ID| New system ID
+a|
+Four
 a|
 node_A_1
 a|
@@ -6806,7 +6932,8 @@ a|
 4068741256
 a|
 unchanged
-.2+| Two
+a|
+Two
 a|
 node_A_1
 a|
@@ -6900,4 +7027,4 @@ If this occurs, repeat step 2 to boot the system to the ONTAP prompt. You will t
 
 Proceed to verify the licenses on the replaced nodes.
 
-xref:task_complete_recovery.adoc#verifying-licenses-on-the-replaced-nodes[Verifying licenses on the replaced nodes]
+xref:task_complete_recovery.adoc[Verifying licenses on the replaced nodes]
