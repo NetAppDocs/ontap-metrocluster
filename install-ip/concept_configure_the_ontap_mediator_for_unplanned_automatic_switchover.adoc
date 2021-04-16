@@ -119,7 +119,7 @@ There is no direct upgrade path. You must remove the 1.0 version and install the
 . Delete the Mediator service from the ONTAP configuration: metrocluster configuration-settings mediator remove
 . Uninstall the 1.0 version of the Mediator service.
 +
-xref:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.adoc[Uninstalling the ONTAP Mediator service]
+<<Uninstalling the ONTAP Mediator service>>
 
 . Upgrade the Linux operating system to version 8.0 or 8.1.
 . Install the 1.1 version of the Mediator service.
@@ -327,12 +327,11 @@ kernel-devel
 |===
 [options="header"]
 |===
-| If your operating system is...| Use these steps...
-a|
-*RHEL 7.x*
-a|
+| If your operating system is... | Use these steps...
 
- .. Subscribe to the required repository: `subscription-manager repos --enable rhel-7-server-optional-rpms`
+a| *RHEL 7.x*
+a|
+. Subscribe to the required repository: `subscription-manager repos --enable rhel-7-server-optional-rpms`
 +
 The following example shows the execution of this command:
 +
@@ -340,8 +339,7 @@ The following example shows the execution of this command:
 [root@localhost ~]# subscription-manager repos --enable rhel-7-server-optional-rpms
 Repository 'rhel-7-server-optional-rpms' is enabled for this system.
 ----
-
- .. Run the yum repolist command.
+. Run the yum repolist command.
 +
 The following example shows the execution of this command. The rhel-7-server-optional-rpms repository should appear in the list.
 +
@@ -360,11 +358,8 @@ repolist: 46,205
 [root@localhost ~]#
 ----
 
-a|
-*RHEL 8.x*
-a|
-
- .. Subscribe to the required repository: `subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms``subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms`
+a|*RHEL 8.x*
+a|. Subscribe to the required repository: `subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms``subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms`
 +
 The following example shows the execution of this command:
 +
@@ -375,16 +370,15 @@ Repository 'rhel-8-for-x86_64-baseos-rpms' is enabled for this system.
 Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
 ----
 
- .. Run the yum repolist command.
+. Run the yum repolist command.
 +
 The newly subscribed repositories should appear in the list.
 
+a| *CentOS 7.x*
 a|
-*CentOS 7.x*
-a|
-    Add the C7.6.1810 - Base repository. The C7.6.1810 - Base vault repository contains the kernel-devel package needed for ONTAP Mediator.
+. Add the C7.6.1810 - Base repository. The C7.6.1810 - Base vault repository contains the kernel-devel package needed for ONTAP Mediator.
 
- .. Add the following lines to /etc/yum.repos.d/CentOS-Vault.repo.
+. Add the following lines to /etc/yum.repos.d/CentOS-Vault.repo.
 +
 ----
 [C7.6.1810-base]
@@ -395,7 +389,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 enabled=1
 ----
 
- .. Run the yum repolist command.
+. Run the yum repolist command.
 +
 The following example shows the execution of this command. The CentOS-7.6.1810 - Base repository should appear in the list.
 +
@@ -417,10 +411,8 @@ repolist: 21,433
 [root@localhost ~]#
 ----
 
-a|
-*CentOS 8.0.1905 or later builds*
-a|
-Because the latest version of the 8.0 (CentOS 8.0.1905) core resides in the CentOS Vault, you must provide access to the matching kernel-devel package to compile the needed kernel module.      Issue the following command to directly install the kernel-devel package: rpm -i http://vault.centos.org/8.0.1905/BaseOS/x86_64/os/Packages/kernel-devel-$(uname -r).rpm
+a| *CentOS 8.0.1905 or later builds*
+a| Because the latest version of the 8.0 (CentOS 8.0.1905) core resides in the CentOS Vault, you must provide access to the matching kernel-devel package to compile the needed kernel module.      Issue the following command to directly install the kernel-devel package: rpm -i http://vault.centos.org/8.0.1905/BaseOS/x86_64/os/Packages/kernel-devel-$(uname -r).rpm
 +
 If the system displays an error indicating that the package is already installed, remove the package and try again:
 
