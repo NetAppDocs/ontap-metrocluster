@@ -1666,33 +1666,25 @@ The bridges use the following example naming: bridge_site_stack grouplocation in
 
 |===
 | This portion of the name...| Identifies the...| Possible values...
-a|
-site
-a|
-Site on which the bridge pair physically resides.
-a|
-A or B
-a|
-stack group
-a|
-Number of the stack group to which the bridge pair connects.
+a| site
+a| Site on which the bridge pair physically resides.
+a| A or B
+
+a| stack group
+a| Number of the stack group to which the bridge pair connects.
 
 * FibreBridge 7600N or 7500N bridges support up to four stacks in the stack group.
 +
 The stack group can contain no more than 10 storage shelves.
 
 * FibreBridge 6500N bridges support only a single stack in the stack group.
+a| 1, 2, etc.
 
-a|
-1, 2, etc.
-a|
-location in pair
-a|
-Bridge within the bridge pair.A pair of bridges connect to a specific stack group.
-
-a|
-a or b
+a| location in pair
+a| Bridge within the bridge pair. A pair of bridges connect to a specific stack group.
+a| a or b
 |===
+
 Example bridge names for one stack group on each site:
 
 * bridge_A_1a
@@ -1702,61 +1694,60 @@ Example bridge names for one stack group on each site:
 
 ==== DR Group 1 - Stack 1 at Site_A
 
+DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
+
+// include reference
+// [%header,format=csv]
+// |===
+// include::_include/brocade_zoning_7500_dr_1a_grp1_top_fc1.csv[]
+// |===
+// end include reference
+
 |===
 | DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| 6505 / 6510 / G610/ G620| 6520
-a|
-FC_switch_A_1
-a|
-A
-a|
-5
-a|
-2
-a|
-2
-a|
-controller_A_1 port 0a
-a|
-6
-a|
-6
-a|
-controller_A_2 port 0a
-a|
-8
-a|
-8
-a|
-bridge_A_1a FC1
-a|
-FC_switch_B_1
-a|
-B
-a|
-7
-a|
-2
-a|
-2
-a|
-controller_B_1 port 0a
-a|
-6
-a|
-6
-a|
-controller_B_2 port 0a
-|===
-|===
-| Zone in Fabric_1
+| FC switch | Site | Switch domain | Switch port | Connects to...
+| | | | 6505 / 6510 / G610/ G620| 6520 |
 
-| Member ports
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
-a|
-5,2;5,6;7,2;7,6;5,8
+a| FC_switch_A_1
+a| A
+a| 5
+a| 2
+a| 2
+a| controller_A_1 port 0a
+
+a| FC_switch_A_1
+a| A
+a| 5
+a| 6
+a| 6
+a| controller_A_2 port 0a
+
+a| FC_switch_A_1
+a| A
+a| 5
+a| 8
+a| 8
+a| bridge_A_1a FC1
+
+a| FC_switch_B_1
+a| B
+a| 7
+a| 2
+a| 2
+a| controller_B_1 port 0a
+
+a| FC_switch_B_1
+a| B
+a| 7
+a| 6
+a| 6
+a| controller_B_2 port 0a
+|===
+|===
+| Zone in Fabric_1 | Member ports
+
+a| MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
+a| 5,2;5,6;7,2;7,6;5,8
 |===
 |===
 | DrGroup 1 : MC1_INIT_GRP_2_SITE_A_STK_GRP_1_TOP_FC1
