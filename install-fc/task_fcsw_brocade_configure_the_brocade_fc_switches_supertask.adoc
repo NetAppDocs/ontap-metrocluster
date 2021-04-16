@@ -547,7 +547,7 @@ If your configuration is running ONTAP 9.0 or earlier, see the "`Port assignment
 You must use the required number of ISLs for your configuration.
 
 |===
-| Switch model| ISL port| Switch port
+| Switch model | ISL port | Switch port
 a|
 Brocade 6520
 a|
@@ -1317,8 +1317,7 @@ include::_include/brocade_zoning_dr_1_qosh1_fcvi_port_ac.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1
-| Member ports
+| Zone in Fabric_1 | Member ports
 
 | QOSH1_MC1_FAB_1_FCVI
 |5,0;5,1;5,4;5,5;7,0;7,1;7,4;7,5
@@ -1334,8 +1333,7 @@ include::_include/brocade_zoning_dr_1_qosh1_fcvi_port_bd.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1
-| Member ports
+| Zone in Fabric_1 | Member ports
 
 | QOSH1_MC1_FAB_2_FCVI
 | 6,0;6,1;6,4;6,5;8,0;8,1;8,4;8,5
@@ -1351,8 +1349,7 @@ include::_include/brocade_zoning_dr_2_qosh2_fcvi_port_ac.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1
-| Member ports
+| Zone in Fabric_1 | Member ports
 
 | QOSH2_MC2_FAB_1_FCVI (6510)
 | 5,24;5,25;5,28;5,29;7,24;7,25;7,28;7,29
@@ -1371,8 +1368,7 @@ include::_include/brocade_zoning_dr_2_qosh2_fcvi_port_bd.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_2
-| Member ports
+| Zone in Fabric_2 | Member ports
 
 | QOSH2_MC2_FAB_2_FCVI (6510)
 | 6,24;6,25;6,28;6,29;8,24;8,25;8,28;8,29
@@ -1383,9 +1379,7 @@ include::_include/brocade_zoning_dr_2_qosh2_fcvi_port_bd.csv[]
 The following table provides a summary of the FC-VI zones:
 
 |===
-| Fabric
-| Zone name
-| Member ports
+| Fabric | Zone name | Member ports
 
 a| FC_switch_A_1 and FC_switch_B_1
 a| QOSH1_MC1_FAB_1_FCVI
@@ -1437,7 +1431,7 @@ The examples show two pairs of bridges connecting two stack groups at each site.
 The bridges use the following example naming: bridge_site_stack grouplocation in pair
 
 |===
-| This portion of the name...| Identifies the...| Possible values...
+| This portion of the name... | Identifies the... | Possible values...
 a|
 site
 a|
@@ -1474,552 +1468,178 @@ Example bridge names for one stack group on each site:
 
 ==== DR Group 1 - Stack 1 at Site_A
 
+DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
+
+// include reference
+[%header,format=csv]
 |===
-| DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| Brocade 6505, 6510, 6520, G620, or G610 switch
-a|
-FC_switch_A_1
-a|
-A
-a|
-5
-a|
-2
-a|
-controller_A_1 port 0a
-a|
-3
-a|
-controller_A_1 port 0c
-a|
-6
-a|
-controller_A_2 port 0a
-a|
-7
-a|
-controller_A_2 port 0c
-a|
-8
-a|
-bridge_A_1a FC1
-a|
-FC_switch_B_1
-a|
-B
-a|
-7
-a|
-2
-a|
-controller_B_1 port 0a
-a|
-3
-a|
-controller_B_1 port 0c
-a|
-6
-a|
-controller_B_2 port 0a
-a|
-7
-a|
-controller_B_2 port 0c
+include::_include/brocade_zoning_dr_1a_grp1_top_fc1.csv[]
 |===
+// end include reference
+
 |===
 | Zone in Fabric_1
-
 | Member ports
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,8
-|===
-|===
-| DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_1_BOT_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| Brocade 6505, 6510, 6520, G620, or G610 switch
-a|
-FC_switch_A_2
-a|
-A
-a|
-6
-a|
-2
-a|
-controller_A_1 port 0b
-a|
-3
-a|
-controller_A_1 port 0d
-a|
-6
-a|
-controller_A_2 port 0b
-a|
-7
-a|
-controller_A_2 port 0d
-a|
-8
-a|
-bridge_A_1b FC1
-a|
-FC_switch_B_2
-a|
-B
-a|
-8
-a|
-2
-a|
-controller_B_1 port 0b
-a|
-3
-a|
-controller_B_1 port 0d
-a|
-6
-a|
-controller_B_2 port 0b
-a|
-7
-a|
-controller_B_2 port 0d
-|===
-|===
-| Zone in Fabric_2
 
-| Member ports
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_1_BOT_FC1
-a|
-6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,8
+| MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,8
+|===
+
+DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_1_BOT_FC1
+
+// include reference
+[%header,format=csv]
+|===
+include::_include/brocade_zoning_dr_1a_grp1_bottom_fc1.csv[]
+|===
+// end include reference
+
+|===
+| Zone in Fabric_2 | Member ports
+
+| MC1_INIT_GRP_1_SITE_A_STK_GRP_1_BOT_FC1
+| 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,8
 |===
 
 ==== DR Group 1 - Stack 2 at Site_A
 
-|===
-| DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| Brocade 6505, 6510, 6520, G620, or G610 switch
-a|
-FC_switch_A_1
-a|
-A
-a|
-5
-a|
-2
-a|
-controller_A_1 port 0a
-a|
-3
-a|
-controller_A_1 port 0c
-a|
-6
-a|
-controller_A_2 port 0a
-a|
-7
-a|
-controller_A_2 port 0c
-a|
-9
-a|
-bridge_A_2a FC1
-a|
-FC_switch_B_1
-a|
-B
-a|
-7
-a|
-2
-a|
-controller_B_1 port 0a
-a|
-3
-a|
-controller_B_1 port 0c
-a|
-6
-a|
-controller_B_2 port 0a
-a|
-7
-a|
-controller_B_2 port 0c
-|===
-|===
-| Zone in Fabric_1
+DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1
 
-| Member ports
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,9
+// include reference
+[%header,format=csv]
 |===
+include::_include/brocade_zoning_dr_1a_grp2_top_fc1.csv[]
 |===
-| DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_2_BOT_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| Brocade 6505, 6510, 6520, G620, or G610 switch
-a|
-FC_switch_A_2
-a|
-A
-a|
-6
-a|
-2
-a|
-controller_A_1 port 0b
-a|
-3
-a|
-controller_A_1 port 0d
-a|
-6
-a|
-controller_A_2 port 0b
-a|
-7
-a|
-controller_A_2 port 0d
-a|
-9
-a|
-bridge_A_2b FC1
-a|
-FC_switch_B_2
-a|
-B
-a|
-8
-a|
-2
-a|
-controller_B_1 port 0b
-a|
-3
-a|
-controller_B_1 port 0d
-a|
-6
-a|
-controller_B_2 port 0b
-a|
-7
-a|
-controller_B_2 port 0d
-|===
-|===
-| Zone in Fabric_2
+// end include reference
 
-| Member ports
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_2_BOT_FC1
-a|
-6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,9
+|===
+| Zone in Fabric_1 | Member ports
+
+| MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,9
+|===
+
+DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_2_BOT_FC1
+
+// include reference
+[%header,format=csv]
+|===
+include::_include/brocade_zoning_dr_1a_grp2_bottom_fc1.csv[]
+|===
+// end include reference
+
+|===
+| Zone in Fabric_2 | Member ports
+
+| MC1_INIT_GRP_1_SITE_A_STK_GRP_2_BOT_FC1
+| 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,9
 |===
 
 ==== DR Group 1 - Stack 1 at Site_B
 
-|===
-| DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| Brocade 6505, 6510, 6520, G620, or G610 switch
-a|
-FC_switch_A_1
-a|
-A
-a|
-5
-a|
-2
-a|
-controller_A_1 port 0a
-a|
-3
-a|
-controller_A_1 port 0c
-a|
-6
-a|
-controller_A_2 port 0a
-a|
-7
-a|
-controller_A_2 port 0c
-a|
-FC_switch_B_1
-a|
-B
-a|
-7
-a|
-2
-a|
-controller_B_1 port 0a
-a|
-3
-a|
-controller_B_1 port 0c
-a|
-6
-a|
-controller_B_2 port 0a
-a|
-7
-a|
-controller_B_2 port 0c
-a|
-8
-a|
-bridge_B_1a FC1
-|===
-|===
-| Zone in Fabric_1
-
-| Member ports
-a|
 MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,8
-|===
-|===
-| DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_1_BOT_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| Brocade 6505, 6510, 6520, G620, or G610 switch
-a|
-FC_switch_A_2
-a|
-A
-a|
-6
-a|
-2
-a|
-controller_A_1 port 0b
-a|
-3
-a|
-controller_A_1 port 0d
-a|
-6
-a|
-controller_A_2 port 0b
-a|
-7
-a|
-controller_A_2 port 0d
-a|
-FC_switch_B_2
-a|
-B
-a|
-8
-a|
-2
-a|
-controller_B_1 port 0b
-a|
-3
-a|
-controller_B_1 port 0d
-a|
-6
-a|
-controller_B_2 port 0b
-a|
-7
-a|
-controller_B_2 port 0d
-a|
-8
-a|
-bridge_B_1b FC1
-|===
-|===
-| Zone in Fabric_2
 
-| Member ports
-a|
-MC1_INIT_GRP_1_SITE_B_STK_GRP_1_BOT_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;8,8
+// include reference
+[%header,format=csv]
+|===
+include::_include/brocade_zoning_dr_1b_grp1_top_fc1.csv[]
+|===
+// end include reference
+
+|===
+| Zone in Fabric_1 | Member ports
+
+| MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,8
+|===
+
+DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_1_BOT_FC1
+
+// include reference
+[%header,format=csv]
+|===
+include::_include/brocade_zoning_dr_1b_grp1_bottom_fc1.csv[]
+|===
+// end include reference
+
+|===
+| Zone in Fabric_2 | Member ports
+
+| MC1_INIT_GRP_1_SITE_B_STK_GRP_1_BOT_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;8,8
 |===
 
 ==== DR Group 1 - Stack 2 at Site_B
 
-|===
-| DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_2_TOP_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| Brocade 6505, 6510, 6520, G620, or G610 switch
-a|
-FC_switch_A_1
-a|
-A
-a|
-5
-a|
-2
-a|
-controller_A_1 port 0a
-a|
-3
-a|
-controller_A_1 port 0c
-a|
-6
-a|
-controller_A_2 port 0a
-a|
-7
-a|
-controller_A_2 port 0c
-a|
-FC_switch_B_1
-a|
-B
-a|
-7
-a|
-2
-a|
-controller_B_1 port 0a
-a|
-3
-a|
-controller_B_1 port 0c
-a|
-6
-a|
-controller_B_2 port 0a
-a|
-7
-a|
-controller_B_2 port 0c
-a|
-9
-a|
-bridge_b_2a FC1
-|===
-|===
-| Zone in Fabric_1
+DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_2_TOP_FC1
 
-| Member ports
-a|
-MC1_INIT_GRP_1_SITE_b_STK_GRP_2_TOP_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,9
+// include reference
+[%header,format=csv]
 |===
+include::_include/brocade_zoning_dr_1b_grp2_top_fc1.csv[]
 |===
-| DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_2_BOT_FC1
-| FC switch| Site| Switch domain| Switch port| Connects to...
-| Brocade 6505, 6510, 6520, G620, or G610 switch
-a|
-FC_switch_A_2
-a|
-A
-a|
-6
-a|
-2
-a|
-controller_A_1 port 0b
-a|
-3
-a|
-controller_A_1 port 0d
-a|
-6
-a|
-controller_A_2 port 0b
-a|
-7
-a|
-controller_A_2 port 0d
-a|
-FC_switch_B_2
-a|
-B
-a|
-8
-a|
-2
-a|
-controller_B_1 port 0b
-a|
-3
-a|
-controller_B_1 port 0d
-a|
-6
-a|
-controller_B_2 port 0b
-a|
-7
-a|
-controller_B_2 port 0d
-a|
-9
-a|
-bridge_B_1b FC1
-|===
-|===
-| Zone in Fabric_2
+// end include reference
 
-| Member ports
-a|
-MC1_INIT_GRP_1_SITE_B_STK_GRP_2_BOT_FC1
-a|
-6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;8,9
+|===
+| Zone in Fabric_1 | Member ports
+
+
+| MC1_INIT_GRP_1_SITE_b_STK_GRP_2_TOP_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,9
+|===
+
+DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_2_BOT_FC1
+
+// include reference
+[%header,format=csv]
+|===
+include::_include/brocade_zoning_dr_1b_grp2_bottom_fc1.csv[]
+|===
+// end include reference
+
+|===
+| Zone in Fabric_2 | Member ports
+
+| MC1_INIT_GRP_1_SITE_B_STK_GRP_2_BOT_FC1
+| 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;8,9
 |===
 
 ==== Summary of storage zones
 
 |===
-| Fabric| Zone name| Member ports
-a|
-FC_switch_A_1 and FC_switch_B_1
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,8
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,9
-a|
-MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,8
-a|
-MC1_INIT_GRP_1_SITE_B_STK_GRP_2_TOP_FC1
-a|
-5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,9
-a|
-FC_switch_A_2 and FC_switch_B_2
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_1_BOT_FC1
-a|
-6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,8
-a|
-MC1_INIT_GRP_1_SITE_A_STK_GRP_2_BOT_FC1
-a|
-6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,9
-a|
-MC1_INIT_GRP_1_SITE_B_STK_GRP_1_BOT_FC1
-a|
-6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;8,8
-a|
-MC1_INIT_GRP_1_SITE_B_STK_GRP_2_BOT_FC1
-a|
-6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;8,9
+| Fabric | Zone name | Member ports
+
+| FC_switch_A_1 and FC_switch_B_1
+| MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,8
+
+|
+| MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,9
+
+|
+| MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,8
+
+|
+| MC1_INIT_GRP_1_SITE_B_STK_GRP_2_TOP_FC1
+| 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,9
+
+| FC_switch_A_2 and FC_switch_B_2
+| MC1_INIT_GRP_1_SITE_A_STK_GRP_1_BOT_FC1
+| 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,8
+
+|
+|vMC1_INIT_GRP_1_SITE_A_STK_GRP_2_BOT_FC1
+| 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,9
+
+|
+| MC1_INIT_GRP_1_SITE_B_STK_GRP_1_BOT_FC1
+| 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;8,8
+
+|
+| MC1_INIT_GRP_1_SITE_B_STK_GRP_2_BOT_FC1
+| 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;8,9
 |===
 
 === Zoning for FibreBridge 7500N bridges using both FC ports
