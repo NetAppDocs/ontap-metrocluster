@@ -141,8 +141,8 @@ If you are using existing switches, proceed to xref:task_transition_from_mcc_fc_
 +
 Follow the steps in the section for your switch vendor from the link:../install-ip/index.html[MetroCluster IP Installation and Configuration Guide]
 
- ** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-39831E44-33C8-46E9-BD48-76CAFC2D71F7.html[Resetting the Broadcom IP switch to factory defaults]**
- ** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-BFE8D886-FC64-40B6-8DBD-32F0EE1FD6C7.html[Resetting the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-cisco-ip-switch-to-factory-defaults[Resetting the Cisco IP switch to factory defaults]
 
 . Update the firmware on the switch to a supported version, if necessary.
 . Use the RCF generator tool to create the RCF file depending on your switch vendor and the platform models, and then update the switches with the file.
@@ -151,8 +151,8 @@ Follow the steps in the section for your switch vendor from the _MetroCluster IP
 +
 link:../install-ip/index.html[MetroCluster IP installation and configuration]
 
- ** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-4E169910-43BC-4BDB-89F6-18B09F5A728C.html[Downloading and installing the Broadcom IP RCF files]
- ** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-89FE081E-9E71-431F-9D66-80EBB2D80B8D.html[Downloading and installing the Cisco IP RCF files]
+ ** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom IP RCF files]
+ ** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
 
 == Moving the local cluster connections
 
@@ -332,15 +332,15 @@ link:../install-ip/index.html[MetroCluster IP installation and configuration]
 +
 You should use the latest firmware that the MetroCluster IP nodes support.
 
-  *** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-223B82D9-2293-4690-AA8E-63A8B3D496E8.html[Downloading and installing the Broadcom switch EFOS software]
-  *** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-896F209C-EF9C-4831-BB33-02CBD7DB188C.html[Downloading and installing the Cisco switch NX-OS software]
+  *** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-broadcom-switch-efos-software[Downloading and installing the Broadcom switch EFOS software]
+  *** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-cisco-switch-nx-os-software[Downloading and installing the Cisco switch NX-OS software]
 
  .. Prepare the IP switches for the application of the new RCF files.
-  *** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-39831E44-33C8-46E9-BD48-76CAFC2D71F7.html[Resetting the Broadcom IP switch to factory defaults] **
-  *** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-BFE8D886-FC64-40B6-8DBD-32F0EE1FD6C7.html[Resetting the Cisco IP switch to factory defaults]
+  *** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults] **
+  *** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-cisco-ip-switch-to-factory-defaults[Resetting the Cisco IP switch to factory defaults]
  .. Download and install the IP RCF file depending on your switch vendor.
-  *** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-4E169910-43BC-4BDB-89F6-18B09F5A728C.html[Downloading and installing the Broadcom IP RCF files]
-  *** http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-89FE081E-9E71-431F-9D66-80EBB2D80B8D.html[Downloading and installing the Cisco IP RCF files]
+  *** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom IP RCF files]
+  *** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
 
 . Reconnect the group A ports to switch_A_1_IP.
 +
@@ -618,15 +618,17 @@ Warning: This command enables the start of a "non-disruptive" MetroCluster
 Do you want to continue? {y|n}: y
 
 cluster_A::*>
+
 ----
 
  .. Return to the admin privilege level: `set -privilege admin`
 . Verify that transition is enabled on both the clusters.
 +
 ----
+
 cluster_A::> metrocluster transition show-mode
 Transition Mode
--------------------------
+
 non-disruptive
 
 cluster_A::*>
@@ -634,10 +636,11 @@ cluster_A::*>
 
 cluster_B::*> metrocluster transition show-mode
 Transition Mode
---------------------------
+
 non-disruptive
 
 Cluster_B::>
+
 ----
 
 . Disable cluster HA.
