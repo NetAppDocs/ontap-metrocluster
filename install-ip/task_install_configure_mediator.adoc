@@ -442,34 +442,9 @@ Package 1:make-3.82-23.el7.x86_64 already installed and latest version
  [root@red-hat-enterprise-linux ~]#
 
 
+----
 
 The following example shows an upgrade of the Mediator service:
-
- [root@scspr1845484003 ontap-mediator]# ./ontap_mediator_1.2
- ONTAP Mediator will be upgraded from version 1.1.231618 to 1.2.0.
-
- Do you wish to continue? Y(es)/n(o): y
- Capturing support_bundle
-          Mediator API User Name: mediatoradmin
-                       Password:
-      Running plugins, please wait...
-
-      Running 11/11: sysctl...
-      Creating tar archive...
-      Support bundle has been generated at /opt/netapp/data/support_bundles/scspr1845484003_1582830730_BASIC.tgz
-      Testing the DB can be upgraded
-      Verifying database is up-to-date...
-      Database out-of-date.Migrations are necessary:
-      Current revision: bdd9252c33ee, Head revision: 6b2a053cd598
-      Cloning database...
-      Cloning successful.
-      Performing database migrations against clone...
-      /opt/netapp/lib/ontap_mediator/pyenv/lib64/python3.6/site-packages/alembic/util/messaging.py:70: UserWarning: Skipping unsupported ALTER for creation of implicit constraint
-        warnings.warn(msg)
-      Migrations successful.
-      Database upgrade operation complete.
-      + Upgrading ONTAP Mediator. (Log: /root/ontap-mediator/upgrade_20200227141143.log)
-      + Upgrade successful. (Moving log to /opt/netapp/lib/ontap_mediator/log/upgrade_20200227141143.log)
 
 . Use the following steps to configure third-part certification.
 +
@@ -505,6 +480,7 @@ You must overwrite the following files with your certificate, renaming the certi
 +
 Run the following command to view the status of the ONTAP Mediator services: systemctl
 
+----
  [root@scspr1915530002 ~]# systemctl status ontap_mediator mediator-scst
 
         ∙ ontap_mediator.service - ONTAP Mediator
@@ -558,9 +534,11 @@ Run the following command to view the status of the ONTAP Mediator services: sys
          Jun 18 09:54:51 scspr1915530002 systemd[1]: Started mediator-scst.service.
 
          [root@scspr1915530002 ~]#
+----
 
 .. To view the ports the ONTAP Mediator service is using, run: netstat
 
+----
          [root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
 
          tcp        0      0 0.0.0.0:31784           0.0.0.0:*               LISTEN
@@ -568,6 +546,7 @@ Run the following command to view the status of the ONTAP Mediator services: sys
          tcp        0      0 0.0.0.0:3260            0.0.0.0:*               LISTEN
 
          tcp6       0      0 :::3260                 :::*                    LISTEN
+----
 
  == Result
  The ONTAP Mediator service is now installed and running. Further configuration must be performed in the ONTAP storage system to use the Mediator features.
