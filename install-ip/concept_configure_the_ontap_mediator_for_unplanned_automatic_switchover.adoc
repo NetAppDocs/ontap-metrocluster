@@ -300,8 +300,8 @@ This procedure is used for an installation or an upgrade of an existing installa
 
 xref:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html#guidelines-for-upgrading-the-ontap-mediator-in-a-metrocluster-configuration[Guidelines for upgrading the ONTAP Mediator in a MetroCluster configuration]
 
-. Enable access to the repositories listed above so Mediator can access the required packages during the installation process.
-+
+*Enable access to the repositories*
+
 [options="header"]
 |===
 | If your operating system is...| You must provide access to these repositories...
@@ -325,12 +325,11 @@ CentOS 8.0
 a|
 kernel-devel
 |===
-[options="header"]
-|===
-| If your operating system is... | Use these steps...
 
-a| *RHEL 7.x*
-a|
+Enable access to the repositories listed above so Mediator can access the required packages during the installation process.
+
+If your operating system is *RHEL 7.x*:
+
 . Subscribe to the required repository: `subscription-manager repos --enable rhel-7-server-optional-rpms`
 +
 The following example shows the execution of this command:
@@ -358,8 +357,9 @@ repolist: 46,205
 [root@localhost ~]#
 ----
 
-a|*RHEL 8.x*
-a|. Subscribe to the required repository: `subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms``subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms`
+If your operating system is *RHEL 8.x*:
+
+. Subscribe to the required repository: `subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms``subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms`
 +
 The following example shows the execution of this command:
 +
@@ -374,8 +374,8 @@ Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
 +
 The newly subscribed repositories should appear in the list.
 
-a| *CentOS 7.x*
-a|
+If your operating system is *CentOS 7.x*:
+
 . Add the C7.6.1810 - Base repository. The C7.6.1810 - Base vault repository contains the kernel-devel package needed for ONTAP Mediator.
 
 . Add the following lines to /etc/yum.repos.d/CentOS-Vault.repo.
@@ -411,16 +411,17 @@ repolist: 21,433
 [root@localhost ~]#
 ----
 
-a| *CentOS 8.0.1905 or later builds*
-a| Because the latest version of the 8.0 (CentOS 8.0.1905) core resides in the CentOS Vault, you must provide access to the matching kernel-devel package to compile the needed kernel module.      Issue the following command to directly install the kernel-devel package: rpm -i http://vault.centos.org/8.0.1905/BaseOS/x86_64/os/Packages/kernel-devel-$(uname -r).rpm
-+
+If your operating system is *CentOS 8.0.1905 or later builds*:
+
+Because the latest version of the 8.0 (CentOS 8.0.1905) core resides in the CentOS Vault, you must provide access to the matching kernel-devel package to compile the needed kernel module.      Issue the following command to directly install the kernel-devel package: rpm -i http://vault.centos.org/8.0.1905/BaseOS/x86_64/os/Packages/kernel-devel-$(uname -r).rpm
+
 If the system displays an error indicating that the package is already installed, remove the package and try again:
 
- .. Remove the kernel-devel package: `yum remove kernel-devel`
- .. Repeat the rpm command shown above.
+. Remove the kernel-devel package: `yum remove kernel-devel`
+. Repeat the rpm command shown above.
 
-+
-|===
+
+*Download the Mediator installation package*
 
 . Download the Mediator installation package from the ONTAP Mediator page.
 +
@@ -485,6 +486,4 @@ Package 1:make-3.82-23.el7.x86_64 already installed and latest version
                             .
                             .
                             .
-                            .
-
-=========================================================================================================================================================================================================
+=======================================================================================================================================
