@@ -172,8 +172,8 @@ Features that require a switched cluster are not supported in this configuration
 Any configuration or feature that requires that the local cluster connections are connected to a switch is not supported. For example, the following configurations and procedures are not supported:
 
  ** Eight-node MetroCluster configurations
- ** link:../transition/task_transition_from_mcc_fc_to_mcc_ip_configurations.html[Transitioning from MetroCluster FC to MetroCluster IP configurations]
- ** link:../upgrade/task_refresh_a_four_node_mcc_configuration_us_volume_move.html[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)]
+ ** Transitioning from MetroCluster FC to MetroCluster IP configurations
+ ** Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
 
 ==== Switch port usage for AFF A220 or FAS2750 systems
 
@@ -237,17 +237,12 @@ https://library.netapp.com/ecm/ecm_download_file/ECMLP2469722[AFF A300 Systems I
 +
 https://library.netapp.com/ecm/ecm_download_file/ECMLP2316769[FAS8200 Systems Installation and Setup Instructions]
 
-== Configuring the IP switches
-
-[.lead]
-You must configure the IP switches for use as the cluster interconnect and for back-end MetroCluster IP connectivity. The procedure you use depends on the switch model.
-
-=== Configuring Broadcom IP switches
+== Configuring Broadcom IP switches
 
 [.lead]
 You must configure the Broadcom IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
 
-==== Resetting the Broadcom IP switch to factory defaults
+=== Resetting the Broadcom IP switch to factory defaults
 
 [.lead]
 Before installing a new switch software version and RCFs, you must erase the Broadcom switch settings and perform basic configuration.
@@ -426,7 +421,7 @@ Configuration Saved!
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-==== Downloading and installing the Broadcom switch EFOS software
+=== Downloading and installing the Broadcom switch EFOS software
 
 [.lead]
 You must download the switch operating system file and RCF file to each switch in the MetroCluster IP configuration.
@@ -518,7 +513,7 @@ Are you sure you would like to reset the system? (y/n) y
 . Wait for the switch to reboot.
 . Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
 
-==== Downloading and installing the Broadcom RCF files
+=== Downloading and installing the Broadcom RCF files
 
 [.lead]
 You must download and install the switch RCF file to each switch in the MetroCluster IP configuration.
@@ -676,12 +671,12 @@ IP_switch_A_1# reload
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-=== Configuring Cisco IP switches
+== Configuring Cisco IP switches
 
 [.lead]
 You must configure the Cisco IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
 
-==== Resetting the Cisco IP switch to factory defaults
+=== Resetting the Cisco IP switch to factory defaults
 
 [.lead]
 Before installing a new software version and RCFs, you must erase the Cisco switch configuration and perform basic configuration.
@@ -702,7 +697,6 @@ The system reboots and enters the configuration wizard. During the boot, if you 
   *** SSH service (RSA)
 After completing the configuration wizard, the switch reboots.
  .. When prompted, enter the user name and password to log in to the switch.
-
 +
 The following example shows the prompts and system responses when configuring the switch. The angle brackets (`<<<`) show where you enter the information.
 +
@@ -710,8 +704,8 @@ The following example shows the prompts and system responses when configuring th
 ---- System Admin Account Setup ----
 Do you want to enforce secure password standard (yes/no) [y]:y  **<<<**
 
-    Enter the password for "admin": password  **<<<**
-  Confirm the password for "admin": password  **<<<**
+    Enter the password for "admin": password
+  Confirm the password for "admin": password
          ---- Basic System Configuration Dialog VDC: 1 ----
 
 This setup utility will guide you through the basic configuration of
@@ -801,7 +795,7 @@ IP_switch_A_1#
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-==== Downloading and installing the Cisco switch NX-OS software
+=== Downloading and installing the Cisco switch NX-OS software
 
 [.lead]
 You must download the switch operating system file and RCF file to each switch in the MetroCluster IP configuration.
@@ -989,7 +983,7 @@ IP_switch_A_1#
 
 . Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
 
-==== Downloading and installing the Cisco IP RCF files
+=== Downloading and installing the Cisco IP RCF files
 
 [.lead]
 You must download the RCF file to each switch in the MetroCluster IP configuration.
@@ -1084,16 +1078,16 @@ IP_switch_A_1# reload
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-==== Configuring MACsec encryption on CISCO 9336C switches
+=== Configuring MACsec encryption on CISCO 9336C switches
 
 [.lead]
 You must only configure MACsec encryption on the WAN ISL ports that run between the sites. You must configure MACsec after applying the correct RCF file.
 
-===== Licensing requirements for MACsec
+==== Licensing requirements for MACsec
 
 MACsec requires a security license. For a complete explanation of the Cisco NX-OS licensing scheme and how to obtain and apply for licenses, see the https://www.cisco.com/c/en/us/td/docs/switches/datacenter/sw/nx-os/licensing/guide/b_Cisco_NX-OS_Licensing_Guide/b_Cisco_NX-OS_Licensing_Guide_chapter_01.html[Cisco NX-OS Licensing Guide]
 
-===== Enabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
+==== Enabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
 
 [.lead]
 You can enable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
@@ -1117,7 +1111,7 @@ IP_switch_A_1(config)# feature macsec
 IP_switch_A_1(config)# copy running-config startup-config
 ----
 
-===== Disabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
+==== Disabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
 
 [.lead]
 You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
@@ -1159,7 +1153,7 @@ IP_switch_A_1(config-if)# no macsec keychain kc2 policy abc fallback-keychain fb
 IP_switch_A_1(config)# copy running-config startup-config
 ----
 
-===== Configuring a MACsec key chain and keys
+==== Configuring a MACsec key chain and keys
 
 [.lead]
 You can create a MACsec key chain or keys on your configuration.
@@ -1236,7 +1230,7 @@ IP_switch_A_1(config)# copy running-config startup-config
 IP_switch_A_1(config-macseckeychain-macseckey)# show key chain 1
 ----
 
-===== Configuring a MACsec policy
+==== Configuring a MACsec policy
 
 [.lead]
 . Enter the global configuration mode: `configure terminal`
@@ -1320,7 +1314,7 @@ IP_switch_A_1(config)# copy running-config startup-config
 IP_switch_A_1(config-macsec-policy)# show macsec policy
 ----
 
-===== Verifying the MACsec configuration
+==== Verifying the MACsec configuration
 
 . Repeat *all* of the previous procedures on the second switch within the configuration to establish a MACsec session.
 . Run the following commands to verify that both switches are successfully encrypted:
@@ -1352,7 +1346,7 @@ a|
 The configuration for a specific MACsec policy or for all MACsec policies
 |===
 
-===== Configuring a MACsec fallback key on a WAN ISL port
+==== Configuring a MACsec fallback key on a WAN ISL port
 
 [.lead]
 You can configure a fallback key to initiate a backup session if the primary session fails as a result of a key/key name (CKN) mismatch or a finite key duration between the switch and peer.
@@ -1388,7 +1382,7 @@ IP_switch_A_1(config-if)# macsec keychain kc2 policy abc fallback-keychain fb_kc
 IP_switch_A_1(config)# copy running-config startup-config
 ----
 
-==== Setting Forward Error Correction for and systems using 25-Gbps connectivity
+=== Setting Forward Error Correction for and systems using 25-Gbps connectivity
 
 [.lead]
 If your system is configured using 25-Gbps connectivity, you need to set the Forward Error Correction (fec) parameter manually to off after applying the RCF file. The RCF file does not apply this setting.
