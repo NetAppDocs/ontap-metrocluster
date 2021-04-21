@@ -48,9 +48,10 @@ NOTE: You should have only one MetroCluster Tiebreaker monitor per MetroCluster 
 [.lead]
 You must install a MySQL or MariaDB server depending on the Linux operating system that is your host before installing or upgrading the Tiebreaker software.
 
+.Steps
 . Install Java Runtime Environment.
 +
-link:task_install_the_tiebreaker_software.md#[Installing Java Runtime Environment 1.8]
+link:task_install_the_tiebreaker_software.html#installing-java-runtime-environment-1-8[Installing Java Runtime Environment 1.8]
 
 . Install MySQL or MariaDB server:
 +
@@ -62,14 +63,16 @@ Red Hat Enterprise Linux 6/CentOS 6
 a|
 
  .. Install MySQL
- link:task_install_the_tiebreaker_software.md#[Installing MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 6 or CentOS 6]
++
+link:task_install_the_tiebreaker_software.html#installing-mysql-server-5-5-30-or-later-and-5-6-x-versions-on-red-hat-enterprise-linux-6-or-centos-6[Installing MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 6 or CentOS 6]
 
 a|
 Red Hat Enterprise Linux 7/CentOS 7
 a|
 
- .. Install MariaDB
- link:task_install_the_tiebreaker_software.md#[Installing MariaDB server on Red Hat Enterprise Linux 7 or CentOS 7]
+.. Install MariaDB
++
+link:task_install_the_tiebreaker_software.html#installing-mariadb-server-on-red-hat-enterprise-linux-7-or-centos-7[Installing MariaDB server on Red Hat Enterprise Linux 7 or CentOS 7]
 
 +
 |===
@@ -79,6 +82,7 @@ a|
 [.lead]
 You must install Java Runtime Environment 1.8 on your host system before installing or upgrading the Tiebreaker software.
 
+.Steps
 . Log in as `root` to the host system.
 +
 ----
@@ -121,6 +125,7 @@ Complete!
 [.lead]
 You must install MySQL Server 5.5.30 or later and 5.6.x version on your host system before installing or upgrading the Tiebreaker software.
 
+.Steps
 . Log in as `root` to the host system.
 +
 ----
@@ -390,6 +395,7 @@ You must install MariaDB server on your host system before installing or upgradi
 
 Your host system must be running on Red Hat Enterprise Linux (RHEL) 7 or CentOS 7.
 
+.Steps
 . Log in as `root` to the host system.
 +
 ----
@@ -502,6 +508,7 @@ You must install or upgrade the MetroCluster Tiebreaker software on your local c
 * Your storage system must be running ONTAP 8.3.x or later.
 * You must have installed OpenJDK by using the yum install java-1.8.0-openjdk command.
 
+.Steps
 . Download the NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm file.
 +
 https://mysupport.netapp.com/site/[NetApp Support]
@@ -515,8 +522,10 @@ https://mysupport.netapp.com/site/[NetApp Support]
 a|
 Performing a new installation
 a|
-rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm     The system displays the following output for a successful installation:
-+
+rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm
+
+The system displays the following output for a successful installation:
+
 ----
 
 [root@scspr0523972001 mcctb]# rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm
@@ -537,8 +546,10 @@ Successfully installed NetApp MetroCluster Tiebreaker software version 1.21P3
 a|
 Upgrading an existing installation
 a|
-rpm -Uvh NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm     The system displays the following output for a successful upgrade:
-+
+rpm -Uvh NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm
+
+The system displays the following output for a successful upgrade:
+
 ----
 
 [root@scspr0523972001 mcctb]# rpm -Uvh NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm
@@ -556,10 +567,11 @@ Successfully installed NetApp MetroCluster Tiebreaker software version 1.21P3
 Cleaning up / removing...
    2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
 ----
-+
+
 |===
 If you enter the wrong MySQL root password, the Tiebreaker software indicates that it was installed successfully, but displays Access denied messages. To resolve the issue, you must uninstall the Tiebreaker software by using the rpm -e command, and then reinstall the software by using the correct MySQL root password.
 
+.Steps
 . Verify the Tiebreaker connectivity to the MetroCluster software by opening an SSH connection from the Tiebreaker host to each of the node management LIFs and cluster management LIFs.
 
 *Related information*
@@ -571,6 +583,7 @@ https://mysupport.netapp.com/site/[NetApp Support]
 [.lead]
 You can upgrade the host where the Tiebreaker monitor is running with minimal disruption if you place the monitors in observer mode before the upgrade.
 
+.Steps
 . Verify the monitors are in observer mode: `monitor show –status`
 +
 ----
@@ -613,7 +626,7 @@ NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name monitor_name -obs
 
 . To upgrade the Tiebreaker host, follow all of the steps in the following procedure:
 +
-link:task_install_the_tiebreaker_software.md#[Installing or upgrading the software package]
+link:task_install_the_tiebreaker_software.html#installing-or-upgrading-the-software-package[Installing or upgrading the software package]
 
 . Disable observer mode to move all the of the monitors back to online mode.
 +
