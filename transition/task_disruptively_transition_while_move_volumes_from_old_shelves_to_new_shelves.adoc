@@ -1,8 +1,8 @@
 ---
 permalink: transition/task_disruptively_transition_while_move_volumes_from_old_shelves_to_new_shelves.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: start, ontap, disruptive, transition, two-node, metrocluster, fc, configuration, four-node, two-node, retire, storage, shelves, shelf, procedure, exist, drive, requirement, retiring, workflow, moving, data, move, retiring, retire, migrate, migrating, root, aggregate,
+summary: Starting with ONTAP 9.8, you can disruptively transition a two-node MetroCluster FC configuration to a four-node MetroCluster IP configuration and retire the existing storage shelves. The procedure includes steps to move data from the existing drive shelves to the new configuration, and then retire the old shelves.
 ---
 = Disruptively transitioning from MetroCluster FC to MetroCluster IP when retiring storage shelves (ONTAP 9.8 and later)
 :icons: font
@@ -36,7 +36,7 @@ xref:concept_supported_platforms_for_transition.adoc[Supported platforms for non
 
 * It must meet all requirements and cabling as described in the _MetroCluster Installation and Configuration Guides_.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
+link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 
 The new configuration must also meet the following requirements:
 
@@ -79,19 +79,19 @@ You must follow the detailed transition procedure.
 
 In the following steps you are directed to other sections in this guide. You must perform the steps in each referenced section in the order given.
 
-. Plan port mapping using the steps in xref:concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.adoc[Mapping ports from the MetroCluster FC nodes to the MetroCluster IP nodes].
-. Prepare the MetroCluster IP controllers using the steps in xref:concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.adoc[Preparing the MetroCluster IP controllers].
+. Plan port mapping using the steps in link:../transition/concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.html#mapping-ports-from-the-metrocluster-fc-nodes-to-the-metrocluster-ip-nodes[Mapping ports from the MetroCluster FC nodes to the MetroCluster IP nodes].
+. Prepare the MetroCluster IP controllers using the steps in link:../transition/concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.html#preparing-the-metrocluster-ip-controllers[Preparing the MetroCluster IP controllers].
 . Verify the health of the MetroCluster FC configuration.
 +
-Perform the steps in the section xref:concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.adoc[Verifying the health of the MetroCluster FC configuration]
+Perform the steps in the section link:../transition/concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.html#verifying-the-health-of-the-metrocluster-fc-configuration[Verifying the health of the MetroCluster FC configuration]
 
 . Gather information from the MetroCluster FC configuration.
 +
-Perform the steps in the section xref:task_transition_the_mcc_fc_nodes_2n_mcc_transition_supertask.adoc[Gathering information from the existing controller modules before the transition]
+Perform the steps in the section link:../task_transition_the_mcc_fc_nodes_2n_mcc_transition_supertask.html#gathering-information-from-the-existing-controller-modules-before-the-transition[Gathering information from the existing controller modules before the transition]
 
 . Remove Tiebreaker monitoring, if necessary.
 +
-Perform the steps in the section xref:concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.adoc[Removing the existing configuration from the Tiebreaker or other monitoring software]
+Perform the steps in the section link:../transition/concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.html#verifying-the-health-of-the-metrocluster-fc-configuration[Removing the existing configuration from the Tiebreaker or other monitoring software]
 
 . Prepare and remove the existing MetroCluster FC nodes.
 +

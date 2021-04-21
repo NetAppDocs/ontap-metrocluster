@@ -1,8 +1,8 @@
 ---
 permalink: install-ip/concept_prepare_for_the_mcc_installation.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: prepare, metrocluster, installation, hardware, architecture, require, component, preparing, difference, ontap, configuration, consideration, mediator, tiebreaker, ip, automatic, drive, assignment, adp, system, san, array, system, configuring, configure, cluster, peer, isl, sharing, share, private, layer, network, compliant, switch, virtualand, border, gateway, protocol, tdm, wdm, encryption, equipment, unmirrored, aggregate, firewall, site, usage, preconfigure, setting, system, factory
+summary: As you prepare for the MetroCluster installation, you should understand the MetroCluster hardware architecture and required components.
 ---
 = Preparing for the MetroCluster installation
 :icons: font
@@ -235,63 +235,47 @@ For example, the nodes might be configured with the following IP addresses:
 
 [cols=4*,options="header"]
 |===
-| Node| Interface| IP address| Subnet
-a|
-node_A_1
-a|
-MetroCluster IP interface 1
-a|
-10.1.1.1
-a|
-10.1.1/24
-a|
-MetroCluster IP interface 2
-a|
-10.1.2.1
-a|
-10.1.2/24
-a|
-node_A_2
-a|
-MetroCluster IP interface 1
-a|
-10.1.1.2
-a|
-10.1.1/24
-a|
-MetroCluster IP interface 2
-a|
-10.1.2.2
-a|
-10.1.2/24
-a|
-node_B_1
-a|
-MetroCluster IP interface 1
-a|
-10.1.1.3
-a|
-10.1.1/24
-a|
-MetroCluster IP interface 2
-a|
-10.1.2.3
-a|
-10.1.2/24
-a|
-node_B_2
-a|
-MetroCluster IP interface 1
-a|
-10.1.1.4
-a|
-10.1.1/24
-a|
-MetroCluster IP interface 2
-a|
-10.1.2.4
-a|
-10.1.2/24
+| Node | Interface | IP address | Subnet
+
+a| node_A_1
+a| MetroCluster IP interface 1
+a| 10.1.1.1
+a| 10.1.1/24
+
+a| node_A_1
+a| MetroCluster IP interface 2
+a| 10.1.2.1
+a| 10.1.2/24
+
+a| node_A_2
+a| MetroCluster IP interface 1
+a| 10.1.1.2
+a| 10.1.1/24
+
+a| node_A_2
+a| MetroCluster IP interface 2
+a| 10.1.2.2
+a| 10.1.2/24
+
+a| node_B_1
+a| MetroCluster IP interface 1
+a| 10.1.1.3
+a| 10.1.1/24
+
+a| node_B_1
+a| MetroCluster IP interface 2
+a| 10.1.2.3
+a| 10.1.2/24
+
+a| node_B_2
+a| MetroCluster IP interface 1
+a| 10.1.1.4
+a| 10.1.1/24
+
+a| node_B_2
+a| MetroCluster IP interface 2
+a| 10.1.2.4
+a| 10.1.2/24
 |===
 
 === Characteristics of MetroCluster IP interfaces
@@ -982,7 +966,7 @@ NOTE: The RcfFileGenerator might restrict the use of certain VLAN IDs (for examp
 [.lead]
 When using shared ISLs in a MetroCluster IP configuration, you must be aware of the requirements for the end-to-end MetroCluster ISL running from controller ports on site A to controller ports on site B.
 
-NOTE: You must follow the basic ISL requirements: <<Considerations_for_ISLs>>
+NOTE: You must follow the basic ISL requirements: xref:concept_prepare_for_the_mcc_installation.html#considerations-for-isls[Considerations for ISLs]
 
 ==== Number of ISLs and breakout cables in the shared network
 
@@ -990,33 +974,27 @@ The number of ISLs connecting the MetroCluster IP switches to the shared network
 
 [cols=3*,options="header"]
 |===
-| MetroCluster IP switch model| Port type| Number of ISLs
-a|
-Broadcom-supported BES-53248 switches
-a|
-Native ports
-a|
-4 ISLs using 10 or 25-Gbps ports
-a|
-Cisco 3132Q-V
-a|
-Native ports
-a|
-6 ISLs using 40-Gbps ports
-a|
-Breakout cables
-a|
-16 x 10-Gbps ISLs
-a|
-Cisco 3232C
-a|
-Native ports
-a|
-6 ISLs using 40 or 100-Gbps ports
-a|
-Breakout cables
-a|
-16 x 10-Gbps ISLs
+| MetroCluster IP switch model | Port type | Number of ISLs
+
+a| Broadcom-supported BES-53248 switches
+a| Native ports
+a| 4 ISLs using 10 or 25-Gbps ports
+
+a| Cisco 3132Q-V
+a| Native ports
+a| 6 ISLs using 40-Gbps ports
+
+a| Cisco 3132Q-V
+a| Breakout cables
+a| 16 x 10-Gbps ISLs
+
+a| Cisco 3232C
+a| Native ports
+a| 6 ISLs using 40 or 100-Gbps ports
+
+a| Cisco 3232C
+a| Breakout cables
+a| 16 x 10-Gbps ISLs
 |===
 
 * The use of breakout cables (one physical port is used as 4 x 10 Gbps ports) is supported on Cisco switches.
@@ -1233,7 +1211,7 @@ MetroCluster One is a MetroCluster configuration using NetApp validated switches
 
 NOTE: The intermediate switches must be compliant with NetApp specifications.
 
-<<Considerations_for_using_MetroCluster_compliant_switches>>
+xref:concept_prepare_for_the_mcc_installation.html#considerations-for-using-metrocluster-compliant-switches[Considerations for using MetroCluster compliant switches]
 
 The example is simplified for illustration purposes only:
 
@@ -1256,7 +1234,7 @@ Connecting local cluster connections to a MetroCluster compliant switch is not s
 * The speed of the switch ports must be 25 Gbps for FAS8200 and AFF A300 platforms, and at least 40 Gbps for all other platforms (40 Gbps or 100 Gbps).
 * The ISLs must be 10 Gbps or higher and must be sized appropriately for the load on the MetroCluster configuration.
 * The MetroCluster configuration must be connected to two networks. Connecting both the MetroCluster interfaces to the same network or switch is not supported. Each MetroCluster node must be connected to two network switches.
-* The network must meet the requirements as outlined in the sections <<MetroCluster_ISL_requirements_in_shared_networks>>, <<ISL_cabling_requirements>>, and <<Required_settings_on_intermediate_switches>>.
+* The network must meet the requirements as outlined in the sections xref:concept_prepare_for_the_mcc_installation.html#metrocluster-isl-requirements-in-shared-networks[MetroCluster ISL requirements in shared networks], xref:concept_prepare_for_the_mcc_installation.html#isl-cabling-requirements[ISL cabling requirements], and xref:concept_prepare_for_the_mcc_installation.html#required-settings-on-intermediate-switches[Required settings on intermediate switches].
 * In MetroCluster IP configurations using open networks, reverting to ONTAP 9.6 or earlier is not supported.
 * The MTU of 9216 must be configured on all switches that carry MetroCluster IP traffic.
 
@@ -1273,8 +1251,8 @@ Connecting local cluster connections to a MetroCluster compliant switch is not s
 Any configuration or feature that requires that the local cluster connections are connected to a switch is not supported. For example, the following configurations and procedures are not supported:
 
 * Eight-node MetroCluster configurations
-* link:transition/task_transition_from_mcc_fc_to_mcc_ip_configurations.html[Transitioning from MetroCluster FC to MetroCluster IP configurations]
-* link:upgrade/task_refresh_a_four_node_mcc_configuration_us_volume_move.html[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)]
+* Transitioning from MetroCluster FC to MetroCluster IP configurations
+* Refreshing a four-node MetroCluster IP configuration
 
 === Platform-specific network speeds for MetroCluster compliant switches
 
@@ -1631,7 +1609,7 @@ The ISLs on one fabric should all be the same speed and length.
 
 The ISLs on one fabric should all have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they should all use WDM.
 
-If you are sharing ISLs with a non-MetroCluster network, you must follow the guidelines in the section xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for sharing private layer 2 networks].
+If you are sharing ISLs with a non-MetroCluster network, you must follow the guidelines in the section xref:concept_prepare_for_the_mcc_installation.html#considerations-for-sharing-private-layer-2-networks[Considerations for sharing private layer 2 networks].
 
 The maximum supported difference in distance between fabric 1 and fabric 2 is 20 km.
 

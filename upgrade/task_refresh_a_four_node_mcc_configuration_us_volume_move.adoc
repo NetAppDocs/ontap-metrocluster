@@ -43,7 +43,7 @@ If the maintenance is completed before the time has elapsed, you can invoke an A
 a|
 *Tiebreaker*
 a|
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+link:..tiebreaker/concept_configuring_the_tiebreaker_software.html#commands-for-modifying-metrocluster-tiebreaker-configurations[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
 a|
 *Mediator*
 a|
@@ -66,7 +66,7 @@ image::../media/mcc_dr_group_b.png[]
 
 . Move the CRS volumes.
 +
-Perform the steps in https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations].
+Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations].
 
 . Move the data from the old nodes to new nodes using the following procedures from the _Controller Hardware Upgrade Express Guide_.
 +
@@ -107,11 +107,11 @@ image::../media/mcc_dr_group_d.png[]
 a|
 *Tiebreaker*
 a|
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
 a|
 *Mediator*
 a|
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-FD09A31D-FE19-4A16-B191-34AA9879BC67.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration Guide_
+link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration Guide_
 a|
 *Third-party applications*
 a|
@@ -332,7 +332,7 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker soft
 a|
 *Tiebreaker*
 a|
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#commands-for-modifying-metrocluster-tiebreaker-configurations[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
 a|
 *Mediator*
 a|
@@ -367,13 +367,13 @@ In these steps, you clear the configuration on the nodes and clear the mailbox r
 . Rack the new controllers.
 . Cable the new MetroCluster IP nodes to the IP switches as shown in the _MetroCluster Installation and Configuration Guide._
 +
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-4255F6AB-8CA7-4772-B282-218AE0DC60A8.html[Cabling the IP switches]
+link:../install-ip/task_install_and_cable_the_mcc_components.html#cabling-the-ip-switches[Cabling the IP switches]
 
 . Configure the MetroCluster IP nodes using the following sections of the _MetroCluster Installation and Configuration Guide._
- .. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-C2ED215D-DDDD-43E7-9F50-15D37D95F505.html[Gathering required information]
- .. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-BB31AA18-EC61-486F-A8F8-070B47793C91.html[Clearing the configuration on a controller module]
- .. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-A97BA5C2-E15D-4BD0-BA74-4FC6F969845B.html[Verifying the ha-config state of components]
- .. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-862DA05B-DB68-4E78-AE23-48D87148B2A3.html[Manually assigning drives for pool 0 (ONTAP 9.4 and later)]
+ .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#gathering-required-information[Gathering required information]
+ .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#restoring-system-defaults-on-a-controller-module[Restoring system defaults on a controller module]
+ .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#verifying-the-ha-config-state-of-components[Verifying the ha-config state of components]
+ .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assigning drives for pool 0 (ONTAP 9.4 and later)]
 . From Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the boot_ontap command to boot the system and get to cluster setup.
 +
 Do not complete the cluster wizard or node wizard at this time.
@@ -464,9 +464,9 @@ The home port used in the examples are platform-specific. You should use the app
 
 . On the new MetroCluster IP nodes, configure the intercluster LIFs using the procedures in the _MetroCluster IP Installation and Configuration Guide_.
 +
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/task_configure_intercluster_lifs_to_use_dedicated_intercluster_ports.html[Configuring intercluster LIFs on dedicated ports]
+link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Configuring intercluster LIFs on dedicated ports]
 +
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/task_configure_intercluster_lifs_to_share_data_ports.html[Configuring intercluster LIFs on shared data ports]
+link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Configuring intercluster LIFs on shared data ports]
 
 . On each site, verify that cluster peering is configured:
 +
@@ -497,9 +497,9 @@ cluster_B::>
 +
 For more information on the MetroCluster configuration settings and connections, see the _MetroCluster IP Installation and Configuration Guide_.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-DF601A9E-AA7A-468E-8BAC-5A169650F095.html[Considerations for MetroCluster IP configuration]
+link:../install-ip/concept_prepare_for_the_mcc_installation.html#considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration]
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/GUID-D32C3191-B17F-4216-9FB0-DB062944B4DE.html[Creating the DR group]
+link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#creating-the-dr-group[Creating the DR group]
 +
 ----
 cluster_A::> metrocluster configuration-settings dr-group create -partner-cluster

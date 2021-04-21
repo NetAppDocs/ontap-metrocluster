@@ -32,13 +32,16 @@ In the illustration, the redundant array port pairs for both the sites are as fo
 
 The redundant port pairs on each storage array form alternate paths. Therefore, both the ports of the port pairs can access the LUNs on the respective storage arrays.
 
-The following table shows the zones for this example:
+The following tables shows the zones for this example:
 
-[options=:header]
+== FC_switch_A_1
+
+[cols=3*,options="header"]
 |===
-| Zone| ONTAP controller and initiator port| Storage array port
-3+a|
-*FC_switch_A_1*
+| Zone
+| ONTAP controller and initiator port
+| Storage array port
+
 a|
 z1
 a|
@@ -63,8 +66,15 @@ a|
 Controller_A_2: Port 0c
 a|
 Port 1B'
-3+a|
-*FC_switch_A_2*
+|===
+
+== FC_switch_A_2
+[cols=3*,options="header"]
+|===
+| Zone
+| ONTAP controller and initiator port
+| Storage array port
+
 a|
 z2
 a|
@@ -89,9 +99,14 @@ a|
 Controller_A_2: Port 0d
 a|
 Port 2B
-3+a|
-*FC_switch_B_1*
-a|
+|===
+
+== FC_switch_B_1
+[cols=3*,options="header"]
+|===
+| Zone
+| ONTAP controller and initiator port
+| Storage array port
 
 a|
 z9
@@ -117,9 +132,14 @@ a|
 Controller_B_2: Port 0c
 a|
 Port 1D
-3+a|
-*FC_switch_B_2*
-a|
+|===
+
+== FC_switch_B_2
+[cols=3*,options="header"]
+|===
+| Zone
+| ONTAP controller and initiator port
+| Storage array port
 
 a|
 z10
@@ -146,67 +166,45 @@ Controller_B_2: Port 0d
 a|
 Port 2D'
 |===
-The following table shows the zones for the FC-VI connections at Site A and Site B:
+
+== Zones for the FC-VI connections at Site A
 
 [options="header"]
 |===
-| Zone| ONTAP controller and FC initiator port| Switch
-2+a|
-*Site A*
-a|
+| Zone | ONTAP controller and FC initiator port | Switch
 
-a|
-zX
-a|
-Controller_A_1: Port FC-VI a
-a|
-FC_switch_A_1
-a|
-zY
-a|
-Controller_A_1: Port FC-VI b
-a|
-FC_switch_A_2
-a|
-zX
-a|
-Controller_A_2: Port FC-VI a
-a|
-FC_switch_A_1
-a|
-zY
-a|
-Controller_A_2: Port FC-VI b
-a|
-FC_switch_A_2
-2+a|
-*Site B*
-a|
+a| zX
+a| Controller_A_1: Port FC-VI a
+a| FC_switch_A_1
+a| zY
+a| Controller_A_1: Port FC-VI b
+a| FC_switch_A_2
+a| zX
+a| Controller_A_2: Port FC-VI a
+a| FC_switch_A_1
+a| zY
+a| Controller_A_2: Port FC-VI b
+a| FC_switch_A_2
+|===
 
-a|
-zX
-a|
-Controller_B_1: Port FC-VI a
-a|
-FC_switch_B_1
-a|
-zY
-a|
-Controller_B_1: Port FC-VI b
-a|
-FC_switch_B_2
-a|
-zX
-a|
-Controller_B_2: Port FC-VI a
-a|
-FC_switch_B_1
-a|
-zY
-a|
-Controller_B_2: Port FC-VI b
-a|
-FC_switch_B_2
+== Zones for the FC-VI connections at Site B
+
+[options="header"]
+|===
+| Zone | ONTAP controller and FC initiator port | Switch
+
+a| zX
+a| Controller_B_1: Port FC-VI a
+a| FC_switch_B_1
+a| zY
+a| Controller_B_1: Port FC-VI b
+a| FC_switch_B_2
+a| zX
+a| Controller_B_2: Port FC-VI a
+a| FC_switch_B_1
+a| zY
+a| Controller_B_2: Port FC-VI b
+a| FC_switch_B_2
 |===
 *Related information*
 

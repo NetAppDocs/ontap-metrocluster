@@ -1,8 +1,8 @@
 ---
 permalink: transition/concept_requirements_for_fc_to_ip_transition_2n_mcc_transition.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: start, transition, process, configuration, requirement, meet, preparing, prepare, disruptive, fc-to-ip, transition, general, workflow, disruptive, map, port, fc, node, ip
+summary: Before starting the transition process, you must make sure the configuration meets the requirements.
 ---
 = Preparing for disruptive FC-to-IP transition
 :icons: font
@@ -21,9 +21,9 @@ It can be a two-node fabric-attached or stretched MetroCluster.
 
 * It must meet all requirements and cabling as described in the _MetroCluster Installation and Configuration Guides_.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
+link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-stretch/home.html[Stretch MetroCluster installation and configuration]
+link:../install-stretch/index.html[Stretch MetroCluster installation and configuration]
 
 * It cannot be configured with NetApp Storage Encryption (NSE).
 * The MDV volumes cannot be encrypted.
@@ -102,21 +102,18 @@ The following table shows the MetroCluster IP ports by platform model. You can i
 +
 [cols=4*,options="header"]
 |===
-| Platform model| MetroCluster IP port| VLAN ID|
-a|
-AFF A800
+| Platform model | MetroCluster IP port | VLAN ID |
+.2+| AFF A800
 a|
 e0b
-a|
-Not used
+.8+| Not used
 a|
 
 a|
 e1b
 a|
 
-a|
-AFF A700 and FAS9000
+.2+| AFF A700 and FAS9000
 a|
 e5a
 a|
@@ -125,8 +122,7 @@ a|
 e5b
 a|
 
-a|
-AFF A320
+.2+| AFF A320
 a|
 e0g
 a|
@@ -135,8 +131,7 @@ a|
 e0h
 a|
 
-a|
-AFF A300 and FAS8200
+.2+| AFF A300 and FAS8200
 a|
 e1a
 a|
@@ -145,20 +140,17 @@ a|
 e1b
 a|
 
-a|
-AFF A220 and FAS2750
+.2+| AFF A220 and FAS2750
 a|
 e0a
 a|
 10
-a|
-On these systems, these physical ports are also used as cluster interfaces.
+.2+| On these systems, these physical ports are also used as cluster interfaces.
 a|
 e0b
 a|
 20
-a|
-AFF A250 and FAS500f
+.2+| AFF A250 and FAS500f
 a|
 e0c
 a|
@@ -215,10 +207,10 @@ You will refer to the table as you carry out the transition procedure.
 +
 In the columns for node_A_1-IP, add the physical ports for the new controller module and plan the IPspaces and broadcast domains for the new node.
 +
-[cols=3*,options="header"]
+[cols=7*,options="header"]
 |===
-|  | node_A_1-FC| node_A_1-IP
-| LIF| Ports| IPspaces| Broadcast domains| Ports| IPspaces| Broadcast domains
+|  3+| node_A_1-FC 3+| node_A_1-IP
+| *LIF* | *Ports* | *IPspaces* | *Broadcast domains* | *Ports* | *IPspaces* | *Broadcast domains*
 a|
 Cluster 1
 a|
@@ -395,9 +387,10 @@ You will refer to the table as you carry out the upgrade procedure.
 +
 In the columns for node_B_1-IP, add the physical ports for the new controller module and plan the LIF port usage, IPspaces and broadcast domains for the new node.
 +
+[cols=7*,options="header"]
 |===
-|  | node_B_1-FC| node_B_1-IP
-| LIF| Physical ports| IPspaces| Broadcast domains| Physical ports| IPspaces| Broadcast domains
+|  3+| node_B_1-FC 3+| node_B_1-IP
+| *LIF* | *Physical ports* | *IPspaces* | *Broadcast domains* | *Physical ports* | *IPspaces* | *Broadcast domains*
 a|
 Cluster 1
 a|
@@ -654,7 +647,7 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker conf
 
 . Remove the existing MetroCluster configuration from the Tiebreaker software.
 +
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster configurations]
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#removing-metrocluster-configurations[Removing MetroCluster configurations]
 
 . Remove the existing MetroCluster configuration from any third-party application that can initiate switchover.
 +

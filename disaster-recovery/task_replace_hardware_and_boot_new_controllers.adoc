@@ -1,8 +1,8 @@
 ---
 permalink: disaster-recovery/task_replace_hardware_and_boot_new_controllers.html
 sidebar: sidebar
-keywords:
-summary: ''
+keywords: hardware, component, replace, individual, replacement, installation, guide, replacing, controller, booting, new
+summary: If hardware components have to be replaced, you must replace them using their individual hardware replacement and installation guides.
 ---
 = Replacing hardware and booting new controllers
 :icons: font
@@ -20,6 +20,7 @@ The storage controllers must be powered off or remain halted (showing the LOADER
 +
 NOTE: In this step, you replace and cable the components exactly as they were cabled prior to the disaster. You must not power up the components.
 +
+[options="header"]
 |===
 | If you are replacing...| Perform these steps...| Using these guides...
 a|
@@ -30,8 +31,7 @@ a|
  .. Cable the ISL links.
  Do not power on the FC switches at this time.
 
-a|
-    https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/home.html[MetroCluster Service and Expansion Guide]
+a| link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/home.html[MetroCluster Service and Expansion Guide]
 a|
 IP switches in a MetroCluster IP configuration
 a|
@@ -40,8 +40,7 @@ a|
  .. Cable the ISL links.
  Do not power on the IP switches at this time.
 
-a|
-    http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-ip/home.html[MetroCluster IP installation and configuration]
+a| link:link:../install-ip/index.html[MetroCluster IP installation and configuration]
 a|
 Disk shelves
 a|
@@ -52,8 +51,7 @@ a|
  .. Cable the disk shelves to adjacent shelves within the stack and to the FC-to-SAS bridge.
  Do not power on the disk shelves at this time.
 
-a|
-    http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
 a|
 SAS cables
 a|
@@ -61,8 +59,7 @@ a|
  .. Install the new cables.
  Do not power on the disk shelves at this time.
 
-a|
-    http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+a| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
 a|
 FC-to-SAS bridges in a MetroCluster FC configuration
 a|
@@ -74,10 +71,9 @@ Cable them to the FC switches or to the controller modules, depending on your Me
 
 +
 Do not power on the FC-to-SAS bridges at this time.
-a|
-    https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-fabric/home.html[Fabric-attached MetroCluster installation and configuration]
+a| link:link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-inst-cnfg-stretch/home.html[Stretch MetroCluster installation and configuration]
+link:link:../install-stretch/index.html[Stretch MetroCluster installation and configuration]
 a|
 Controller modules
 a|
@@ -98,8 +94,7 @@ The ports connecting the controller module to the storage (either by connections
 
 +
 Do not power on the controller modules at this time.
-a|
-    http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+a| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
 +
 |===
 
@@ -132,9 +127,10 @@ node_B_2 is present in a four-node MetroCluster configuration only.
 
 The controller modules have the following original system IDs:
 
+[options="header"]
 |===
 | Number of nodes in MetroCluster configuration| Node| Original system ID
-a|
+.4+a|
 Four
 a|
 node_A_1
@@ -152,7 +148,7 @@ a|
 node_B_2
 a|
 4068741256
-a|
+.2+a|
 Two
 a|
 node_A_1
@@ -166,6 +162,7 @@ a|
 
 . From the surviving site, display the system IDs of the nodes in the MetroCluster configuration.
 +
+[options="header"]
 |===
 | Number of nodes in MetroCluster configuration| Use this command
 a|
@@ -273,7 +270,7 @@ site_B::*> storage iscsi-initiator disconnect -node node_B_2 -label *
 == Clearing the configuration on a controller module
 
 // include reference
-include::_include/steps_clear_config_boot_to_maint_mode.adoc[]
+include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 // end include reference
 
 == Netbooting the new controller modules
@@ -287,7 +284,7 @@ If the new controller modules have a different version of ONTAP from the version
 https://mysupport.netapp.com/site/global/dashboard[NetApp Support]
 
 // include reference
-include::_include/netboot_steps.adoc[]
+include::../_include/netboot_steps.adoc[]
 // end include reference
 
 . From the Boot menu, select *option 5* to enter Maintenance mode.
@@ -316,9 +313,10 @@ Present only in four-node MetroCluster configurations.
 
 The examples in this procedure use controllers with the following system IDs:
 
+[options="header"]
 |===
 | Number of nodes in MetroCluster configuration| Node| Original system ID| New system ID| Will pair with this node as DR partner
-a|
+.4+a|
 Four
 a|
 node_A_1
@@ -352,7 +350,7 @@ a|
 unchanged
 a|
 node_A_2
-a|
+.2+a|
 Two
 a|
 node_A_1
@@ -413,6 +411,7 @@ This task must be performed on each new controller module.
 +
 The correct HA state depends on your MetroCluster configuration.
 +
+[options="header"]
 |===
 | Number of controllers in the MetroCluster configuration| HA state for all components should be...
 a|
@@ -431,6 +430,7 @@ mccip
 
 . If the displayed system state of the controller is not correct, set the HA state for the controller module:
 +
+[options="header"]
 |===
 | Number of controllers in the MetroCluster configuration| Command
 a|
@@ -449,6 +449,7 @@ ha-config modify controller mccip
 
 . If the displayed system state of the chassis is not correct, set the HA state for the chassis:
 +
+[options="header"]
 |===
 | Number of controllers in the MetroCluster configuration| Command
 a|

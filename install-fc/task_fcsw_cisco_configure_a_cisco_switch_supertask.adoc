@@ -495,7 +495,7 @@ FC_switch_B_1# copy running-config startup-config
 +
 NOTE: When configuring ONTAP on the controller modules, OOD must be explicitly configured on each controller module in the MetroCluster configuration.
 +
-xref:concept_configure_the_mcc_software_in_ontap.adoc[Configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
+https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
 
 . Set QoS policies for the FC-VI VSAN:
  .. Enter configuration mode: `conf t`
@@ -957,243 +957,175 @@ image::../media/fcip_ports_dual_isl.gif[]
 The task and examples use the following profile configuration table:
 
 |===
-| Switch fabric| IPStorage interface| IP Address| Port type| FCIP interface| FCIP profile| Port| Peer IP/port| VSAN ID
-a|
-Fabric 1
-a|
-FC_switch_A_1
-a|
-IPStorage1/1
-a|
-a.a.a.a
-a|
-FC-VI
-a|
-fcip 1
-a|
-15
-a|
-3220
-a|
-c.c.c.c/3230
-a|
-10
-a|
-Storage
-a|
-fcip 2
-a|
-20
-a|
-3221
-a|
-c.c.c.c/3231
-a|
-20
-a|
-IPStorage1/2
-a|
-b.b.b.b
-a|
-FC-VI
-a|
-fcip 3
-a|
-25
-a|
-3222
-a|
-d.d.d.d/3232
-a|
-10
-a|
-Storage
-a|
-fcip 4
-a|
-30
-a|
-3223
-a|
-d.d.d.d/3233
-a|
-20
-a|
-FC_switch_B_1
-a|
-IPStorage1/1
-a|
-c.c.c.c
-a|
-FC-VI
-a|
-fcip 1
-a|
-15
-a|
-3230
-a|
-a.a.a.a/3220
-a|
-10
-a|
-Storage
-a|
-fcip 2
-a|
-20
-a|
-3231
-a|
-a.a.a.a/3221
-a|
-20
-a|
-IPStorage1/2
-a|
-d.d.d.d
-a|
-FC-VI
-a|
-fcip 3
-a|
-25
-a|
-3232
-a|
-b.b.b.b/3222
-a|
-10
-a|
-Storage
-a|
-fcip 4
-a|
-30
-a|
-3233
-a|
-b.b.b.b/3223
-a|
-20
-a|
-Fabric 2
-a|
-FC_switch_A_2
-a|
-IPStorage1/1
-a|
-e.e.e.e
-a|
-FC-VI
-a|
-fcip 1
-a|
-15
-a|
-3220
-a|
-g.g.g.g/3230
-a|
-10
-a|
-Storage
-a|
-fcip 2
-a|
-20
-a|
-3221
-a|
-g.g.g.g/3231
-a|
-20
-a|
-IPStorage1/2
-a|
-f.f.f.f
-a|
-FC-VI
-a|
-fcip 3
-a|
-25
-a|
-3222
-a|
-h.h.h.h/3232
-a|
-10
-a|
-Storage
-a|
-fcip 4
-a|
-30
-a|
-3223
-a|
-h.h.h.h/3233
-a|
-20
-a|
-FC_switch_B_2
-a|
-IPStorage1/1
-a|
-g.g.g.g
-a|
-FC-VI
-a|
-fcip 1
-a|
-15
-a|
-3230
-a|
-e.e.e.e/3220
-a|
-10
-a|
-Storage
-a|
-fcip 2
-a|
-20
-a|
-3231
-a|
-e.e.e.e/3221
-a|
-20
-a|
-IPStorage1/2
-a|
-h.h.h.h
-a|
-FC-VI
-a|
-fcip 3
-a|
-25
-a|
-3232
-a|
-f.f.f.f/3222
-a|
-10
-a|
-Storage
-a|
-fcip 4
-a|
-30
-a|
-3233
-a|
-f.f.f.f/3223
-a|
-20
+| Switch fabric | IPStorage interface | IP Address | Port type | FCIP interface | FCIP profile | Port | Peer IP/port | VSAN ID
+
+a| Fabric 1
+a| FC_switch_A_1
+a| IPStorage1/1
+a| a.a.a.a
+a| FC-VI
+a| fcip 1
+a| 15
+a| 3220
+a| c.c.c.c/3230
+a| 10
+
+a| Fabric 1
+a| FC_switch_A_1
+a| IPStorage1/1
+a| a.a.a.a
+a| Storage
+a| fcip 2
+a| 20
+a| 3221
+a| .c.c.c/3231
+a| 20
+
+a| Fabric 1
+a| FC_switch_A_1
+a| IPStorage1/2
+a| b.b.b.b
+a| FC-VI
+a| fcip 3
+a| 25
+a| 3222
+a| d.d.d.d/3232
+a| 10
+
+a| Fabric 1
+a| FC_switch_A_1
+a| IPStorage1/2
+a| b.b.b.b
+a| Storage
+a| fcip 4
+a| 30
+a| 3223
+a| d.d.d.d/3233
+a| 20
+
+a| FC_switch_B_1
+a| IPStorage1/1
+a| c.c.c.c
+a| FC-VI
+a| fcip 1
+a| 15
+a| 3230
+a| a.a.a.a/3220
+a| 10
+
+a| FC_switch_B_1
+a| IPStorage1/1
+a| c.c.c.c
+a| Storage
+a| fcip 2
+a| 20
+a| 3231
+a| a.a.a.a/3221
+a| 20
+
+a| FC_switch_B_1
+a| IPStorage1/2
+a| d.d.d.d
+a| FC-VI
+a| fcip 3
+a| 25
+a| 3232
+a| b.b.b.b/3222
+a| 10
+
+a| FC_switch_B_1
+a| IPStorage1/2
+a| d.d.d.d
+a| Storage
+a| fcip 4
+a| 30
+a| 3233
+a| b.b.b.b/3223
+a| 20
+
+a| Fabric 2
+a| FC_switch_A_2
+a| IPStorage1/1
+a| e.e.e.e
+a| FC-VI
+a| fcip 1
+a| 15
+a| 3220
+a| g.g.g.g/3230
+a| 10
+
+a| Fabric 2
+a| FC_switch_A_2
+a| IPStorage1/1
+a| e.e.e.e
+a| Storage
+a| fcip 2
+a| 20
+a| 3221
+a| g.g.g.g/3231
+a| 20
+
+a| Fabric 2
+a| FC_switch_A_2
+a| IPStorage1/2
+a| f.f.f.f
+a| FC-VI
+a| fcip 3
+a| 25
+a| 3222
+a| h.h.h.h/3232
+a| 10
+
+a| Fabric 2
+a| FC_switch_A_2
+a| IPStorage1/2
+a| f.f.f.f
+a| Storage
+a| fcip 4
+a| 30
+a| 3223
+a| h.h.h.h/3233
+a| 20
+
+a| FC_switch_B_2
+a| IPStorage1/1
+a| g.g.g.g
+a| FC-VI
+a| fcip 1
+a| 15
+a| 3230
+a| e.e.e.e/3220
+a| 10
+
+a| FC_switch_B_2
+a| IPStorage1/1
+a| g.g.g.g
+a| Storage
+a| fcip 2
+a| 20
+a| 3231
+a| e.e.e.e/3221
+a| 20
+
+a| FC_switch_B_2
+a| IPStorage1/2
+a| h.h.h.h
+a| FC-VI
+a| fcip 3
+a| 25
+a| 3232
+a| f.f.f.f/3222
+a| 10
+
+a| FC_switch_B_2
+a| IPStorage1/2
+a| h.h.h.h
+a| Storage
+a| fcip 4
+a| 30
+a| 3233
+a| f.f.f.f/3223
+a| 20
 |===
 
 . Enter configuration mode: `config t`
@@ -1582,7 +1514,7 @@ These steps must be performed on both FC switch fabrics.
 
 The following steps use the zoning described in the section Zoning for a FibreBridge 7500N in a four-node MetroCluster configuration.
 
-xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FC-VI ports]
+https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/task_fcsw_cisco_configure_a_cisco_switch_supertask.html#configuring-fcip-ports-for-a-dual-isl-on-cisco-9250i-fc-switches[Zoning for FC-VI ports]
 
 . Clear the existing zones and zone set, if present.
  .. Determine which zones and zone sets are active: `show zoneset active`

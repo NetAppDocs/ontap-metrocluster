@@ -1,8 +1,8 @@
 ---
 permalink: disaster-recovery/task_prepare_the_nodes_for_switchback_in_a_mixed_configuration.html
 sidebar: sidebar
-keywords:
-summary: 'You must perform certain tasks in order to prepare the mixed MetroCluster IP and FC configuration for the switchback operation. This procedure only applies to configurations that encountered a failure during the MetroCluster FC to IP transition process.'
+keywords: perform, certain, task, prepare, metrocluster, ip, fc, configuration, switchback, recovery, during, transition, mix
+summary: You must perform certain tasks in order to prepare the mixed MetroCluster IP and FC configuration for the switchback operation. This procedure only applies to configurations that encountered a failure during the MetroCluster FC to IP transition process.
 ---
 = Preparing for switchback in a mixed configuration (recovery during transition)
 :icons: font
@@ -26,13 +26,13 @@ You must perform the MetroCluster IP recovery steps on these nodes.
 Perform the steps in the following order.
 
 . Prepare the FC nodes for switchback by performing the following tasks in order:
- .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Verifying port configuration (MetroCluster FC configurations only)]
- .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Configuring the FC-to-SAS bridges (MetroCluster FC configurations only)]
- .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Configuring the FC switches (MetroCluster FC configurations only)]
- .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Verifying the storage configuration] (only perform these steps on replaced drives on the MetroCluster FC nodes)
- .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Powering on the equipment at the disaster site] (only perform these steps on replaced drives on the MetroCluster FC nodes)
- .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Assigning ownership for replaced drives] (only perform these steps on replaced drives on the MetroCluster FC nodes)
- .. Perform the steps in xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Reassigning disk ownership for root aggregates to replacement controller modules (MetroCluster FC configurations)], up to and including the step to issue the mailbox destroy command.
+ .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#verifying-port-configuration-metrocluster-fc-configurations-only[Verifying port configuration (MetroCluster FC configurations only)]
+ .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#configuring-the-fc-to-sas-bridges-metrocluster-fc-configurations-only[Configuring the FC-to-SAS bridges (MetroCluster FC configurations only)]
+ .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#configuring-the-fc-switches-metrocluster-fc-configurations-only[Configuring the FC switches (MetroCluster FC configurations only)]
+ .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#verifying-the-storage-configuration[Verifying the storage configuration] (only perform these steps on replaced drives on the MetroCluster FC nodes)
+ .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#powering-on-the-equipment-at-the-disaster-site[Powering on the equipment at the disaster site] (only perform these steps on replaced drives on the MetroCluster FC nodes)
+ .. xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#assigning-ownership-for-replaced-drives[Assigning ownership for replaced drives] (only perform these steps on replaced drives on the MetroCluster FC nodes)
+ .. Perform the steps in xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#reassigning-disk-ownership-for-root-aggregates-to-replacement-controller-modules-metrocluster-fc-configurations[Reassigning disk ownership for root aggregates to replacement controller modules (MetroCluster FC configurations)], up to and including the step to issue the mailbox destroy command.
  .. Destroy the local plex (plex 0) of the root aggregate: `aggr destroy plex-id`
  .. If the root aggr is not online, online it.
 . Boot the MetroCluster FC nodes.
@@ -90,7 +90,7 @@ Group Cluster Node               State          Mirroring Mode
               wmc55-b2           configured
 ----
 
-. Prepare the MetroCluster IP nodes for switchback by performing the tasks in xref:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.adoc[Preparing for switchback in a MetroCluster IP configuration] up to and including xref:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.adoc[Deleting failed plexes owned by the surviving site (MetroCluster IP configurations)].
-. On the MetroCluster FC nodes, perform the steps in xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.adoc[Performing aggregate healing and restoring mirrors (MetroCluster FC configurations)].
-. On the MetroCluster IP nodes, perform the steps in xref:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.adoc[Performing aggregate healing and restoring mirrors (MetroCluster IP configurations)].
-. Proceed through the remaining tasks of the recovery process starting with xref:task_complete_recovery.adoc[Reestablishing object stores for FabricPool configurations].
+. Prepare the MetroCluster IP nodes for switchback by performing the tasks in xref:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.adoc[Preparing for switchback in a MetroCluster IP configuration] up to and including xref:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.html#deleting-failed-plexes-owned-by-the-surviving-site-metrocluster-ip-configurations[Deleting failed plexes owned by the surviving site (MetroCluster IP configurations)].
+. On the MetroCluster FC nodes, perform the steps in xref:task_prepare_for_switchback_in_a_mcc_fc_configuration_supertask.html#performing-aggregate-healing-and-restoring-mirrors-metrocluster-fc-configurations[Performing aggregate healing and restoring mirrors (MetroCluster FC configurations)].
+. On the MetroCluster IP nodes, perform the steps in xref:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.html#performing-aggregate-healing-and-restoring-mirrors-metrocluster-ip-configurations[Performing aggregate healing and restoring mirrors (MetroCluster IP configurations)].
+. Proceed through the remaining tasks of the recovery process starting with xref:task_complete_recovery.html#reestablishing-object-stores-for-fabricpool-configurations[Reestablishing object stores for FabricPool configurations].
