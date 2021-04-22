@@ -53,7 +53,19 @@ Example names:
 
 == Controller module requirements in a MetroCluster IP configuration
 
-MetroCluster IP configurations require four controller modules.
+MetroCluster IP configurations require four or eight controller modules.
+
+NOTE: These models are limited to four in a MetroCluster configuration.
++
+* AFF A220
+* AFF A250
+* FAS500f
++
+For example:
++
+*An eight-node configuration consisting of eight AFF A250 controllers is not supported.
+*An eight-node configuration consisting of DR Group 1 with AFF A250 controllers and DR Group 2 with FAS9000 controllers is supported.
+*Two four-node MetroCluster IP configurations consisting of eight AFF A250 controllers and sharing the same back-end switches is not supported.
 
 The controller modules at each site form an HA pair. Each controller module has a DR partner at the other site.
 
@@ -198,3 +210,4 @@ If this system is populated with 16 drives, they must be symmetrically distribut
 Your version of ONTAP must support shelf mixing. Refer to the Interoperability Matrix Tool (IMT) to see if your version of ONTAP supports shelf mixing. https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability]
 
 For further details on shelf mixing, see: https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-ds-mix-hotadd/home.html[Hot-adding shelves with IOM12 modules to a stack of shelves with IOM6 modules]
+// 2021-04-21 1374268
