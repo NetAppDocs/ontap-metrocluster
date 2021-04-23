@@ -55,18 +55,6 @@ Example names:
 
 MetroCluster IP configurations require four or eight controller modules.
 
-NOTE: These models are limited to four in a MetroCluster configuration.
-+
-* AFF A220
-* AFF A250
-* FAS500f
-+
-For example:
-+
-*An eight-node configuration consisting of eight AFF A250 controllers is not supported.
-*An eight-node configuration consisting of DR Group 1 with AFF A250 controllers and DR Group 2 with FAS9000 controllers is supported.
-*Two four-node MetroCluster IP configurations consisting of eight AFF A250 controllers and sharing the same back-end switches is not supported.
-
 The controller modules at each site form an HA pair. Each controller module has a DR partner at the other site.
 
 Each controller module must be running the same ONTAP version. Supported platform models depend on the ONTAP version:
@@ -78,7 +66,27 @@ Existing MetroCluster IP configurations on FAS systems can be upgraded to ONTAP 
 * Starting with ONTAP 9.5, new MetroCluster IP installations on FAS systems are supported.
 * Starting with ONTAP 9.4, controller modules configured for ADP are supported.
 
-Example names:
+=== Controller models limited to four-node configurations
+
+These models are limited to four in a MetroCluster configuration.
+
+* AFF A220
+* AFF A250
+* FAS500f
+
+For example, the following configurations are not supported:
+
+* An eight-node configuration consisting of eight AFF A250 controllers.
+* An eight-node configuration consisting of four AFF 220 controllers and four FAS500f controllers.
+* Two four-node MetroCluster IP configurations each consisting of AFF A250 controllers and sharing the same back-end switches.
+
+The following configuration is supported:
+
+* An eight-node configuration consisting of DR Group 1 with AFF A250 controllers and DR Group 2 with FAS9000 controllers.
+
+=== Example names
+
+The following example names are used in the documentation:
 
 * Site A: cluster_A
  ** controller_A_1
