@@ -1846,7 +1846,11 @@ cluster_B
 +
 NOTE: The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
 
- .. Configure the interface on port e5a on node_A_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -address ip-address -netmask netmask`
++
+// 22 APR 2021, BURT 1180776
+NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster interfaces.
+
+.. Configure the interface on port e5a on node_A_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -address ip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5a on node_A_1 with IP address 10.1.1.1:
 +
@@ -1856,7 +1860,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 cluster_A::>
 ----
 
- .. Configure the interface on port e5b on node_A_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5b -address ip-address -netmask netmask`
+.. Configure the interface on port e5b on node_A_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5b -address ip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5b on node_A_1 with IP address 10.1.2.1:
 +
@@ -1873,7 +1877,12 @@ NOTE: You can verify that these interfaces are present using the `metrocluster c
 +
 NOTE: The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
 
- .. Configure the interface on port e5a on node_A_2: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -address ip-address -netmask netmask`
+
++
+// 22 APR 2021, BURT 1180776
+NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster interfaces.
+
+.. Configure the interface on port e5a on node_A_2: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -address ip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5a on node_A_2 with IP address 10.1.1.2:
 +
@@ -1891,7 +1900,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 cluster_A::>
 ----
 +
- .. Configure the interface on port e5b on node_A_2: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5b -address ip-address -netmask netmask`
+.. Configure the interface on port e5b on node_A_2: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5b -address ip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5b on node_A_2 with IP address 10.1.2.2:
 +
@@ -1913,7 +1922,11 @@ cluster_A::>
 +
 NOTE: The port usage in the following examples is for an AFF A700s or a FAS9000system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given in above.
 
- .. Configure the interface on port e5a on node_B_1:``metrocluster configuration-settings interface create -cluster-namecluster-name-home-nodenode-name-home-port e5a -addressip-address-netmask netmask``
++
+// 22 APR 2021, BURT 1180776
+NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster interfaces.
+
+.. Configure the interface on port e5a on node_B_1:``metrocluster configuration-settings interface create -cluster-namecluster-name-home-nodenode-name-home-port e5a -addressip-address-netmask netmask``
 +
 The following example shows the creation of the interface on port e5a on node_B_1 with IP address 10.1.1.3:
 +
@@ -1922,7 +1935,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [Job 28] Job succeeded: Interface Create is successful.cluster_A::>
 ----
 
- .. Configure the interface on port e5b on node_B_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -addressip-address -netmask netmask`
+.. Configure the interface on port e5b on node_B_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -addressip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5b on node_B_1 with IP address 10.1.2.3:
 +
@@ -1935,7 +1948,11 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 +
 NOTE: The port usage in the following examples is for an AFF A700s or a FDvM200 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
 
- .. Configure the interface on port e5a on node_B_2:``metrocluster configuration-settings interface create -cluster-name cluster-name -home-nodenode-name -home-port e5a -addressip-addresip-addresss ip-address -netmask netmask``
++
+// 22 APR 2021, BURT 1180776
+NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster interfaces.
+
+.. Configure the interface on port e5a on node_B_2:``metrocluster configuration-settings interface create -cluster-name cluster-name -home-nodenode-name -home-port e5a -addressip-addresip-addresss ip-address -netmask netmask``
 +
 The following example shows the creation of the interface on port e5a on node_B_2 with IP address 10.1.1.4:
 +
@@ -1989,7 +2006,7 @@ cluster_A::>
 
 . Verify that the nodes are ready to connect the MetroCluster interfaces: `metrocluster configuration-settings show-status`
 +
-The following example shows all nodes in the ready for connection state:
+The following example shows all nodes in the "ready for connection" state:
 +
 ----
 

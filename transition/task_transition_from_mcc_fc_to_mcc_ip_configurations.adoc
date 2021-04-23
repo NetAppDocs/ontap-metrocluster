@@ -819,9 +819,9 @@ DR Group ID Cluster                    Node               DR Partner Node
 cluster_A::>
 ----
 +
-You will notice that the DR group for the old MetroCluster FC nodes (DR Group 1) is not listed when you run the metrocluster configuration-settings dr-group show command.
+You will notice that the DR group for the old MetroCluster FC nodes (DR Group 1) is not listed when you run the `metrocluster configuration-settings dr-group show` command.
 +
-You can use metrocluster node show command on both sites to list all nodes.
+You can use `metrocluster node show` command on both sites to list all nodes.
 +
 ----
 cluster_A::> metrocluster node show
@@ -861,7 +861,9 @@ Group Cluster Node               State          Mirroring Mode
 
 . Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes: `metrocluster configuration-settings interface create -cluster-name`
 +
-NOTE: You can configure the MetroCluster IP interfaces from either cluster.
+NOTE: You can configure the MetroCluster IP interfaces from either cluster. Also, starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster interfaces.
+
++
 +
 ----
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_3-IP -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
