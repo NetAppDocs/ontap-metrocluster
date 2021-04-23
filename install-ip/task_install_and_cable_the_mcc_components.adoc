@@ -68,11 +68,11 @@ Keep track of the MetroCluster port group (MetroCluster 1, MetroCluster 2, or Me
 +
 Use this cabling overview to verify your cabling.
 
-==== Cabling temporary eight-node MetroCluster configurations for transition and upgrade procedures
+==== Cabling eight-node MetroCluster configurations
 
-Some procedures require the addition of second four-node DR group to the configuraiton, for a temporary eight-node configuration.
+For some MetroCluster configurations running ONTAP 9.8 and earlier, some procedures that are performed to transition an upgrade require the addition of a second four-node DR group to the configuration to create a temporary eight-node configuration.  Starting with ONTAP 9.9.1, permanent 8-node MetroCluster configurations are supported.
 
-For such configurations, you use the same method as described above. Instead of a second MetroCluster, you are cabling an additional four-node DR group
+For such configurations, you use the same method as described above. Instead of a second MetroCluster, you are cabling an additional four-node DR group.
 
 For example, your configuration includes the following:
 
@@ -83,6 +83,8 @@ For example, your configuration includes the following:
 For MetroCluster 1, cable the Cisco 3132Q-V switches using the table for the FAS2750 platform and the rows for MetroCluster 1 interfaces.
 
 For MetroCluster 2 (the new DR group), cable the Cisco 3132Q-V switches using the table for the AFF A700 platform and the rows for MetroCluster 2 interfaces.
+
+// 21 APR 2021, BURT 1374268 
 
 === Platform port assignments for Cisco 3132Q-V switches
 
@@ -1414,3 +1416,4 @@ IP_switch_A_1(config-if)# end
 IP_switch_A_1# copy running-config startup-config
 ----
 . Repeat the previous step on the other three switches in the MetroCluster IP configuration.
+// 21 APR 2021, BURT 1371395

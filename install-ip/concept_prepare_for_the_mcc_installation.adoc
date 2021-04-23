@@ -11,7 +11,7 @@ summary: As you prepare for the MetroCluster installation, you should understand
 [.lead]
 As you prepare for the MetroCluster installation, you should understand the MetroCluster hardware architecture and required components.
 
-== Differences between the ONTAP MetroCluster configurations
+== Differences among the ONTAP MetroCluster configurations
 
 [.lead]
 The various MetroCluster configurations have key differences in the required components.
@@ -282,18 +282,22 @@ a| 10.1.2/24
 
 The MetroCluster IP interfaces are specific to MetroCluster IP configurations. They have different characteristics from other ONTAP interface types:
 
-* They are created by the metrocluster configuration-settings interface create command as part the initial MetroCluster configuration.
+* They are created by the `metrocluster configuration-settings interface create` command as part the initial MetroCluster configuration.
++
+// 22 APR 2021, BURT 1180776
+NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster interfaces.
+
 +
 They are not created or modified by the network interface commands.
 
-* They do not appear in the output of the network interface show command.
+* They do not appear in the output of the `network interface show` command.
 * They do not fail over, but remain associated with the port on which they were created.
 * MetroCluster IP configurations use specific Ethernet ports (depending on the platform) for the MetroCluster IP interfaces.
 
 == Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later
 
 [.lead]
-Starting with ONTAP 9.4, MetroCluster IP configurations support new installations with AFF systems using ADP (Advanced Drive Partitioning). In most configurations, partitioning and disk assignment is performed automatically during the initial configuration of the MetroCluster sites.
+Starting with ONTAP 9.4, MetroCluster IP configurations support new installations with AFF systems using ADP (Advanced Drive Partitioning). In most configurations, partitioning and disk assignment are performed automatically during the initial configuration of the MetroCluster sites.
 
 ONTAP 9.4 and later releases include the following changes for ADP support:
 
@@ -308,7 +312,7 @@ NOTE: When upgrading from ONTAP 9.4 to 9.5, the system recognizes the existing d
 
 ADP is performed automatically during initial configuration of the platform.
 
-NOTE: Starting with ONTAP 9.5, disk autoassignment must be enabled for automatic partitioning for ADP to occur.
+NOTE: Starting with ONTAP 9.5, `disk auto=assignment` must be enabled for automatic partitioning for ADP to occur.
 
 === How shelf-by-shelf automatic assignment works
 
@@ -895,7 +899,8 @@ CAUTION:
 
 If using a shared network, the customer is responsible for meeting the MetroCluster network requirements in the shared network.
 
-=== MetroCluster ISL requirements in shared networks
+
+=== MetroCluster ISL requirements in shared layer 2 networks
 
 [.lead]
 When sharing ISL traffic in a shared network, you must ensure that you have adequate capacity and size the ISLs appropriately. Low latency is critical for replication of data between the MetroCluster sites. Latency issues on these connections can impact client I/O.
@@ -948,12 +953,13 @@ The intermediate customer-provided switches must meet the following requirements
 +
 Layer 2 VLANs with IDs that match the MetroCluster VLAN IDs must span the shared network.
 
- ** In ONTAP 9.7 and earlier, FAS2750 and AFF A220 systems require VLAN 10 and 20.
- ** In ONTAP 9.8 and later, FAS2750, AFF A220, FAS500f, AFF A250, FAS8300, AFF A400, and FAS8700 systems use VLAN 10 and 20 by default. You can configure other VLANs during interface creation, and they must be withing the range 101-4096.
+** In ONTAP 9.7 and earlier, FAS2750 and AFF A220 systems require VLAN 10 and 20.
+** In ONTAP 9.8 and later, FAS2750, AFF A220, FAS500f, AFF A250, FAS8300, AFF A400, and FAS8700 systems use VLAN 10 and 20 by default. You can configure other VLANs during interface creation, and they must be withing the range 101-4096.
 For all the platforms mentioned previously, you can only specify the VLAN during interface creation. Once the MetroCluster interfaces are created, the VLAN ID cannot not be changed. For all other platforms not mentioned previously, you can use any VLAN and you can change the VLAN ID for those platforms at any time, but it requires that a new RCF file is created and applied.
 
-+
+
 NOTE: The RcfFileGenerator does not allow the creation of an RCF file using VLANs that are not supported by the platform.
+
 
 NOTE: The RcfFileGenerator might restrict the use of certain VLAN IDs (for example, if they are intended for future use). Generally, reserved VLANs are up to and including 100.
 
@@ -1211,11 +1217,49 @@ MetroCluster One is a MetroCluster configuration using NetApp validated switches
 
 NOTE: The intermediate switches must be compliant with NetApp specifications.
 
-xref:concept_prepare_for_the_mcc_installation.html#considerations-for-using-metrocluster-compliant-switches[Considerations for using MetroCluster compliant switches]
-
 The example is simplified for illustration purposes only:
 
 image::../media/delete_me_mcc_ip_unsupported_two_mccs_direct_to_shared_switches.png[]
+
+== Considerations for layer 3 wide-area networks
+
+Starting with ONTAP 9.9.1, MetroCluster IP configurations can be implemented with IP-routed (layer 3) backend connections.
+
+The MetroCluster backend switches are connected to the routed IP network, as shown in the following simplified example:
+
+image::../media/mcc_layer3_backend.png[]
+
+The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:task_install_and_cable_the_mcc_components.html[Install and cable the MetroCluster components].  When you perform the installation and cabling procedure, use the steps labeled for a layer 3 network.  The steps that are specific to layer 3 include:
+
+*	Cabling the MetroCluster switches to the routed IP network to provide the ISLs. The MetroCluster switches can be connected directly to the router or to one or more intervening switches. The VLAN must be extended to the gateway device.
+
+*	Using the `-gateway` parameter to configure the MetroCluster IP (MCC-IP) interface address with an IP gateway address.
+
+The switches can be NetApp-validated or MetroCluster-compliant switches (for detailed descriptions, refer to <<Considerations for using MetroCluster compliant switches>>).
+
+*	*NetApp-compliant* switches are listed in the cabling section and supported by the RCF generator.
+
+*	*MetroCluster-compliant* switches are not validated by NetApp, but they meet the requirements in Considers for using MetroCluster-compliant switches.
+
+The MetroCluster VLANs must extend from the edge MetroCluster switch to the gateway router so that MetroCluster traffic reaches the gateway (refer to the diagram shown above).   The VLAN IDs for the MetroCluster VLANs must be the same at each site.  However, the subnets can be different.
+
+You use the RCF files that are created by the RcfFileGenerator tool.  The network between the MetroCluster nodes and the gateway router must provide the same VLAN IDs as set in the RCF file.
+
+=== IP-routed network requirements
+
+The IP-routed network must meet the following requirements:
+
+*	All the ISL requirements that are described in xref:concept_prepare_for_the_mcc_installation.html#metrocluster-isl-requirements-in-shared-networks[MetroCluster ISL requirements in shared networks] must be met, including the requirements for VLAN IDs.
+
+*	All the intermediate switches must meet the requirements that are described in xref:concept_prepare_for_the_mcc_installation.html#required-settings-on-intermediate-switches[Required settings on intermediate switches].
+
+*	Dynamic routing is not supported for the MetroCluster traffic.
+
+*	Only four-node MetroCluster configurations are supported (two nodes at each site).
+
+*	Two subnets are required on each MetroCluster site—one in each network.
+
+*	Auto-IP assignment is not supported.
 
 == Considerations for using MetroCluster compliant switches
 
@@ -1254,7 +1298,7 @@ Any configuration or feature that requires that the local cluster connections ar
 * Transitioning from MetroCluster FC to MetroCluster IP configurations
 * Refreshing a four-node MetroCluster IP configuration
 
-=== Platform-specific network speeds for MetroCluster compliant switches
+=== Platform-specific network speeds for MetroCluster-compliant switches
 
 The following table provides platform-specific network speeds for MetroCluster compliant switches.
 
