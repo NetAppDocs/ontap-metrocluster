@@ -20,8 +20,6 @@ Eight- and four-node MetroCluster configurations protect data on both a local le
 
 MetroCluster configurations protect data by using two physically separated, mirrored clusters. Each cluster synchronously mirrors the data and storage virtual machine (SVM) configuration of the other. When a disaster occurs at one site, an administrator can activate the mirrored SVM and begin serving the mirrored data from the surviving site. Additionally, the nodes in each cluster are configured as an HA pair, providing a level of local failover.
 
-IMPORTANT:
-
 === How local HA data protection works in a MetroCluster configuration
 
 [.lead]
@@ -219,7 +217,14 @@ NOTE: AUSO (automatic unscheduled switchover) is not supported on MetroCluster I
 
 [options="header"]
 |===
-| Failure type | DR mechanism (Four-node configuration) | DR mechanism (Two-node configuration) | Summary of recovery method (Four-node configuration) | Summary of recovery method (Two-node configuration)
+| Failure type 2+| DR mechanism  2+| Summary of recovery method
+
+|
+|Four-node configuration
+|Two-node configuration
+|Four-node configuration
+|Two-node configuration
+
 |
 Single-node failure
 |
@@ -230,7 +235,7 @@ AUSO
 Not required if automatic failover and giveback is enabled.
 |
 After the node is restored, manual healing and switchback using the metrocluster heal -phase aggregates, metrocluster heal -phase root-aggregates, and metrocluster switchback commands is required.
-+
+
 NOTE: The metrocluster heal commands are not required on MetroCluster IP configurations running ONTAP 9.5 or later.
 
 |
@@ -239,7 +244,7 @@ Site failure
 MetroCluster switchover
 2.3+|
 After the node is restored, manual healing and switchback using the metrocluster healing and metrocluster switchback commands is required.
-+
+
 The metrocluster heal commands are not required on MetroCluster IP configurations running ONTAP 9.5.
 
 |
@@ -253,7 +258,7 @@ AUSO (same as single-node failure)
 Multiple sequential failures
 |
 Local HA failover followed by MetroCluster forced switchover using the metrocluster switchover -forced-on-disaster command.
-+
+
 NOTE: Depending on the component that failed, a forced switchover might not be required.
 
 |
