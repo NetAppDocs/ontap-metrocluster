@@ -229,14 +229,18 @@ AUSO
 |
 Not required if automatic failover and giveback is enabled.
 |
-After the node is restored, manual healing and switchback using the metrocluster heal -phase aggregates, metrocluster heal -phase root-aggregates, and metrocluster switchback commands is required.*Note:* The metrocluster heal commands are not required on MetroCluster IP configurations running ONTAP 9.5.
+After the node is restored, manual healing and switchback using the metrocluster heal -phase aggregates, metrocluster heal -phase root-aggregates, and metrocluster switchback commands is required.
++
+NOTE: The metrocluster heal commands are not required on MetroCluster IP configurations running ONTAP 9.5 or later.
 
 |
 Site failure
 2+|
 MetroCluster switchover
 2.2+|
-After the node is restored, manual healing and switchback using the metrocluster healing and metrocluster switchback commands is required. *Note:* The metrocluster heal commands are not required on MetroCluster IP configurations running ONTAP 9.5.
+After the node is restored, manual healing and switchback using the metrocluster healing and metrocluster switchback commands is required.
++
+The metrocluster heal commands are not required on MetroCluster IP configurations running ONTAP 9.5.
 
 |
 Site-wide controller failure
@@ -248,11 +252,12 @@ AUSO (same as single-node failure)
 |
 Multiple sequential failures
 |
-Local HA failover followed by MetroCluster forced switchover using the metrocluster switchover -forced-on-disaster command. *Note:* Depending on the component that failed, a forced switchover might not be required.
+Local HA failover followed by MetroCluster forced switchover using the metrocluster switchover -forced-on-disaster command.
++
+NOTE: Depending on the component that failed, a forced switchover might not be required.
 
 |
 MetroCluster forced switchover using the metrocluster switchover -forced-on-disaster command.
-|
 
 |
 ISL failure
@@ -260,7 +265,6 @@ ISL failure
 No MetroCluster switchover; the two clusters independently serve their data
 2+|
 Not required for this type of failure. After you restore connectivity, the storage resynchronizes automatically.
-
 
 |===
 
@@ -645,13 +649,13 @@ If some source storage components failed, the command reports the errors at appl
 
 If no errors are reported, the aggregates are successfully resynchronized. This process can sometimes take hours to complete.
 
-Healing the data aggregates CATALYST MIGRATION -- FIX LINKS
+link:../manage/task_heal_the_configuration_choice_task.html[Healing the configuration]
 
 === Root aggregate healing
 
 After the aggregates are synchronized, you start the controller healing phase by giving back the CFO aggregates and root aggregates to their respective DR partners.
 
-Healing the root aggregates CATALYST MIGRATION -- FIX LINKS
+link:../manage/task_heal_the_configuration_choice_task.html[Healing the configuration]
 
 == What happens during healing (MetroCluster IP configurations)
 
@@ -679,13 +683,13 @@ If some source storage components failed, the command reports the errors at appl
 
 If no errors are reported, the aggregates are successfully resynchronized. This process can sometimes take hours to complete.
 
-Healing the data aggregates CATALYST MIGRATION -- FIX LINKS
+link:../manage/task_heal_the_configuration_choice_task.html[Healing the configuration]
 
 === Root aggregate healing
 
 After the aggregates are synchronized, you perform the root aggregate healing phase. In MetroCluster IP configurations, this phase confirms that aggregates have been healed.
 
-Healing the root aggregates CATALYST MIGRATION -- FIX LINKS
+link:../manage/task_heal_the_configuration_choice_task.html[Healing the configuration]
 
 == Automatic healing of aggregates on MetroCluster IP configurations after switchover
 
