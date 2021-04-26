@@ -220,48 +220,49 @@ NOTE: AUSO (automatic unscheduled switchover) is not supported on MetroCluster I
 [options="header"]
 |===
 | Failure type | DR mechanism (Four-node configuration) | DR mechanism (Two-node configuration) | Summary of recovery method (Four-node configuration) | Summary of recovery method (Two-node configuration)
-a|
+|
 Single-node failure
-a|
+|
 Local HA failover
-a|
+|
 AUSO
-a|
+|
 Not required if automatic failover and giveback is enabled.
-a|
+|
 After the node is restored, manual healing and switchback using the metrocluster heal -phase aggregates, metrocluster heal -phase root-aggregates, and metrocluster switchback commands is required.*Note:* The metrocluster heal commands are not required on MetroCluster IP configurations running ONTAP 9.5.
 
-a|
+|
 Site failure
-a 2+|
+2+|
 MetroCluster switchover
-a 2+.2+|
+2+.2+|
 After the node is restored, manual healing and switchback using the metrocluster healing and metrocluster switchback commands is required. *Note:* The metrocluster heal commands are not required on MetroCluster IP configurations running ONTAP 9.5.
 
-a|
+|
 Site-wide controller failure
-a|
+|
 AUSO Only if the storage at the disaster site is accessible.
 
-a|
+|
 AUSO (same as single-node failure)
-a|
+|
 Multiple sequential failures
-a|
+|
 Local HA failover followed by MetroCluster forced switchover using the metrocluster switchover -forced-on-disaster command. *Note:* Depending on the component that failed, a forced switchover might not be required.
 
-a|
+|
 MetroCluster forced switchover using the metrocluster switchover -forced-on-disaster command.
-a|
+|
 
-a|
+|
 ISL failure
-a 2+|
+2+|
 No MetroCluster switchover; the two clusters independently serve their data
-a 2+|
+2+|
 Not required for this type of failure. After you restore connectivity, the storage resynchronizes automatically.
+
+
 |===
-Performing a forced switchover after a disaster CATALYST MIGRATION -- FIX LINKS
 
 == How an eight-node or four-node MetroCluster configuration provides nondisruptive operations
 
