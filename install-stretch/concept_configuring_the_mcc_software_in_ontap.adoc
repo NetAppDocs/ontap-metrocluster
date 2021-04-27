@@ -698,6 +698,7 @@ NOTE: You must repeat this step on the node at the disaster recovery (DR) site.
 +
 The node boots, and then the Cluster Setup wizard starts on the console, informing you that AutoSupport will be enabled automatically.
 +
+
 ----
 ::> Welcome to the cluster setup wizard.
 
@@ -832,7 +833,7 @@ The following example shows that ports `e0e` and `e0f` have not been assigned LI
 
 cluster01::> network interface show -fields home-port,curr-port
 vserver lif                  home-port curr-port
-------- -------------------- --------- ---------
+
 Cluster cluster01-01_clus1   e0a       e0a
 Cluster cluster01-01_clus2   e0b       e0b
 Cluster cluster01-02_clus1   e0a       e0a
@@ -885,17 +886,21 @@ cluster01
 
 . Create intercluster LIFs on the system SVM and assign them to the failover group.
 +
-[options="header"]
+[cols="1,3"]
 |===
-    a|
-*In ONTAP 9.6 and later:*
+| ONTAP version | Command
 a|
-`*network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_*`
+9.6 and later
 a|
-*In ONTAP 9.5 and earlier:*
+`network interface create -vserver system_SVM -lif LIF_name -service-policy default-intercluster -home-node node -home-port port -address port_IP -netmask netmask -failover-group failover_group`
+
 a|
-`*network interface create -vserver _system_SVM_ -lif _LIF_name_ -role intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_*`
+9.5 and earlier
+a|
+`network interface create -vserver system_SVM -lif LIF_name -role intercluster -home-node node -home-port port -address port_IP -netmask netmask -failover-group failover_group`
+
 |===
+
 For complete command syntax, see the man page.
 +
 The following example creates intercluster LIFs cluster01_icl01 and cluster01_icl02 in the failover group intercluster01:
