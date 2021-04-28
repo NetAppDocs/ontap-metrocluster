@@ -1920,9 +1920,9 @@ You must create a mirrored data aggregate on each node in the DR group.
 * If you have multiple drive types in your system (heterogeneous storage), you should understand how you can ensure that the correct drive type is selected.
 * Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
-+
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+See https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management].
 
+.Steps
 . Display a list of available spares: `storage disk show -spare -owner node_name`
 . Create the aggregate by using the storage aggregate create -mirror true command.
 +
@@ -1930,23 +1930,26 @@ If you are logged in to the cluster on the cluster management interface, you can
 +
 You can specify the following options:
 
- ** Aggregate's home node (that is, the node that owns the aggregate in normal operation)
- ** List of specific drives or array LUNs that are to be added to the aggregate
- ** Number of drives to include
+* Aggregate's home node (that is, the node that owns the aggregate in normal operation)
+* List of specific drives or array LUNs that are to be added to the aggregate
+* Number of drives to include
 +
-NOTE: In the minimum supported configuration, in which a limited number of drives are available, you must use the force-small-aggregate option to allow the creation of a three disk RAID-DP aggregate.
+NOTE: In the minimum-supported configuration, in which a limited number of drives are available, you must use the force-small-aggregate option to allow the creation of a three disk RAID-DP aggregate.
 
- ** Checksum style to use for the aggregate
- ** Type of drives to use
- ** Size of drives to use
- ** Drive speed to use
- ** RAID type for RAID groups on the aggregate
- ** Maximum number of drives or array LUNs that can be included in a RAID group
- ** Whether drives with different RPM are allowed
-For more information about these options, see the storage aggregate create man page.
+* Checksum style to use for the aggregate
+* Type of drives to use
+* Size of drives to use
+* Drive speed to use
+* RAID type for RAID groups on the aggregate
+* Maximum number of drives or array LUNs that can be included in a RAID group
+* Whether drives with different RPM are allowed
+
++
+For more information about these options, see the `storage aggregate create` man page.
 
 +
 The following command creates a mirrored aggregate with 10 disks:
+
 +
 ----
 cluster_A::> storage aggregate create aggr1_node_A_1 -diskcount 10 -node node_A_1 -mirror true
@@ -1975,6 +1978,8 @@ NOTE: The unmirrored aggregates must be local to the node owning them.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
 * The _Disks and Aggregates Power Guide_ contains more information about mirroring aggregates.
 
+.Steps
+
 . Display a list of available spares: `storage disk show -spare -owner node_name`
 . Create the aggregate: `storage aggregate create`
 +
@@ -1996,6 +2001,7 @@ For more information about these options, see the storage aggregate create man p
 
 +
 The following command creates a unmirrored aggregate with 10 disks:
+
 +
 ----
 controller_A_1::> storage aggregate create aggr1_controller_A_1 -diskcount 10 -node controller_A_1
