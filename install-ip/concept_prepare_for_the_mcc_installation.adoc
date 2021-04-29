@@ -134,7 +134,7 @@ The MetroCluster IP interfaces are specific to MetroCluster IP configurations. T
 * They are created by the `metrocluster configuration-settings interface create` command as part the initial MetroCluster configuration.
 +
 // 22 APR 2021, BURT 1180776
-NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster interfaces.
+NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces.
 
 +
 They are not created or modified by the network interface commands.
@@ -1082,19 +1082,15 @@ The MetroCluster environment is configured and cabled as a standard MetroCluster
 
 *	Cabling the MetroCluster switches to the routed IP network to provide the ISLs. The MetroCluster switches can be connected directly to the router or to one or more intervening switches. The VLAN must be extended to the gateway device.
 
-*	Using the `-gateway` parameter to configure the MetroCluster IP (MCC-IP) interface address with an IP gateway address.
+*	Using the `-gateway` parameter to configure the MetroCluster IP interface address with an IP gateway address.
 
-The switches can be NetApp-validated or MetroCluster-compliant switches (for detailed descriptions, refer to <<Considerations for using MetroCluster compliant switches>>).
+NetApp supports only NetApp-validated switches for use in layer 3 wide-area networks.  These switches are tested and sold by NetApp.  Their cabling is documented by NetApp, and they are listed in the link:https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability Matrix Tool (IMT)]. NetApp-validated switches are also listed in the cabling section and supported by the RCF generator.
 
-*	*NetApp-compliant* switches are listed in the cabling section and supported by the RCF generator.
-
-*	*MetroCluster-compliant* switches are not validated by NetApp, but they meet the requirements in Considers for using MetroCluster-compliant switches.
-
-The MetroCluster VLANs must extend from the edge MetroCluster switch to the gateway router so that MetroCluster traffic reaches the gateway (refer to the diagram shown above).   The VLAN IDs for the MetroCluster VLANs must be the same at each site.  However, the subnets can be different.
+The MetroCluster VLANs must extend from the edge MetroCluster switch to the gateway router so that MetroCluster traffic reaches the gateway (refer to the diagram shown above). The VLAN IDs for the MetroCluster VLANs must be the same at each site.  However, the subnets can be different.
 
 You use the RCF files that are created by the RcfFileGenerator tool.  The network between the MetroCluster nodes and the gateway router must provide the same VLAN IDs as set in the RCF file.
 
-=== IP-routed network requirements
+*IP-routed network requirements*
 
 The IP-routed network must meet the following requirements:
 
@@ -1110,7 +1106,7 @@ The IP-routed network must meet the following requirements:
 
 *	Auto-IP assignment is not supported.
 
-== Considerations for using MetroCluster compliant switches
+== Considerations for using MetroCluster-compliant switches
 
 [.lead]
 MetroCluster IP switches provided by NetApp are NetApp validated. Beginning with ONTAP 9.7, MetroCluster IP configurations can support switches that are not NetApp validated provided that they are compliant with NetApp specifications.

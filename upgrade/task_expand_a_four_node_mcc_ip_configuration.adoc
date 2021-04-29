@@ -365,7 +365,7 @@ The following example shows the cluster peering configuration on cluster_B:
 cluster_B:> cluster peer show
 Peer Cluster Name         Cluster Serial Number Availability   Authentication
 ------------------------- --------------------- -------------- --------------
-cluster_A 1-80-000011 Available ok
+cluster_A                 1-80-000011           Available      ok
 cluster_B::>
 ----
 
@@ -415,11 +415,15 @@ cluster_A::>
 . Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes:
 +
 `*metrocluster configuration-settings interface create -cluster-name*`
+
 +
 include::../_include/models_supporting_vlan-id.adoc[]
 
 +
 NOTE: You can configure the MetroCluster IP interfaces from either cluster.
+
++
+NOTE: Starting with ONTAP 9.1.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter to create MetroCluster IP interfaces.
 
 +
 ----
@@ -655,7 +659,7 @@ cluster_A::>
 
 . Verify disk autoassignment and partitioning:
 +
-`*_disk show -pool Pool1_*`
+`*disk show -pool Pool1*`
 +
 ----
 cluster_A::> disk show -pool Pool1
@@ -683,7 +687,7 @@ cluster_A::>
 
 . Mirror the root aggregates:
 +
-`*_storage aggregate mirror -aggregate aggr0_node_A_1-new_*`
+`*storage aggregate mirror -aggregate aggr0_node_A_1-new*`
 +
 NOTE: You must complete this step on each MetroCluster IP node.
 +
@@ -752,9 +756,10 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 
 . Create mirrored data aggregates on each of the new MetroCluster nodes:
 +
-`%storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true*`
+`*storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true*`
 +
 NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
+
 +
 The following example shows the creation of an aggregate on node_A_1-new.
 +
@@ -840,10 +845,11 @@ cluster_A::*>
 ----
 
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
- .. Display the volumes to identify the MDV volumes:
+.. Display the volumes to identify the MDV volumes:
 +
 NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
+
 The following example shows the MDV volumes in the `volume show` output:
 +
 ----

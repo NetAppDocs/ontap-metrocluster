@@ -39,7 +39,7 @@ https://library.netapp.com/ecm/ecm_download_file/ECMLP2316769[FAS8200 Systems In
 . Install the disk shelves, power them on, and then set the shelf IDs.
  ** You must power-cycle each disk shelf.
  ** Shelf IDs must be unique for each SAS disk shelf within each MetroCluster DR group (including both sites).
-*Note:* Do not cable disk shelves intended to contain unimirrored aggregates at this time. You must wait to deploy shelves intended for unmirrored aggregates until after the MetroCluster configuration is complete and only deploy them after using the metrocluster modify -enable-unmirrored-aggr-deployment true command.
+*Note:* Do not cable disk shelves intended to contain unmirrored aggregates at this time. You must wait to deploy shelves intended for unmirrored aggregates until after the MetroCluster configuration is complete and only deploy them after using the `metrocluster modify -enable-unmirrored-aggr-deployment true` command.
 
 == Cabling the IP switches
 
@@ -68,9 +68,9 @@ Keep track of the MetroCluster port group (MetroCluster 1, MetroCluster 2, or Me
 +
 Use this cabling overview to verify your cabling.
 
-==== Cabling eight-node MetroCluster configurations for transition and upgrade procedures
+==== Cabling eight-node MetroCluster configurations 
 
-Some procedures require the addition of second four-node DR group to create a temporary or permanent eight-node configuration.
+For MetroCluster configuration running ONTAP 9.8 and earlier, some procedures that are performed to transition an upgrade require the addition of a second four-node DR group to the configuration to create a temporary eight-node configuration.  Starting with ONTAP 9.9.1, permanent 8-node MetroCluster configurations are supported.
 
 For such configurations, you use the same method as described above. Instead of a second MetroCluster, you are cabling an additional four-node DR group.
 
