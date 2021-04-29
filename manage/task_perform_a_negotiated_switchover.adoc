@@ -49,12 +49,10 @@ For MetroCluster IP configurations:
 * For ONTAP 9.8 and later:
  ** Unmirrored aggregates that are located at the disaster site will become unavailable if access to the remote storage is lost. This might lead to a controller outage.
 
-. Use the metrocluster check run, metrocluster check show and metrocluster check config-replication show commands to make sure no configuration updates are in progress or pending.
-. Enter the following command to implement the switchover: `metrocluster switchover`
+. Use the metrocluster check run, metrocluster check show and metrocluster check config-replication show commands to make sure no configuration updates are in progress or pending. Issue these commands from the site that will remain up and operational.
+.  From the site that will remain up and operational, implement the switchover: `metrocluster switchover`
 +
 The operation can take several minutes to complete.
-+
-IMPORTANT:
 
 . Monitor the completion of the switchover: `metrocluster operation show`
 +
