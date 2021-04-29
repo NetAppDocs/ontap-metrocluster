@@ -4,14 +4,21 @@ The various MetroCluster configurations have key differences in the required com
 
 In all configurations, each of the two MetroCluster sites is configured as an ONTAP cluster. In a two-node MetroCluster configuration, each node is configured as a single-node cluster.
 
-[cols=3*,options="header"]
+[cols=6*,options="header"]
 |===
-| Feature| IP configurations| Fabric-attached configurations| Stretch configurations
-| Four- or eight-node| Two-node| Two-node bridge-attached| Two-node direct-attached
+| Feature | IP configurations   2+| Fabric attached configurations 2+| Stretch configurations
+
+a|
+a|
+a| *Four- or eight-node*
+a| *Two-node*
+a| *Two-node bridge-attached*
+a| *Two-node direct-attached*
+
 a|
 Number of controllers
 a|
-Four or eight
+Four or eight*
 a|
 Four or eight
 a|
@@ -153,4 +160,11 @@ Yes
 a|
 Yes
 |===
+
+*Note the following considerations for eight-node MetroCluster IP configurations:
+
+* Eight-node configurations are supported starting in ONTAP 9.9.1.
+* Only NetApp-validated MetroCluster switches (ordered from NetApp) are supported.
+* Configurations using IP-routed (layer 3) backend connections are not supported.
+* Configurations using sharing private layer 2 networks are not supported.
 //2021-04-21 1374268
