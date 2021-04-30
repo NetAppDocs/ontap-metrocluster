@@ -2,7 +2,7 @@
 permalink: install-ip/concept_configure_the_mcc_software_in_ontap.html
 sidebar: sidebar
 keywords: metrocluster, configuration, ontap, node-level, configuration, node, site, relationship, configuring, configure
-keywords: metrocluster, configuration, ontap, node-level, configuration, node, site, relationship, configuring, configure, similarities, difference, standard, cluster, verify, ha-config, state, component, restoring, restore, controller, module, manual, drive, pool, set, up
+keywords: metrocluster, configuration, ontap, node-level, configuration, node, site, relationship, configuring, configure, similarities, difference, standard, cluster, verify, ha-config, state, component, restoring, restore, controller, module, manual, drive, pool, set, up, eight-node
 summary: You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites.
 ---
 = Configuring the MetroCluster software in ONTAP
@@ -13,6 +13,13 @@ summary: You must set up each node in the MetroCluster configuration in ONTAP, i
 You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites.
 
 image::../media/delete_me_workflow_mcc_ip_high_level_node_and_cluster_configuration_software.gif[]
+
+== Handling eight-node Configurations
+
+[.lead]
+An eight-node configuration will consist of two DR groups. Configure the first DR group by using the tasks in this section.
+
+Then perform the tasks in link:../upgrade/task_expand_a_four_node_mcc_ip_configuration.html[Expanding a four-node MetroCluster IP configuration to an eight-node configuration]
 
 == Gathering required information
 
@@ -1290,16 +1297,19 @@ cluster01
 
 . Create intercluster LIFs on the system SVM and assign them to the failover group.
 +
-[options="header"]
+[cols="1,3"]
 |===
-    a|
-*In ONTAP 9.6 and later:*
+| ONTAP version | Command
+a|
+9.6 and later
 a|
 `network interface create -vserver system_SVM -lif LIF_name -service-policy default-intercluster -home-node node -home-port port -address port_IP -netmask netmask -failover-group failover_group`
+
 a|
-*In ONTAP 9.5 and earlier:*
+9.5 and earlier
 a|
 `network interface create -vserver system_SVM -lif LIF_name -role intercluster -home-node node -home-port port -address port_IP -netmask netmask -failover-group failover_group`
+
 |===
 For complete command syntax, see the man page.
 +
@@ -2729,6 +2739,10 @@ Cluster                   Entry Name          State
 Remote: cluster_A         Configuration state configured
                           Mode                normal
 ----
+
+=== Configuring the second DR group in an eight-node configuration
+
+Repeat the previous tasks to configure the nodes in the second DR group.
 
 === Creating unmirrored data aggregates
 
