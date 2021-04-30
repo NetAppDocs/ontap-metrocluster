@@ -134,7 +134,7 @@ The MetroCluster IP interfaces are specific to MetroCluster IP configurations. T
 * They are created by the `metrocluster configuration-settings interface create` command as part the initial MetroCluster configuration.
 +
 // 22 APR 2021, BURT 1180776
-NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces.
+NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:install-ip/concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
 
 +
 They are not created or modified by the network interface commands.
@@ -1078,18 +1078,11 @@ The MetroCluster backend switches are connected to the routed IP network, either
 
 image::../media/mcc_layer3_backend.png[]
 
-You can use MetroCluster IP configurations with IP-routed backend connections in two ways:
-
-* *Inter-VLAN routing*: You can enable inter-VLAN routing and configure gateways on the switch ports.
-
-* *Customer routers*: You can also connect the MetroCluster backend switches to your routers and configure the gateways on the switch ports.
-
-NOTE: For either configuration, NetApp supports only NetApp-validated switches.  These switches are tested and sold by NetApp.  They are listed in the link:https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability Matrix Tool (IMT)] and in the link:https://review.docs.netapp.com/us-en/ontap-metrocluster_mcc991_releasebranch/install-ip/task_install_and_cable_the_mcc_components.html#cabling-the-ip-switches[Cabling the IP switches].
-However, you can use switches that have not been validated by NetApp, but support will not be provided for the switch configuration.
+NOTE: NetApp supports only NetApp-validated switches.  These switches are tested and sold by NetApp.  They are listed in the link:https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability Matrix Tool (IMT)] and in link:https://review.docs.netapp.com/us-en/ontap-metrocluster_mcc991_releasebranch/install-ip/task_install_and_cable_the_mcc_components.html#cabling-the-ip-switches[Cabling the IP switches].
 
 The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:task_install_and_cable_the_mcc_components.html[Install and cable the MetroCluster components].  When you perform the installation and cabling procedure, you must perform the steps specific to the layer 3 configuration:
 
-*	You cable the MetroCluster switches to the routed IP network to provide the ISLs. The MetroCluster switches can be connected directly to the router or to one or more intervening switches. The VLAN must be extended to the gateway device.
+*	The MetroCluster switches can be connected directly to the router or to one or more intervening switches. The VLAN must be extended to the gateway device.
 
 *	You use the `-gateway` parameter to configure the MetroCluster IP (MCC-IP) interface address with an IP gateway address.
 
@@ -1098,6 +1091,7 @@ When you configure routers and gateway IP addresses, ensure the following requir
 * On each node, two interfaces cannot have the same gateway IP address.
 * The corresponding interfaces on the HA pairs on each site must have the same gateway IP address.
 * The corresponding interfaces on a node and its DR and AUX partners cannot have the same gateway IP address.
+* The corresponding interfaces on a node and its DR and AUX partners must have the same VLAN ID.
 
 The MetroCluster VLANs must extend from the edge MetroCluster switch to the gateway router so that MetroCluster traffic reaches the gateway (refer to the diagram shown above). The VLAN IDs for the MetroCluster VLANs must be the same at each site.  However, the subnets can be different.
 
