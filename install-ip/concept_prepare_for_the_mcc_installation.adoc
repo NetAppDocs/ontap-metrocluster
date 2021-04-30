@@ -1074,17 +1074,30 @@ image::../media/delete_me_mcc_ip_unsupported_two_mccs_direct_to_shared_switches.
 
 Starting with ONTAP 9.9.1, MetroCluster IP configurations can be implemented with IP-routed (layer 3) backend connections.
 
-The MetroCluster backend switches are connected to the routed IP network, as shown in the following simplified example:
+The MetroCluster backend switches are connected to the routed IP network, either directly to routers (as shown in the following simplified example) or through other intervening switches.
 
 image::../media/mcc_layer3_backend.png[]
 
-The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:task_install_and_cable_the_mcc_components.html[Install and cable the MetroCluster components].  When you perform the installation and cabling procedure, use the steps labeled for a layer 3 network.  The steps that are specific to layer 3 include:
+You can use MetroCluster IP configurations with IP-routed backend connections in two ways:
 
-*	Cabling the MetroCluster switches to the routed IP network to provide the ISLs. The MetroCluster switches can be connected directly to the router or to one or more intervening switches. The VLAN must be extended to the gateway device.
+* *Inter-VLAN routing*: You can enable inter-VLAN routing and configure gateways on the switch ports.
 
-*	Using the `-gateway` parameter to configure the MetroCluster IP interface address with an IP gateway address.
+* *Customer routers*: You can also connect the MetroCluster backend switches to your routers and configure the gateways on the switch ports.
 
-NetApp supports only NetApp-validated switches for use in layer 3 wide-area networks.  These switches are tested and sold by NetApp.  Their cabling is documented by NetApp, and they are listed in the link:https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability Matrix Tool (IMT)]. NetApp-validated switches are also listed in the cabling section and supported by the RCF generator.
+NOTE: For either configuration, NetApp supports only NetApp-validated switches.  These switches are tested and sold by NetApp.  They are listed in the link:https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability Matrix Tool (IMT)] and in the link:https://review.docs.netapp.com/us-en/ontap-metrocluster_mcc991_releasebranch/install-ip/task_install_and_cable_the_mcc_components.html#cabling-the-ip-switches[Cabling the IP switches].
+However, you can use switches that have not been validated by NetApp, but support will not be provided for the switch configuration.
+
+The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:task_install_and_cable_the_mcc_components.html[Install and cable the MetroCluster components].  When you perform the installation and cabling procedure, you must perform the steps specific to the layer 3 configuration:
+
+*	You cable the MetroCluster switches to the routed IP network to provide the ISLs. The MetroCluster switches can be connected directly to the router or to one or more intervening switches. The VLAN must be extended to the gateway device.
+
+*	You use the `-gateway` parameter to configure the MetroCluster IP (MCC-IP) interface address with an IP gateway address.
+
+When you configure routers and gateway IP addresses, ensure the following requirements are met:
+
+* On each node, two interfaces cannot have the same gateway IP address.
+* The corresponding interfaces on the HA pairs on each site must have the same gateway IP address.
+* The corresponding interfaces on a node and its DR and AUX partners cannot have the same gateway IP address.
 
 The MetroCluster VLANs must extend from the edge MetroCluster switch to the gateway router so that MetroCluster traffic reaches the gateway (refer to the diagram shown above). The VLAN IDs for the MetroCluster VLANs must be the same at each site.  However, the subnets can be different.
 
@@ -1105,11 +1118,12 @@ The IP-routed network must meet the following requirements:
 *	Two subnets are required on each MetroCluster site—one in each network.
 
 *	Auto-IP assignment is not supported.
+// 2021-04-21, BURT 1374268
 
 == Considerations for using MetroCluster-compliant switches
 
 [.lead]
-MetroCluster IP switches provided by NetApp are NetApp validated. Beginning with ONTAP 9.7, MetroCluster IP configurations can support switches that are not NetApp validated provided that they are compliant with NetApp specifications.
+MetroCluster IP switches provided by NetApp are NetApp-validated. Beginning with ONTAP 9.7, MetroCluster IP configurations can support switches that are not NetApp-validated provided that they are compliant with NetApp specifications.
 
 === General requirements
 
@@ -1685,4 +1699,4 @@ No
 a|
 Yes
 |===
-//2021-04-21 1374268
+// 2021-04-21, BURT 1374268
