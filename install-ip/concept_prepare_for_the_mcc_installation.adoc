@@ -134,7 +134,7 @@ The MetroCluster IP interfaces are specific to MetroCluster IP configurations. T
 * They are created by the `metrocluster configuration-settings interface create` command as part the initial MetroCluster configuration.
 +
 // 22 APR 2021, BURT 1180776
-NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:install-ip/concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+NOTE: Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to <<Considerations for layer 3 wide-area networks>>.
 
 +
 They are not created or modified by the network interface commands.
@@ -1062,7 +1062,7 @@ image::../media/delete_me_mcc_ip_two_mccs_sharing_the_same_shared_network_sx.gif
 
 This topology is supported beginning with ONTAP 9.7. Two separate MetroCluster configurations share the same intermediate network and one MetroCluster configuration's nodes is directly connected to the intermediate switch.
 
-MetroCluster One is a MetroCluster configuration using NetApp validated switches, ONTAP 9.6 and a shared topology. MetroCluster Two is a MetroCluster configuration using NetApp compliant switches and ONTAP 9.7.
+MetroCluster One is a MetroCluster configuration using NetApp validated switches, ONTAP 9.6 and a shared topology. MetroCluster Two is a MetroCluster configuration using NetApp-compliant switches and ONTAP 9.7.
 
 NOTE: The intermediate switches must be compliant with NetApp specifications.
 
@@ -1078,9 +1078,9 @@ The MetroCluster backend switches are connected to the routed IP network, either
 
 image::../media/mcc_layer3_backend.png[]
 
-NOTE: NetApp supports only NetApp-validated switches.  These switches are tested and sold by NetApp.  They are listed in the link:https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability Matrix Tool (IMT)] and in link:https://review.docs.netapp.com/us-en/ontap-metrocluster_mcc991_releasebranch/install-ip/task_install_and_cable_the_mcc_components.html#cabling-the-ip-switches[Cabling the IP switches].
+NOTE: NetApp supports only NetApp-validated switches.  These switches are tested and sold by NetApp.  They are listed in the link:https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability Matrix Tool (IMT)] and in link:https://review.docs.netapp.com/us-en/ontap-metrocluster_mcc991_releasebranch/task_cable_ip_switches.html[Cabling the IP switches].
 
-The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:task_install_and_cable_the_mcc_components.html[Install and cable the MetroCluster components].  When you perform the installation and cabling procedure, you must perform the steps specific to the layer 3 configuration:
+The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:task_configure_the_mcc_hardware_components.html[Configure the MetroCluster hardware components].  When you perform the installation and cabling procedure, you must perform the steps specific to the layer 3 configuration:
 
 *	The MetroCluster switches can be connected directly to the router or to one or more intervening switches. The VLAN must be extended to the gateway device.
 
@@ -1101,7 +1101,7 @@ You use the RCF files that are created by the RcfFileGenerator tool.  The networ
 
 The IP-routed network must meet the following requirements:
 
-*	All the ISL requirements that are described in xref:concept_prepare_for_the_mcc_installation.html#metrocluster-isl-requirements-in-shared-networks[MetroCluster ISL requirements in shared networks] must be met, including the requirements for VLAN IDs.
+*	All the ISL requirements that are described in xref:concept_prepare_for_the_mcc_installation.html#metrocluster-isl-requirements-in-shared-networks[MetroCluster ISL requirements in shared layer 2 networks] must be met, including the requirements for VLAN IDs.
 
 *	All the intermediate switches must meet the requirements that are described in xref:concept_prepare_for_the_mcc_installation.html#required-settings-on-intermediate-switches[Required settings on intermediate switches].
 
