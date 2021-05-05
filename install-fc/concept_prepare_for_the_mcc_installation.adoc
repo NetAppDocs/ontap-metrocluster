@@ -14,7 +14,7 @@ As you prepare for the MetroCluster installation, you should understand the Metr
 == Differences between the ONTAP MetroCluster configurations
 
 // include reference
-include::_include/differences_between_mcc_types.adoc[]
+include::_include/differences_between_mcc_configs.adoc[]
 // end include reference
 
 == Considerations for using All SAN Array systems in MetroCluster configurations
@@ -136,7 +136,7 @@ You must have the new MetroCluster configuration fully configured and operating 
 
 If you have Brocade 6510 switches and plan on sharing the switch fabrics between the 7-Mode fabric MetroCluster and the MetroCluster running in ONTAP, you must use the specific procedure for configuring the MetroCluster components.
 
-xref:task_fmc_mcc_transition_configure_the_mcc_hardware_for_share_a_7_mode_brocade_6510_fc_fabric_dure_transition.adoc[FMC-MCC transition: Configuring the MetroCluster hardware for sharing a 7-Mode Brocade 6510 FC fabric during transition]
+xref:task_fmc_mcc_transition_configure_the_mcc_hardware_for_share_a_7_mode_brocade_6510_fc_fabric_dure_transition.adoc[FMC-MetroCluster transition: Configuring the MetroCluster hardware for sharing a 7-Mode Brocade 6510 FC fabric during transition]
 
 == Considerations for ISLs
 
@@ -332,7 +332,7 @@ SVMs should be configured on mirrored aggregates only or on unmirrored aggregate
 
 === Considerations for unmirrored aggregates and SAN
 
-A LUN should not be located on an unmirrored aggregate. Configuring a LUN on an unmirrored aggregate can result in a switchover operation that exceeds 120 seconds and a data outage.
+In ONTAP versions prior to 9.9.1, a LUN should not be located on an unmirrored aggregate. Configuring a LUN on an unmirrored aggregate can result in a switchover operation that exceeds 120 seconds and a data outage.
 
 == Considerations for firewall usage at MetroCluster sites
 
@@ -511,3 +511,4 @@ No
 a|
 Yes
 |===
+//2021-04-21 1374268

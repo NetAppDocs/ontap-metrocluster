@@ -2,7 +2,7 @@
 permalink: install-ip/concept_configure_the_mcc_software_in_ontap.html
 sidebar: sidebar
 keywords: metrocluster, configuration, ontap, node-level, configuration, node, site, relationship, configuring, configure
-keywords: metrocluster, configuration, ontap, node-level, configuration, node, site, relationship, configuring, configure, similarities, difference, standard, cluster, verify, ha-config, state, component, restoring, restore, controller, module, manual, drive, pool, set, up
+keywords: metrocluster, configuration, ontap, node-level, configuration, node, site, relationship, configuring, configure, similarities, difference, standard, cluster, verify, ha-config, state, component, restoring, restore, controller, module, manual, drive, pool, set, up, eight-node
 summary: You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites.
 ---
 = Configuring the MetroCluster software in ONTAP
@@ -13,6 +13,13 @@ summary: You must set up each node in the MetroCluster configuration in ONTAP, i
 You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites.
 
 image::../media/delete_me_workflow_mcc_ip_high_level_node_and_cluster_configuration_software.gif[]
+
+== Handling eight-node Configurations
+
+[.lead]
+An eight-node configuration will consist of two DR groups. Configure the first DR group by using the tasks in this section.
+
+Then perform the tasks in link:../upgrade/task_expand_a_four_node_mcc_ip_configuration.html[Expanding a four-node MetroCluster IP configuration to an eight-node configuration]
 
 == Gathering required information
 
@@ -754,7 +761,7 @@ Please choose one of the following:
     1) This option (9a) has been executed or will be executed
     on the HA partner node (and DR/DR-AUX partner nodes if
     applicable), prior to reinitializing any system in the
-    HA-pair (or MCC setup).
+    HA-pair (or MetroCluster setup).
     2) The HA partner node (and DR/DR-AUX partner nodes if
     applicable) is currently waiting at the boot menu.
 
@@ -1641,15 +1648,14 @@ Cluster_A::> metrocluster configuration-settings dr-group create -partner-cluste
 === Configuring and connecting the MetroCluster IP interfaces
 
 [.lead]
-You must configure the MetroCluster IP (MCCIP) interfaces that are used for replication of each node's storage and nonvolatile cache. You then establish the connections using the MCCIP interfaces. This creates iSCSI connections for storage replication.
-
-You must create two interfaces for each node. The interfaces must be associated with the VLANs defined in the MetroCluster RCF file.
-
-You must create all MetroCluster IP interface 'A' ports in the same VLAN and all MetroCluster IP interface 'B' ports in the other VLAN.
+You must configure the MetroCluster IP interfaces that are used for replication of each node's storage and nonvolatile cache. You then establish the connections using the MetroCluster IP interfaces. This creates iSCSI connections for storage replication.
 
 NOTE: You must choose the MetroCluster IP addresses carefully because you cannot change them after initial configuration.
 
-xref:concept_prepare_for_the_mcc_installation.html#considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration]
+* You must create two interfaces for each node. The interfaces must be associated with the VLANs defined in the MetroCluster RCF file.
+
+* You must create all MetroCluster IP interface 'A' ports in the same VLAN and all MetroCluster IP interface 'B' ports in the other VLAN.  Refer to xref:concept_prepare_for_the_mcc_installation.html#Considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration].
+
 
 // include reference
 include::../_include/models_supporting_vlan-id.adoc[]
@@ -1847,9 +1853,18 @@ cluster_B
 
 . Create the interfaces on node_A_1.
 +
-NOTE: The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
+|===
 
- .. Configure the interface on port e5a on node_A_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -address ip-address -netmask netmask`
+|*Notes:*
+a|
+* The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
+* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+// 22 APR 2021, BURT 1180776
+* On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
+
+|===
+
+.. Configure the interface on port e5a on node_A_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -address ip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5a on node_A_1 with IP address 10.1.1.1:
 +
@@ -1859,7 +1874,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 cluster_A::>
 ----
 
- .. Configure the interface on port e5b on node_A_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5b -address ip-address -netmask netmask`
+.. Configure the interface on port e5b on node_A_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5b -address ip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5b on node_A_1 with IP address 10.1.2.1:
 +
@@ -1874,9 +1889,18 @@ NOTE: You can verify that these interfaces are present using the `metrocluster c
 
 . Create the interfaces on node_A_2.
 +
-NOTE: The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
+|===
 
- .. Configure the interface on port e5a on node_A_2: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -address ip-address -netmask netmask`
+|*Notes:*
+a|
+* The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
+* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+// 22 APR 2021, BURT 1180776
+* On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
+
+|===
+
+.. Configure the interface on port e5a on node_A_2: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -address ip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5a on node_A_2 with IP address 10.1.1.2:
 +
@@ -1894,7 +1918,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 cluster_A::>
 ----
 +
- .. Configure the interface on port e5b on node_A_2: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5b -address ip-address -netmask netmask`
+.. Configure the interface on port e5b on node_A_2: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5b -address ip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5b on node_A_2 with IP address 10.1.2.2:
 +
@@ -1914,9 +1938,18 @@ cluster_A::>
 
 . Create the interfaces on node_B_1.
 +
-NOTE: The port usage in the following examples is for an AFF A700s or a FAS9000system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given in above.
+|===
 
- .. Configure the interface on port e5a on node_B_1:``metrocluster configuration-settings interface create -cluster-namecluster-name-home-nodenode-name-home-port e5a -addressip-address-netmask netmask``
+|*Notes:*
+a|
+* The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
+* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+// 22 APR 2021, BURT 1180776
+* On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
+
+|===
+
+.. Configure the interface on port e5a on node_B_1:``metrocluster configuration-settings interface create -cluster-namecluster-name-home-nodenode-name-home-port e5a -addressip-address-netmask netmask``
 +
 The following example shows the creation of the interface on port e5a on node_B_1 with IP address 10.1.1.3:
 +
@@ -1925,7 +1958,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [Job 28] Job succeeded: Interface Create is successful.cluster_A::>
 ----
 
- .. Configure the interface on port e5b on node_B_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -addressip-address -netmask netmask`
+.. Configure the interface on port e5b on node_B_1: `metrocluster configuration-settings interface create -cluster-name cluster-name -home-node node-name -home-port e5a -addressip-address -netmask netmask`
 +
 The following example shows the creation of the interface on port e5b on node_B_1 with IP address 10.1.2.3:
 +
@@ -1936,9 +1969,18 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 
 . Create the interfaces on node_B_2.
 +
-NOTE: The port usage in the following examples is for an AFF A700s or a FDvM200 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
+|===
 
- .. Configure the interface on port e5a on node_B_2:``metrocluster configuration-settings interface create -cluster-name cluster-name -home-nodenode-name -home-port e5a -addressip-addresip-addresss ip-address -netmask netmask``
+|*Notes:*
+a|
+* The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
+* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+// 22 APR 2021, BURT 1180776
+* On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
+
+|===
+
+.. Configure the interface on port e5a on node_B_2:``metrocluster configuration-settings interface create -cluster-name cluster-name -home-nodenode-name -home-port e5a -addressip-addresip-addresss ip-address -netmask netmask``
 +
 The following example shows the creation of the interface on port e5a on node_B_2 with IP address 10.1.1.4:
 +
@@ -1992,7 +2034,7 @@ cluster_A::>
 
 . Verify that the nodes are ready to connect the MetroCluster interfaces: `metrocluster configuration-settings show-status`
 +
-The following example shows all nodes in the ready for connection state:
+The following example shows all nodes in the "ready for connection" state:
 +
 ----
 
@@ -2043,11 +2085,11 @@ You need to respond with `y` when you are prompted to continue into advanced mod
 
  .. Display the connections: `storage iscsi-initiator show`
 +
-On systems running ONTAP 9.5, there are eight MCCIP initiators on each cluster that should appear in the output.
+On systems running ONTAP 9.5, there are eight MetroCluster IP initiators on each cluster that should appear in the output.
 +
-On systems running ONTAP 9.4 and earlier, there are four MCCIP initiators on each cluster that should appear in the output.
+On systems running ONTAP 9.4 and earlier, there are four MetroCluster IP initiators on each cluster that should appear in the output.
 +
-The following example shows the eight MCCIP initiators on a cluster running ONTAP 9.5:
+The following example shows the eight MetroCluster IP initiators on a cluster running ONTAP 9.5:
 +
 ----
 cluster_A::*> storage iscsi-initiator show
@@ -2154,7 +2196,7 @@ a|
 [.lead]
 You must verify that the remote disks are visible to the nodes and have been assigned correctly.
 
-You must wait at least ten minutes for disk auto-assignment to complete after the MetroCluster IP interfaces and connections were created with the metrocluster configuration-settings connection connect command.
+You must wait at least ten minutes for disk auto-assignment to complete after the MetroCluster IP interfaces and connections were created with the `metrocluster configuration-settings connection connect` command.
 
 Command output will show disk names in the form: node-name:0m.i1.0L1
 
@@ -2697,6 +2739,10 @@ Cluster                   Entry Name          State
 Remote: cluster_A         Configuration state configured
                           Mode                normal
 ----
+
+=== Configuring the second DR group in an eight-node configuration
+
+Repeat the previous tasks to configure the nodes in the second DR group.
 
 === Creating unmirrored data aggregates
 

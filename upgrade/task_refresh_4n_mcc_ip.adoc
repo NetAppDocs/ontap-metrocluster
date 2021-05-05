@@ -1,0 +1,125 @@
+---
+permalink: upgrade/task_refresh_4n_mcc_ip.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, refresh, four, node, ip, configuration, add, autosupport
+summary: 'Starting with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.'
+---
+= Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Starting with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.
+
+* This procedure is supported on systems running ONTAP 9.8 and later.
+* If you are upgrading the IP switches, they should be upgraded before to performing this refresh procedure.
+* References to "old nodes" mean the nodes that you intend to replace.
+* This procedure is not supported on AFF A320 systems configured with Broadcom BES-53248 switches.
+
+.Steps
+. Gather information from the old nodes.
++
+At this stage, the four-node configuration appears as shown in the following image:
++
+image::../media/mcc_dr_group_a.png[]
+
+. To prevent automatic support case generation, send an Autosupport message to indicate the upgrade is underway.
+ .. Issue the following command:
+ +
+`*system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading _old-model_ to _new-model"_*`
++
+Our example specifies a 10 hour maintenance window. You may want to allow additional time depending on your plan.
++
+If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
++
+`*system node autosupport invoke -node * -type all -message MAINT=end*`
+
+ .. Repeat the command on the partner cluster.
+. Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
++
+[cols=2*,options="header"]
+|===
+| If you are using...| Use this procedure...
+a|
+*Tiebreaker*
+a|
+link:..tiebreaker/concept_configuring_the_tiebreaker_software.html#commands-for-modifying-metrocluster-tiebreaker-configurations[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+a|
+*Mediator*
+a|
+Issue the following command from the ONTAP prompt:
+
+`*metrocluster configuration-settings mediator remove*`
+a|
+*Third-party applications*
+a|
+Refer to the product documentation.
+|===
+
+. Perform all of the steps in link:../upgrade/task_expand_a_four_node_mcc_ip_configuration.html[Expanding a four-node MetroCluster IP configuration to an eight-node configuration] to add the new nodes and storage to the configuration.
++
+When the expansion procedure is complete, the configuration appears as shown in the following image:
++
+image::../media/mcc_dr_group_b.png[]
+
+. Move the CRS volumes.
++
+Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations].
+
+. Move the data from the old nodes to new nodes using the following procedures from the _Controller Hardware Upgrade Express Guide_.
++
+https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/home.html[Other platform procedures:Controller Hardware Upgrade Express Guide]
+
+ .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-AFE432F6-60AD-4A79-86C0-C7D12957FA63.html[Creating an aggregate and moving volumes to the new nodes].
++
+NOTE: You might choose to mirror the aggregate when or after it is created.
+
+ .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-95CA9262-327D-431D-81AA-C73DEFF3DEE2.html[Moving non-SAN data LIFs and cluster management LIFs to the new nodes].
+
+. Follow the steps in the procedure for removing the old DR group.
++
+xref:concept_removing_a_disaster_recovery_group.adoc[Removing a Disaster Recovery group]
++
+After you have removed the old DR group (DR group one), the configuration appears as shown in the following image:
++
+image::../media/mcc_dr_group_d.png[]
+
+. Confirm the operational mode of the MetroCluster configuration and perform a MetroCluster check.
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
++
+`*metrocluster show*`
+ .. Confirm that all expected nodes are shown:
++
+`*metrocluster node show*`
+ .. Issue the following command:
++
+`*metrocluster check run*`
+ .. Display the results of the MetroCluster check:
++
+`*metrocluster check show*`
+. Restore monitoring if necessary, using the procedure for your configuration.
++
+[cols=2*,options="header"]
+|===
+| If you are using...| Use this procedure
+a|
+*Tiebreaker*
+a|
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+a|
+*Mediator*
+a|
+link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration Guide_
+a|
+*Third-party applications*
+a|
+Refer to the product documentation.
+|===
+
+. To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
+ .. Issue the following command:
++
+`*system node autosupport invoke -node * -type all -message MAINT=end*`
+ .. Repeat the command on the partner cluster.
+
+// 2021-04-21 1374268
