@@ -1,137 +1,15 @@
 ---
-permalink: upgrade/task_refresh_a_four_node_mcc_configuration_us_volume_move.html
+permalink: upgrade/task_expand_a_four_node_mcc_ip_configuration.html
 sidebar: sidebar
 keywords: metrocluster, upgrade, refresh, four, node, ip, configuration, add, autosupport
-summary: 'Starting with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.'
+summary: 'You can add four new nodes to the MetroCluster IP configuration as a second DR group. This creates an eight-node MetroCluster configuration.'
 ---
-= Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
+= Expanding a four-node MetroCluster IP configuration to an eight-node configuration
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Starting with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.
-
-* This procedure is supported on systems running ONTAP 9.8 and later.
-* If you are upgrading the IP switches, they should be upgraded before to performing this refresh procedure.
-* References to "old nodes" mean the nodes that you intend to replace.
-* This procedure is not supported on AFF A320 systems configured with Broadcom BES-53248 switches.
-
-.Steps
-. Gather information from the old nodes.
-+
-At this stage, the four-node configuration appears as shown in the following image:
-+
-image::../media/mcc_dr_group_a.png[]
-
-. To prevent automatic support case generation, send an Autosupport message to indicate the upgrade is underway.
- .. Issue the following command:
- +
-`*system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading _old-model_ to _new-model"_*`
-+
-Our example specifies a 10 hour maintenance window. You may want to allow additional time depending on your plan.
-+
-If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
-+
-`*system node autosupport invoke -node * -type all -message MAINT=end*`
-
- .. Repeat the command on the partner cluster.
-. Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
-+
-[cols=2*,options="header"]
-|===
-| If you are using...| Use this procedure...
-a|
-*Tiebreaker*
-a|
-link:..tiebreaker/concept_configuring_the_tiebreaker_software.html#commands-for-modifying-metrocluster-tiebreaker-configurations[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
-a|
-*Mediator*
-a|
-Issue the following command from the ONTAP prompt:
-
-`*metrocluster configuration-settings mediator remove*`
-a|
-*Third-party applications*
-a|
-Refer to the product documentation.
-|===
-
-. Perform all of the steps in the procedure to add nodes to your MetroCluster IP configuration.
-+
-xref:task_refresh_a_four_node_mcc_configuration_us_volume_move.adoc[Adding new nodes to the MetroCluster IP configuration]
-+
-When the expansion procedure is complete, the configuration appears as shown in the following image:
-+
-image::../media/mcc_dr_group_b.png[]
-
-. Move the CRS volumes.
-+
-Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations].
-
-. Move the data from the old nodes to new nodes using the following procedures from the _Controller Hardware Upgrade Express Guide_.
-+
-https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/home.html[Other platform procedures:Controller Hardware Upgrade Express Guide]
-
- .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-AFE432F6-60AD-4A79-86C0-C7D12957FA63.html[Creating an aggregate and moving volumes to the new nodes].
-+
-NOTE: You might choose to mirror the aggregate when or after it is created.
-
- .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-95CA9262-327D-431D-81AA-C73DEFF3DEE2.html[Moving non-SAN data LIFs and cluster management LIFs to the new nodes].
-
-. Follow the steps in the procedure for removing the old DR group.
-+
-xref:concept_removing_a_disaster_recovery_group.adoc[Removing a Disaster Recovery group]
-+
-After you have removed the old DR group (DR group one), the configuration appears as shown in the following image:
-+
-image::../media/mcc_dr_group_d.png[]
-
-. Confirm the operational mode of the MetroCluster configuration and perform a MetroCluster check.
- .. Confirm the MetroCluster configuration and that the operational mode is normal:
-+
-`*metrocluster show*`
- .. Confirm that all expected nodes are shown:
-+
-`*metrocluster node show*`
- .. Issue the following command:
-+
-`*metrocluster check run*`
- .. Display the results of the MetroCluster check:
-+
-`*metrocluster check show*`
-. Restore monitoring if necessary, using the procedure for your configuration.
-+
-[cols=2*,options="header"]
-|===
-| If you are using...| Use this procedure
-a|
-*Tiebreaker*
-a|
-link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
-a|
-*Mediator*
-a|
-link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration Guide_
-a|
-*Third-party applications*
-a|
-Refer to the product documentation.
-|===
-
-. To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
- .. Issue the following command:
-+
-`*system node autosupport invoke -node * -type all -message MAINT=end*`
- .. Repeat the command on the partner cluster.
-
-== Adding new nodes to the MetroCluster IP configuration
-
-[.lead]
-You can add four new nodes to the MetroCluster IP configuration as a second DR group. This creates a temporary eight-node MetroCluster configuration.
-
-* You must complete the initial steps in xref:task_refresh_a_four_node_mcc_configuration_us_volume_move.adoc[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)].
-+
-After completing this procedure, return to xref:task_refresh_a_four_node_mcc_configuration_us_volume_move.adoc[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)] to complete the refresh of the configuration.
+Starting with ONTAP 9.9.1, you can add four new nodes to the MetroCluster IP configuration as a second DR group. This creates an eight-node MetroCluster configuration.
 
 * The old and new nodes must be running the same version of ONTAP.
 * You must ensure that the old and new platform models are supported for platform mixing.
@@ -144,7 +22,7 @@ https://hwu.netapp.com[NetApp Hardware Universe]
 
 * The new nodes must have enough storage to accommodate the data of the old nodes, along with adequate disks for root aggregates and spare disks.
 
-=== Example naming in this procedure
+== Example naming in this procedure
 
 [.lead]
 This procedure uses example names throughout to identify the DR groups, nodes, and switches involved.
@@ -178,7 +56,7 @@ a|
 
 |===
 
-=== Sending a custom AutoSupport message prior to maintenance
+== Sending a custom AutoSupport message prior to maintenance
 
 [.lead]
 Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
@@ -199,7 +77,7 @@ If the maintenance is completed before the time has elapsed, you can invoke an A
 
  .. Repeat the command on the partner cluster.
 
-=== Verifying the health of the MetroCluster configuration
+== Verifying the health of the MetroCluster configuration
 
 [.lead]
 You must verify the health and connectivity of the MetroCluster configuration prior to performing the transition
@@ -319,7 +197,7 @@ Cluster
 cluster_A::>
 ----
 
-=== Removing the configuration from monitoring applications
+== Removing the configuration from monitoring applications
 
 [.lead]
 If the existing configuration is monitored with the MetroCluster Tiebreaker software, the ONTAP Mediator or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the monitoring software prior to upgrade.
@@ -349,7 +227,7 @@ Refer to the product documentation.
 +
 Refer to the documentation for the application.
 
-=== Preparing the new controller modules
+== Preparing the new controller modules
 
 [.lead]
 You must prepare the four new MetroCluster nodes and install the correct ONTAP version.
@@ -367,7 +245,7 @@ In these steps, you clear the configuration on the nodes and clear the mailbox r
 . Rack the new controllers.
 . Cable the new MetroCluster IP nodes to the IP switches as shown in the _MetroCluster Installation and Configuration Guide._
 +
-link:../install-ip/task_install_and_cable_the_mcc_components.html#cabling-the-ip-switches[Cabling the IP switches]
+link:../install-ip/task_cable_ip_switches.html[Cabling the IP switches]
 
 . Configure the MetroCluster IP nodes using the following sections of the _MetroCluster Installation and Configuration Guide._
  .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#gathering-required-information[Gathering required information]
@@ -378,7 +256,7 @@ link:../install-ip/task_install_and_cable_the_mcc_components.html#cabling-the-ip
 +
 Do not complete the cluster wizard or node wizard at this time.
 
-=== Joining the new nodes to the clusters
+== Joining the new nodes to the clusters
 
 [.lead]
 You must add the four new MetroCluster IP nodes to the existing MetroCluster configuration.
@@ -455,7 +333,7 @@ Do you want to use this configuration? {yes, no} [yes]: yes
  .. Join the second new MetroCluster IP node (node_A_2-new) to the existing MetroCluster IP configuration.
 . Repeat these steps to join node_B_1-new and node_B_2-new to cluster_B.
 
-=== Configuring intercluster LIFs, creating the MetroCluster interfaces, and mirroring root aggregates
+== Configuring intercluster LIFs, creating the MetroCluster interfaces, and mirroring root aggregates
 
 [.lead]
 You must create cluster peering LIFs, create the MetroCluster interfaces on the new MetroCluster IP nodes.
@@ -487,7 +365,7 @@ The following example shows the cluster peering configuration on cluster_B:
 cluster_B:> cluster peer show
 Peer Cluster Name         Cluster Serial Number Availability   Authentication
 ------------------------- --------------------- -------------- --------------
-cluster_A 1-80-000011 Available ok
+cluster_A                 1-80-000011           Available      ok
 cluster_B::>
 ----
 
@@ -537,37 +415,39 @@ cluster_A::>
 . Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes:
 +
 `*metrocluster configuration-settings interface create -cluster-name*`
+
 +
 include::../_include/models_supporting_vlan-id.adoc[]
-+
-NOTE: You can configure the MetroCluster IP interfaces from either cluster.
-+
+
+NOTE: You can configure the MetroCluster IP interfaces from either cluster.  Also, starting with ONTAP 9.1.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter to create MetroCluster IP interfaces. Refer to link:../install-ip/concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+
 ----
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_1-new -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
 [Job 260] Job succeeded: Interface Create is successful.
-+
+
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_1-new -home-port e1b -address 172.17.27.10 -netmask 255.255.255.0
 [Job 261] Job succeeded: Interface Create is successful.
-+
+
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_2-new -home-port e1a -address 172.17.26.11 -netmask 255.255.255.0
 [Job 262] Job succeeded: Interface Create is successful.
-+
+
 cluster_A::> :metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_2-new -home-port e1b -address 172.17.27.11 -netmask 255.255.255.0
 [Job 263] Job succeeded: Interface Create is successful.
-+
+
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_1-new -home-port e1a -address 172.17.26.12 -netmask 255.255.255.0
 [Job 264] Job succeeded: Interface Create is successful.
-+
+
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_1-new -home-port e1b -address 172.17.27.12 -netmask 255.255.255.0
 [Job 265] Job succeeded: Interface Create is successful.
-+
+
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_2-new -home-port e1a -address 172.17.26.13 -netmask 255.255.255.0
 [Job 266] Job succeeded: Interface Create is successful.
-+
+
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_2-new -home-port e1b -address 172.17.27.13 -netmask 255.255.255.0
 [Job 267] Job succeeded: Interface Create is successful.
 ----
 
+[Arabic, start=6]
 . Verify the MetroCluster IP interfaces are created:
 +
 `*metrocluster configuration-settings interface show*`
@@ -632,6 +512,7 @@ cluster_A>
 `*metrocluster configuration-settings connection connect*`
 +
 NOTE: This command might take several minutes to complete.
+
 +
 ----
 cluster_A::> metrocluster configuration-settings connection connect
@@ -774,7 +655,7 @@ cluster_A::>
 
 . Verify disk autoassignment and partitioning:
 +
-`*_disk show -pool Pool1_*`
+`*disk show -pool Pool1*`
 +
 ----
 cluster_A::> disk show -pool Pool1
@@ -802,10 +683,11 @@ cluster_A::>
 
 . Mirror the root aggregates:
 +
-`*_storage aggregate mirror -aggregate aggr0_node_A_1-new_*`
+`*storage aggregate mirror -aggregate aggr0_node_A_1-new*`
 +
 NOTE: You must complete this step on each MetroCluster IP node.
 +
+
 ----
 cluster_A::> aggr mirror -aggregate aggr0_node_A_1-new
 
@@ -863,16 +745,17 @@ aggr_data_a2
                                                                    mirrored,
 ----
 
-=== Finalizing the addition of the new nodes
+== Finalizing the addition of the new nodes
 
 [.lead]
 You must incorporate the new DR group into the MetroCluster configuration and create mirrored data aggregates on the new nodes.
 
 . Create mirrored data aggregates on each of the new MetroCluster nodes:
 +
-`%storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true*`
+`*storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true*`
 +
 NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
+
 +
 The following example shows the creation of an aggregate on node_A_1-new.
 +
@@ -958,10 +841,11 @@ cluster_A::*>
 ----
 
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
- .. Display the volumes to identify the MDV volumes:
+.. Display the volumes to identify the MDV volumes:
 +
 NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
+
 The following example shows the MDV volumes in the `volume show` output:
 +
 ----
@@ -1044,6 +928,7 @@ node_A_4-new      false
 +
 `*cluster show -fields epsilon*`
 +
+
 ----
 cluster_A::> cluster show -fields epsilon
 node             epsilon
@@ -1054,6 +939,5 @@ node_A_3-new      true
 node_A_4-new      false
 4 entries were displayed.
 ----
-. Complete the remaining steps in xref:task_refresh_a_four_node_mcc_configuration_us_volume_move.adoc[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)].
-+
-You have now completed step 4, adding the new nodes to the MetroCluster IP configuration.
+
+// 2021-04-21 1374268

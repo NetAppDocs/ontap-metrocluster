@@ -12,7 +12,7 @@ summary: To install the ONTAP Mediator service, you must ensure all prerequisite
 
 To install the ONTAP Mediator service, you must ensure all prerequisites are met, get the installation package and run the installer on the host.
 
-*Before you being*
+== Before you begin
 
 You must meet the following prerequisites.
 
@@ -20,9 +20,14 @@ You must meet the following prerequisites.
 |===
 | Mediator version| Supported Linux versions
 a|
+1.3
+a|
+Red Hat Enterprise Linux or CentOS 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3
+
+a|
 1.2
 a|
-Red Hat Enterprise Linux or CentOS 7.6, 7.7, 7.8, 7.9, 8.0, 8.1
+Red Hat Enterprise Linux or CentOS 7.6, 7.7, 7.8, 8.0, 8.1
 |===
 
 * 64-bit physical installation or virtual machine
@@ -44,7 +49,7 @@ You can use the following link for information about setting up a repository.
 +
 If you are using Link Aggregation Control Protocol (LACP) in a Linux environment, you must correctly configure the kernel and make sure the sysctl net.ipv4.conf.all.arp_ignore is set to `2`.
 +
-The following packages are required by the ONTAP Mediator service version 1.2:
+The following packages are required by the ONTAP Mediator service:
 +
 [options="header"]
 |===
@@ -98,7 +103,7 @@ This procedure is used for an installation or an upgrade of an existing installa
 
 xref:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html#guidelines-for-upgrading-the-ontap-mediator-in-a-metrocluster-configuration[Guidelines for upgrading the ONTAP Mediator in a MetroCluster configuration]
 
-*Enable access to the repositories*
+== Enable access to the repositories
 
 [options="header"]
 |===
@@ -219,7 +224,7 @@ If the system displays an error indicating that the package is already installed
 . Repeat the rpm command shown above.
 
 
-*Download the Mediator installation package*
+== Download the Mediator installation package
 
 . Download the Mediator installation package from the ONTAP Mediator page.
 +
@@ -229,20 +234,25 @@ https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-
 +
 ----
 [root@mediator-host ~]#ls
-./ontap-mediator_1.2
+./ontap-mediator_1.3
 ----
 +
 If you are at a location without access to the internet, you must ensure that the installer has access to the required packages.
 
 . If necessary, move the Mediator installation package from the download directory to the installation directory on the Linux Mediator host.
-. Install the Mediator installation package and respond to the prompts as required: `./ontap-mediator_1.2`
+
+== Install the ONTAP Mediator installation package
+
+. Install the Mediator installation package and respond to the prompts as required: `./ontap-mediator_1.3`
 +
 The installation process proceeds to create the required accounts and install required packages. If you have a previous version of Mediator installed on the host, you will be prompted to confirm that you want to upgrade.
-+
+
+=== Example of a fresh ONTAP Mediator installation
+
 The following example shows a fresh installation of the Mediator service:
-+
+
 ----
-[root@red-hat-enterprise-linux ~]# ./ontap-mediator_1.2
+[root@red-hat-enterprise-linux ~]# ./ontap-mediator_1.3
 ONTAP Mediator: Self Extracting Installer
 
 
@@ -444,13 +454,13 @@ Package 1:make-3.82-23.el7.x86_64 already installed and latest version
  + Install successful. (Moving log to /opt/netapp/lib/ontap_mediator/log/install.log)
 
  [root@red-hat-enterprise-linux ~]#
-
-
 ----
+
+=== Upgrading the ONTAP Mediator service
 
 The following example shows an upgrade of the Mediator service:
 
-. Use the following steps to configure third-part certification.
+. Use the following steps to configure third-party certification.
 +
 Third-party certification is recommended.
 .. The certificate must be placed in the following directory: /opt/netapp/lib/ontap_mediator/ontap_mediator/ server_config
@@ -480,8 +490,8 @@ You must overwrite the following files with your certificate, renaming the certi
  ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key'
  ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl'
 
-. Verify the installation.
-+
+== Verify the installation.
+
 Run the following command to view the status of the ONTAP Mediator services: systemctl
 
 ----
@@ -540,7 +550,7 @@ Run the following command to view the status of the ONTAP Mediator services: sys
          [root@scspr1915530002 ~]#
 ----
 
-.. To view the ports the ONTAP Mediator service is using, run: netstat
+. Confirm the ports the ONTAP Mediator service is using: netstat
 
 ----
          [root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
@@ -552,5 +562,9 @@ Run the following command to view the status of the ONTAP Mediator services: sys
          tcp6       0      0 :::3260                 :::*                    LISTEN
 ----
 
- == Result
- The ONTAP Mediator service is now installed and running. Further configuration must be performed in the ONTAP storage system to use the Mediator features.
+== Result
+
+The ONTAP Mediator service is now installed and running. Further configuration must be performed in the ONTAP storage system to use the Mediator features.
+
+// 2021-04-21 ONTAPEX-133437
+// 2021-05-05 review comment in IDR-67
