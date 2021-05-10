@@ -1,7 +1,7 @@
 ---
 permalink: transition/task_transition_from_mcc_fc_to_mcc_ip_configurations.html
 sidebar: sidebar
-keywords: review, requirement, preparing, prepare, transition, perform, procedure, order, completing, complete, step, task, moving, move, controller, storage, shelves, shelf, exist, configuration, direct, metrocluster, fc, ip, verify, health, removing, remove, tiebreaker, monitor, software, generating, generate, apply, rcf, switch, controller, configure, prepare, preparing
+keywords: Transitioning from MetroCluster FC to MetroCluster IP configurations, review, requirement, preparing, prepare, transition, perform, procedure, order, completing, complete, step, task, moving, move, controller, storage, shelves, shelf, exist, configuration, direct, metrocluster, fc, ip, verify, health, removing, remove, tiebreaker, monitor, software, generating, generate, apply, rcf, switch, controller, configure, prepare, preparing
 summary: After reviewing all requirements and preparing for the transition, you perform the transition procedure. You must perform each task in order, completing all steps in each task before moving to the next. You should not connect the new controllers or storage shelves to the existing configuration until directed.
 ---
 = Transitioning from MetroCluster FC to MetroCluster IP configurations
@@ -30,7 +30,7 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
  .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 . Verify that the cluster is healthy: `cluster show`
 +
-----
+....
 cluster_A::> cluster show
 Node           Health  Eligibility   Epsilon
 -------------- ------  -----------   -------
@@ -38,11 +38,11 @@ node_A_1_FC    true    true          false
 node_A_2_FC    true    true          false
 
 cluster_A::>
-----
+....
 
 . Verify that all cluster ports are up: `network port show -ipspace cluster`
 +
-----
+....
 cluster_A::> network port show -ipspace cluster
 
 Node: node_A_1_FC
@@ -64,13 +64,13 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 4 entries were displayed.
 
 cluster_A::>
-----
+....
 
 . Verify that all cluster LIFs are up and operational: `network interface show -vserver cluster`
 +
-Each cluster LIF should display true for Is Home and have a Status Admin/Oper of up/up
+Each cluster LIF should display "true" for "Is Home" and "up/up" for "Status Admin/Oper".
 +
-----
+....
 cluster_A::> network interface show -vserver cluster
 
             Logical      Status     Network          Current       Current Is
@@ -89,11 +89,11 @@ Cluster
 4 entries were displayed.
 
 cluster_A::>
-----
+....
 
 . Verify that auto-revert is enabled on all cluster LIFs: `network interface show -vserver Cluster -fields auto-revert`
 +
-----
+....
 cluster_A::> network interface show -vserver Cluster -fields auto-revert
 
           Logical
@@ -112,7 +112,7 @@ Cluster
     4 entries were displayed.
 
 cluster_A::>
-----
+....
 
 == Removing the existing configuration from the Tiebreaker or other monitoring software
 
@@ -187,8 +187,8 @@ a|
 e0b, e0d
 |===
 
-* _group A_ ports connect to local switch switch_x_1-IP
-* _group B_ ports connect to local switch switch_x_2-IP
+* Group A ports connect to local switch switch_x_1-IP.
+* Group B ports connect to local switch switch_x_2-IP.
 
 The following table shows which switch ports the FC nodes connect to. For the Broadcom BES-53248 switch, the port usage depends on the model of the MetroCluster IP nodes.
 
@@ -248,7 +248,7 @@ Use the ports described in link:../transition/task_transition_from_mcc_fc_to_mcc
 
 . Verify that all cluster ports are up: `network port show -ipspace Cluster`
 +
-----
+....
 cluster_A::*> network port show -ipspace Cluster
 
 Node: node_A_1-FC
@@ -270,13 +270,13 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 4 entries were displayed.
 
 cluster_A::*>
-----
+....
 
 . Verify that all interfaces display true in the Is Home column: `network interface show -vserver cluster`
 +
 This might take several minutes to complete.
 +
-----
+....
 cluster_A::*> network interface show -vserver cluster
 
             Logical      Status     Network          Current       Current Is
@@ -295,10 +295,10 @@ Cluster
 4 entries were displayed.
 
 cluster_A::*>
-----
+....
 
 . Perform the above steps on both nodes (node_A_1-FC and node_A_2-FC) to move the group B ports of the cluster interfaces.
-. Repeat the above steps on the partner cluster, cluster_B.
+. Repeat the above steps on the partner cluster "cluster_B".
 
 ==== Moving the local cluster connections when reusing existing IP switches
 
@@ -348,7 +348,7 @@ Use the ports described in xref:task_transition_from_mcc_fc_to_mcc_ip_configurat
 
 . Verify that all cluster ports are up: `network port show -ipspace cluster`
 +
-----
+....
 Cluster-A::*> network port show -ipspace cluster
 
 Node: node_A_1_FC
@@ -370,11 +370,11 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 4 entries were displayed.
 
 Cluster-A::*>
-----
+....
 
 . Verify that all interfaces are on their home port: `network interface show -vserver Cluster`
 +
-----
+....
 Cluster-A::*> network interface show -vserver Cluster
 
             Logical      Status     Network          Current       Current Is
@@ -393,7 +393,7 @@ Cluster
 4 entries were displayed.
 
 Cluster-A::*>
-----
+....
 
 . Repeat all the previous steps on switch_A_2_IP.
 . Reconnect the local cluster ISL ports.
@@ -407,7 +407,7 @@ To ensure that there is proper connectivity and that the configuration is ready 
 
 . Verify that all cluster ports are up and running: `network port show -ipspace Cluster`
 +
-----
+....
 Cluster-A::*> network port show -ipspace Cluster
 
 Node: Node-A-1-FC
@@ -429,15 +429,15 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 4 entries were displayed.
 
 Cluster-A::*>
-----
+....
 
 . Verify that all interfaces are on their home port: `network interface show -vserver Cluster`
 +
-This may take several minutes to complete.
+This might take several minutes to complete.
 +
 The following example shows that all interfaces show true in the Is Home column.
 +
-----
+....
 Cluster-A::*> network interface show -vserver Cluster
 
             Logical      Status     Network          Current       Current Is
@@ -456,11 +456,11 @@ Cluster
 4 entries were displayed.
 
 Cluster-A::*>
-----
+....
 
 . Verify that both the local IP switches are discovered by the nodes: `network device-discovery show -protocol cdp`
 +
-----
+....
 Cluster-A::*> network device-discovery show -protocol cdp
 
 Node/       Local  Discovered
@@ -478,7 +478,7 @@ Node-A-2-FC
 4 entries were displayed.
 
 Cluster-A::*>
-----
+....
 
 . On the IP switch, verify that the MetroCluster IP nodes have been discovered by both local IP switches: `show cdp neighbors`
 +
@@ -486,7 +486,7 @@ You must perform this step on each switch.
 +
 This example shows how to verify the nodes are discovered on Switch-A-3-IP.
 +
-----
+....
 (Switch-A-3-IP)# show cdp neighbors
 
 Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
@@ -509,11 +509,11 @@ Switch-B-3-IP(FDO220329B3)
 Total entries displayed: 4
 
 (Switch-A-3-IP)#
-----
+....
 +
-This example shows how to verify the nodes are discovered on Switch-A-4-IP.
+This example shows how to verify that the nodes are discovered on Switch-A-4-IP.
 +
-----
+....
 (Switch-A-4-IP)# show cdp neighbors
 
 Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
@@ -536,7 +536,7 @@ Switch-B-4-IP(FDO220329B4)
 Total entries displayed: 4
 
 (Switch-A-4-IP)#
-----
+....
 
 == Preparing the MetroCluster IP controllers
 
@@ -603,7 +603,8 @@ You must enable the MetroCluster transition mode to allow the old and new nodes 
 +
 NOTE: Run this command on one cluster only.
 +
-----
+
+....
 cluster_A::*> metrocluster transition enable -transition-mode non-disruptive
 
 Warning: This command enables the start of a "non-disruptive" MetroCluster
@@ -617,12 +618,12 @@ Do you want to continue? {y|n}: y
 
 cluster_A::*>
 
-----
+....
 
  .. Return to the admin privilege level: `set -privilege admin`
 . Verify that transition is enabled on both the clusters.
 +
-----
+....
 
 cluster_A::> metrocluster transition show-mode
 Transition Mode
@@ -639,13 +640,14 @@ non-disruptive
 
 Cluster_B::>
 
-----
+....
 
 . Disable cluster HA.
 +
 NOTE: You must run this command on both clusters.
 +
-----
+
+....
 cluster_A::*> cluster ha modify -configured false
 
 Warning: This operation will unconfigure cluster HA. Cluster HA must be
@@ -666,13 +668,14 @@ Do you want to continue? {y|n}: y
 Notice: HA is disabled.
 
 cluster_B::*>
-----
+....
 
 . Verify that cluster HA is disabled.
 +
 NOTE: You must run this command on both clusters.
 +
-----
+
+....
 cluster_A::> cluster ha show
 
 High Availability Configured: false
@@ -692,7 +695,7 @@ event of storage failover. Use the "cluster ha modify -configured
 true" command to configure cluster HA.
 
 cluster_B::>
-----
+....
 
 === Joining the MetroCluster IP nodes to the clusters
 
@@ -704,7 +707,7 @@ You must perform this task on both clusters.
 . Add the MetroCluster IP nodes to the existing MetroCluster configuration.
  .. Join the first MetroCluster IP node (node_A_1-IP) to the existing MetroCluster FC configuration.
 +
-----
+....
 
 Welcome to the cluster setup wizard.
 
@@ -753,7 +756,7 @@ Do you want to use this configuration? {yes, no} [yes]: yes
 .
 .
 .
-----
+....
 
  .. Join the second MetroCluster IP node (node_A_2-IP) to the existing MetroCluster FC configuration.
 . Repeat these steps to join node_B_1-IP and node_B_2-IP to cluster_B.
@@ -773,34 +776,34 @@ link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#configuring-
 +
 The following example shows the cluster peering configuration on cluster_A:
 +
-----
+....
 cluster_A:> cluster peer show
 Peer Cluster Name         Cluster Serial Number Availability   Authentication
 ------------------------- --------------------- -------------- --------------
 cluster_B                 1-80-000011           Available      ok
-----
+....
 +
 The following example shows the cluster peering configuration on cluster_B:
 +
-----
+....
 cluster_B:> cluster peer show
 Peer Cluster Name         Cluster Serial Number Availability   Authentication
 ------------------------- --------------------- -------------- --------------
 cluster_A 1-80-000011 Available ok
-----
+....
 
 . Configure the DR group for the MetroCluster IP nodes: `metrocluster configuration-settings dr-group create -partner-cluster`
 +
-----
+....
 cluster_A::> metrocluster configuration-settings dr-group create -partner-cluster
 cluster_B -local-node node_A_3-IP -remote-node node_B_3-IP
 [Job 259] Job succeeded: DR Group Create is successful.
 cluster_A::>
-----
+....
 
 . Verify that the DR group is created. `metrocluster configuration-settings dr-group show`
 +
-----
+....
 cluster_A::> metrocluster configuration-settings dr-group show
 
 DR Group ID Cluster                    Node               DR Partner Node
@@ -815,13 +818,13 @@ DR Group ID Cluster                    Node               DR Partner Node
 4 entries were displayed.
 
 cluster_A::>
-----
+....
 +
 You will notice that the DR group for the old MetroCluster FC nodes (DR Group 1) is not listed when you run the `metrocluster configuration-settings dr-group show` command.
 +
 You can use `metrocluster node show` command on both sites to list all nodes.
 +
-----
+....
 cluster_A::> metrocluster node show
 
 DR                               Configuration  DR
@@ -855,15 +858,14 @@ Group Cluster Node               State          Mirroring Mode
                                                 -         -
               node_B_2-IP      ready to configure
                                                 -         -
-----
+....
 
 . Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes: `metrocluster configuration-settings interface create -cluster-name`
 +
 NOTE: You can configure the MetroCluster IP interfaces from either cluster. Also, starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:../install-ip/concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
 
 +
-+
-----
+....
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_3-IP -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
 [Job 260] Job succeeded: Interface Create is successful.
 
@@ -887,11 +889,11 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_4-IP -home-port e1b -address 172.17.27.13 -netmask 255.255.255.0
 [Job 267] Job succeeded: Interface Create is successful.
-----
+....
 
 . Verify the MetroCluster IP interfaces are created: `metrocluster configuration-settings interface show`
 +
-----
+....
 cluster_A::>metrocluster configuration-settings interface show
 
 DR                                                                    Config
@@ -922,21 +924,22 @@ Group Cluster Node    Network Address Netmask         Gateway         State
 8 entries were displayed.
 
 cluster_A>
-----
+....
 
 . Connect the MetroCluster IP interfaces: `metrocluster configuration-settings connection connect`
 +
 NOTE: This command might take several minutes to complete.
 +
-----
+
+....
 cluster_A::> metrocluster configuration-settings connection connect
 
 cluster_A::>
-----
+....
 
 . Verify the connections are properly established: `metrocluster configuration-settings connection show`
 +
-----
+....
 cluster_A::> metrocluster configuration-settings connection show
 
 DR                    Source          Destination
@@ -1003,11 +1006,11 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 24 entries were displayed.
 
 cluster_A::>
-----
+....
 
 . Verify disk autoassignment and partitioning: `disk show -pool Pool1`
 +
-----
+....
 cluster_A::> disk show -pool Pool1
                      Usable           Disk    Container   Container
 Disk                   Size Shelf Bay Type    Type        Name      Owner
@@ -1029,13 +1032,14 @@ Disk                   Size Shelf Bay Type    Type        Name      Owner
 43 entries were displayed.
 
 cluster_A::>
-----
+....
 
 . Mirror the root aggregates: `storage aggregate mirror -aggregate aggr0_node_A_3-IP`
 +
 NOTE: You must complete this step on each MetroCluster IP node.
 +
-----
+
+....
 cluster_A::> aggr mirror -aggregate aggr0_node_A_3-IP
 
 Info: Disks would be added to aggregate "aggr0_node_A_3-IP"on node "node_A_3-IP"
@@ -1056,11 +1060,11 @@ Info: Disks would be added to aggregate "aggr0_node_A_3-IP"on node "node_A_3-IP"
 Do you want to continue? {y|n}: y
 
 cluster_A::>
-----
+....
 
 . Verify that the root aggregates are mirrored: `storage aggregate show`
 +
-----
+....
 cluster_A::> aggr show
 
 Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
@@ -1088,7 +1092,7 @@ aggr_data_a1
 aggr_data_a2
             1.02TB    1.01TB    1% online       1 node_A_2-FC      raid_dp,
                                                                    mirrored,
-----
+....
 
 === Finalizing the addition of the MetroCluster IP nodes
 
@@ -1099,9 +1103,10 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 +
 NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
 +
+
 The following example shows the creation of an aggregate on node_A_1-new.
 +
-----
+....
 cluster_A::> storage aggregate create -aggregate data_a3 -node node_A_1-new -diskcount 10 -mirror t
 
 Info: The layout for aggregate "data_a3" on node "node_A_1-new" would be:
@@ -1136,21 +1141,21 @@ Do you want to continue? {y|n}: y
 [Job 440] Job succeeded: DONE
 
 cluster_A::>
-----
+....
 
 . Configure the MetroCluster to implement the changes: `metrocluster configure`
 +
-----
+....
 cluster_A::*> metrocluster configure
 
 [Job 439] Job succeeded: Configure is successful.
 
 cluster_A::*>
-----
+....
 
 . Verify that the nodes are added to their DR group: `metrocluster node show`
 +
-----
+....
 cluster_A::*> metrocluster node show
 
 DR                               Configuration  DR
@@ -1171,16 +1176,17 @@ Group Cluster Node               State          Mirroring Mode
 8 entries were displayed.
 
 cluster_A::*>
-----
+....
 
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
  .. Display the volumes to identify the MDV volumes:
 +
 NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
+
 The following example shows the MDV volumes in the volume show output:
 +
-----
+....
 cluster_A::> volume show
 Vserver   Volume       Aggregate    State      Type       Size  Available Used%
 --------- ------------ ------------ ---------- ---- ---------- ---------- -----
@@ -1196,14 +1202,14 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
                        aggr_a2      online     RW         10GB     9.50GB    0%
 ...
 11 entries were displayed.mple
-----
+....
 
  .. Set the advanced privilege level: `set -privilege advanced`
  .. Move the MDV volumes, one at a time: `volume move start -volume mdv-volume -destination-aggregate aggr-on-new-node -vserver vserver-name`
 +
 The following example shows the command and output for moving MDV_CRS_d6b0b313ff5611e9837100a098544e51_A to aggregate data_a3 on node_A_3.
 +
-----
+....
 cluster_A::> vol move start -volume MDV_CRS_d6b0b313ff5611e9837100a098544e51_A -destination-aggregate data_a3 -vserver cluster_A
 
 Warning: You are about to modify the system volume
@@ -1211,19 +1217,19 @@ Warning: You are about to modify the system volume
          performance or stability problems. Do not proceed unless directed to
          do so by support. Do you want to proceed? {y|n}: y
 [Job 494] Job is queued: Move "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" in Vserver "cluster_A" to aggregate "data_a3". Use the "volume move show -vserver cluster_A -volume MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" command to view the status of this operation.
-----
+....
 
  .. Use the volume show command to check that the MDV volume has been successfully moved: `volume show mdv-name`
 +
 The following output shows that the MDV volume has been successfully moved.
 +
-----
+....
 cluster_A::> vol show MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 Vserver     Volume       Aggregate    State      Type       Size  Available Used%
 ---------   ------------ ------------ ---------- ---- ---------- ---------- -----
 cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
                        aggr_a2      online     RW         10GB     9.50GB    0%
-----
+....
 
  .. Return to admin mode: `set -privilege admin`
 
@@ -1276,7 +1282,8 @@ In this example the following data aggregates are hosted by the MetroCluster FC 
 +
 NOTE: You need to perform the steps to identify, offline and delete the data aggregates on both the clusters. The example is for one cluster only.
 +
-----
+
+....
 cluster_B::> aggr show
 
 Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
@@ -1316,7 +1323,7 @@ aggr_data_a4
 8 entries were displayed.
 
 cluster_B::>
-----
+....
 
 . Check if the data aggregates on the FC nodes have any MDV_aud volumes, and delete them prior to deleting the aggregates.
 +
@@ -1327,11 +1334,11 @@ You must delete the MDV_aud volumes as they cannot be moved.
 +
 The following example shows the aggregate node_B_1_aggr0 being taken offline:
 +
-----
+....
 cluster_B::> storage aggregate offline -aggregate node_B_1_aggr0
 
 Aggregate offline successful on aggregate: node_B_1_aggr0
-----
+....
 
  .. Delete the aggregate: `storage aggregate delete -aggregate aggregate-name`
 +
@@ -1339,18 +1346,18 @@ You can destroy the plex when prompted.
 +
 The following example shows the aggregate node_B_1_aggr0 being deleted.
 +
-----
+....
 cluster_B::> storage aggregate delete -aggregate node_B_1_aggr0
 Warning: Are you sure you want to destroy aggregate "node_B_1_aggr0"? {y|n}: y
 [Job 123] Job succeeded: DONE
 
 cluster_B::>
-----
+....
 . Identify the MetroCluster FC DR group that need to be removed.
 +
 In the following example the MetroCluster FC nodes are in DR Group '1', and this is the DR group that need to be removed.
 +
-----
+....
 cluster_B::> metrocluster node show
 
 DR                               Configuration  DR
@@ -1371,14 +1378,14 @@ Group Cluster Node               State          Mirroring Mode
 8 entries were displayed.
 
 cluster_B::>
-----
+....
 
 . Move the cluster management LIF from a MetroCluster FC node to a MetroCluster IP node: `cluster_B::> network interface migrate -vserver svm-name -lif cluster_mgmt -destination-node node-in-metrocluster-ip-dr-group -destination-port available-port`
 . Change the home node and home port of the cluster management LIF: `cluster_B::> network interface modify -vserver svm-name -lif cluster_mgmt -service-policy default-management -home-node node-in-metrocluster-ip-dr-group -home-port lif-port`
 . Move epsilon from a MetroCluster FC node to a MetroCluster IP node:
  .. Identify which node currently has epsilon: `cluster show -fields epsilon`
 +
-----
+....
 cluster_B::> cluster show -fields epsilon
 node             epsilon
 ---------------- -------
@@ -1387,13 +1394,13 @@ node_A_2-FC      false
 node_A_1-IP      false
 node_A_2-IP      false
 4 entries were displayed.
-----
+....
 
  .. Set epsilon to false on the MetroCluster FC node (node_A_1-FC): `cluster modify -node fc-node -epsilon false`
  .. Set epsilon to true on the MetroCluster IP node (node_A_1-IP): `cluster modify -node ip-node -epsilon true`
  .. Verify that epsilon has moved to the correct node: `cluster show -fields epsilon`
 +
-----
+....
 cluster_B::> cluster show -fields epsilon
 node             epsilon
 ---------------- -------
@@ -1402,20 +1409,20 @@ node_A_2-FC      false
 node_A_1-IP      true
 node_A_2-IP      false
 4 entries were displayed.
-----
+....
 . On each cluster, remove the DR group containing the old nodes from the MetroCluster FC configuration.
 +
 You must perform this step on both clusters, one at a time.
 +
-----
+....
 cluster_B::> metrocluster remove-dr-group -dr-group-id 1
 
 Warning: Nodes in the DR group that are removed from the MetroCluster
          configuration will lose their disaster recovery protection.
 
-         Local nodes "node_A_1-FC, node_A_2-FC"will be removed from the
+         Local nodes "node_A_1-FC, node_A_2-FC" will be removed from the
          MetroCluster configuration. You must repeat the operation on the
-         partner cluster "cluster_B"to removethe remote nodes in the DR group.
+         partner cluster "cluster_B" to remove the remote nodes in the DR group.
 Do you want to continue? {y|n}: y
 
 Info: The following preparation steps must be completed on the local and partner
@@ -1438,15 +1445,16 @@ Do you want to continue? {y|n}: y
 [Job 513] Job succeeded: Remove DR Group is successful.
 
 cluster_B::>
-----
+....
 
 . Verify that the nodes are ready to be removed from the clusters.
 +
 You must perform this step on both clusters.
 +
-NOTE: At this point, the metrocluster node show command only shows the local MetroCluster FC nodes and no longer shows the nodes that are part of the partner cluster.
+NOTE: At this point, the `metrocluster node show` command only shows the local MetroCluster FC nodes and no longer shows the nodes that are part of the partner cluster.
 +
-----
+
+....
 cluster_B::> metrocluster node show
 
 DR                               Configuration  DR
@@ -1466,23 +1474,23 @@ Group Cluster Node               State          Mirroring Mode
 6 entries were displayed.
 
 cluster_B::>
-----
+....
 
 . Disable storage failover for the MetroCluster FC nodes.
 +
 You must perform this step on each node.
 +
-----
+....
 cluster_A::> storage failover modify -node node_A_1-FC -enabled false
 cluster_A::> storage failover modify -node node_A_2-FC -enabled false
 cluster_A::>
-----
+....
 
 . Unjoin the MetroCluster FC nodes from the clusters: `cluster unjoin -node node-name`
 +
 You must perform this step on each node.
 +
-----
+....
 cluster_A::> cluster unjoin -node node_A_1-FC
 
 Warning: This command will remove node "node_A_1-FC"from the cluster. You must
@@ -1498,7 +1506,7 @@ If applicable, also remove the node's HA partner, and then clean its configurati
 Run "debug vreport show" to address remaining aggregate or volume issues.
 
 cluster_B::>
-----
+....
 
 . Power down the MetroCluster FC controller modules and storage shelves.
 . Disconnect and remove the MetroCluster FC controller modules and storage shelves.
@@ -1514,7 +1522,7 @@ You must perform this step on each cluster.
 +
 The following example shows the output for cluster_A.
 +
-----
+....
 cluster_A::> cluster show
 Node                 Health  Eligibility   Epsilon
 -------------------- ------- ------------  ------------
@@ -1523,11 +1531,11 @@ node_A_2-IP          true    true          false
 2 entries were displayed.
 
 cluster_A::>
-----
+....
 +
 The following example shows the output for cluster_B.
 +
-----
+....
 cluster_B::> cluster show
 Node                 Health  Eligibility   Epsilon
 -------------------- ------- ------------  ------------
@@ -1536,7 +1544,7 @@ node_B_2-IP          true    true          false
 2 entries were displayed.
 
 cluster_B::>
-----
+....
 
 . Enable cluster HA and storage failover.
 +
@@ -1544,7 +1552,7 @@ You must perform this step on each cluster.
 
 . Verify that cluster HA capability is enabled.
 +
-----
+....
 cluster_A::> cluster ha show
 High Availability Configured: true
 
@@ -1560,7 +1568,7 @@ node_A_2-IP    node_A_1-IP    true     Connected to node_A_1-IP
 2 entries were displayed.
 
 cluster_A::>
-----
+....
 
 . Disable MetroCluster transition mode.
  .. Change to the advanced privilege level: `set -privilege advanced`
@@ -1568,29 +1576,29 @@ cluster_A::>
  .. Return to the admin privilege level: `set -privilege admin`
 
 +
-----
+....
 cluster_A::*> metrocluster transition disable
 
 cluster_A::*>
-----
+....
 . Verify that transition is disabled:``metrocluster transition show-mode``
 +
 You must perform these steps on both clusters.
 +
-----
+....
 cluster_A::> metrocluster transition show-mode
 Transition Mode
 --------------------------
 not-enabled
 
 cluster_A::>
-----
+....
 +
-----
+....
 cluster_B::> metrocluster transition show-mode
 Transition Mode
 --------------------------
 not-enabled
 
 cluster_B::>
-----
+....
