@@ -1,0 +1,42 @@
+---
+permalink: install-ip/concept_considerations_firewalls.html
+sidebar: sidebar
+keywords: firewall, port usage, tcip, udp, cluster peering, intercluster lifs, hardware-assist
+summary: If you are using a firewall at a MetroCluster site, you must ensure access for certain required ports.
+---
+= Firewall usage at MetroCluster sites
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If you are using a firewall at a MetroCluster site, you must ensure access for certain required ports.
+
+The following table shows TCP/UDP port usage in an external firewall positioned between two MetroCluster sites.
+
+[cols=2*,options="header"]
+|===
+| Traffic type| Port/services
+a|
+Cluster peering
+a|
+11104 / TCP
+
+11105 / TCP
+
+a|
+ONTAP System Manager
+a|
+443 / TCP
+a|
+MetroCluster IP intercluster LIFs
+a|
+65200 / TCP
+
+10006 / TCP and UDP
+
+a|
+Hardware assist
+a|
+4444 / TCP
+|===
+// 2021-04-21, BURT 1374268

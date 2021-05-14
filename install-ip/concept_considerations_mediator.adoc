@@ -1,0 +1,42 @@
+---
+permalink: install-ip/concept_considerations_mediator.html
+sidebar: sidebar
+keywords: differences, eight-node, four-node, fabric-attached, stretch, metrocluster ip, storage, bridges, fc-to-sas, atto, fibrebridge, SAS, local HA, auso, automatic unplanned switchover, array luns, mediator, tiebreaker
+summary: The various MetroCluster configurations have key differences in the required components.
+---
+= Differences between ONTAP Mediator and MetroCluster Tiebreaker
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Starting with ONTAP 9.7, you can use either the ONTAP Mediator-assisted automatic unplanned switchover (MAUSO) in the MetroCluster IP configuration or you can use the MetroCluster Tiebreaker software. Only one of the two services can be used with the MetroCluster IP configuration.
+
+The different MetroCluster configurations perform automatic switchover under different circumstances:
+
+* *MetroCluster FC configurations using the AUSO capability (not present in MetroCluster IP configurations)*
++
+In these configurations, AUSO is initiated if controllers fail but the storage (and bridges, if present) remain operational.
+
+* *MetroCluster IP configurations using the ONTAP Mediator service (ONTAP 9.7 and later)*
++
+In these configurations, MAUSO is initiated in the same circumstances as AUSO, as described above, and also after a complete site failure (controllers, storage, and switches).
++
+NOTE: MAUSO is initiated only if nonvolatile cache mirroring (_DR mirroring_) and SyncMirror plex mirroring is in sync at the time of the failure.
+
+* *MetroCluster IP or FC configurations using the Tiebreaker software in active mode*
++
+In these configurations, the Tiebreaker initiates unplanned switchover after a complete site failure.
++
+Before using the Tiebreaker software, review the link:../tiebreaker/index.html[MetroCluster Tiebreaker Software Installation and Configuration Guide]
+
+== Interoperability of ONTAP Mediator with other applications and appliances
+
+You cannot use any third-party applications or appliances that can trigger a switchover in combination with ONTAP Mediator. In addition, monitoring a MetroCluster configuration with MetroCluster Tiebreaker software is not supported when using ONTAP Mediator.
+
+== How the ONTAP Mediator supports automatic unplanned switchover
+
+The ONTAP Mediator stores state information about the MetroCluster nodes in mailboxes located on the Mediator host. The MetroCluster nodes can use this information to monitor the state of their DR partners and implement a Mediator-assisted automatic unplanned switchover (MAUSO) in the case of a disaster.
+
+When a node detects a site failure requiring a switchover, it takes steps to confirm that the switchover is appropriate and, if so, performs the switchover.
+
+MAUSO is only initiated if both SyncMirror mirroring and DR mirroring of each node's nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
