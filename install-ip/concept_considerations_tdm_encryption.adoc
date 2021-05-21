@@ -1,0 +1,42 @@
+---
+permalink: install-ip/concept_considerations_tdm_encryption.html
+sidebar: sidebar
+keywords: differences, eight-node, four-node, fabric-attached, stretch, metrocluster ip, storage, bridges, fc-to-sas, atto, fibrebridge, SAS, local HA, auso, automatic unplanned switchover, array luns, mediator, tiebreaker
+summary: You should be aware of certain considerations for using multiplexing equipment in the MetroCluster IP configuration.
+---
+= Using TDM/xWDM and encryption equipment with MetroCluster IP configurations
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You should be aware of certain considerations for using multiplexing equipment in the MetroCluster IP configuration.
+
+These considerations apply only to direct, dedicated MetroCluster back-end links and switches, not links shared with non-MetroCluster traffic.
+
+The Hardware Universe tool provides some notes about the requirements that TDM/xWDM equipment must meet to work with a MetroCluster IP configuration.
+
+https://hwu.netapp.com[NetApp Hardware Universe]
+
+== Using encryption on WDM or external encryption devices
+
+When using encryption on WDM devices in the MetroCluster IP configuration, your environment must meet the following requirements:
+
+* The external encryption devices or DWDM equipment must have been certified by the vendor with the switch in question.
++
+The certification should cover the operating mode (such as trunking and encryption).
+
+* The overall end-to-end latency and jitter, including the encryption, cannot be above the maximum stated in the IMT or in this document.
+
+== SFP considerations
+
+Any SFPs or QSFPs supported by the equipment vendor are supported for the MetroCluster ISLs. SFPs and QSFPs can be acquired from NetApp or the equipment vendor.
+
+== Considerations for ISLs
+
+The ISLs on one fabric should all be the same speed and length.
+
+The ISLs on one fabric should all have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they should all use WDM.
+
+If you are sharing ISLs with a non-MetroCluster network, you must follow the guidelines in the section xref:concept_prepare_for_the_mcc_installation.html#considerations-for-sharing-private-layer-2-networks[Considerations for sharing private layer 2 networks].
+
+The maximum supported difference in distance between fabric 1 and fabric 2 is 20 km.

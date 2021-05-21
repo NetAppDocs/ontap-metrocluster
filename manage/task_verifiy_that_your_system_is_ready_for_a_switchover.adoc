@@ -12,7 +12,8 @@ summary: You can use the -simulate option to preview the results of a switchover
 You can use the -simulate option to preview the results of a switchover operation. A verification check gives you a way to verify that most of the preconditions for a successful run are met before you start the operation. Issue these commands from the site that will remain up and operational:
 
 . Set the privilege level to advanced: `set -privilege advanced`
-. Simulate a switchover operation: `metrocluster switchover -simulate`
+. From the site that will remain up and operational, simulate a switchover operation: `metrocluster switchover -simulate`
+//BURT 1396948
 . Review the output that is returned.
 +
 The output shows whether any vetoes would prevent a switchover operation. Every time you perform a MetroCluster operation, you must verify a set of criteria for the success of the operation. A "`veto`" is a mechanism to prohibit the operation if one or more of the criteria are not fulfilled. There are two types of veto: a "`soft`" veto and a "`hard`" veto. You can override a soft veto, but not a hard veto. For example, to perform a negotiated switchover in a four-node MetroCluster configuration, one criterion is that all of the nodes are up and healthy. Suppose one node is down and was taken over by its HA partner. The switchover operation will be hard vetoed because it is a hard criterion that all of the nodes must be up and healthy. Because this is a hard veto, you cannot override the veto.
