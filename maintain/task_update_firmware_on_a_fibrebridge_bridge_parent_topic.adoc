@@ -67,14 +67,15 @@ cluster_A> storage bridge firmware update -bridge bridge_A_1a -uri http://192.16
 . Return to the admin privilege level:
 +
 `*set -privilege admin*`
+
 . Verify that the firmware upgrade is complete:
 +
-`*job show -name _Storage bridge firmware update_*`
+`*job show -name "_job-name_"*`
 +
-The following example shows that the job is still running:
+The following example shows that the job *storage bridge firmware update* is still running:
 +
 ----
-cluster_A> job show -name storage bridge firmware update
+cluster_A> job show -name "storage bridge firmware update"
 Owning
 
 Job ID Name                 Vserver    Node           State
@@ -89,12 +90,12 @@ Description: Storage bridge firmware update job
 After approximately 10 minutes, the new firmware is fully installed and the job state will be Success:
 +
 ----
-cluster_A> job show -name Storage bridge firmware update
+cluster_A> job show -name "storage bridge firmware update"
 
                             Owning
 Job ID Name                 Vserver    Node           State
 ------ -------------------- ---------- -------------- ----------
-2246   Storage bridge firmware update job name
+2246   Storage bridge firmware update
                             cluster_A
                                        node_A_1
                                                       Success
