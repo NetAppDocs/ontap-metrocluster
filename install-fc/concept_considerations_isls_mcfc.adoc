@@ -1,0 +1,69 @@
+---
+permalink: install-fc/concept_considerations_isls_mcfc.html
+sidebar: sidebar
+keywords: preparing, prepare, metrocluster, mcc, installation, install, differences, configurations, between, considerations, all, san, array, asa, cluster, peering, prerequisites, dedicated, ports, sharing, data, ports, native, disk, shelves, array, luns, transitions, 7-mode, isls, tdm/wdm, fabric-attached, iod, ood, encryption, devices, unmirrored, aggregates, maintenance, requiring, power, shutdown, firewall, hardware, racking, cabling, setup, checklist, all san array, asa
+summary: 'You must determine how many ISLs you need for each FC switch fabric in the MetroCluster configuration.'
+---
+
+= Considerations for ISLs
+
+[.lead]
+You must determine how many ISLs you need for each FC switch fabric in the MetroCluster configuration. Beginning with ONTAP 9.2, in some cases, instead of dedicating FC switches and ISLs to each individual MetroCluster configuration, you can share the same four switches.
+
+== ISL sharing considerations (ONTAP 9.2)
+
+Starting with ONTAP 9.2, you can use ISL sharing in the following cases:
+
+* One two-node and one four-node MetroCluster configurations
+* Two separate four-node MetroCluster configurations
+* Two separate two-node MetroCluster configurations
+* Two DR groups within one eight-node MetroCluster configuration
+
+The number of ISLs required between the shared switches depends on the bandwidth of the platform models connected to the shared switches.
+
+Consider the following aspects of your configuration when determining how many ISLs you need.
+
+* Non-MetroCluster devices should not be connected to any of the FC switches that provide the back-end MetroCluster connectivity.
+* ISL sharing is supported on all switches except the Cisco 9250i and Cisco 9148 switches.
+* All nodes must be running ONTAP 9.2 or later.
+* The FC switch cabling for ISL sharing is the same as for the eight-node MetroCluster cabling.
+* The RCF files for ISL sharing are same as for the eight-node MetroCluster cabling.
+* You should verify that all hardware and software versions are supported.
++
+https://hwu.netapp.com[NetApp Hardware Universe]
+
+* The speed and number of ISLs must be sized to support the client load on both MetroCluster systems.
+* The back-end ISLs and the back-end components must be dedicated to the MetroCluster configuration only.
+* The ISL must use one of the supported speeds: 4 Gbps, 8 Gbps, 16 Gbps, or 32 Gbps.
+* The ISLs on one fabric should all be the same speed and length.
+* The ISLs on one fabric should all have the same topology. For example, they should all be direct links, or if your system uses WDM, then they should all use WDM.
+
+== Platform-specific ISL considerations
+
+The number of recommended ISLs is platform-model specific. The following table shows the ISL requirements for each fabric by platform model. It assumes that each ISL has a 16-Gbps capacity.
+
+[cols=2*,options="header"]
+|===
+| Platform model| Recommended number of ISLs per four-node DR group (per switch fabric)
+a|
+AFF A700
+a|
+Six
+a|
+FAS9000
+a|
+Six
+a|
+8080
+a|
+Four
+a|
+All others
+a|
+Two
+|===
+If the switch fabric is supporting eight nodes (either part of a single, eight-node MetroCluster configuration, or two four-node configurations that are sharing ISLs), the recommended total number of ISLs for the fabric is the sum of that required for each four-node DR group. For example:
+
+* If DR group 1 includes four AFF A700 systems, it requires six ISLs.
+* If DR group 2 includes four FAS8200 systems, it requires two ISLs.
+* The total number of recommended ISLs for the switch fabric is eight.
