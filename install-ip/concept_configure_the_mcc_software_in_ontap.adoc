@@ -2392,8 +2392,7 @@ This procedure applies to configurations running ONTAP 9.4 or later.
 
 Details for determining whether your system requires manual disk assignment are included in xref:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
 
-If the configuration has fewer than four external shelves per site, you must check that automatic drive assignment on all nodes is disabled and manually assign the drives.
-
+// BURT 1389935
 When the configuration includes only two external shelves per site, pool 1 drives for each site should be shared from the same shelf as shown in the following examples:
 
 * node_A_1 is assigned drives in bays 0-11 on site_B-shelf_2 (remote)
@@ -2740,6 +2739,11 @@ Remote: cluster_A         Configuration state configured
                           Mode                normal
 ----
 
+. To avoid possible issues with nonvolatile memory mirroring, reboot each of the four nodes:
+`node reboot -node _node-name_ -inhibit-takeover true`
+
+. Issue the `metrocluster show` command on both clusters to again verify the configuration.
+//BURT 1393238
 === Configuring the second DR group in an eight-node configuration
 
 Repeat the previous tasks to configure the nodes in the second DR group.
