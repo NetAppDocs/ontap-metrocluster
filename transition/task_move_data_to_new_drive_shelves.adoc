@@ -1,0 +1,38 @@
+---
+permalink: transition/task_move_data_to_new_drive_shelves.html
+sidebar: sidebar
+keywords: Generating and applying RCFs to the new IP switches, review, requirement, preparing, prepare, transition, perform, procedure, order, completing, complete, step, task, moving, move, controller, storage, shelves, shelf, exist, configuration, direct, metrocluster, fc, ip, verify, health, removing, remove, tiebreaker, monitor, software, generating, generate, apply, rcf, switch, controller, configure, prepare, preparing
+summary: During the transition, you move data from the drive shelves in the MetroCluster FC configuration to the new MetroCluster IP configuration..
+---
+
+= Moving the data to the new drive shelves
+
+[.lead]
+During the transition, you move data from the drive shelves in the MetroCluster FC configuration to the new MetroCluster IP configuration.
+
+. To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
+ .. Issue the following command: `system node autosupport invoke -node * -type all -message MAINT=end`
+ .. Repeat the command on the partner cluster.
+. Move the data volumes to aggregates on the new controllers, one volume at a time.
++
+Use the following section of the _Controller Upgrade Express Guide_.
++
+http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-AFE432F6-60AD-4A79-86C0-C7D12957FA63.html[Creating an aggregate and moving volumes to the new nodes]
+
+. Create SAN LIFs on the recently added nodes.
++
+Use the following section of the _Cluster Expansion Express Guide_.
++
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-expand/GUID-E3BB89AF-6251-4210-A979-130E845BC9A1.html[Updating LUN paths for the new nodes]
+
+. Check if there are any node locked licenses on the FC nodes, if there are, they need to be added to the newly added nodes.
++
+Use the following section of the _Cluster Expansion Express Guide_.
++
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-expand/GUID-487FAC36-3C5C-4314-B4BD-4253CB67ABE8.html[Adding node-locked licenses]
+
+. Migrate the data LIFs.
++
+Use the following section of the _Controller Upgrade Express Guide_ but do *not* perform the last two steps to migrate cluster management LIFs.
++
+http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-95CA9262-327D-431D-81AA-C73DEFF3DEE2.html[Moving non-SAN data LIFs and cluster management LIFs to the new nodes]
