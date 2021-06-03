@@ -1,0 +1,38 @@
+---
+permalink: disaster-recovery/task_boot_new_mcfc.html
+sidebar: sidebar
+keywords: boot, controller, modules, fc
+summary: 'After aggregate healing has been completed for both the data and root aggregates, you must boot the node or nodes at the disaster site.'
+---
+= Booting the new controller modules (MetroCluster FC configurations)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+After aggregate healing has been completed for both the data and root aggregates, you must boot the node or nodes at the disaster site.
+
+This task begins with the nodes showing the LOADER prompt.
+
+. Display the boot menu: `boot_ontap menu`
+. From the boot menu, select option 6, *Update flash from backup config*.
+. Respond y to the following prompt:This will replace all flash-based configuration with the last backup to disks. Are you sure you want to continue?: y
++
+The system will boot twice, the second time to load the new configuration.
++
+NOTE: If you did not clear the NVRAM contents of a used replacement controller, then you might see a panic with the following message: PANIC: NVRAM contents are invalid...
++
+If this occurs, repeat step 2 to boot the system to the ONTAP prompt. You will then need to perform a root recovery. Contact technical support for assistance.
+
+. Mirror the root aggregate on plex 0:
+ .. Assign three pool0 disks to the new controller module.
+ .. Mirror the root aggregate pool1 plex: `aggr mirror root-aggr-name`
+ .. Assign unowned disks to pool0 on the local node
+. Refresh the MetroCluster configuration:
+ .. Enter advanced privilege mode: `set -privilege advanced`
+ .. Refresh the configuration: `metrocluster configure -refresh true`
+ .. Return to admin privilege mode: `set -privilege admin`
+. If you have a four-node configuration, repeat the previous steps on the other node at the disaster site.
+
+Proceed to verify the licenses on the replaced nodes.
+
+link:../disaster-recovery/task_complete_recovery.adoc[Verifying licenses on the replaced nodes]
