@@ -1,0 +1,24 @@
+---
+permalink: disaster-recovery/task_assign_pool1_survivingsite_mcip.html
+sidebar: sidebar
+keywords: adp, system, assign, surviving, site
+summary: At the surviving site you need to manually assign remote drives located at the disaster site to the surviving nodes' pool 1.
+---
+= Assigning pool 1 drives on the surviving site (MetroCluster IP configurations)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If drives have been replaced at the disaster site and the system is not configured for ADP, at the surviving site you need to manually assign remote drives located at the disaster site to the surviving nodes' pool 1. You must identify the number of drives to assign.
+
+For ADP systems, the drives are assigned automatically.
+
+. On the surviving site, assign the first node's pool 1 (remote) drives: `storage disk assign -n number-of-replacement disks -p 1 0m*`
++
+This command assigns the newly added and unowned drives on the disaster site.
++
+The following command assigns 22 drives:
++
+----
+cluster_B::> storage disk assign -n 22 -p 1 0m*
+----
