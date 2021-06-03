@@ -248,10 +248,10 @@ In these steps, you clear the configuration on the nodes and clear the mailbox r
 link:../install-ip/task_cable_ip_switches.html[Cabling the IP switches]
 
 . Configure the MetroCluster IP nodes using the following sections of the _MetroCluster Installation and Configuration Guide._
- .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#gathering-required-information[Gathering required information]
- .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#restoring-system-defaults-on-a-controller-module[Restoring system defaults on a controller module]
- .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#verifying-the-ha-config-state-of-components[Verifying the ha-config state of components]
- .. link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assigning drives for pool 0 (ONTAP 9.4 and later)]
+ .. link:../install-ip/task_sw_config_gather_info.html[Gathering required information]
+ .. link:../install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module]
+ .. link:../install-ip/task_sw_config_verify_haconfig.html[Verifying the ha-config state of components]
+ .. link:../install-ip/task_sw_config_assign_pool0.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assigning drives for pool 0 (ONTAP 9.4 and later)]
 . From Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the boot_ontap command to boot the system and get to cluster setup.
 +
 Do not complete the cluster wizard or node wizard at this time.
@@ -342,9 +342,9 @@ The home port used in the examples are platform-specific. You should use the app
 
 . On the new MetroCluster IP nodes, configure the intercluster LIFs using the procedures in the _MetroCluster IP Installation and Configuration Guide_.
 +
-link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Configuring intercluster LIFs on dedicated ports]
+link:../install-ip/task_sw_config_configure_clusters.html#peering-the-clusters[Configuring intercluster LIFs on dedicated ports]
 +
-link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Configuring intercluster LIFs on shared data ports]
+link:../install-ip/task_sw_config_configure_clusters.html#peering-the-clusters[Configuring intercluster LIFs on shared data ports]
 
 . On each site, verify that cluster peering is configured:
 +
@@ -377,7 +377,7 @@ For more information on the MetroCluster configuration settings and connections,
 +
 link:../install-ip/concept_considerations_mcip.adoc
 +
-link:../install-ip/concept_configure_the_mcc_software_in_ontap.html#creating-the-dr-group[Creating the DR group]
+link:../install-ip/task_sw_config_configure_clusters.html#creating-the-dr-group[Creating the DR group]
 +
 ----
 cluster_A::> metrocluster configuration-settings dr-group create -partner-cluster
