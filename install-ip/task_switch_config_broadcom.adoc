@@ -1,0 +1,443 @@
+---
+permalink: install-ip/task_install_and_cable_the_mcc_components.html
+sidebar: sidebar
+keywords:  ip, switch, connection, configuring, configure, broadcom, factory defaults
+summary: You must configure the Broadcom IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
+---
+
+= Configuring Broadcom IP switches
+
+[.lead]
+You must configure the Broadcom IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
+
+= Resetting the Broadcom IP switch to factory defaults
+
+[.lead]
+Before installing a new switch software version and RCFs, you must erase the Broadcom switch settings and perform basic configuration.
+
+* You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
+* You must be connected to the switch using the serial console.
+* This task resets the configuration of the management network.
+
+. Change to the elevated command prompt (`#`): `enable`
++
+----
+(Routing)> enable
+(Routing) #
+----
+
+. Erase the startup configuration: `erase startup-config`
++
+----
+(Routing) #erase startup-config
+Are you sure you want to clear the configuration? (y/n) y
+
+
+(Routing) #
+----
++
+This command does not erase the banner.
+
+. Reboot the switch: `reload`
++
+----
+(IP_switch_A_1) #reload
+
+Are you sure you would like to reset the system? (y/n) y
+----
++
+NOTE: If the system asks whether to save the unsaved or changed configuration before reloading the switch, select *No*.
+
+. Wait for the switch to reload, and then log in to the switch.
++
+The default user is "`admin`", and no password is set. A prompt similar to the following is displayed:
++
+----
+(Routing)>
+----
+
+. Change to the elevated command prompt: `enable`
++
+----
+Routing)> enable
+(Routing) #
+----
+
+. Set the serviceport protocol to `none`: `serviceport protocol none`
++
+----
+(Routing) #serviceport protocol none
+Changing protocol mode will reset ip configuration.
+Are you sure you want to continue? (y/n) y
+
+(Routing) #
+----
+
+. Assign the IP address to the service port: `serviceport ip ip-addressnetmaskgateway`
++
+The following example shows a service port assigned IP address 10.10.10.10 with subnet 255.255.255.0 and gateway 10.10.10.1:
++
+----
+(Routing) #serviceport ip 10.10.10.10 255.255.255.0 10.10.10.1
+----
+
+. Verify that the service port is correctly configured: `show serviceport`
++
+The following example shows that the port is up and the correct addresses have been assigned:
++
+----
+(Routing) #show serviceport
+
+Interface Status............................... Up
+IP Address..................................... 10.10.10.10
+Subnet Mask.................................... 255.255.255.0
+Default Gateway................................ 10.10.10.1
+IPv6 Administrative Mode....................... Enabled
+IPv6 Prefix is ................................ fe80::dac4:97ff:fe56:87d7/64
+IPv6 Default Router............................ fe80::222:bdff:fef8:19ff
+Configured IPv4 Protocol....................... None
+Configured IPv6 Protocol....................... None
+IPv6 AutoConfig Mode........................... Disabled
+Burned In MAC Address.......................... D8:C4:97:56:87:D7
+
+(Routing) #
+----
+
+. If desired, configure the SSH server.
++
+NOTE: The RCF file disables the Telnet protocol. If you do not configure the SSH server, you can only access the bridge using the serial port connection.
+
+ .. Generate RSA keys.
++
+----
+(Routing) #configure
+(Routing) (Config)#crypto key generate rsa
+----
+
+ .. Generate DSA keys.
++
+----
+(Routing) #configure
+(Routing) (Config)#crypto key generate dsa
+----
+
+ .. Enable the SSH server.
++
+If necessary, exit the configuration context.
++
+----
+(Routing) (Config)#end
+(Routing) #ip ssh server enable
+----
++
+NOTE: If keys already exist, then you might be asked to overwrite them.
+
+. If desired, configure the domain and name server: `configure`
++
+The following example shows the ip domain and ip name server commands:
++
+----
+(Routing) # configure
+(Routing) (Config)#ip domain name lab.netapp.com
+(Routing) (Config)#ip name server 10.99.99.1 10.99.99.2
+(Routing) (Config)#exit
+(Routing) (Config)#
+----
+
+. If desired, configure the time zone and time synchronization (SNTP).
++
+The following example shows the sntp commands, specifying the IP address of the SNTP server and the relative timezone.
++
+----
+(Routing) #
+(Routing) (Config)#sntp client mode unicast
+(Routing) (Config)#sntp server 10.99.99.5
+(Routing) (Config)#clock timezone -7
+(Routing) (Config)#exit
+(Routing) (Config)#
+----
+
+. Configure the switch name: `hostname IP_switch_A_1`
++
+The switch prompt will display the new name:
++
+----
+(Routing) # hostname IP_switch_A_1
+
+(IP_switch_A_1) #
+----
+
+. Save the configuration: `write memory`
++
+You receive prompts and output similar to the following example:
++
+----
+(IP_switch_A_1) #write memory
+
+This operation may take a few minutes.
+Management interfaces will not be available during this time.
+
+Are you sure you want to save? (y/n) y
+
+Config file 'startup-config' created successfully .
+
+
+Configuration Saved!
+
+(IP_switch_A_1) #
+----
+
+. Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
+
+== Downloading and installing the Broadcom switch EFOS software
+
+[.lead]
+You must download the switch operating system file and RCF file to each switch in the MetroCluster IP configuration.
+
+This task must be repeated on each switch in the MetroCluster IP configuration.
+
+. Copy the switch software to the switch: `+copy sftp://user@50.50.50.50/switchsoftware/efos-3.4.3.1.stk backup+`
++
+In this example, the efos-3.4.3.1.stk operating system file is copied from the SFTP server at 50.50.50.50 to the backup partition. You need to use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
++
+----
+(IP_switch_A_1) #copy sftp://user@50.50.50.50/switchsoftware/efos-3.4.3.1.stk backup
+Remote Password:*************
+
+Mode........................................... SFTP
+Set Server IP.................................. 50.50.50.50
+Path........................................... /switchsoftware/
+Filename....................................... efos-3.4.3.1.stk
+Data Type...................................... Code
+Destination Filename........................... backup
+
+Management access will be blocked for the duration of the transfer
+Are you sure you want to start? (y/n) y
+
+File transfer in progress. Management access will be blocked for the duration of the transfer. Please wait...
+SFTP Code transfer starting...
+
+
+File transfer operation completed successfully.
+
+(IP_switch_A_1) #
+----
+
+. Set the switch to boot from the backup partition on the next switch reboot: `boot system backup`
++
+----
+(IP_switch_A_1) #boot system backup
+Activating image backup ..
+
+(IP_switch_A_1) #
+----
+
+. Verify that the new boot image will be active on the next boot: `show bootvar`
++
+----
+(IP_switch_A_1) #show bootvar
+
+Image Descriptions
+
+ active :
+ backup :
+
+
+ Images currently available on Flash
+
+ ----  -----------  --------  ---------------  ------------
+ unit       active    backup   current-active   next-active
+ ----  -----------  --------  ---------------  ------------
+
+	1       3.4.3.0      3.4.3.1      3.4.3.0          3.4.3.1
+
+(IP_switch_A_1) #
+----
+
+. Save the configuration: `write memory`
++
+----
+(IP_switch_A_1) #write memory
+
+This operation may take a few minutes.
+Management interfaces will not be available during this time.
+
+Are you sure you want to save? (y/n) y
+
+
+Configuration Saved!
+
+(IP_switch_A_1) #
+----
+
+. Reboot the switch: `reload`
++
+----
+(IP_switch_A_1) #reload
+
+Are you sure you would like to reset the system? (y/n) y
+----
+
+. Wait for the switch to reboot.
+. Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
+
+== Downloading and installing the Broadcom RCF files
+
+[.lead]
+You must download and install the switch RCF file to each switch in the MetroCluster IP configuration.
+
+This task requires file transfer software, such as FTP, TFTP, SFTP, or SCP, to copy the files to the switches.
+
+These steps must be repeated on each of the IP switches in the MetroCluster IP configuration.
+
+There are four RCF files, one for each of the four switches in the MetroCluster IP configuration. You must use the correct RCF files for the switch model you are using.
+
+[options="header"]
+|===
+| Switch| RCF file
+a|
+IP_switch_A_1
+a|
+BES-53248_v1.32_Switch-A1.txt
+a|
+IP_switch_A_2
+a|
+BES-53248_v1.32_Switch-A2.txt
+a|
+IP_switch_B_1
+a|
+BES-53248_v1.32_Switch-B1.txt
+a|
+IP_switch_B_2
+a|
+BES-53248_v1.32_Switch-B2.txt
+|===
+
+. Download the MetroCluster IP RCF files for the Broadcom switch.
++
+https://mysupport.netapp.com/NOW/download/software/metrocluster_ip/rcfs/download.shtml[Broadcom Cluster and Management Network Switch Reference Configuration File Download for MetroCluster IP]
+
+. Copy the RCF files to the switches:
+ .. Copy the RCF files to the first switch: `+copy sftp://user@FTP-server-IP-address/RcfFiles/switch-specific-RCF nvram:script BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr+`
++
+In this example, the BES-53248_v1.32_Switch-A1.txt RCF file is copied from the SFTP server at 50.50.50.50 to the local bootflash. You need to use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
++
+----
+(IP_switch_A_1) #copy sftp://user@50.50.50.50/RcfFiles/BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr
+
+Remote Password:*************
+
+Mode........................................... SFTP
+Set Server IP.................................. 50.50.50.50
+Path........................................... /RcfFiles/
+Filename....................................... BES-53248_v1.32_Switch-A1.txt
+Data Type...................................... Config Script
+Destination Filename........................... BES-53248_v1.32_Switch-A1.scr
+
+Management access will be blocked for the duration of the transfer
+Are you sure you want to start? (y/n) y
+
+File transfer in progress. Management access will be blocked for the duration of the transfer. Please wait...
+File transfer operation completed successfully.
+
+
+Validating configuration script...
+
+config
+
+set clibanner "********************************************************************************
+
+* NetApp Reference Configuration File (RCF)
+
+*
+
+* Switch    : BES-53248
+
+
+...
+The downloaded RCF is validated. Some output is being logged here.
+...
+
+
+Configuration script validated.
+File transfer operation completed successfully.
+
+(IP_switch_A_1) #
+----
+
+ .. Verify that the RCF file is saved as a script: `script list`
++
+----
+(IP_switch_A_1) #script list
+
+Configuration Script Name        Size(Bytes)  Date of Modification
+-------------------------------  -----------  --------------------
+BES-53248_v1.32_Switch-A1.scr             852   2019 01 29 18:41:25
+
+1 configuration script(s) found.
+2046 Kbytes free.
+(IP_switch_A_1) #
+----
+
+ .. Apply the RCF script: `script apply BES-53248_v1.32_Switch-A1.scr`
++
+----
+(IP_switch_A_1) #script apply BES-53248_v1.32_Switch-A1.scr
+
+Are you sure you want to apply the configuration script? (y/n) y
+
+
+config
+
+set clibanner "********************************************************************************
+
+* NetApp Reference Configuration File (RCF)
+
+*
+
+* Switch    : BES-53248
+
+...
+The downloaded RCF is validated. Some output is being logged here.
+...
+
+Configuration script 'BES-53248_v1.32_Switch-A1.scr' applied.
+
+(IP_switch_A_1) #
+----
+
+ .. Save the configuration: `write memory`
++
+----
+(IP_switch_A_1) #write memory
+
+This operation may take a few minutes.
+Management interfaces will not be available during this time.
+
+Are you sure you want to save? (y/n) y
+
+
+Configuration Saved!
+
+(IP_switch_A_1) #
+----
+
+ .. Reboot the switch: `reload`
++
+----
+(IP_switch_A_1) #reload
+
+Are you sure you would like to reset the system? (y/n) y
+----
+
+ .. Repeat the previous steps for each of the other three switches, being sure to copy the matching RCF file to the corresponding switch.
+. Reload the switch: `reload`
++
+----
+IP_switch_A_1# reload
+----
+
+. Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
+
+// 21 APR 2021, BURT 1371395
+//  2021-04-23 1374271
