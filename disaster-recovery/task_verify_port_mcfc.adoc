@@ -1,0 +1,46 @@
+---
+permalink: disaster-recovery/task_verify_port_mcfc.html
+sidebar: sidebar
+keywords: verify, port, environmental, metrocluster, configuration
+summary: 'You must set the environmental variables on the node and then power it off to prepare it for MetroCluster configuration.'
+---
+= Verifying port configuration (MetroCluster FC configurations only)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must set the environmental variables on the node and then power it off to prepare it for MetroCluster configuration.
+
+This procedure is performed with the replacement controller modules in Maintenance mode.
+
+The steps to check configuration of ports is needed only on systems in which FC or CNA ports are used in initiator mode.
+
+. In Maintenance mode, enter the following command to restore the FC port configuration: `ucadmin modify -m fc -t initiatoradapter_name`
++
+If you only want to use one of a port pair in the initiator configuration, enter a precise adapter_name.
+
+. Take one of the following actions, depending on your configuration:
++
+|===
+| If the FC port configuration is...| Then...
+a|
+The same for both ports
+a|
+Answer `y` when prompted by the system since modifying one port in a port pair modifies the other port as well.
+a|
+Different
+a|
+
+ .. Answer `n` when prompted by the system.
+ .. Enter the following command to restore the FC port configuration: `ucadmin modify -m fc -t initiator\|targetadapter_name`
+
++
+|===
+
+. Exit Maintenance mode by entering the following command: `halt`
++
+After you issue the command, wait until the system stops at the LOADER prompt.
+
+. Boot the node back into Maintenance mode for the configuration changes to take effect: `boot_ontap maint`
+. Verify the values of the variables by entering the following command: `ucadmin show`
+. Exit Maintenance mode and display the LOADER prompt:``halt``

@@ -1,0 +1,114 @@
+---
+permalink: disaster-recovery/task_power_on_mcfc.html
+sidebar: sidebar
+keywords: power, sas, storage, direct, attached, configuration, fabric
+summary: 'You must power on the MetroCluster components at the disaster site when you are ready to prepare for switchback.'
+---
+= Powering on the equipment at the disaster site
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must power on the MetroCluster components at the disaster site when you are ready to prepare for switchback. In addition, you must also recable the SAS storage connections in direct-attached MetroCluster configurations and enable non-Inter-Switch Link ports in fabric-attached MetroCluster configurations.
+
+You must have already replaced and cabled the MetroCluster components exactly as the old ones.
+
+link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
+
+link:../install-stretch/index.html[Stretch MetroCluster installation and configuration]
+
+The examples in this procedure assume the following:
+
+* Site A is the disaster site.
+* FC_switch_A_1 has been replaced.
+* FC_switch_A_2 has been replaced.
+* Site B is the surviving site.
+* FC_switch_B_1 is healthy.
+* FC_switch_B_2 is healthy.
+
+The FC switches are present only in fabric-attached MetroCluster configurations.
+
+. In a stretch MetroCluster configuration using SAS cabling (and no FC switch fabric or FC-to-SAS bridges), connect all the storage including the remote storage across both sites.
++
+The controller at the disaster site must remain powered off or at the LOADER prompt.
+
+. On the surviving site, disable disk autoassignment: `storage disk option modify -autoassign off *`
++
+----
+cluster_B::> storage disk option modify -autoassign off *
+2 entries were modified.
+----
+
+. On the surviving site, confirm that disk autoassignment is off: `storage disk option show`
++
+----
+ cluster_B::> storage disk option show
+ Node     BKg. FW. Upd.  Auto Copy   Auto Assign  Auto Assign Policy
+--------  -------------  -----------  -----------  ------------------
+node_B_1       on            on          off             default
+node_B_2       on            on          off             default
+2 entries were displayed.
+
+ cluster_B::>
+----
+
+. Turn on the disk shelves at the disaster site and make sure that all disks are running.
+. In a bridge-attached or fabric-attached MetroCluster configuration, turn on all FC-to-SAS bridges at the disaster site.
+. If any disks were replaced, leave the controllers powered off or at the LOADER prompt.
+. In a fabric-attached MetroCluster configuration, enable the non-ISL ports on the FC switches.
++
+|===
+| If the switch vendor is...| Then use these steps to enable the ports...
+a|
+Brocade
+a|
+
+ .. Persistently enable the ports connected to the FC-to-SAS bridges: `portpersistentenable port-number`
++
+In the following example, ports 6 and 7 are enabled:
++
+----
+FC_switch_A_1:admin> portpersistentenable 6
+FC_switch_A_1:admin> portpersistentenable 7
+
+FC_switch_A_1:admin>
+----
+
+ .. Persistently enable the ports connected to the HBAs and FC-VI adapters: `portpersistentenable port-number`
++
+In the following example, ports 6 and 7 are enabled:
++
+----
+FC_switch_A_1:admin> portpersistentenable 1
+FC_switch_A_1:admin> portpersistentenable 2
+FC_switch_A_1:admin> portpersistentenable 4
+FC_switch_A_1:admin> portpersistentenable 5
+FC_switch_A_1:admin>
+----
++
+NOTE: For AFF A700 and FAS9000 systems, you must persistently enable all four FC-VI ports by using the switchcfgpersistentenable command.
+
+ .. Repeat substeps a and b for the second FC switch at the surviving site.
+
+a|
+Cisco
+a|
+
+ .. Enter configuration mode for the interface, and then enable the ports with the no shut command.
++
+In the following example, port fc1/36 is disabled:
++
+----
+ FC_switch_A_1# conf t
+FC_switch_A_1(config)# interface fc1/36
+FC_switch_A_1(config)# no shut
+FC_switch_A_1(config-if)# end
+FC_switch_A_1# copy running-config startup-config
+----
+
+ .. Verify that the switch port is enabled: `show interface brief`
+ .. Repeat substeps a and b on the other ports connected to the FC-to-SAS bridges, HBAs, and FC-VI adapters.
+ .. Repeat substeps a, b, and c for the second FC switch at the surviving site.
+
++
+|===
