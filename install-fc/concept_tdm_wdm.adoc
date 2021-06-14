@@ -1,0 +1,74 @@
+---
+permalink: install-fc/concept_tdm_wdm.html
+sidebar: sidebar
+keywords: preparing, prepare, metrocluster, mcc, installation, install, differences, configurations, between, considerations, all, san, array, asa, cluster, peering, prerequisites, dedicated, ports, sharing, data, ports, native, disk, shelves, array, luns, transitions, 7-mode, isls, tdm/wdm, fabric-attached, iod, ood, encryption, devices, unmirrored, aggregates, maintenance, requiring, power, shutdown, firewall, hardware, racking, cabling, setup, checklist, all san array, asa
+summary: 'As you prepare for the MetroCluster installation, you should understand the MetroCluster hardware architecture and required components.'
+---
+
+= Considerations for using TDM/WDM equipment with fabric-attached MetroCluster configurations
+
+[.lead]
+The Hardware Universe tool provides some notes about the requirements that Time Division Multiplexing (TDM) or Wavelength Division Multiplexing (WDM) equipment must meet to work with a fabric-attached MetroCluster configuration. These notes also include information about various configurations, which can help you to determine when to use in-order delivery (IOD) of frames or out-of-order delivery (OOD) of frames.
+
+An example of such requirements is that the TDM/WDM equipment must support the link aggregation (trunking) feature with routing policies. The order of delivery (IOD or OOD) of frames is maintained within a switch, and is determined by the routing policy that is in effect.
+
+https://hwu.netapp.com[NetApp Hardware Universe]
+
+The following table provides the routing policies for configurations containing Brocade switches and Cisco switches:
+
+[cols=3*,options="header"]
+|===
+| Switches| Configuring MetroCluster configurations for IOD| Configuring MetroCluster configurations for OOD
+a|
+Brocade
+a|
+
+* AptPolicy must be set to 1
+* DLS must be set to off
+* IOD must be set to on
+
+a|
+
+* AptPolicy must be set to 3
+* DLS must be set to on
+* IOD must be set to off
+
+a|
+Cisco
+a|
+Policies for the FCVI-designated VSAN:
+
+* Load balancing policy: srcid and dstid
+* IOD must be set to on
+
+Policies for the storage-designated VSAN:
+
+* Load balancing policy: srcid, dstid, and oxid
+* VSAN must not have the in-order-guarantee option set
+
+a|
+Not applicable
+|===
+
+== When to use IOD
+
+It is best to use IOD if it is supported by the links. The following configurations support IOD:
+
+* A single ISL
+* The ISL and the link (and the link equipment, such as TDM/WDM, if used) supports configuration for IOD.
+* A single trunk, and the ISLs and the links (and the link equipment, such as TDM/WDM, if used) support configuration for IOD.
+
+== When to use OOD
+
+* You can use OOD for all configurations that do not support IOD.
+* You can use OOD for configurations that do not support the trunking feature.
+
+== Using encryption devices
+
+When using dedicated encryption devices on the ISL or encryption on WDM devices in the MetroCluster configuration, you must meet the following requirements:
+
+* The external encryption devices or WDM equipment has been self certified by the vendor with the FC switch in question.
++
+The self certification should cover the operating mode (such as trunking and encryption).
+
+* The added latency due to encryption should be no more than 10 microseconds.

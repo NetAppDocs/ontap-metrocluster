@@ -1,0 +1,157 @@
+---
+permalink: disaster-recovery/task_reassign_pool1_disastersite_mcip.html
+sidebar: sidebar
+keywords: metrocluster, disaster, site, replacement, controller, module, reassign, ownership
+summary: If the controller modules or NVRAM cards were replaced at the disaster site you must reassign disks belonging to the root aggregates to the replacement controller modules.
+---
+= Reassigning disk ownership for pool 1 disks on the disaster site (MetroCluster IP configurations)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If one or both of the controller modules or NVRAM cards were replaced at the disaster site, the system ID has changed and you must reassign disks belonging to the root aggregates to the replacement controller modules.
+
+Because the nodes are in switchover mode, only the disks containing the root aggregates of pool1 of the disaster site will be reassigned in this task. They are the only disks still owned by the old system ID at this point.
+
+This task is performed on the replacement nodes at the disaster site.
+
+This task is performed in Maintenance mode.
+
+The examples make the following assumptions:
+
+* Site A is the disaster site.
+* node_A_1 has been replaced.
+* node_A_2 has been replaced.
+* Site B is the surviving site.
+* node_B_1 is healthy.
+* node_B_2 is healthy.
+
+The old and new system IDs were identified in link:../disaster-recovery/task_replace_hardware_and_boot_new_controllers.html#determining-the-system-ids-of-the-replacement-controller-modules[Determining the new System IDs of the replacement controller modules].
+
+The examples in this procedure use controllers with the following system IDs:
+
+[options="header"]
+|===
+| Node| Original system ID| New system ID
+a|
+node_A_1
+a|
+4068741258
+a|
+1574774970
+a|
+node_A_2
+a|
+4068741260
+a|
+1574774991
+a|
+node_B_1
+a|
+4068741254
+a|
+unchanged
+a|
+node_B_2
+a|
+4068741256
+a|
+unchanged
+|===
+
+. With the replacement node in Maintenance mode, reassign the root aggregate disks, using the correct command, depending on whether your system is configured with ADP and your ONTAP version.
++
+You can proceed with the reassignment when prompted.
++
+[options="header"]
+|===
+| System is using ADP| Use this command for disk reassignment:
+a|
+Yes (ONTAP 9.8)
+a|
+disk reassign -s old-system-ID -d new-system-ID -r dr-partner-system-ID
+a|
+Yes (ONTAP 9.7.x and earlier)
+a|
+disk reassign -s old-system-ID -d new-system-ID -p old-partner-system-ID
+a|
+No
+a|
+disk reassign -s old-system-ID -d new-system-ID
+|===
+The following example shows reassignment of drives on a non-ADP system:
++
+----
+*> disk reassign -s 4068741256 -d 1574774970
+Partner node must not be in Takeover mode during disk reassignment from maintenance mode.
+Serious problems could result!!
+Do not proceed with reassignment if the partner is in takeover mode. Abort reassignment (y/n)? n
+
+After the node becomes operational, you must perform a takeover and giveback of the HA partner node to ensure disk reassignment is successful.
+Do you want to continue (y/n)? y
+Disk ownership will be updated on all disks previously belonging to Filer with sysid 537037643.
+Do you want to continue (y/n)? y
+disk reassign parameters: new_home_owner_id 537070473 , new_home_owner_name
+Disk 0m.i0.3L14 will be reassigned.
+Disk 0m.i0.1L6 will be reassigned.
+Disk 0m.i0.1L8 will be reassigned.
+Number of disks to be reassigned: 3
+----
+
+. Destroy the contents of the mailbox disks: `mailbox destroy local`
++
+You can proceed with the destroy operation when prompted.
++
+The following example shows the output for the mailbox destroy local command:
++
+----
+*> mailbox destroy local
+Destroying mailboxes forces a node to create new empty mailboxes,
+which clears any takeover state, removes all knowledge
+of out-of-date plexes of mirrored volumes, and will prevent
+management services from going online in 2-node cluster
+HA configurations.
+Are you sure you want to destroy the local mailboxes? y
+...............Mailboxes destroyed.
+*>
+----
+
+. If disks have been replaced, there will be failed local plexes that must be deleted.
+ .. Display the aggregate status: `aggr status`
++
+In the following example, plex node_A_1_aggr0/plex0 has failed.
++
+----
+*> aggr status
+Aug 18 15:00:07 [node_B_1:raid.vol.mirror.degraded:ALERT]: Aggregate node_A_1_aggr0 is
+   mirrored and one plex has failed. It is no longer protected by mirroring.
+Aug 18 15:00:07 [node_B_1:raid.debug:info]: Mirrored aggregate node_A_1_aggr0 has plex0
+   clean(-1), online(0)
+Aug 18 15:00:07 [node_B_1:raid.debug:info]: Mirrored aggregate node_A_1_aggr0 has plex2
+   clean(0), online(1)
+Aug 18 15:00:07 [node_B_1:raid.mirror.vote.noRecord1Plex:error]: WARNING: Only one plex
+   in aggregate node_A_1_aggr0 is available. Aggregate might contain stale data.
+Aug 18 15:00:07 [node_B_1:raid.debug:info]: volobj_mark_sb_recovery_aggrs: tree:
+   node_A_1_aggr0 vol_state:1 mcc_dr_opstate: unknown
+Aug 18 15:00:07 [node_B_1:raid.fsm.commitStateTransit:debug]: /node_A_1_aggr0 (VOL):
+   raid state change UNINITD -> NORMAL
+Aug 18 15:00:07 [node_B_1:raid.fsm.commitStateTransit:debug]: /node_A_1_aggr0 (MIRROR):
+   raid state change UNINITD -> DEGRADED
+Aug 18 15:00:07 [node_B_1:raid.fsm.commitStateTransit:debug]: /node_A_1_aggr0/plex0
+   (PLEX): raid state change UNINITD -> FAILED
+Aug 18 15:00:07 [node_B_1:raid.fsm.commitStateTransit:debug]: /node_A_1_aggr0/plex2
+   (PLEX): raid state change UNINITD -> NORMAL
+Aug 18 15:00:07 [node_B_1:raid.fsm.commitStateTransit:debug]: /node_A_1_aggr0/plex2/rg0
+   (GROUP): raid state change UNINITD -> NORMAL
+Aug 18 15:00:07 [node_B_1:raid.debug:info]: Topology updated for aggregate node_A_1_aggr0
+   to plex plex2
+*>
+----
+
+ .. Delete the failed plex: `aggr destroy plex-id`
++
+----
+*> aggr destroy node_A_1_aggr0/plex0
+----
+. Halt the node to display the LOADER prompt: `halt`
+. Repeat these steps on the other node at the disaster site.

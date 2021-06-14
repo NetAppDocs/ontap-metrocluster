@@ -1,0 +1,37 @@
+---
+permalink: disaster-recovery/task_verify_connectivity_mcip.html
+sidebar: sidebar
+keywords: metrocluster, ip, configuration, verify, storage, connectivity, remote
+summary: You must confirm that the replaced nodes have connectivity to the disk shelves at the surviving site.
+---
+= Verify storage connectivity to the remote site (MetroCluster IP configurations)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must confirm that the replaced nodes have connectivity to the disk shelves at the surviving site.
+
+This task is performed on the replacement nodes at the disaster site.
+
+This task is performed in Maintenance mode.
+
+. Display the disks that are owned by the original system ID. `disk show -s old-system-ID`
++
+The remote disks can be recognized by the 0m device. 0m indicates that the disk is connected via the MetroCluster iSCSI connection. These disks must be reassigned later in the recovery procedure.
++
+----
+*> disk show -s 4068741256
+Local System ID: 1574774970
+
+  DISK     OWNER                 POOL  SERIAL NUMBER   HOME                  DR HOME
+---------- --------------------- ----- -------------   --------------------- ----------------------
+0m.i0.0L11 node_A_2 (4068741256) Pool1 S396NA0HA02128  node_A_2 (4068741256) node_A_2  (4068741256)
+0m.i0.1L38 node_A_2 (4068741256) Pool1 S396NA0J148778  node_A_2 (4068741256) node_A_2  (4068741256)
+0m.i0.0L52 node_A_2 (4068741256) Pool1 S396NA0J148777  node_A_2 (4068741256) node_A_2  (4068741256)
+...
+...
+NOTE: Currently 49 disks are unowned. Use 'disk show -n' for additional information.
+*>
+----
+
+. Repeat this step on the other replacement nodes

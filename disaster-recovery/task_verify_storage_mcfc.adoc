@@ -1,0 +1,22 @@
+---
+permalink: disaster-recovery/task_verify_storage_mcfc.html
+sidebar: sidebar
+keywords: verify, storage, configuration
+summary: 'You must confirm that all storage is visible from the surviving nodes.'
+---
+= Verifying the storage configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must confirm that all storage is visible from the surviving nodes.
+
+. Confirm that all storage components at the disaster site are the same in quantity and type at the surviving site.
++
+The surviving site and disaster site should have the same number of disk shelf stacks, disk shelves, and disks. In a bridge-attached or fabric-attached MetroCluster configuration, the sites should have the same number of FC-to-SAS bridges.
+
+. Confirm that all disks that have been replaced at the disaster site are unowned: run local disk show-n
++
+Disks should appear as being unowned.
+
+. If no disks were replaced, confirm that all disks are present: disk show
