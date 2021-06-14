@@ -1,0 +1,159 @@
+---
+permalink: disaster-recovery/task_boot_ontap_mcip.html
+sidebar: sidebar
+keywords: metrocluster, ip, configuration, replacement, controller, module, disaster, site, boot
+summary: You must boot the replacement nodes at the disaster site to the ONTAP operating system.
+---
+= Booting to ONTAP on replacement controller modules in MetroCluster IP configurations
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must boot the replacement nodes at the disaster site to the ONTAP operating system.
+
+This task begins with the nodes at the disaster site in Maintenance mode.
+
+. On one of the replacement nodes, exit to the LOADER prompt: `halt`
+. Display the boot menu: `boot_ontap menu`
+. From the boot menu, select option 6, *Update flash from backup config*.
++
+The system boots twice. You should respond `yes` when prompted to continue. After the second boot, you should respond `y` when prompted about the system ID mismatch.
++
+NOTE: If you did not clear the NVRAM contents of a used replacement controller module, then you might see the following panic message: PANIC: NVRAM contents are invalid....
++
+If this occurs, boot the system to the ONTAP prompt again (`boot_ontap menu`). You then need to perform a root recovery. Contact technical support for assistance.
++
+Confirmation to continue prompt:
++
+----
+Selection (1-9)? 6
+
+This will replace all flash-based configuration with the last backup to
+disks. Are you sure you want to continue?: yes
+----
++
+System ID mismatch prompt:
++
+----
+WARNING: System ID mismatch. This usually occurs when replacing a boot device or NVRAM cards!
+Override system ID? {y|n} y
+----
+
+. From the surviving site, verify that the correct partner system IDs have been applied to the nodes: `metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
++
+In this example, the following new system IDs should appear in the output:
+
+ ** Node_A_1: 1574774970
+ ** Node_A_2: 1574774991
+The ha-partner-systemid column should show the new system IDs.
+
++
+----
+metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
+
+dr-group-id cluster    node      node-systemid ha-partner-systemid dr-partner-systemid dr-auxiliary-systemid
+----------- ---------- --------  ------------- ------ ------------ ------ ------------ ------ --------------
+1           Cluster_A  Node_A_1  1574774970    1574774991          4068741254          4068741256
+1           Cluster_A  Node_A_2  1574774991    1574774970          4068741256          4068741254
+1           Cluster_B  Node_B_1  -             -                   -                   -
+1           Cluster_B  Node_B_2  -             -                   -                   -
+4 entries were displayed.
+----
+
+. If the partner system IDs were not correctly set, you must manually set the correct value:
+ .. Halt and display the LOADER prompt on the node.
+ .. Verify the partner-sysID bootarg's current value: `printenv`
+ .. Set the value to the correct partner system ID: `setenv partner-sysid partner-sysID`
+ .. Boot the node: `boot_ontap`
+ .. Repeat these substeps on the other node, if necessary.
+. Confirm that the replacement nodes at the disaster site are ready for switchback: `metrocluster node show`
++
+The replacement nodes should be in waiting for switchback recovery mode. If they are in normal mode instead, you can reboot the replacement nodes. After that boot, the nodes should be in waiting for switchback recovery mode.
++
+The following example shows that the replacement nodes are ready for switchback:
++
+----
+cluster_B::> metrocluster node show
+DR                               Configuration  DR
+Group Cluster Node               State          Mirroring Mode
+----- ------- ------------------ -------------- --------- --------------------
+1     cluster_B
+              node_B_1           configured     enabled   switchover completed
+              node_B_2           configured     enabled   switchover completed
+      cluster_A
+              node_A_1           configured     enabled   waiting for switchback recovery
+              node_A_2           configured     enabled   waiting for switchback recovery
+4 entries were displayed.
+
+cluster_B::>
+----
+
+. Verify the MetroCluster connection configuration settings: `metrocluster configuration-settings connection show`
++
+The configuration state should indicate completed.
++
+----
+cluster_B::*> metrocluster configuration-settings connection show
+DR                    Source          Destination
+Group Cluster Node    Network Address Network Address Partner Type Config State
+----- ------- ------- --------------- --------------- ------------ ------------
+1     cluster_B
+              node_B_2
+                 Home Port: e5a
+                      172.17.26.13    172.17.26.12    HA Partner   completed
+                 Home Port: e5a
+                      172.17.26.13    172.17.26.10    DR Partner   completed
+                 Home Port: e5a
+                      172.17.26.13    172.17.26.11    DR Auxiliary completed
+                 Home Port: e5b
+                      172.17.27.13    172.17.27.12    HA Partner   completed
+                 Home Port: e5b
+                      172.17.27.13    172.17.27.10    DR Partner   completed
+                 Home Port: e5b
+                      172.17.27.13    172.17.27.11    DR Auxiliary completed
+              node_B_1
+                 Home Port: e5a
+                      172.17.26.12    172.17.26.13    HA Partner   completed
+                 Home Port: e5a
+                      172.17.26.12    172.17.26.11    DR Partner   completed
+                 Home Port: e5a
+                      172.17.26.12    172.17.26.10    DR Auxiliary completed
+                 Home Port: e5b
+                      172.17.27.12    172.17.27.13    HA Partner   completed
+                 Home Port: e5b
+                      172.17.27.12    172.17.27.11    DR Partner   completed
+                 Home Port: e5b
+                      172.17.27.12    172.17.27.10    DR Auxiliary completed
+      cluster_A
+              node_A_2
+                 Home Port: e5a
+                      172.17.26.11    172.17.26.10    HA Partner   completed
+                 Home Port: e5a
+                      172.17.26.11    172.17.26.12    DR Partner   completed
+                 Home Port: e5a
+                      172.17.26.11    172.17.26.13    DR Auxiliary completed
+                 Home Port: e5b
+                      172.17.27.11    172.17.27.10    HA Partner   completed
+                 Home Port: e5b
+                      172.17.27.11    172.17.27.12    DR Partner   completed
+                 Home Port: e5b
+                      172.17.27.11    172.17.27.13    DR Auxiliary completed
+              node_A_1
+                 Home Port: e5a
+                      172.17.26.10    172.17.26.11    HA Partner   completed
+                 Home Port: e5a
+                      172.17.26.10    172.17.26.13    DR Partner   completed
+                 Home Port: e5a
+                      172.17.26.10    172.17.26.12    DR Auxiliary completed
+                 Home Port: e5b
+                      172.17.27.10    172.17.27.11    HA Partner   completed
+                 Home Port: e5b
+                      172.17.27.10    172.17.27.13    DR Partner   completed
+                 Home Port: e5b
+                      172.17.27.10    172.17.27.12    DR Auxiliary completed
+24 entries were displayed.
+
+cluster_B::*>
+----
+
+. Repeat the previous steps on the other node at the disaster site.

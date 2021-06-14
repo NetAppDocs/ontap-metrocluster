@@ -1,0 +1,126 @@
+---
+permalink: disaster-recovery/task_reassign_roots_mcfc.html
+sidebar: sidebar
+keywords: reassign, ownership, nvram, system, id, replaced
+summary: 'If one or both of the controller modules or NVRAM cards were replaced at the disaster site, you must reassign disks belonging to the root aggregates to the replacement controller modules.'
+---
+= Reassigning disk ownership for root aggregates to replacement controller modules (MetroCluster FC configurations)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If one or both of the controller modules or NVRAM cards were replaced at the disaster site, the system ID has changed and you must reassign disks belonging to the root aggregates to the replacement controller modules.
+
+Because the nodes are in switchover mode and healing has been done, only the disks containing the root aggregates of pool1 of the disaster site will be reassigned in this section. They are the only disks still owned by the old system ID at this point.
+
+This section provides examples for two and four-node configurations. For two-node configurations, you can ignore references to the second node at each site. For eight-node configurations, you must account for the additional nodes on the second DR group. The examples make the following assumptions:
+
+* Site A is the disaster site.
+* node_A_1 has been replaced.
+* node_A_2 has been replaced.
++
+Present only in four-node MetroCluster configurations.
+
+* Site B is the surviving site.
+* node_B_1 is healthy.
+* node_B_2 is healthy.
++
+Present only in four-node MetroCluster configurations.
+
+The old and new system IDs were identified in xref:task_replace_hardware_and_boot_new_controllers.adoc[Acquiring the new System ID].
+
+The examples in this procedure use controllers with the following system IDs:
+
+|===
+| Number of nodes| Node| Original system ID| New system ID
+a|
+Four
+a|
+node_A_1
+a|
+4068741258
+a|
+1574774970
+a|
+node_A_2
+a|
+4068741260
+a|
+1574774991
+a|
+node_B_1
+a|
+4068741254
+a|
+unchanged
+a|
+node_B_2
+a|
+4068741256
+a|
+unchanged
+a|
+Two
+a|
+node_A_1
+a|
+4068741258
+a|
+1574774970
+a|
+node_B_1
+a|
+4068741254
+a|
+unchanged
+|===
+
+. With the replacement node in Maintenance mode, reassign the root aggregate disks: `disk reassign -s old-system-ID -d new-system-ID`
++
+----
+*> disk reassign -s 4068741258 -d 1574774970
+----
+
+. View the disks to confirm the ownership change of the pool1 root aggr disks of the disaster site to the replacement node: `disk show`
++
+The output might show more or fewer disks, depending on how many disks are in the root aggregate and whether any of these disks failed and were replaced. If the disks were replaced, then Pool0 disks will not appear in the output.
++
+The pool1 root aggregate disks of the disaster site should now be assigned to the replacement node.
++
+----
+*> disk show
+Local System ID: 1574774970
+
+  DISK             OWNER             POOL   SERIAL NUMBER         HOME                DR HOME
+------------       -------------     -----  -------------         -------------       -------------
+sw_A_1:6.126L19 node_A_1(1574774970) Pool0  serial-number  node_A_1(1574774970)
+sw_A_1:6.126L3  node_A_1(1574774970) Pool0  serial-number  node_A_1(1574774970)
+sw_A_1:6.126L7  node_A_1(1574774970) Pool0  serial-number  node_A_1(1574774970)
+sw_B_1:6.126L8  node_A_1(1574774970) Pool1  serial-number  node_A_1(1574774970)
+sw_B_1:6.126L24 node_A_1(1574774970) Pool1  serial-number  node_A_1(1574774970)
+sw_B_1:6.126L2  node_A_1(1574774970) Pool1  serial-number  node_A_1(1574774970)
+
+*> aggr status
+         Aggr State           Status
+ node_A_1_root online          raid_dp, aggr
+                               mirror degraded
+                               64-bit
+*>
+----
+
+. View the aggregate status: `aggr status`
++
+The output might show more or fewer disks, depending on how many disks are in the root aggregate and whether any of these disks failed and were replaced. If disks were replaced, then Pool0 disks will not appear in output.
++
+----
+*> aggr status
+          Aggr State           Status
+  node_A_1_root online          raid_dp, aggr
+                                mirror degraded
+                                64-bit
+*>
+----
+
+. Delete the contents of the mailbox disks: `mailbox destroy local`
+. If the aggregate is not online, bring it online: `aggr online aggr_name`
+. Halt the node to display the LOADER prompt: `halt`

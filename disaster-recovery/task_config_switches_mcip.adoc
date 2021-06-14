@@ -1,0 +1,121 @@
+---
+permalink: disaster-recovery/task_config_switches_mcip.html
+sidebar: sidebar
+keywords: metrocluster, ip, configuration, switchback, operation
+summary: You must configure any IP switches that were replaced.
+---
+= Configuring the IP switches (MetroCluster IP configurations)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must configure any IP switches that were replaced.
+
+This task applies to MetroCluster IP configurations only.
+
+This must be done on both switches. Verify after configuring the first switch that storage access on the surviving site is not impacted.
+
+NOTE: You must not proceed with the second switch if storage access on the surviving site is impacted.
+
+. Refer to the _MetroCluster IP Installation and Configuration Guide_ for procedures for cabling and configuring a replacement switch.
++
+link:../install-ip/index.html[MetroCluster IP installation and configuration]
++
+You can use the procedures in the following sections:
+
+ ** Cabling the IP switches
+ ** Configuring the IP switches
+
+. If the ISLs were disabled at the surviving site, enable the ISLs and verify that the ISLs are online.
+ .. Enable the of the ISL interfaces on the first switch: `no shutdown`
++
+The following examples show the commands for a Broadcom IP switch or a Cisco IP switch.
++
+[options="header"]
+|===
+| Switch vendor| Commands
+a|
+Broadcom
+a|
+----
+(IP_Switch_A_1)> enable
+(IP_switch_A_1)# configure
+(IP_switch_A_1)(Config)# interface 0/13-0/16
+(IP_switch_A_1)(Interface 0/13-0/16 )# no shutdown
+(IP_switch_A_1)(Interface 0/13-0/16 )# exit
+(IP_switch_A_1)(Config)# exit
+----
+a|
+Cisco
+a|
+----
+IP_switch_A_1# conf t
+IP_switch_A_1(config)# int eth1/15-eth1/20
+IP_switch_A_1(config)# no shutdown
+IP_switch_A_1(config)# copy running startup
+IP_switch_A_1(config)# show interface brief
+----
+|===
+
+ .. Enable the of the ISL interfaces on the partner switch: `no shutdown`
++
+The following examples show the commands for a Broadcom IP switch or a Cisco IP switch.
++
+[options="header"]
+|===
+| Switch vendor| Commands
+a|
+Broadcom
+a|
+----
+(IP_Switch_A_2)> enable
+(IP_switch_A_2)# configure
+(IP_switch_A_2)(Config)# interface 0/13-0/16
+(IP_switch_A_2)(Interface 0/13-0/16 )# no shutdown
+(IP_switch_A_2)(Interface 0/13-0/16 )# exit
+(IP_switch_A_2)(Config)# exit
+----
+a|
+Cisco
+a|
+----
+IP_switch_A_2# conf t
+IP_switch_A_2(config)# int eth1/15-eth1/20
+IP_switch_A_2(config)# no shutdown
+IP_switch_A_2(config)# copy running startup
+IP_switch_A_2(config)# show interface brief
+----
+|===
+
+ .. Verify that the interfaces are enabled: `show interface brief`
++
+The following example shows the output for a Cisco switch.
++
+----
+IP_switch_A_2(config)# show interface brief
+
+--------------------------------------------------------
+Port VRF Status IP Address Speed MTU
+--------------------------------------------------------
+mt0 -- up 10.10.99.10 100 1500
+--------------------------------------------------------
+Ethernet    VLAN Type Mode    Status Reason Speed   Port
+Interface                                           Ch
+#
+--------------------------------------------------------
+.
+.
+.
+Eth1/15    10   eth   access  up     none   40G(D)  --
+Eth1/16    10   eth   access  up     none   40G(D)  --
+Eth1/17    10   eth   access  down   none   auto(D) --
+Eth1/18    10   eth   access  down   none   auto(D) --
+Eth1/19    10   eth   access  down   none   auto(D) --
+Eth1/20    10   eth   access  down   none   auto(D) --
+.
+.
+.
+IP_switch_A_2#
+----
+
+Proceed to xref:task_prepare_for_switchback_in_a_mcc_ip_configuration_supertask.adoc[Preparing for switchback in a MetroCluster IP configuration].

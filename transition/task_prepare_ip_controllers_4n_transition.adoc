@@ -1,0 +1,43 @@
+---
+permalink: transition/task_prepare_ip_controllers_4n_transition.html
+sidebar: sidebar
+keywords: Transitioning from MetroCluster FC to MetroCluster IP configurations, review, requirement, preparing, prepare, transition, perform, procedure, order, completing, complete, step, task, moving, move, controller, storage, shelves, shelf, exist, configuration, direct, metrocluster, fc, ip, verify, health, removing, remove, tiebreaker, monitor, software, generating, generate, apply, rcf, switch, controller, configure, prepare, preparing
+summary: You must prepare the four new MetroCluster IP nodes and install the correct ONTAP version.
+---
+
+= Preparing the MetroCluster IP controllers
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must prepare the four new MetroCluster IP nodes and install the correct ONTAP version.
+
+This task must be performed on each of the new nodes:
+
+* node_A_1-IP
+* node_A_2-IP
+* node_B_1-IP
+* node_B_2-IP
+
+In these steps, you clear the configuration on the nodes and clear the mailbox region on new drives.
+
+. Rack the new controllers for the MetroCluster IP configuration.
++
+The MetroCluster FC nodes (node_A_x-FC and node_B_x-FC) remain cabled at this time.
+
+. Cable the MetroCluster IP nodes to the IP switches as shown in the link:../install-ip/task_cable_ip_switches.html[Cabling the IP switches].
+
+. Configure the MetroCluster IP nodes using the following sections of the _MetroCluster Installation and Configuration Guide._
++
+CATALYST MIGRATION
+
+ .. link:../install-ip/task_sw_config_gather_info[Gathering required information]
+ .. link:../install-ip/task_sw_config_restore_defaults[Clearing the configuration on a controller module]
+ .. link:../install-ip/task_sw_config_verify_haconfig[Verifying the ha-config state of components]
+ .. link:../install-ip/task_sw_config_assign_pool0[Manually assigning drives for pool 0 (ONTAP 9.4 and later)]
+
+. From Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the boot_ontap command to boot the system and get to cluster setup.
++
+Do not complete the cluster wizard or node wizard at this time.
+
+. Repeat these steps on the other MetroCluster IP nodes.
