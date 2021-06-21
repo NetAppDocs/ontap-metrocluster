@@ -11,6 +11,8 @@ summary: In MetroCluster IP configurations, you retrieve the IP address of the M
 [.lead]
 In MetroCluster IP configurations, you must retrieve the IP address of the MetroCluster interfaces on the Ethernet ports, and then use them to configure the interfaces on the replacement controller modules.
 
+.About this task
+
 This task is required only in MetroCluster IP configurations.
 
 Commands in this task are performed from the cluster prompt of the surviving site and from the LOADER prompt of the nodes at the disaster site.
@@ -19,9 +21,11 @@ The nodes in these examples have the following IP addresses for their MetroClust
 
 NOTE: These examples are for an AFF A700 or FAS9000 system. The interfaces vary by platform model.
 
+
 [cols=3*,options="header"]
 |===
-| Node| Port| IP address
+| Node | Port | IP address
+
 a|
 node_A_1
 a|
@@ -165,7 +169,7 @@ node_A_1
 * e5b: 172.17.27.10
 
 |===
-The following table lists the platform models that use VLAN IDs on the MetroCluster IP interfaces. These models may require additional steps if you are not using the default VLAN IDs.
+The following table lists the platform models that use VLAN IDs on the MetroCluster IP interfaces. These models might require additional steps if you are not using the default VLAN IDs.
 
 [options="header"]
 |===
@@ -186,9 +190,13 @@ a|
 
 |===
 
-. From the surviving site, gather the IP addresses of the MetroCluster interfaces on the disaster site: `metrocluster configuration-settings connection show`
+.Steps
+
+. From the surviving site, gather the IP addresses of the MetroCluster interfaces on the disaster site:
 +
-The required addresses are the DR Partner addresses shown in the `Destination Network Address` column.
+`metrocluster configuration-settings connection show`
++
+The required addresses are the DR Partner addresses shown in the *Destination Network Address* column.
 +
 The following output shows the IP addresses for a configuration with AFF A700 and FAS9000 systems with the MetroCluster IP interfaces on ports e5a and e5b. The interfaces vary depending on platform type.
 +
@@ -228,12 +236,14 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 12 entries were displayed.
 ----
 
-. If you need to determine the VLAN ID or gateway address for the interface, determine the VLAN IDs from the surviving site: `metrocluster configuration-settings interface show`
+. If you need to determine the VLAN ID or gateway address for the interface, determine the VLAN IDs from the surviving site:
++
+`metrocluster configuration-settings interface show`
 +
 ** You need the VLAN ID if the platform models use VLAN IDs (see the list above), and if you are not using the default VLAN IDs.
-** You need the gateway address if you are using link:../install-ip/concept_considerations_layer_3.adoc.
+** You need the gateway address if you are using link:../install-ip/concept_considerations_layer_3.html[Layer 3 wide-area networks].
 +
-The VLAN IDs are included in the Network Address column of the output. The Gateway column shows the gateway IP address.
+The VLAN IDs are included in the *Network Address* column of the output. The *Gateway* column shows the gateway IP address.
 +
 In this example the interfaces are e0a with the VLAN ID 120 and e0b with the VLAN ID 130:
 +
@@ -252,46 +262,64 @@ Group Cluster Node     Network Address Netmask         Gateway         State
 ----
 
 . If the disaster site nodes use VLAN IDs (see the list above), at the LOADER prompt for each of the disaster site nodes, set the following bootargs:
-`setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id`
-`setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id`
++
+....
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+
+setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+....
 +
 *NOTE:*
 
 ** If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
-** If the configuration is not using link:../install-ip/concept_considerations_layer_3.adoc, the value for _gateway-IP-address_ is *0* (zero).
+** If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
 +
 The following commands set the values for node_A_1 using VLAN 120 for the first network and VLAN 130 for the second network:
 +
-----
+....
 setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
+
 setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
-----
+....
 +
 The following example shows the commands for node_A_1 without a VLAN ID:
 +
-----
+....
 setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
-setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
-----
 
-. If the disaster site nodes are not systems that use VLAN IDs, at the LOADER prompt for each of the disaster nodes, set the following bootargs with local_IP/mask,gateway: `setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address``setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address`
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
+....
+
+. If the disaster site nodes are not systems that use VLAN IDs, at the LOADER prompt for each of the disaster nodes, set the following bootargs with local_IP/mask,gateway:
 +
-*NOTE:*
+....
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address
+
+setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address
+....
++
+*NOTES:*
 
 ** If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
 ** If the configuration is not using link:../install-ip/concept_considerations_layer_3.adoc, the value for _gateway-IP-address_ is *0* (zero).
+
 +
 The following commands set the values for node_A_1. In this example, the  _gateway-IP-address_ and  _vlan-id_ values are not used.
-+
-----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
-setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
-----
 
-. From the surviving site, gather the UUIDs for the disaster site: `metrocluster node show -fields node-cluster-uuid, node-uuid`
++
+....
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
+
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
+....
+
+. From the surviving site, gather the UUIDs for the disaster site:
++
+`metrocluster node show -fields node-cluster-uuid, node-uuid`
 +
 ----
 cluster_B::> metrocluster node show -fields node-cluster-uuid, node-uuid
+
   (metrocluster node show)
 dr-group-id cluster     node     node-uuid                            node-cluster-uuid
 ----------- ----------- -------- ------------------------------------ ------------------------------
@@ -336,33 +364,60 @@ a|
 aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 |===
 
-. At the replacement nodes' LOADER prompt, set the UUIDs: `setenv bootarg.mgwd.partner_cluster_uuid partner-cluster-UUID``setenv bootarg.mgwd.cluster_uuid local-cluster-UUID``setenv bootarg.mcc.pri_partner_uuid DR-partner-node-UUID``setenv bootarg.mcc.aux_partner_uuid DR-aux-partner-node-UUID``setenv bootarg.mcc_iscsi.node_uuid local-node-UUID`
+. At the replacement nodes' LOADER prompt, set the UUIDs:
++
+....
+setenv bootarg.mgwd.partner_cluster_uuid partner-cluster-UUID
+
+setenv bootarg.mgwd.cluster_uuid local-cluster-UUID
+
+setenv bootarg.mcc.pri_partner_uuid DR-partner-node-UUID
+
+setenv bootarg.mcc.aux_partner_uuid DR-aux-partner-node-UUID
+
+setenv bootarg.mcc_iscsi.node_uuid local-node-UUID`
+....
+
  .. Set the UUIDs on node_A_1.
 +
 The following example shows the commands for setting the UUIDs on node_A_1:
 +
-----
+....
 setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
-setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
-setenv bootarg.mcc.pri_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
-setenv bootarg.mcc.aux_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
-setenv bootarg.mcc_iscsi.node_uuid f03cb63c-9a7e-11e7-b68b-00a098908039
-----
 
- .. Set the UUIDs on node_A_2:
+setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
+
+setenv bootarg.mcc.pri_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
+
+setenv bootarg.mcc.aux_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
+
+setenv bootarg.mcc_iscsi.node_uuid f03cb63c-9a7e-11e7-b68b-00a098908039
+....
+
+.. Set the UUIDs on node_A_2:
 +
 The following example shows the commands for setting the UUIDs on node_A_2:
 +
-----
+....
 setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
+
 setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
+
 setenv bootarg.mcc.pri_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
+
 setenv bootarg.mcc.aux_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
+
 setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
-----
-. If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, enable ADP: `setenv bootarg.mcc.adp_enabled true`
-. If running ONTAP 9.5, 9.6 or 9.7, at each of the replacement nodes' LOADER prompt, enable the following variable: `setenv bootarg.mcc.lun_part true`
- .. Set the variables on node_A_1.
+....
+
+. If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, enable ADP:
++
+`setenv bootarg.mcc.adp_enabled true`
+. If running ONTAP 9.5, 9.6 or 9.7, at each of the replacement nodes' LOADER prompt, enable the following variable:
++
+`setenv bootarg.mcc.lun_part true`
+
+.. Set the variables on node_A_1.
 +
 The following example shows the commands for setting the values on node_A_1 when running ONTAP 9.6:
 +
@@ -370,23 +425,28 @@ The following example shows the commands for setting the values on node_A_1 when
 setenv bootarg.mcc.lun_part true
 ----
 
- .. Set the variables on node_A_2.
+.. Set the variables on node_A_2.
 +
 The following example shows the commands for setting the values on node_A_2 when running ONTAP 9.6:
 +
 ----
 setenv bootarg.mcc.lun_part true
 ----
-. If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, set the original system ID (*not* the system ID of the replacement controller module) and the system ID of the DR partner of the node: `setenv bootarg.mcc.local_config_id original-sysID``setenv bootarg.mcc.dr_partner dr_partner-sysID`
-+
-xref:task_replace_hardware_and_boot_new_controllers.html#determining-the-system-ids-of-the-replacement-controller-modules[Determining the system IDs and VLAN IDs of the old controller modules]
 
- .. Set the variables on node_A_1.
+. If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, set the original system ID (*not* the system ID of the replacement controller module) and the system ID of the DR partner of the node:
++
+`setenv bootarg.mcc.local_config_id original-sysID`
++
+`setenv bootarg.mcc.dr_partner dr_partner-sysID`
++
+link:task_replace_hardware_and_boot_new_controllers.html#determining-the-system-ids-of-the-replacement-controller-modules[Determining the system IDs and VLAN IDs of the old controller modules]
+
+.. Set the variables on node_A_1.
 +
 The following example shows the commands for setting the system IDs on node_A_1:
 
-  *** The old system ID of node_A_1 is 4068741258.
-  *** The system ID of node_B_1 is 4068741254.
+*** The old system ID of node_A_1 is 4068741258.
+*** The system ID of node_B_1 is 4068741254.
 
 +
 ----
@@ -394,12 +454,12 @@ setenv bootarg.mcc.local_config_id 4068741258
 setenv bootarg.mcc.dr_partner 4068741254
 ----
 
- .. Set the variables on node_A_2.
+.. Set the variables on node_A_2.
 +
 The following example shows the commands for setting the system IDs on node_A_2:
 
-  *** The old system ID of node_A_1 is 4068741260.
-  *** The system ID of node_B_1 is 4068741256.
+*** The old system ID of node_A_1 is 4068741260.
+*** The system ID of node_B_1 is 4068741256.
 
 +
 ----

@@ -11,11 +11,15 @@ summary: 'You must power on the MetroCluster components at the disaster site whe
 [.lead]
 You must power on the MetroCluster components at the disaster site when you are ready to prepare for switchback. In addition, you must also recable the SAS storage connections in direct-attached MetroCluster configurations and enable non-Inter-Switch Link ports in fabric-attached MetroCluster configurations.
 
+.Before you begin
+
 You must have already replaced and cabled the MetroCluster components exactly as the old ones.
 
 link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 
 link:../install-stretch/index.html[Stretch MetroCluster installation and configuration]
+
+.About this task
 
 The examples in this procedure assume the following:
 
@@ -28,18 +32,24 @@ The examples in this procedure assume the following:
 
 The FC switches are present only in fabric-attached MetroCluster configurations.
 
+.Steps
+
 . In a stretch MetroCluster configuration using SAS cabling (and no FC switch fabric or FC-to-SAS bridges), connect all the storage including the remote storage across both sites.
 +
 The controller at the disaster site must remain powered off or at the LOADER prompt.
 
-. On the surviving site, disable disk autoassignment: `storage disk option modify -autoassign off *`
+. On the surviving site, disable disk autoassignment:
++
+`storage disk option modify -autoassign off *`
 +
 ----
 cluster_B::> storage disk option modify -autoassign off *
 2 entries were modified.
 ----
 
-. On the surviving site, confirm that disk autoassignment is off: `storage disk option show`
+. On the surviving site, confirm that disk autoassignment is off:
++
+`storage disk option show`
 +
 ----
  cluster_B::> storage disk option show
@@ -57,8 +67,10 @@ node_B_2       on            on          off             default
 . If any disks were replaced, leave the controllers powered off or at the LOADER prompt.
 . In a fabric-attached MetroCluster configuration, enable the non-ISL ports on the FC switches.
 +
+[cols="25,75"]
 |===
-| If the switch vendor is...| Then use these steps to enable the ports...
+| If the switch vendor is... | Then use these steps to enable the ports...
+
 a|
 Brocade
 a|

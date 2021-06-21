@@ -8,21 +8,26 @@ summary: If hardware components have to be replaced, you must replace them using
 :icons: font
 :imagesdir: ../media/
 
-[.lead]
+
 == Replacing hardware at the disaster site
 
-[.lead]
 If hardware components have to be replaced, you must replace them using their individual hardware replacement and installation guides.
 
+.Before you begin
+
 The storage controllers must be powered off or remain halted (showing the LOADER prompt).
+
+.Steps
 
 . Replace the components as necessary.
 +
 NOTE: In this step, you replace and cable the components exactly as they were cabled prior to the disaster. You must not power up the components.
+
 +
-[options="header"]
+
 |===
-| If you are replacing...| Perform these steps...| Using these guides...
+| If you are replacing... | Perform these steps... | Using these guides...
+
 a|
 FC switches in a MetroCluster FC configuration
 a|
@@ -31,7 +36,7 @@ a|
  .. Cable the ISL links.
  Do not power on the FC switches at this time.
 
-a| link:../maintain/index.html[Maintain MetroCluster Components]
+| link:../maintain/index.html[Maintain MetroCluster Components]
 a|
 IP switches in a MetroCluster IP configuration
 a|
@@ -40,7 +45,7 @@ a|
  .. Cable the ISL links.
  Do not power on the IP switches at this time.
 
-a| link:link:../install-ip/index.html[MetroCluster IP installation and configuration]
+a| link:../install-ip/index.html[MetroCluster IP installation and configuration]
 a|
 Disk shelves
 a|
@@ -71,9 +76,9 @@ Cable them to the FC switches or to the controller modules, depending on your Me
 
 +
 Do not power on the FC-to-SAS bridges at this time.
-a| link:link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
-+
-link:link:../install-stretch/index.html[Stretch MetroCluster installation and configuration]
+a| link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
+
+link:../install-stretch/index.html[Stretch MetroCluster installation and configuration]
 a|
 Controller modules
 a|
@@ -95,17 +100,20 @@ The ports connecting the controller module to the storage (either by connections
 +
 Do not power on the controller modules at this time.
 a| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
-+
+
 |===
 
-. Verify that all components are cabled correctly according the _MetroCluster Installation and Configuration Guide_ for your configuration.
+. Verify that all components are cabled correctly according to the _MetroCluster Installation and Configuration Guide_ for your configuration.
 
 == Determining the system IDs and VLAN IDs of the old controller modules
 
-[.lead]
 After you have replaced all hardware at the disaster site, you must determine the system IDs of the replaced controller modules. You need the old system IDs when you reassign disks to the new controller modules. If the systems are AFF A220, AFF A250, AFF A400, AFF A800, FAS2750, FAS500f, FAS8300, or FAS8700 models, you must also determine the VLAN IDs used by the MetroCluster IP interfaces.
 
+.Before you begin
+
 All equipment at the disaster site must be powered off.
+
+.About this task
 
 This discussion provides examples for two and four-node configurations. For eight-node configurations, you must account for any failures in the additional nodes on the second DR group.
 
@@ -160,6 +168,8 @@ a|
 4068741254
 |===
 
+.Steps
+
 . From the surviving site, display the system IDs of the nodes in the MetroCluster configuration.
 +
 [options="header"]
@@ -178,6 +188,7 @@ In this example for a four-node MetroCluster configuration, the following old sy
 
  ** Node_A_1: 4068741258
  ** Node_A_2: 4068741260
+ +
 Disks owned by the old controller modules are still owned these system IDs.
 
 +
@@ -196,6 +207,7 @@ dr-group-id cluster    node      node-systemid ha-partner-systemid dr-partner-sy
 In this example for a two-node MetroCluster configuration, the following old system ID is retrieved:
 
  ** Node_A_1: 4068741258
+ +
 Disks owned by the old controller module are still owned this system ID.
 
 +
@@ -209,12 +221,16 @@ dr-group-id cluster    node      node-systemid dr-partner-systemid
 2 entries were displayed.
 ----
 
-. For MetroCluster IP configurations using the ONTAP Mediator service, get the IP address of the ONTAP Mediator service: `storage iscsi-initiator show -node * -label mediator`
-. If the systems are AFF A220, AFF A400, FAS2750, FAS8300, or FAS8700 models, determine the VLAN IDs: `metrocluster interconnect show`
+. For MetroCluster IP configurations using the ONTAP Mediator service, get the IP address of the ONTAP Mediator service:
++
+`storage iscsi-initiator show -node * -label mediator`
+. If the systems are AFF A220, AFF A400, FAS2750, FAS8300, or FAS8700 models, determine the VLAN IDs:
++
+`metrocluster interconnect show`
 +
 The VLAN IDs are included in the adapter name shown in the Adapter column of the output.
 +
-In this example the VLAN IDs are 120 and 130:
+In this example, the VLAN IDs are 120 and 130:
 +
 ----
 metrocluster interconnect show
@@ -245,16 +261,23 @@ Node_A_2 Node_A_1 HA      enabled  online
 
 == Isolating replacement drives from the surviving site (MetroCluster IP configurations)
 
-[.lead]
 You must isolate any replacement drives by taking down the MetroCluster iSCSI initiator connections from the surviving nodes.
+
+.About this task
 
 This procedure is only required on MetroCluster IP configurations.
 
-. From either surviving node's prompt, change to the advanced privilege level: `set -privilege advanced`
+.Steps
+
+. From either surviving node's prompt, change to the advanced privilege level:
++
+`set -privilege advanced`
 +
 You need to respond with `y` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
-. Disconnect the iSCSI initiators on both surviving nodes in the DR group: `storage iscsi-initiator disconnect -node surviving-node -label *`
+. Disconnect the iSCSI initiators on both surviving nodes in the DR group:
++
+`storage iscsi-initiator disconnect -node surviving-node -label *`
 +
 This command must be issued twice, once for each of the surviving nodes.
 +
@@ -265,7 +288,9 @@ site_B::*> storage iscsi-initiator disconnect -node node_B_1 -label *
 site_B::*> storage iscsi-initiator disconnect -node node_B_2 -label *
 ----
 
-. Return to the admin privilege level: `set -privilege admin`
+. Return to the admin privilege level:
++
+`set -privilege admin`
 
 == Clearing the configuration on a controller module
 
@@ -278,14 +303,16 @@ include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 [.lead]
 If the new controller modules have a different version of ONTAP from the version on the surviving controller modules, you must netboot the new controller modules.
 
+.Before you begin
+
 * You must have access to an HTTP server.
 * You must have access to the NetApp Support Site to download the necessary system files for your platform and version of ONTAP software that is running on it.
 +
 https://mysupport.netapp.com/site/global/dashboard[NetApp Support]
 
-// include reference
+// include file
 include::../_include/netboot_steps.adoc[]
-// end include reference
+// end include file
 
 . From the Boot menu, select *option 5* to enter Maintenance mode.
 . If you have a four-node MetroCluster configuration, repeat this procedure on the other new controller module.
@@ -294,6 +321,8 @@ include::../_include/netboot_steps.adoc[]
 
 [.lead]
 After you have replaced all hardware at the disaster site, you must determine the system ID of the newly installed storage controller module or modules.
+
+.About this task
 
 You must perform this procedure with the replacement controller modules in Maintenance mode.
 
@@ -376,6 +405,8 @@ In the preceding example:
 * node_A_1 (1574774970) will be paired with node_B_1 (4068741254)
 * node_A_2 (1574774991) will be paired with node_B_2 (4068741256)
 
+.Steps
+
 . With the node in Maintenance mode, display the local system ID of the node from each node: `disk show`
 +
 In the following example, the new local system ID is 1574774970:
@@ -400,14 +431,20 @@ In the following example, the new local system ID is 1574774991:
 
 == Verifying the ha-config state of components
 
-[.lead]
-In a MetroCluster configuration, the ha-config state of the controller module and chassis components must be set to mcc or mcc-2n so they boot up properly.
+In a MetroCluster configuration, the ha-config state of the controller module and chassis components must be set to "mcc" or "mcc-2n" so they boot up properly.
+
+.Before you begin
 
 The system must be in Maintenance mode.
 
+.About this task
+
 This task must be performed on each new controller module.
 
-. In Maintenance mode, display the HA state of the controller module and chassis: `ha-config show`
+.Steps
+. In Maintenance mode, display the HA state of the controller module and chassis:
++
+`ha-config show`
 +
 The correct HA state depends on your MetroCluster configuration.
 +
@@ -436,15 +473,15 @@ mccip
 a|
 Eight- or four-node MetroCluster FC configuration
 a|
-ha-config modify controller mcc
+`ha-config modify controller mcc`
 a|
 Two-node MetroCluster FC configuration
 a|
-ha-config modify controller mcc-2n
+`ha-config modify controller mcc-2n`
 a|
 MetroCluster IP configuration
 a|
-ha-config modify controller mccip
+`ha-config modify controller mccip`
 |===
 
 . If the displayed system state of the chassis is not correct, set the HA state for the chassis:
@@ -455,15 +492,15 @@ ha-config modify controller mccip
 a|
 Eight- or four-node MetroCluster FC configuration
 a|
-ha-config modify chassis mcc
+`ha-config modify chassis mcc`
 a|
 Two-node MetroCluster FC configuration
 a|
-ha-config modify chassis mcc-2n
+`ha-config modify chassis mcc-2n`
 a|
 MetroCluster IP configuration
 a|
-ha-config modify chassis mccip
+`ha-config modify chassis mccip`
 |===
 
 . Repeat these steps on the other replacement node.

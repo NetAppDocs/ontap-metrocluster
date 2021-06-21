@@ -14,8 +14,12 @@ summary: If one of the object stores in a FabricPool mirror was co-located with 
 [.lead]
 If one of the object stores in a FabricPool mirror was co-located with the MetroCluster disaster site and was destroyed, you must reestablish the object store and the FabricPool mirror.
 
+.About this task
+
 * If the object-stores are remote and a MetroCluster site is destroyed, you do not need to rebuild the object store, and the original object store configurations as well as cold data contents are retained.
 * For more information about FabricPool configurations, see the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and Aggregates Power Guide].
+
+.Step
 
 . Follow the procedure "Replacing a FabricPool mirror on a MetroCluster configuration" in the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and Aggregates Power Guide].
 
@@ -23,6 +27,8 @@ If one of the object stores in a FabricPool mirror was co-located with the Metro
 
 [.lead]
 You must install new licenses for the replacement nodes if the impaired nodes were using ONTAP features that require a standard (node-locked) license. For features with standard licenses, each node in the cluster should have its own key for the feature.
+
+.About this task
 
 Until you install license keys, features requiring standard licenses continue to be available to the replacement node. However, if the impaired node was the only node in the cluster with a license for the feature, no configuration changes to the feature are allowed. Also, using unlicensed features on the node might put you out of compliance with your license agreement, so you should install the replacement license key or keys on the replacement node as soon as possible.
 
@@ -32,7 +38,11 @@ You have a 90-day grace period in which to install the license keys. After the g
 
 NOTE: If all nodes at a site have been replaced (a single node in the case of a two-node MetroCluster configuration), license keys must be installed on the replacement node or nodes prior to switchback.
 
-. Identify the licenses on the node: `license show`
+.Steps
+
+. Identify the licenses on the node:
++
+`license show`
 +
 The following example displays the information about licenses in the system:
 +
@@ -54,7 +64,9 @@ FlexClone        site        FlexClone License           -
 6 entries were displayed.
 ----
 
-. Verify that the licenses are good for the node after switchback: `metrocluster check license show`
+. Verify that the licenses are good for the node after switchback:
++
+`metrocluster check license show`
 +
 The following example displays the licenses that are good for the node:
 +
@@ -74,15 +86,23 @@ FCP               periodic-check-enabled            ok
 +
 NOTE: The new license keys that you require are automatically generated and sent to the email address on file. If you fail to receive the email with the license keys within 30 days, you should contact technical support.
 
-. Install each license key: `+system license add -license-code license-key, license-key...+`
+. Install each license key:
++
+`system license add -license-code license-key, license-key...+`
 . Remove the old licenses, if desired:
- .. Check for unused licenses: `license clean-up -unused -simulate`
- .. If the list looks correct, remove the unused licenses: `license clean-up -unused`
+.. Check for unused licenses:
++
+`license clean-up -unused -simulate`
+.. If the list looks correct, remove the unused licenses:
++
+`license clean-up -unused`
 
 == Performing a switchback
 
 [.lead]
 After you heal the MetroCluster configuration, you can perform the MetroCluster switchback operation. The MetroCluster switchback operation returns the configuration to its normal operating state, with the sync-source storage virtual machines (SVMs) on the disaster site active and serving data from the local disk pools.
+
+.Before you begin
 
 * The disaster cluster must have successfully switched over to the surviving cluster.
 * Healing must have been performed on the data and root aggregates.
@@ -92,7 +112,11 @@ After you heal the MetroCluster configuration, you can perform the MetroCluster 
 * The Inter-Switch Links (ISLs) must be online.
 * Any required licenses must be installed on the system.
 
-. Confirm that all nodes are in the enabled state: `metrocluster node show`
+.Steps
+
+. Confirm that all nodes are in the enabled state:
++
+`metrocluster node show`
 +
 The following example displays the nodes that are in the enabled state:
 +
@@ -111,12 +135,18 @@ Group Cluster Node        State          Mirroring Mode
 4 entries were displayed.
 ----
 
-. Confirm that resynchronization is complete on all SVMs: `metrocluster vserver show`
-. Verify that any automatic LIF migrations being performed by the healing operations have been successfully completed: metrocluster check lif show
-. Perform the switchback by running the metrocluster switchback command from any node in the surviving cluster.
-. Check the progress of the switchback operation: `metrocluster show`
+. Confirm that resynchronization is complete on all SVMs:
 +
-The switchback operation is still in progress when the output displays waiting-for-switchback:
+`metrocluster vserver show`
+. Verify that any automatic LIF migrations being performed by the healing operations have been successfully completed:
++
+`metrocluster check lif show`
+. Perform the switchback by running the `metrocluster switchback` command from any node in the surviving cluster.
+. Check the progress of the switchback operation:
++
+`metrocluster show`
++
+The switchback operation is still in progress when the output displays "waiting-for-switchback":
 +
 ----
 cluster_B::> metrocluster show
@@ -130,7 +160,7 @@ Remote: cluster_A         Configuration state configured
                           AUSO Failure Domain -
 ----
 +
-The switchback operation is complete when the output displays normal:
+The switchback operation is complete when the output displays "normal":
 +
 ----
 cluster_B::> metrocluster show
@@ -144,7 +174,7 @@ Remote: cluster_A         Configuration state configured
                           AUSO Failure Domain -
 ----
 +
-If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the metrocluster config-replication resync-status show command. This command is at the advanced privilege level.
+If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the `metrocluster config-replication resync-status show` command. This command is at the advanced privilege level.
 
 . Reestablish any SnapMirror or SnapVault configurations.
 +
@@ -155,7 +185,11 @@ In ONTAP 8.3, you need to manually reestablish a lost SnapMirror configuration a
 [.lead]
 After performing the switchback, you want to confirm that all aggregates and storage virtual machines (SVMs) are switched back and online.
 
-. Verify that the switched-over data aggregates are switched back: `storage aggregate show`
+.Steps
+
+. Verify that the switched-over data aggregates are switched back:
++
+`storage aggregate show`
 +
 In the following example, aggr_b2 on node B2 has switched back:
 +
@@ -175,9 +209,11 @@ Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
 aggr_b2          -         -     - unknown      - node_A_1
 ----
 +
-If the disaster site included unmirrored aggregates and the unmirrored aggregates are no longer present, the aggregate may show up with a State of unknown in the output of the storage aggregate show command. Contact technical support to remove the out-of-date entries for the unmirrored aggregates.
+If the disaster site included unmirrored aggregates and the unmirrored aggregates are no longer present, the aggregate might show up with a state of "unknown" in the output of the storage aggregate show command. Contact technical support to remove the out-of-date entries for the unmirrored aggregates.
 
-. Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an Admin State of stopped) and the sync-source SVMs on the disaster cluster are up and running: `vserver show -subtype sync-source`
+. Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an Admin State of "stopped") and the sync-source SVMs on the disaster cluster are up and running:
++
+`vserver show -subtype sync-source`
 +
 ----
 node_B_1::> vserver show -subtype sync-source
@@ -201,7 +237,7 @@ cluster_A-vs1a-mc  data    sync-destination
 +
 Sync-destination aggregates in the MetroCluster configuration have the suffix "-mc" automatically appended to their name to help identify them.
 
-. Confirm that the switchback operations succeeded by using the metrocluster operation show command.
+. Confirm that the switchback operations succeeded by using the `metrocluster operation show` command.
 +
 [cols=2*,options="header"]
 |===
@@ -216,6 +252,8 @@ a|
 Perform the suggested fix provided in the output of the metrocluster operation show command.
 |===
 
+.After you finish
+
 You must repeat the previous sections to perform the switchback in the opposite direction. If site_A did a switchover of site_B, have site_B do a switchover of site_A.
 
 == Mirroring the root aggregates of the replacement nodes
@@ -223,7 +261,11 @@ You must repeat the previous sections to perform the switchback in the opposite 
 [.lead]
 If disks were replaced, you must mirror the root aggregates of the new nodes on the disaster site.
 
-. On the disaster site, identify the aggregates which are not mirrored: `storage aggregate show`
+.Steps
+
+. On the disaster site, identify the aggregates which are not mirrored:
++
+`storage aggregate show`
 +
 ----
 cluster_A::> storage aggregate show
@@ -247,7 +289,9 @@ node_A_2_aggr1
 cluster_A::>
 ----
 
-. Mirror one of the root aggregates: `storage aggregate mirror -aggregate root-aggregate`
+. Mirror one of the root aggregates:
++
+`storage aggregate mirror -aggregate root-aggregate`
 +
 The following example shows how the command selects disks and prompts for confirmation when mirroring the aggregate.
 +
@@ -273,7 +317,9 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ----
 
-. Verify that mirroring of the root aggregate is complete: `storage aggregate show`
+. Verify that mirroring of the root aggregate is complete:
++
+`storage aggregate show`
 +
 The following example shows that the root aggregates are mirrored.
 +
@@ -312,18 +358,30 @@ Any root aggregate that does not have a status of mirrored must be mirrored.
 [.lead]
 If you have a MetroCluster IP configuration that was configured with the ONTAP Mediator service, you must remove and reconfigure the association with the mediator.
 
+.Before you begin
+
 * You must have the IP address and username and password for the ONTAP Mediator service.
 * The ONTAP Mediator service must be configured and operating on the Linux host.
 
-. Remove the existing ONTAP Mediator configuration: `metrocluster configuration-settings mediator remove`
-. Reconfigure the ONTAP Mediator configuration: `metrocluster configuration-settings mediator add -mediator-address mediator-IP-address`
+.Steps
+
+. Remove the existing ONTAP Mediator configuration:
++
+`metrocluster configuration-settings mediator remove`
+. Reconfigure the ONTAP Mediator configuration:
++
+`metrocluster configuration-settings mediator add -mediator-address mediator-IP-address`
 
 == Verifying the health of the MetroCluster configuration
 
 [.lead]
 You should check the health of the MetroCluster configuration to verify proper operation.
 
-. Check that the MetroCluster is configured and in normal mode on each cluster: `metrocluster show`
+.Steps
+
+. Check that the MetroCluster is configured and in normal mode on each cluster:
++
+`metrocluster show`
 +
 ----
 cluster_A::> metrocluster show
@@ -337,7 +395,9 @@ Remote: cluster_B         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
-. Check that mirroring is enabled on each node: `metrocluster node show`
+. Check that mirroring is enabled on each node:
++
+`metrocluster node show`
 +
 ----
 cluster_A::> metrocluster node show
@@ -351,7 +411,9 @@ Group Cluster Node           State          Mirroring Mode
 2 entries were displayed.
 ----
 
-. Check that the MetroCluster components are healthy: `metrocluster check run`
+. Check that the MetroCluster components are healthy:
++
+`metrocluster check run`
 +
 ----
 cluster_A::> metrocluster check run
@@ -370,16 +432,26 @@ Command completed. Use the "metrocluster check show -instance" command or sub-co
 To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
 ----
 
-. Check that there are no health alerts: `system health alert show`
+. Check that there are no health alerts:
++
+`system health alert show`
 . Simulate a switchover operation:
- .. From any node's prompt, change to the advanced privilege level: `set -privilege advanced`
+ .. From any node's prompt, change to the advanced privilege level:
++
+`set -privilege advanced`
 +
 You need to respond with `y` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
- .. Perform the switchover operation with the -simulate parameter: `metrocluster switchover -simulate`
- .. Return to the admin privilege level: `set -privilege admin`
+.. Perform the switchover operation with the `-simulate` parameter:
++
+`metrocluster switchover -simulate`
+.. Return to the admin privilege level:
++
+`set -privilege admin`
 . For MetroCluster IP configurations using the ONTAP Mediator service, confirm that the Mediator service is up and operating.
- .. Check that the Mediator disks are visible to the system: `storage failover mailbox-disk show`
+ .. Check that the Mediator disks are visible to the system:
++
+`storage failover mailbox-disk show`
 +
 The following example shows that the mailbox disks have been recognized.
 +
@@ -402,8 +474,12 @@ sti113-vsim-ucs626g
 28 entries were displayed.
 ----
 
- .. Change to the advanced privilege level: `set -privilege advanced`
- .. Check that the mailbox LUNs are visible to the system: `storage iscsi-initiator show`
+.. Change to the advanced privilege level:
++
+`set -privilege advanced`
+.. Check that the mailbox LUNs are visible to the system:
++
+`storage iscsi-initiator show`
 +
 The output will show the presence of the mailbox LUNs:
 +
@@ -423,4 +499,6 @@ Node    Type       Label      Target Portal     Target Name                     
 17 entries were displayed.
 ----
 
- .. Return to the administrative privilege level: `set -privilege admin`
+.. Return to the administrative privilege level:
++
+`set -privilege admin`

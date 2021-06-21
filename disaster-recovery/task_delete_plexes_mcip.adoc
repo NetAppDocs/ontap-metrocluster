@@ -11,9 +11,14 @@ summary: You must power on the disk shelves and MetroCluster IP switches compone
 [.lead]
 After replacing hardware and assigning disks, you must delete failed remote plexes that are owned by the surviving site nodes but located at the disaster site.
 
+.About this task
+
 These steps are performed on the surviving cluster.
 
-. Identify the local aggregates: `storage aggregate show -is-home true`
+.Steps
+
+. Identify the local aggregates:
+`storage aggregate show -is-home true`
 +
 ----
 cluster_B::> storage aggregate show -is-home true
@@ -44,9 +49,11 @@ node_B_2_aggr2 2.99TB  2.87TB   4% online      35 node_B_2         raid_tec,
 cluster_B::>
 ----
 
-. Identify the failed remote plexes: `storage aggregate plex show`
+. Identify the failed remote plexes:
 +
-The following example calls out the plexes that are remote (not plex0) and have a status of failed:
+`storage aggregate plex show`
++
+The following example calls out the plexes that are remote (not plex0) and have a status of "failed":
 +
 ----
 cluster_B::> storage aggregate plex show -fields aggregate,status,is-online,Plex,pool
@@ -78,9 +85,12 @@ cluster_B::>
 ----
 
 . Take offline each of the failed plexes, and then delete them:
- .. Take offline the failed: `storage aggregate plex offline -aggregate aggregate-name -plex plex-id`
+
+.. Take offline the failed plexes:
 +
-The following example shows the aggregate node_B_2_aggr1/plex1 being taken offline:
+`storage aggregate plex offline -aggregate aggregate-name -plex plex-id`
++
+The following example shows the aggregate "node_B_2_aggr1/plex1" being taken offline:
 +
 ----
 cluster_B::> storage aggregate plex offline -aggregate node_B_1_aggr0 -plex plex4
@@ -88,7 +98,9 @@ cluster_B::> storage aggregate plex offline -aggregate node_B_1_aggr0 -plex plex
 Plex offline successful on plex: node_B_1_aggr0/plex4
 ----
 
- .. Delete the failed plex: `storage aggregate plex delete -aggregate aggregate-name -plex plex-id`
+.. Delete the failed plex:
++
+`storage aggregate plex delete -aggregate aggregate-name -plex plex-id`
 +
 You can destroy the plex when prompted.
 +
@@ -116,7 +128,10 @@ cluster_B::>
 
 +
 You must repeat these steps for each of the failed plexes.
-. Confirm that the plexes have been removed: `storage aggregate plex show -fields aggregate,status,is-online,plex,pool`
+
+. Confirm that the plexes have been removed:
++
+`storage aggregate plex show -fields aggregate,status,is-online,plex,pool`
 +
 ----
 cluster_B::> storage aggregate plex show -fields aggregate,status,is-online,Plex,pool
@@ -141,9 +156,11 @@ node_A_2_aggr2 plex1 normal,active true     1
 cluster_B::>
 ----
 
-. Identify the switched-over aggregates: `storage aggregate show -is-home false`
+. Identify the switched-over aggregates:
 +
-You can also use the storage aggregate plex show -fields aggregate,status,is-online,plex,pool command to identify plex 0 switched-over aggregates. They will have a status of failed, inactive.
+`storage aggregate show -is-home false`
++
+You can also use the `storage aggregate plex show -fields aggregate,status,is-online,plex,pool` command to identify plex 0 switched-over aggregates. They will have a status of "failed, inactive".
 +
 The following commands show four switched-over aggregates:
 
@@ -176,9 +193,11 @@ node_A_2_aggr2 2.89TB  2.64TB    9% online      90 node_B_2        raid_tec,
 cluster_B::>
 ----
 
-. Identify switched-over plexes: `storage aggregate plex show -fields aggregate,status,is-online,Plex,pool`
+. Identify switched-over plexes:
 +
-You want to identify the plexes with a status of failed, inactive.
+`storage aggregate plex show -fields aggregate,status,is-online,Plex,pool`
++
+You want to identify the plexes with a status of "failed, inactive".
 +
 The following commands show four switched-over aggregates:
 +
@@ -205,7 +224,9 @@ node_A_2_aggr2 plex1 normal,active true     1
 cluster_B::>
 ----
 
-. Delete the failed plex: `storage aggregate plex delete -aggregate node_A_1_aggr1 -plex plex0`
+. Delete the failed plex:
++
+`storage aggregate plex delete -aggregate node_A_1_aggr1 -plex plex0`
 +
 You can destroy the plex when prompted.
 +

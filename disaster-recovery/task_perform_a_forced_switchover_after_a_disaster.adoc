@@ -11,24 +11,31 @@ summary: If a disaster has occurred, there are steps you must perform on both th
 [.lead]
 If a disaster has occurred, there are steps you must perform on both the disaster cluster and the surviving cluster after the switchover to ensure safe and continued data service.
 
-Determining if a disaster has occured is done by:
-*An administrator
-*The MetroCluster Tiebreaker software, if it is configured
-*The ONTAP Mediator software, if it is configured
+Determining if a disaster has occurred is done by:
+
+* An administrator
+
+* The MetroCluster Tiebreaker software, if it is configured
+
+* The ONTAP Mediator software, if it is configured
 
 == Fencing off the disaster site
 
-[.lead]
 After the disaster, if the disaster site nodes must be replaced, you must halt them to prevent the site from resuming service. Otherwise, you risk the possibility of data corruption if clients start accessing the nodes before the replacement procedure is completed.
 
-. Halt the nodes at the disaster site and keep them powered down or at the LOADER prompt until directed to boot ONTAP:``system node halt -node disaster-site-node-name``
+.Step 
+
+. Halt the nodes at the disaster site and keep them powered down or at the LOADER prompt until directed to boot ONTAP:
++
+`system node halt -node disaster-site-node-name`
 +
 If the disaster site nodes have been destroyed or cannot be halted, turn off power to the nodes and do not boot the replacement nodes until directed to in the recovery procedure.
 
 == Performing a forced switchover
 
-[.lead]
 The switchover process, in addition to providing nondisruptive operations during testing and maintenance, enables you to recover from a site failure with a single command.
+
+.Before you begin
 
 * At least one of the surviving site nodes must up and running before you perform the switchover.
 * All previous configuration changes must be complete before performing a switchback operation.
@@ -37,20 +44,22 @@ This is to avoid competition with the negotiated switchover or switchback operat
 
 NOTE: SnapMirror and SnapVault configurations are deleted automatically.
 
-The metrocluster switchover command switches over the nodes in all DR groups in the MetroCluster configuration. For example, in an eight-node MetroCluster configuration, it switches over the nodes in both DR groups.
+.About this task
+
+The `metrocluster switchover` command switches over the nodes in all DR groups in the MetroCluster configuration. For example, in an eight-node MetroCluster configuration, it switches over the nodes in both DR groups.
+
+.Steps
 
 . Implement the switchover:
 +
-----
-metrocluster switchover -forced-on-disaster true
-----
+`metrocluster switchover -forced-on-disaster true`
 +
 The operation can take a period of minutes to complete.
 
 . Answer `y` when prompted to continue with the switchover.
 . Verify that the switchover was completed successfully by running the metrocluster operation show command.
 +
-----
+....
 mcc1A::> metrocluster operation show
   Operation: switchover
  Start time: 10/4/2012 19:04:13
@@ -64,32 +73,40 @@ mcc1A::> metrocluster operation show
       State: successful
    End time: 10/4/2012 19:04:22
      Errors: -
-----
+....
 +
-If the switchover is vetoed, you have the option of reissuing the metrocluster switchover-forced-on-disaster true command with the --override-vetoes option. If you use this optional parameter, the system overrides any soft vetoes that prevented the switchover.
+If the switchover is vetoed, you have the option of reissuing the `metrocluster switchover-forced-on-disaster true` command with the `--override-vetoes` option. If you use this optional parameter, the system overrides any soft vetoes that prevented the switchover.
+
+.After you finish
 
 SnapMirror relationships need to be reestablished after switchover.
 
 == Output for the storage aggregate plex show command is indeterminate after a MetroCluster switchover
 
-[.lead]
-When you run the storage aggregate plex show command after a MetroCluster switchover, the status of plex0 of the switched over root aggregate is indeterminate and is displayed as failed. During this time, the switched over root is not updated. The actual status of this plex can only be determined after the MetroCluster healing phase.
+When you run the `storage aggregate plex show` command after a MetroCluster switchover, the status of plex0 of the switched over root aggregate is indeterminate and is displayed as failed. During this time, the switched over root is not updated. The actual status of this plex can only be determined after the MetroCluster healing phase.
 
 == Accessing volumes in NVFAIL state after a switchover
 
-[.lead]
-After a switchover, you must clear the NVFAIL state by resetting the -in-nvfailed-state parameter of the volume modify command to remove the restriction of clients to access data.
+After a switchover, you must clear the NVFAIL state by resetting the `-in-nvfailed-state` parameter of the `volume modify` command to remove the restriction of clients to access data.
+
+.Before you begin
 
 The database or file system must not be running or trying to access the affected volume.
 
-Setting -in-nvfailed-state parameter requires advanced-level privilege.
+.About this task
 
-. Recover the volume by using the volume modify command with the -in-nvfailed-state parameter set to false.
+Setting the `-in-nvfailed-state` parameter requires advanced-level privilege.
+
+.Step
+
+. Recover the volume by using the `volume modify` command with the `-in-nvfailed-state` parameter set to false.
+
+.After you finish
 
 For instructions about examining database file validity, see the documentation for your specific database software.
 
 If your database uses LUNs, review the steps to make the LUNs accessible to the host after an NVRAM failure.
 
-*Related information*
+.Related information
 
 link:../manage/concept_monitoring_and_protecting_database_validity_by_using_nvfail.html[Monitoring and protecting database validity by using NVFAIL]

@@ -11,12 +11,18 @@ summary: After replacing hardware and assigning disks, you can perform the Metro
 [.lead]
 After replacing hardware and assigning disks, in systems running ONTAP 9.5 or earlier you can perform the MetroCluster healing operations. In all versions of ONTAP, you must then confirm that aggregates are mirrored and, if necessary, restart mirroring.
 
+.About this task
+
 Starting with ONTAP 9.6, the healing operations are performed automatically when the disaster site nodes boot up. The healing commands are not required.
 
 These steps are performed on the surviving cluster.
 
+.Steps
+
 . If you are using ONTAP 9.6 or later, you must verify that automatic healing completed successfully:
- .. Confirm that the heal-aggr-auto and heal-root-aggr-auto operations completed: `metrocluster operation history show`
+ .. Confirm that the heal-aggr-auto and heal-root-aggr-auto operations completed:
++
+`metrocluster operation history show`
 +
 The following output shows that the operations have completed successfully on cluster_A.
 +
@@ -33,7 +39,9 @@ heal-aggr-auto                successful     2/25/2019 06:45:48
 .
 ----
 
- .. Confirm that the disaster site is ready for switchback:``metrocluster node show``
+ .. Confirm that the disaster site is ready for switchback:
++
+`metrocluster node show`
 +
 The following output shows that the operations have completed successfully on cluster_A.
 +
@@ -51,7 +59,9 @@ Group Cluster Node          State          Mirroring Mode
 4 entries were displayed.
 ----
 . If you are using ONTAP 9.5 or earlier, you must perform aggregate healing:
- .. Verify the state of the nodes: `metrocluster node show`
+.. Verify the state of the nodes:
++
+`metrocluster node show`
 +
 The following output shows that switchover has completed, so healing can be performed.
 +
@@ -71,7 +81,9 @@ Group Cluster Node               State          Mirroring Mode
 cluster_B::>
 ----
 
- .. Perform the aggregates healing phase: `metrocluster heal -phase aggregates`
+.. Perform the aggregates healing phase:
++
+`metrocluster heal -phase aggregates`
 +
 The following output shows a typical aggregates healing operation.
 +
@@ -89,9 +101,11 @@ cluster_B::*> metrocluster operation show
 cluster_B::*>
 ----
 
- .. Verify that heal aggregates has completed and the disaster site is ready for switchback: `metrocluster node show`
+.. Verify that aggregate healing has completed and the disaster site is ready for switchback:
 +
-The following output shows that the heal aggregates phase has completed on cluster_A.
+`metrocluster node show`
++
+The following output shows that the "heal aggregates" phase has completed on cluster_A.
 +
 ----
 cluster_B::> metrocluster node show
@@ -108,8 +122,10 @@ Group Cluster Node               State          Mirroring Mode
 
 cluster_B::>
 ----
-. If disks have been replaced, you must mirror the local and switched over aggregates:
- .. Display the aggregates: `storage aggregate show`
+. If disks have been replaced, you must mirror the local and switched-over aggregates:
+.. Display the aggregates:
++
+`storage aggregate show`
 +
 ----
 cluster_B::> storage aggregate show
@@ -145,7 +161,9 @@ node_A_2_aggr2 3.14TB  2.89TB    8% online     90 node_B_2         raid_tec,
 cluster_B::>
 ----
 
- .. Mirror the aggregate: `storage aggregate mirror -aggregate aggregate-name`
+.. Mirror the aggregate:
++
+`storage aggregate mirror -aggregate aggregate-name`
 +
 The following output shows a typical mirroring operation.
 +
@@ -172,8 +190,8 @@ Info: Disks would be added to aggregate "node_B_1_aggr1" on node "node_B_1" in
 Do you want to continue? {y|n}: y
 ----
 
- .. Repeat the previous step for each of the aggregates from the surviving site.
- .. Wait for the aggregates to resynchronize; you can check the status with the storage aggregate show command.
+.. Repeat the previous step for each of the aggregates from the surviving site.
+.. Wait for the aggregates to resynchronize; you can check the status with the `storage aggregate show` command.
 +
 The following output shows that a number of aggregates are resynchronizing.
 +
@@ -212,7 +230,9 @@ node_A_2_aggr2 2.64TB  2.39TB    9% online     90 node_B_2         raid_tec,
 12 entries were displayed.
 ----
 
- .. Confirm that all aggregates are online and have resynchronized: `storage aggregate plex show`
+ .. Confirm that all aggregates are online and have resynchronized:
++
+`storage aggregate plex show`
 +
 The following output shows that all aggregates have resynchronized.
 +
@@ -244,7 +264,9 @@ node_A_2_aggr2 plex1 true    false              - normal,active
 node_A_2_aggr2 plex5 true    false              - normal,active
 20 entries were displayed.
 ----
-. On systems running ONTAP 9.5 and earlier, perform the root-aggregates healing phase: `metrocluster heal -phase root-aggregates`
+. On systems running ONTAP 9.5 and earlier, perform the root-aggregates healing phase:
++
+`metrocluster heal -phase root-aggregates`
 +
 ----
 cluster_B::> metrocluster heal -phase root-aggregates
@@ -252,9 +274,9 @@ cluster_B::> metrocluster heal -phase root-aggregates
 [Job 651] Job succeeded: Heal Root Aggregates is successful.
 ----
 
-. Verify that heal root-aggregates has completed and the disaster site is ready for switchback:
+. Verify that the "heal roots" phase has completed and the disaster site is ready for switchback:
 +
-The following output shows that the heal roots phase has completed on cluster_A.
+The following output shows that the "heal roots" phase has completed on cluster_A.
 +
 ----
 cluster_B::> metrocluster node show

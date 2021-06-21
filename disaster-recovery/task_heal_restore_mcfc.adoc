@@ -11,6 +11,8 @@ summary: 'After replacing hardware and assigning disks, you can perform the Metr
 [.lead]
 After replacing hardware and assigning disks, you can perform the MetroCluster healing operations. You must then confirm that aggregates are mirrored and, if necessary, restart mirroring.
 
+.Steps
+
 . Perform the two phases of healing (aggregate healing and root healing) on the disaster site:
 +
 ----
@@ -19,7 +21,9 @@ cluster_B::> metrocluster heal -phase aggregates
 cluster_B::> metrocluster heal -phase root aggregates
 ----
 
-. Monitor the healing and verify that the aggregates are in either the resyncing or mirrored state: `storage aggregate show -node local`
+. Monitor the healing and verify that the aggregates are in either the resyncing or mirrored state:
++
+`storage aggregate show -node local`
 +
 |===
 | If the aggregate shows this state...| Then...

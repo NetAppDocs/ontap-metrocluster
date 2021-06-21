@@ -11,7 +11,11 @@ summary: You must boot the replacement nodes at the disaster site to the ONTAP o
 [.lead]
 You must boot the replacement nodes at the disaster site to the ONTAP operating system.
 
+.About this task
+
 This task begins with the nodes at the disaster site in Maintenance mode.
+
+.Steps
 
 . On one of the replacement nodes, exit to the LOADER prompt: `halt`
 . Display the boot menu: `boot_ontap menu`
@@ -19,11 +23,10 @@ This task begins with the nodes at the disaster site in Maintenance mode.
 +
 The system boots twice. You should respond `yes` when prompted to continue. After the second boot, you should respond `y` when prompted about the system ID mismatch.
 +
-NOTE: If you did not clear the NVRAM contents of a used replacement controller module, then you might see the following panic message: PANIC: NVRAM contents are invalid....
+NOTE: If you did not clear the NVRAM contents of a used replacement controller module, then you might see the following panic message: `PANIC: NVRAM contents are invalid....`  If this occurs, boot the system to the ONTAP prompt again (`boot_ontap menu`). You then need to perform a root recovery. Contact technical support for assistance.
+
 +
-If this occurs, boot the system to the ONTAP prompt again (`boot_ontap menu`). You then need to perform a root recovery. Contact technical support for assistance.
-+
-Confirmation to continue prompt:
+* Confirmation to continue prompt:
 +
 ----
 Selection (1-9)? 6
@@ -32,20 +35,23 @@ This will replace all flash-based configuration with the last backup to
 disks. Are you sure you want to continue?: yes
 ----
 +
-System ID mismatch prompt:
+* System ID mismatch prompt:
 +
 ----
 WARNING: System ID mismatch. This usually occurs when replacing a boot device or NVRAM cards!
 Override system ID? {y|n} y
 ----
 
-. From the surviving site, verify that the correct partner system IDs have been applied to the nodes: `metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
+. From the surviving site, verify that the correct partner system IDs have been applied to the nodes:
++
+`metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
 +
 In this example, the following new system IDs should appear in the output:
 
- ** Node_A_1: 1574774970
- ** Node_A_2: 1574774991
-The ha-partner-systemid column should show the new system IDs.
+** Node_A_1: 1574774970
+** Node_A_2: 1574774991
++
+The "ha-partner-systemid" column should show the new system IDs.
 
 +
 ----
@@ -62,11 +68,21 @@ dr-group-id cluster    node      node-systemid ha-partner-systemid dr-partner-sy
 
 . If the partner system IDs were not correctly set, you must manually set the correct value:
  .. Halt and display the LOADER prompt on the node.
- .. Verify the partner-sysID bootarg's current value: `printenv`
- .. Set the value to the correct partner system ID: `setenv partner-sysid partner-sysID`
- .. Boot the node: `boot_ontap`
- .. Repeat these substeps on the other node, if necessary.
-. Confirm that the replacement nodes at the disaster site are ready for switchback: `metrocluster node show`
+ .. Verify the partner-sysID bootarg's current value:
++
+`printenv`
+
+.. Set the value to the correct partner system ID:
++
+`setenv partner-sysid partner-sysID`
+
+.. Boot the node:
++
+`boot_ontap`
+.. Repeat these substeps on the other node, if necessary.
+. Confirm that the replacement nodes at the disaster site are ready for switchback:
++
+`metrocluster node show`
 +
 The replacement nodes should be in waiting for switchback recovery mode. If they are in normal mode instead, you can reboot the replacement nodes. After that boot, the nodes should be in waiting for switchback recovery mode.
 +
@@ -88,7 +104,9 @@ Group Cluster Node               State          Mirroring Mode
 cluster_B::>
 ----
 
-. Verify the MetroCluster connection configuration settings: `metrocluster configuration-settings connection show`
+. Verify the MetroCluster connection configuration settings:
++
+`metrocluster configuration-settings connection show`
 +
 The configuration state should indicate completed.
 +
