@@ -44,16 +44,17 @@ Override system ID? {y|n} y
 
 . From the surviving site, verify that the correct partner system IDs have been applied to the nodes:
 +
+
 `metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
 +
+--
 In this example, the following new system IDs should appear in the output:
 
-** Node_A_1: 1574774970
-** Node_A_2: 1574774991
-+
+* Node_A_1: 1574774970
+* Node_A_2: 1574774991
+
 The "ha-partner-systemid" column should show the new system IDs.
 
-+
 ----
 metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
 
@@ -65,6 +66,7 @@ dr-group-id cluster    node      node-systemid ha-partner-systemid dr-partner-sy
 1           Cluster_B  Node_B_2  -             -                   -                   -
 4 entries were displayed.
 ----
+--
 
 . If the partner system IDs were not correctly set, you must manually set the correct value:
  .. Halt and display the LOADER prompt on the node.

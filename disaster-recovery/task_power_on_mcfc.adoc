@@ -24,11 +24,12 @@ link:../install-stretch/index.html[Stretch MetroCluster installation and configu
 The examples in this procedure assume the following:
 
 * Site A is the disaster site.
-* FC_switch_A_1 has been replaced.
-* FC_switch_A_2 has been replaced.
+** FC_switch_A_1 has been replaced.
+** FC_switch_A_2 has been replaced.
+
 * Site B is the surviving site.
-* FC_switch_B_1 is healthy.
-* FC_switch_B_2 is healthy.
+** FC_switch_B_1 is healthy.
+** FC_switch_B_2 is healthy.
 
 The FC switches are present only in fabric-attached MetroCluster configurations.
 
@@ -52,8 +53,8 @@ cluster_B::> storage disk option modify -autoassign off *
 `storage disk option show`
 +
 ----
- cluster_B::> storage disk option show
- Node     BKg. FW. Upd.  Auto Copy   Auto Assign  Auto Assign Policy
+cluster_B::> storage disk option show
+Node     BKg. FW. Upd.  Auto Copy   Auto Assign  Auto Assign Policy
 --------  -------------  -----------  -----------  ------------------
 node_B_1       on            on          off             default
 node_B_2       on            on          off             default
@@ -100,18 +101,18 @@ FC_switch_A_1:admin>
 +
 NOTE: For AFF A700 and FAS9000 systems, you must persistently enable all four FC-VI ports by using the switchcfgpersistentenable command.
 
- .. Repeat substeps a and b for the second FC switch at the surviving site.
+.. Repeat substeps a and b for the second FC switch at the surviving site.
 
 a|
 Cisco
 a|
 
- .. Enter configuration mode for the interface, and then enable the ports with the no shut command.
+.. Enter configuration mode for the interface, and then enable the ports with the no shut command.
 +
 In the following example, port fc1/36 is disabled:
 +
 ----
- FC_switch_A_1# conf t
+FC_switch_A_1# conf t
 FC_switch_A_1(config)# interface fc1/36
 FC_switch_A_1(config)# no shut
 FC_switch_A_1(config-if)# end
@@ -119,8 +120,8 @@ FC_switch_A_1# copy running-config startup-config
 ----
 
  .. Verify that the switch port is enabled: `show interface brief`
- .. Repeat substeps a and b on the other ports connected to the FC-to-SAS bridges, HBAs, and FC-VI adapters.
- .. Repeat substeps a, b, and c for the second FC switch at the surviving site.
+ .. Repeat Substeps a and b on the other ports connected to the FC-to-SAS bridges, HBAs, and FC-VI adapters.
+ .. Repeat Substeps a, b, and c for the second FC switch at the surviving site.
 
 +
 |===

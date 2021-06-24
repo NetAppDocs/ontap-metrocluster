@@ -90,7 +90,7 @@ FC_switch_A_1:admin> portcfgpersistentenable 11
 ----
 
 
-.. On the replacement switch (FC_switch_A_1 in our example) verify that the ISL's are online:
+.. On the replacement switch (FC_switch_A_1 in this example) verify that the ISL's are online:
 +
 `switchshow`
 +
@@ -227,14 +227,15 @@ FC_switch_A_1#
 
 . Enter configuration mode for the zone and remove zone members that do not belong to the switch WWNs of the two switches:
 +
+--
 `no member interface interface-ide swwn wwn`
-+
+
 In this example, the following members are not associated with the WWN of either of the switches in the fabric and must be removed:
 
 ** Zone name FC-VI_Zone_1_10 vsan 10
 *** Interface fc1/1 swwn 20:00:54:7f:ee:e3:86:50
 *** Interface fc1/2 swwn 20:00:54:7f:ee:e3:86:50
-+
+
 NOTE: AFF A700 and FAS9000 systems support four FC-VI ports. You must remove all four ports from the FC-VI zone.
 
 ** Zone name STOR_Zone_1_20_25A vsan 20
@@ -249,10 +250,8 @@ NOTE: AFF A700 and FAS9000 systems support four FC-VI ports. You must remove all
 *** Interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
 *** Interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
 
-+
 The following example shows the removal of these interfaces:
 
-+
 ----
 
  FC_switch_B_1# conf t
@@ -276,6 +275,7 @@ The following example shows the removal of these interfaces:
  FC_switch_B_1(config-zone)# end
  FC_switch_B_1# copy running-config startup-config
 ----
+--
 
 [start=8]
 . [[step8]]Add the ports of the new switch to the zones.

@@ -48,7 +48,9 @@ The following example shows a forced switchover, where you bring the switched-ov
 
 .Steps
 
-. Verify that switchover was completed by running the `metrocluster operation show` command.
+. Verify that switchover was completed:
++
+`metrocluster operation show`
 +
 ----
 controller_A_1::> metrocluster operation show
@@ -59,7 +61,9 @@ controller_A_1::> metrocluster operation show
      Errors: -
 ----
 
-. Resynchronize the data aggregates by running the `metrocluster heal -phase aggregates` command from the surviving cluster.
+. Resynchronize the data aggregates by running the following command from the surviving cluster:
++
+`metrocluster heal -phase aggregates`
 +
 ----
 controller_A_1::> metrocluster heal -phase aggregates
@@ -68,7 +72,9 @@ controller_A_1::> metrocluster heal -phase aggregates
 +
 If the healing is vetoed, you have the option of reissuing the `metrocluster heal` command with the `--override-vetoes` parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
 
-. Verify that the operation has been completed by running the `metrocluster operation show` command.
+. Verify that the operation has been completed:
++
+`metrocluster operation show`
 +
 ----
 controller_A_1::> metrocluster operation show
@@ -79,7 +85,9 @@ Start Time: 7/25/2014 18:45:55
      Errors: -
 ----
 
-. Check the state of the aggregates by running the `storage aggregate show` command.
+. Check the state of the aggregates:
++
+`storage aggregate show` command.
 +
 ----
 controller_A_1::> storage aggregate show
@@ -102,7 +110,9 @@ The data aggregates phase of the MetroCluster healing process must have been com
 
 .Steps
 
-. Switch back the mirrored aggregates by running the `metrocluster heal -phase root-aggregates` command.
+. Switch back the mirrored aggregates:
++
+`metrocluster heal -phase root-aggregates`
 +
 ----
 mcc1A::> metrocluster heal -phase root-aggregates
@@ -111,7 +121,9 @@ mcc1A::> metrocluster heal -phase root-aggregates
 +
 If the healing is vetoed, you have the option of reissuing the `metrocluster heal` command with the `--override-vetoes` parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
 
-. Ensure that the heal operation is complete by running the `metrocluster operation show` command on the destination cluster:
+. Ensure that the heal operation is complete by running the following command on the destination cluster:
++
+`metrocluster operation show`
 +
 ----
 
@@ -126,7 +138,9 @@ mcc1A::> metrocluster operation show
 . Power up each controller module on the disaster site.
 . After nodes are booted, verify that the root aggregates are mirrored.
 +
-If both plexes are present, any resynchronization will start automatically. If one plex has failed, that plex must be destroyed and the mirror recreated using the `storage aggregate mirror -aggregate <aggregate-name>` command to reestablish the mirror relationship.
+If both plexes are present, any resynchronization will start automatically. If one plex has failed, that plex must be destroyed and the mirror recreated using the following command to reestablish the mirror relationship.
++
+`storage aggregate mirror -aggregate <aggregate-name>`
 
 == Verifying that your system is ready for a switchback
 
@@ -202,7 +216,7 @@ After you heal the MetroCluster configuration, you can perform the MetroCluster 
 +
 `metrocluster node show`
 +
-The following example displays the nodes that are in the enabled state:
+The following example displays the nodes that are in the "enabled" state:
 +
 ----
 cluster_B::>  metrocluster node show
@@ -222,16 +236,20 @@ Group Cluster Node        State          Mirroring Mode
 . Confirm that resynchronization is complete on all SVMs:
 +
 `metrocluster vserver show`
+
 . Verify that any automatic LIF migrations being performed by the healing operations have been successfully completed:
 +
 `metrocluster check lif show`
 
-. Perform the switchback by running the `metrocluster switchback` command from any node in the surviving cluster.
+. Perform the switchback by running the following command from any node in the surviving cluster.
++
+`metrocluster switchback`
+
 . Check the progress of the switchback operation:
 +
 `metrocluster show`
 +
-The switchback operation is still in progress when the output displays" "waiting-for-switchback":
+The switchback operation is still in progress when the output displays "waiting-for-switchback":
 +
 ----
 cluster_B::> metrocluster show
@@ -259,7 +277,9 @@ Remote: cluster_A         Configuration state configured
                           AUSO Failure Domain -
 ----
 +
-If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the `metrocluster config-replication resync-status show` command. This command is at the advanced privilege level.
+If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the following command at the advanced privilege level.
++
+`metrocluster config-replication resync-status show`
 
 . Reestablish any SnapMirror or SnapVault configurations.
 +
@@ -321,11 +341,14 @@ cluster_A-vs1a-mc  data    sync-destination
 +
 Sync-destination aggregates in the MetroCluster configuration have the suffix "-mc" automatically appended to their name to help identify them.
 
-. Confirm that the switchback operations succeeded by using the `metrocluster operation show` command.
+. Confirm that the switchback operations succeeded:
++
+`metrocluster operation show`
 +
 [options="header"]
 |===
-| If the command output shows...| Then...
+| If the command output shows... | Then...
+
 a|
 That the switchback operation state is successful.
 a|
@@ -355,7 +378,7 @@ Stale aggregates can occur if you relocated aggregates while the MetroCluster co
 
 At this point a stale aggregate appears on node_B_1, even though the actual aggregate has been deleted from that node. This aggregate appears in the output from the `nodeshell aggr status -r` command. It does not appear in the output of the `storage aggregate show` command.
 
-. Compare the output of the `storage aggregate show` command and the `nodeshell aggr status -r` command:
+. Compare the output of the following commands:
 +
 `storage aggregate show`
 +

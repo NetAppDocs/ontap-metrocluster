@@ -15,9 +15,7 @@ If you replaced drives when restoring hardware at the disaster site or you had t
 
 The disaster site must have at least as many available drives as it did prior to the disaster.
 
-The drives shelves and drives arrangement must meet the requirements in the "`Required MetroCluster IP components and naming conventions`" section of the _MetroCluster IP Installation and Configuration Guide_.
-
-link:../install-ip/index.html[MetroCluster IP installation and configuration]
+The drives shelves and drives arrangement must meet the requirements in link:../install-ip/concept_required_mcc_ip_components_and_naming_guidelines_mcc_ip.html[Required MetroCluster IP component and naming conventions] section of the link:../install-ip/index.html[MetroCluster IP Installation and Configuration Guide].
 
 .About this task
 
@@ -28,14 +26,14 @@ This procedure shows the reassignment of all drives and the creation of new plex
 This section provides examples for two and four-node configurations. For two-node configurations, you can ignore references to the second node at each site. For eight-node configurations, you must account for the additional nodes on the second DR group. The examples make the following assumptions:
 
 * Site A is the disaster site.
-* node_A_1 has been replaced.
-* node_A_2 has been replaced.
+** node_A_1 has been replaced.
+** node_A_2 has been replaced.
 +
 Present only in four-node MetroCluster configurations.
 
 * Site B is the surviving site.
-* node_B_1 is healthy.
-* node_B_2 is healthy.
+** node_B_1 is healthy.
+** node_B_2 is healthy.
 +
 Present only in four-node MetroCluster configurations.
 
@@ -82,7 +80,7 @@ If a lower number of disks is specified or present, the healing operations might
 * The new plexes to be created are remote plexes belonging to the surviving site (node_B_x pool1) and local plexes belonging to the disaster site (node_B_x pool0).
 * The total number of required drives should not include the root aggr disks.
 +
-If n disks are assigned to pool1 of the surviving site, then (n-3) disks should be assigned to the disaster site with the assumption that the root aggregate uses three disks.
+If n disks are assigned to pool1 of the surviving site, then n-3 disks should be assigned to the disaster site with the assumption that the root aggregate uses three disks.
 
 * None of the disks can be assigned to a pool that is different from the one to which all other disks on the same stack are assigned.
 * Disks belonging to the surviving site are assigned to pool 1 and disks belonging to the disaster site are assigned to pool 0.
@@ -90,8 +88,10 @@ If n disks are assigned to pool1 of the surviving site, then (n-3) disks should 
 .Steps
 
 . Assign the new, unowned drives based on whether you have a four-node or two-node MetroCluster configuration:
- ** For four-node MetroCluster configurations, assign the new, unowned disks to the appropriate disk pools by using the following series of commands on the replacement nodes:
-  ... Systematically assign the replaced disks for each node to their respective disk pools: `disk assign -s sysid -n old-count-of-disks -p pool`
+** For four-node MetroCluster configurations, assign the new, unowned disks to the appropriate disk pools by using the following series of commands on the replacement nodes:
+... Systematically assign the replaced disks for each node to their respective disk pools:
++
+`disk assign -s sysid -n old-count-of-disks -p pool`
 +
 From the surviving site, you issue a disk assign command for each node:
 +
@@ -111,7 +111,9 @@ cluster_B::> disk assign -s 4068741258 -n 21 -p 0
 cluster_B::> disk assign -s 4068741260 -n 21 -p 0
 ----
 
-  ... Confirm the ownership of the disks: `storage disk show -fields owner, pool`
+... Confirm the ownership of the disks:
++
+`storage disk show -fields owner, pool`
 +
 ----
 storage disk show -fields owner, pool
@@ -140,21 +142,27 @@ disk     owner          pool
 .
 ----
 ** For two-node MetroCluster configurations, assign the new, unowned disks to the appropriate disk pools by using the following series of commands on the replacement node:
-... Display the local shelf IDs: `run local storage show shelf`
+... Display the local shelf IDs:
++
+`run local storage show shelf`
 ... Assign the replaced disks for the healthy node to pool 1:
 +
 `run local disk assign -shelf shelf-id -n old-count-of-disks -p 1 -s node_B_1-sysid -f`
 ... Assign the replaced disks for the replacement node to pool 0:
 +
 `run local disk assign -shelf shelf-id -n old-count-of-disks -p 0 -s node_A_1-sysid -f`
-. On the surviving site, turn on automatic disk assignment again: `storage disk option modify -autoassign on *`
+. On the surviving site, turn on automatic disk assignment again:
++
+`storage disk option modify -autoassign on *`
 +
 ----
 cluster_B::> storage disk option modify -autoassign on *
 2 entries were modified.
 ----
 
-. On the surviving site, confirm that automatic disk assignment is on: `storage disk option show`
+. On the surviving site, confirm that automatic disk assignment is on:
++
+`storage disk option show`
 +
 ----
  cluster_B::> storage disk option show

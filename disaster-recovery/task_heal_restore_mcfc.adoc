@@ -26,7 +26,8 @@ cluster_B::> metrocluster heal -phase root aggregates
 `storage aggregate show -node local`
 +
 |===
-| If the aggregate shows this state...| Then...
+| If the aggregate shows this state... | Then...
+
 a|
 resyncing
 a|
@@ -69,7 +70,8 @@ cluster_B::>
 In the following examples, the three aggregates are each in a different state:
 +
 |===
-| Node| State
+| Node | State
+
 a|
 node_B_1_aggr1
 a|
@@ -88,7 +90,9 @@ mirrored, normal
 +
 In the preceding table, the mirror for node_B_1_aggr2 must be rebuilt.
 
- .. View details of the aggregate to identify any failed plexes: `storage aggregate show -r -aggregate node_B_1_aggr2`
+.. View details of the aggregate to identify any failed plexes:
++
+`storage aggregate show -r -aggregate node_B_1_aggr2`
 +
 In the following example, plex /node_B_1_aggr2/plex0 is in a failed state:
 +
@@ -119,6 +123,14 @@ cluster_B::> storage aggregate show -r -aggregate node_B_1_aggr2
  cluster_B::>
 ----
 
- .. Delete the failed plex: `storage aggregate plex delete -aggregate aggregate-name -plex plex`
- .. Reestablish the mirror: `storage aggregate mirror -aggregate aggregate-name`
- .. Monitor the resynchronization and mirroring status of the plex until all mirrors are reestablished and all aggregates show mirrored, normal status: `storage aggregate show`
+.. Delete the failed plex:
++
+`storage aggregate plex delete -aggregate aggregate-name -plex plex`
+
+.. Reestablish the mirror:
++
+`storage aggregate mirror -aggregate aggregate-name`
+
+.. Monitor the resynchronization and mirroring status of the plex until all mirrors are reestablished and all aggregates show mirrored, normal status:
++
+`storage aggregate show`

@@ -67,6 +67,7 @@ e5b
 a|
 172.17.27.12
 |===
+
 The following table summarizes the relationships between the nodes and each node's MetroCluster IP addresses.
 
 [options="header"]
@@ -263,32 +264,35 @@ Group Cluster Node     Network Address Netmask         Gateway         State
 
 . If the disaster site nodes use VLAN IDs (see the list above), at the LOADER prompt for each of the disaster site nodes, set the following bootargs:
 +
+--
 ....
 setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
 
 setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
 ....
-+
-*NOTE:*
 
-** If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
-** If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
-+
+[NOTE]
+====
+* If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
+* If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
+====
+
 The following commands set the values for node_A_1 using VLAN 120 for the first network and VLAN 130 for the second network:
-+
+
 ....
 setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
 
 setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
 ....
-+
+
 The following example shows the commands for node_A_1 without a VLAN ID:
-+
+
 ....
 setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
 
 setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
 ....
+--
 
 . If the disaster site nodes are not systems that use VLAN IDs, at the LOADER prompt for each of the disaster nodes, set the following bootargs with local_IP/mask,gateway:
 +
@@ -298,11 +302,11 @@ setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,HA-partner-
 setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address
 ....
 +
-*NOTES:*
-
-** If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
-** If the configuration is not using link:../install-ip/concept_considerations_layer_3.adoc, the value for _gateway-IP-address_ is *0* (zero).
-
+[NOTE]
+====
+* If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
+* If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer 3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
+====
 +
 The following commands set the values for node_A_1. In this example, the  _gateway-IP-address_ and  _vlan-id_ values are not used.
 
@@ -447,7 +451,6 @@ The following example shows the commands for setting the system IDs on node_A_1:
 
 *** The old system ID of node_A_1 is 4068741258.
 *** The system ID of node_B_1 is 4068741254.
-
 +
 ----
 setenv bootarg.mcc.local_config_id 4068741258
@@ -460,7 +463,6 @@ The following example shows the commands for setting the system IDs on node_A_2:
 
 *** The old system ID of node_A_1 is 4068741260.
 *** The system ID of node_B_1 is 4068741256.
-
 +
 ----
 setenv bootarg.mcc.local_config_id 4068741260
