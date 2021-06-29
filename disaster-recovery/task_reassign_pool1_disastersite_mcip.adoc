@@ -11,6 +11,8 @@ summary: If the controller modules or NVRAM cards were replaced at the disaster 
 [.lead]
 If one or both of the controller modules or NVRAM cards were replaced at the disaster site, the system ID has changed and you must reassign disks belonging to the root aggregates to the replacement controller modules.
 
+.About this task
+
 Because the nodes are in switchover mode, only the disks containing the root aggregates of pool1 of the disaster site will be reassigned in this task. They are the only disks still owned by the old system ID at this point.
 
 This task is performed on the replacement nodes at the disaster site.
@@ -30,9 +32,9 @@ The old and new system IDs were identified in link:../disaster-recovery/task_rep
 
 The examples in this procedure use controllers with the following system IDs:
 
-[options="header"]
 |===
-| Node| Original system ID| New system ID
+| Node | Original system ID | New system ID
+
 a|
 node_A_1
 a|
@@ -59,25 +61,28 @@ a|
 unchanged
 |===
 
+.Steps
+
 . With the replacement node in Maintenance mode, reassign the root aggregate disks, using the correct command, depending on whether your system is configured with ADP and your ONTAP version.
 +
 You can proceed with the reassignment when prompted.
 +
-[options="header"]
+
 |===
-| System is using ADP| Use this command for disk reassignment:
+| If the system is using ADP... | Use this command for disk reassignment...
+
 a|
 Yes (ONTAP 9.8)
 a|
-disk reassign -s old-system-ID -d new-system-ID -r dr-partner-system-ID
+`disk reassign -s old-system-ID -d new-system-ID -r dr-partner-system-ID`
 a|
 Yes (ONTAP 9.7.x and earlier)
 a|
-disk reassign -s old-system-ID -d new-system-ID -p old-partner-system-ID
+`disk reassign -s old-system-ID -d new-system-ID -p old-partner-system-ID`
 a|
 No
 a|
-disk reassign -s old-system-ID -d new-system-ID
+`disk reassign -s old-system-ID -d new-system-ID`
 |===
 The following example shows reassignment of drives on a non-ADP system:
 +
@@ -98,7 +103,9 @@ Disk 0m.i0.1L8 will be reassigned.
 Number of disks to be reassigned: 3
 ----
 
-. Destroy the contents of the mailbox disks: `mailbox destroy local`
+. Destroy the contents of the mailbox disks:
++
+`mailbox destroy local`
 +
 You can proceed with the destroy operation when prompted.
 +
@@ -117,7 +124,9 @@ Are you sure you want to destroy the local mailboxes? y
 ----
 
 . If disks have been replaced, there will be failed local plexes that must be deleted.
- .. Display the aggregate status: `aggr status`
+.. Display the aggregate status:
++
+`aggr status`
 +
 In the following example, plex node_A_1_aggr0/plex0 has failed.
 +
@@ -148,10 +157,14 @@ Aug 18 15:00:07 [node_B_1:raid.debug:info]: Topology updated for aggregate node_
 *>
 ----
 
- .. Delete the failed plex: `aggr destroy plex-id`
+.. Delete the failed plex:
++
+`aggr destroy plex-id`
 +
 ----
 *> aggr destroy node_A_1_aggr0/plex0
 ----
-. Halt the node to display the LOADER prompt: `halt`
+. Halt the node to display the LOADER prompt:
++
+`halt`
 . Repeat these steps on the other node at the disaster site.
