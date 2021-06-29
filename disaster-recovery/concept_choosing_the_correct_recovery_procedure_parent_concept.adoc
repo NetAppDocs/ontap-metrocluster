@@ -63,14 +63,21 @@ xref:task_recover_from_a_multi_controller_and_or_storage_failure.adoc[Recovering
 
 == Controller module failure scenarios during MetroCluster FC-to-IP Transition
 
-The recovery procedure can be used if a site failure occurs during transition. However, it can only be used if the configuration is a stable mixed configuration, with the FC DR group and IP DR group both fully configured. The output of the metrocluster node show command should show both DR groups with all eight nodes.
+The recovery procedure can be used if a site failure occurs during transition. However, it can only be used if the configuration is a stable mixed configuration, with the FC DR group and IP DR group both fully configured. The output of the `metrocluster node show` command should show both DR groups with all eight nodes.
 
 IMPORTANT: If the failure occurred during transition when the nodes are in the process of being added or removed, you must contact technical support.
 
 == Controller module failure scenarios in eight-node MetroCluster configurations
 
-* *Single controller module failures in a single DR group*
-+
+Failure scenarios:
+
+* <<Single controller module failures in a single DR group>>
+* <<Two controller module failures in a single DR group>>
+* <<Single controller module failures in separate DR groups>>
+* <<Three controller module failures spread across the DR groups>>
+
+=== Single controller module failures in a single DR group
+
 In this case the failure is limited to an HA pair.
 
  ** If no storage requires replacement, you can use the controller module FRU replacement procedure for the platform model.
@@ -86,18 +93,18 @@ This scenario applies to four-node MetroCluster configurations also.
 +
 image::../media/mcc_dr_groups_8_node_with_a_single_controller_failure.gif[]
 
-* *Two controller module failures in a single DR group*
-+
+=== Two controller module failures in a single DR group
+
 In this case the failure requires a switchover. You can use the multi-controller module failure recovery procedure.
-+
+
 xref:task_recover_from_a_multi_controller_and_or_storage_failure.adoc[Recovering from a multi-controller or storage failure]
-+
+
 This scenario applies to four-node MetroCluster configurations also.
-+
+
 image::../media/mcc_dr_groups_8_node_with_a_multi_controller_failure.gif[]
 
-* *Single controller module failures in separate DR groups.*
-+
+=== Single controller module failures in separate DR groups
+
 In this case the failure is limited to separate HA pairs.
 
  ** If no storage requires replacement, you can use the controller module FRU replacement procedure for the platform model.
@@ -110,19 +117,19 @@ https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
 +
 xref:task_recover_from_a_multi_controller_and_or_storage_failure.adoc[Recovering from a multi-controller or storage failure]
 
-+
+
 image::../media/mcc_dr_groups_8_node_with_two_single_controller_failures.gif[]
 
-* *Three controller module failures spread across the DR groups*
-+
+=== Three controller module failures spread across the DR groups
+
 In this case the failure requires a switchover. You can use the multi-controller module failure recovery procedure for DR Group One.
-+
+
 xref:task_recover_from_a_multi_controller_and_or_storage_failure.adoc[Recovering from a multi-controller or storage failure]
-+
+
 You can use the platform-specific controller module FRU replacement procedure for DR Group Two.
-+
+
 https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
-+
+
 image::../media/mcc_dr_groups_8_node_with_a_3_controller_failure.gif[]
 
 == Controller module failure scenarios in two-node MetroCluster configurations
@@ -134,7 +141,7 @@ The procedure you use depends on the extent of the failure.
 https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
 
 * If storage requires replacement, you can use the multi-controller module recovery procedure.
-
++
 xref:task_recover_from_a_multi_controller_and_or_storage_failure.adoc[Recovering from a multi-controller or storage failure]
 
 image::../media/mcc_dr_groups_2_node_with_a_single_controller_failure.gif[]

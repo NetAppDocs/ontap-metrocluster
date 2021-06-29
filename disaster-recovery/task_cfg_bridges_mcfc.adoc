@@ -11,12 +11,14 @@ summary: 'If you replaced the FC-to-SAS bridges, you must configure them when re
 [.lead]
 If you replaced the FC-to-SAS bridges, you must configure them when restoring the MetroCluster configuration. The procedure is identical to the initial configuration of an FC-to-SAS bridge.
 
+.Steps
+
 . Power on the FC-to-SAS bridges.
-. Set the IP address on the Ethernet ports by using the `set IPAddressportipaddress` command.
+. Set the IP address on the Ethernet ports by using the `set IPAddress port ipaddress` command.
 +
-port can be either MP1 or MP2.
+* `port` can be either "MP1" or "MP2".
 +
-ipaddress can be an IP address in the format xxx.xxx.xxx.xxx.
+* `ipaddress` can be an IP address in the format xxx.xxx.xxx.xxx.
 +
 In the following example, the IP address is 10.10.10.55 on Ethernet port 1:
 +
@@ -28,11 +30,11 @@ set IPAddress MP1 10.10.10.55
 Ready. *
 ----
 
-. Set the IP subnet mask on the Ethernet ports by using the `set IPSubnetMaskportmask` command.
+. Set the IP subnet mask on the Ethernet ports by using the `set IPSubnetMask port mask` command.
 +
-port can be MP1 or MP2.
+* `port` can be "MP1" or "MP2".
 +
-mask can be a subnet mask in the format xxx.xxx.xxx.xxx.
+* `mask` can be a subnet mask in the format xxx.xxx.xxx.xxx.
 +
 In the following example, the IP subnet mask is 255.255.255.0 on Ethernet port 1:
 +
@@ -44,11 +46,11 @@ set IPSubnetMask MP1 255.255.255.0
 Ready. *
 ----
 
-. Set the speed on the Ethernet ports by using the `set EthernetSpeedportspeed` command.
+. Set the speed on the Ethernet ports by using the `set EthernetSpeed port speed` command.
 +
-port can be MP1 or MP2.
+* `port` can be "MP1" or "MP2".
 +
-speed can be 100, 1000, or auto.
+* `speed` can be "100", "1000", or "auto".
 +
 In the following example, the Ethernet speed is set to 1000 on Ethernet port 1.
 +
@@ -76,13 +78,13 @@ Confirm with 'y'. The bridge will save and restart with the new settings.
 ----
 
 . After the FC-to-SAS bridge reboots, log in again.
-. Set the speed on the FC ports by using the `set fcdatarateportspeed` command.
+. Set the speed on the FC ports by using the `set fcdatarate port speed` command.
 +
-port can be 1 or 2.
+* `port` can be "1" or "2".
 +
-speed can be 2 Gb, 4 Gb, 8 Gb, or 16 Gb, depending on your model bridge.
+* `speed` can be "2 Gb", "4 Gb", "8 Gb", or "16 Gb", depending on your model bridge.
 +
-In the following example, the port FC1 speed is set to 8 Gb.
+In the following example, the port FC1 speed is set to "8 Gb".
 +
 ----
 
@@ -92,13 +94,13 @@ set fcdatarate 1 8Gb
 Ready. *
 ----
 
-. Set the topology on the FC ports by using the `set FCConnModeportmode` command.
+. Set the topology on the FC ports by using the `set FCConnMode port mode` command.
 +
-port can be 1 or 2.
+* `port` can be "1" or "2".
 +
-mode can be ptp, loop, ptp-loop, or auto.
+* `mode` can be "ptp", "loop", "ptp-loop", or "auto".
 +
-In the following example, the port FC1 topology is set to ptp.
+In the following example, the port FC1 topology is set to "ptp".
 +
 ----
 

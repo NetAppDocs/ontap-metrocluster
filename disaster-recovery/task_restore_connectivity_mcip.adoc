@@ -8,16 +8,23 @@ summary: You must restore the MetroCluster iSCSI initiator connections from the 
 :icons: font
 :imagesdir: ../media/
 
-[.lead]
 You must restore the MetroCluster iSCSI initiator connections from the surviving nodes.
+
+.About this task
 
 This procedure is only required on MetroCluster IP configurations.
 
-. From either surviving node's prompt, change to the advanced privilege level: `set -privilege advanced`
+.Steps
+
+. From either surviving node's prompt, change to the advanced privilege level:
++
+`set -privilege advanced`
 +
 You need to respond with `y` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
-. Connect the iSCSI initiators on both surviving nodes in the DR group: `storage iscsi-initiator connect -node surviving-node -label *`
+. Connect the iSCSI initiators on both surviving nodes in the DR group:
++
+`storage iscsi-initiator connect -node surviving-node -label *`
 +
 The following example shows the commands for connecting the initiators on site B:
 +
@@ -26,4 +33,6 @@ site_B::*> storage iscsi-initiator connect -node node_B_1 -label *
 site_B::*> storage iscsi-initiator connect -node node_B_2 -label *
 ----
 
-. Return to the admin privilege level: `set -privilege admin`
+. Return to the admin privilege level:
++
+`set -privilege admin`
