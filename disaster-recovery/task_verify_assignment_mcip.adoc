@@ -9,14 +9,16 @@ summary: On systems configured for ADP, you must verify that pool 0 drives have 
 :imagesdir: ../media/
 
 [.lead]
-On systems configured for ADP, you must verify that pool 0 drives have been automatically assigned. On systems configured that are not configured for ADP, you must manually assign the pool 0 drives.
+On systems configured for ADP, you must verify that pool 0 drives have been automatically assigned. On systems that are not configured for ADP, you must manually assign the pool 0 drives.
 
-=== Verifying drive assignment of pool 0 drives on ADP systems at the disaster site (MetroCluster IP systems)
-
-[.lead]
+== Verifying drive assignment of pool 0 drives on ADP systems at the disaster site (MetroCluster IP systems)
 If drives have been replaced at the disaster site and the system is configured for ADP, you must verify that the remote drives are visible to the nodes and have been assigned correctly.
 
-. Verify that pool 0 drives are assigned automatically: `disk show`
+.Step
+
+. Verify that pool 0 drives are assigned automatically:
++
+`disk show`
 +
 In the following example for an AFF A800 system with no external shelves, one quarter (8 drives) were automatically assigned to node_A_1 and one quarter were automatically assigned to node_A_2. The remaining drives will be remote (pool1) drives for node_B_1 and node_B_2.
 +
@@ -60,15 +62,20 @@ node_A_2:0n.43   -          0     43  SSD-NVM unassigned  -         -
 32 entries were displayed.
 ----
 
-=== Assigning pool 0 drives on non-ADP systems at the disaster site (MetroCluster IP configurations)
+== Assigning pool 0 drives on non-ADP systems at the disaster site (MetroCluster IP configurations)
 
-[.lead]
 If drives have been replaced at the disaster site and the system is not configured for ADP, you need to manually assign new drives to pool 0.
+
+.About this task
 
 For ADP systems, the drives are assigned automatically.
 
-. On one of the replacement nodes at the disaster site, reassign the node's pool 0 drives: `storage disk assign -n number-of-replacement disks -p 0`
+.Steps
+
+. On one of the replacement nodes at the disaster site, reassign the node's pool 0 drives:
 +
-This command assigns the newly added (and unowned) drives on the disaster site. You should assign the same number and size (or larger) of drives that the node had prior to the disaster. The storage disk assign man page contains about performing more granular drive assignment.
+`storage disk assign -n number-of-replacement disks -p 0`
++
+This command assigns the newly added (and unowned) drives on the disaster site. You should assign the same number and size (or larger) of drives that the node had prior to the disaster. The `storage disk assign` man page contains more information about performing more granular drive assignment.
 
 . Repeat the step on the other replacement node at the disaster site.

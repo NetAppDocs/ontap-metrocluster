@@ -11,28 +11,31 @@ summary: 'If one or both of the controller modules or NVRAM cards were replaced 
 [.lead]
 If one or both of the controller modules or NVRAM cards were replaced at the disaster site, the system ID has changed and you must reassign disks belonging to the root aggregates to the replacement controller modules.
 
+.About this task
+
 Because the nodes are in switchover mode and healing has been done, only the disks containing the root aggregates of pool1 of the disaster site will be reassigned in this section. They are the only disks still owned by the old system ID at this point.
 
 This section provides examples for two and four-node configurations. For two-node configurations, you can ignore references to the second node at each site. For eight-node configurations, you must account for the additional nodes on the second DR group. The examples make the following assumptions:
 
 * Site A is the disaster site.
-* node_A_1 has been replaced.
-* node_A_2 has been replaced.
+** node_A_1 has been replaced.
+** node_A_2 has been replaced.
 +
 Present only in four-node MetroCluster configurations.
 
 * Site B is the surviving site.
-* node_B_1 is healthy.
-* node_B_2 is healthy.
+** node_B_1 is healthy.
+** node_B_2 is healthy.
 +
 Present only in four-node MetroCluster configurations.
 
-The old and new system IDs were identified in xref:task_replace_hardware_and_boot_new_controllers.adoc[Acquiring the new System ID].
+The old and new system IDs were identified in link:task_replace_hardware_and_boot_new_controllers.html#determining-the-system-ids-and-vlan-ids-of-the-old-controller-modules[Determining the system IDs of the replacement controller modules].
 
 The examples in this procedure use controllers with the following system IDs:
 
 |===
-| Number of nodes| Node| Original system ID| New system ID
+| Number of nodes | Node | Original system ID | New system ID
+
 a|
 Four
 a|
@@ -75,13 +78,19 @@ a|
 unchanged
 |===
 
-. With the replacement node in Maintenance mode, reassign the root aggregate disks: `disk reassign -s old-system-ID -d new-system-ID`
+.Steps
+
+. With the replacement node in Maintenance mode, reassign the root aggregate disks:
++
+`disk reassign -s old-system-ID -d new-system-ID`
 +
 ----
 *> disk reassign -s 4068741258 -d 1574774970
 ----
 
-. View the disks to confirm the ownership change of the pool1 root aggr disks of the disaster site to the replacement node: `disk show`
+. View the disks to confirm the ownership change of the pool1 root aggr disks of the disaster site to the replacement node:
++
+`disk show`
 +
 The output might show more or fewer disks, depending on how many disks are in the root aggregate and whether any of these disks failed and were replaced. If the disks were replaced, then Pool0 disks will not appear in the output.
 +
@@ -108,7 +117,9 @@ sw_B_1:6.126L2  node_A_1(1574774970) Pool1  serial-number  node_A_1(1574774970)
 *>
 ----
 
-. View the aggregate status: `aggr status`
+. View the aggregate status:
++
+`aggr status`
 +
 The output might show more or fewer disks, depending on how many disks are in the root aggregate and whether any of these disks failed and were replaced. If disks were replaced, then Pool0 disks will not appear in output.
 +
@@ -121,6 +132,12 @@ The output might show more or fewer disks, depending on how many disks are in th
 *>
 ----
 
-. Delete the contents of the mailbox disks: `mailbox destroy local`
-. If the aggregate is not online, bring it online: `aggr online aggr_name`
-. Halt the node to display the LOADER prompt: `halt`
+. Delete the contents of the mailbox disks:
++
+`mailbox destroy local`
+. If the aggregate is not online, bring it online:
++
+`aggr online aggr_name`
+. Halt the node to display the LOADER prompt:
++
+`halt`

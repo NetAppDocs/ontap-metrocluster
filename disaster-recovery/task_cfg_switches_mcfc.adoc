@@ -11,10 +11,18 @@ summary: 'If you have replaced the FC switches in the disaster site, you must co
 [.lead]
 If you have replaced the FC switches in the disaster site, you must configure them using the vendor-specific procedures. You must configure one switch, verify that storage access on the surviving site is not impacted, and then configure the second switch.
 
+.Related tasks
+
+link:../install-fc/concept_port_assignments_for_fc_switches_when_using_ontap_9_0.html[Port assignments for FC switches when using 9.0]
+
+link:../install-fc/concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
+
 === Configuring a Brocade FC switch after site disaster
 
 [.lead]
 You must use this Brocade-specific procedure to configure the replacement switch and enable the ISL ports.
+
+.About this task
 
 The examples in this procedure are based on the following assumptions:
 
@@ -32,18 +40,24 @@ You must verify that you are using the specified port assignments when you cable
 
 The examples show two FC-to-SAS bridges. If you have more bridges, you must disable and subsequently enable the additional ports.
 
+.Steps
+
 . Boot and pre-configure the new switch:
- .. Power up the new switch and let it boot up.
- .. Check the firmware version on the switch to confirm it matches the version of the other FC switches: `firmwareShow`
- .. Configure the new switch as described in the _MetroCluster Installation and Configuration Guide_, skipping the steps for configuring zoning on the switch.
+.. Power up the new switch and let it boot up.
+.. Check the firmware version on the switch to confirm it matches the version of the other FC switches:
++
+`firmwareShow`
+.. Configure the new switch as described in the following topics, skipping the steps for configuring zoning on the switch.
 +
 link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 +
 link:../install-stretch/index.html[Stretch MetroCluster installation and configuration]
 
- .. Disable the switch persistently: `switchcfgpersistentdisable`
+.. Disable the switch persistently:
 +
-The switch will remain disabled after a reboot or fastboot. If this command is not available, you should use the switchdisable command.
+`switchcfgpersistentdisable`
++
+The switch will remain disabled after a reboot or fastboot. If this command is not available, you should use the `switchdisable` command.
 +
 The following example shows the command on BrocadeSwitchA:
 +
@@ -57,21 +71,28 @@ The following example shows the command on BrocadeSwitchB:
 BrocadeSwitchA:admin> switchcfgpersistentdisable
 ----
 . Complete configuration of the new switch:
- .. Enable the ISLs on the surviving site: `portcfgpersistentenable port-number`
+.. Enable the ISLs on the surviving site:
++
+`portcfgpersistentenable port-number`
 +
 ----
 FC_switch_B_1:admin> portcfgpersistentenable 10
 FC_switch_B_1:admin> portcfgpersistentenable 11
 ----
 
- .. Enable the ISLs on the replacement switches: `portcfgpersistentenable port-number`
+.. Enable the ISLs on the replacement switches:
++
+`portcfgpersistentenable port-number`
 +
 ----
 FC_switch_A_1:admin> portcfgpersistentenable 10
 FC_switch_A_1:admin> portcfgpersistentenable 11
 ----
 
- .. On the replacement switch (FC_switch_A_1 in our example) verify that the ISL's are online:``switchshow``
+
+.. On the replacement switch (FC_switch_A_1 in this example) verify that the ISL's are online:
++
+`switchshow`
 +
 ----
 FC_switch_A_1:admin> switchshow
@@ -93,13 +114,19 @@ Index Port Address Media Speed State  Proto
 11   11    030B00 id   16G     Online  FC E-Port 10:00:00:05:33:86:89:cb "FC_switch_A_1" (downstream)
 ...
 ----
-. Persistently enable the switch: `switchcfgpersistentenable`
-. Verify that the ports are online:``switchshow``
+. Persistently enable the switch:
++
+`switchcfgpersistentenable`
+. Verify that the ports are online:
++
+`switchshow`
 
 === Configuring a Cisco FC switch after site disaster
 
 [.lead]
 You must use the Cisco-specific procedure to configure the replacement switch and enable the ISL ports.
+
+.About this task
 
 The examples in this procedure are based on the following assumptions:
 
@@ -110,12 +137,12 @@ The examples in this procedure are based on the following assumptions:
 * FC_switch_B_1 is healthy.
 * FC_switch_B_2 is healthy.
 
-. Configure the switch:
- .. Refer to the _Fabric-attached MetroCluster Installation and Configuration Guide_.
-+
-link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
+.Steps
 
- .. Follow the steps for configuring the switch in the  link:../install-fc/generaltask_fcsw_cisco_configure_the_cisco_fc_switches_with_rcf_files.html[Configuring the Cisco FC switches] section, _except_ for the "`Configuring zoning on a Cisco FC switch`" section:
+. Configure the switch:
+.. Refer to link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
+
+.. Follow the steps for configuring the switch in  link:../install-fc/generaltask_fcsw_cisco_configure_the_cisco_fc_switches_with_rcf_files.html[Configuring the Cisco FC switches] section, _except_ for the "Configuring zoning on a Cisco FC switch" section:
 +
 Zoning is configured later in this procedure.
 . On the healthy switch (in this example, FC_switch_B_1), enable the ISL ports.
@@ -142,9 +169,11 @@ FC_switch_B_1(config-zone)# zoneset distribute full vsan 20
 FC_switch_B_1(config-zone)# end
 ----
 +
-FC_switch_B_1 is distributed to all other switches in the fabric for vsan 10 and vsan 20, and the zoning information is retrieved from FC_switch_A_1.
+FC_switch_B_1 is distributed to all other switches in the fabric for "vsan 10" and "vsan 20", and the zoning information is retrieved from FC_switch_A_1.
 
-. On the healthy switch, verify that the zoning information is properly retrieved from the partner switch: `show zone`
+. On the healthy switch, verify that the zoning information is properly retrieved from the partner switch:
++
+`show zone`
 +
 ----
 FC_switch_B_1# show zone
@@ -196,28 +225,33 @@ Switch WWN is 20:00:54:7f:ee:b8:24:c0
 FC_switch_A_1#
 ----
 
-. Enter configuration mode for the zone and remove zone members that do not belong to the switch WWNs of the two switches: `no member interface interface-ide swwn wwn`
+. Enter configuration mode for the zone and remove zone members that do not belong to the switch WWNs of the two switches:
 +
+--
+`no member interface interface-ide swwn wwn`
+
 In this example, the following members are not associated with the WWN of either of the switches in the fabric and must be removed:
 
- ** Zone name FC-VI_Zone_1_10 vsan 10
-  *** Interface fc1/1 swwn 20:00:54:7f:ee:e3:86:50
-  *** Interface fc1/2 swwn 20:00:54:7f:ee:e3:86:50
-*Note:* AFF A700 and FAS9000 systems support four FC-VI ports. You must remove all four ports from the FC-VI zone.
- ** Zone name STOR_Zone_1_20_25A vsan 20
-  *** Interface fc1/5 swwn 20:00:54:7f:ee:e3:86:50
-  *** Interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
-  *** Interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
-  *** Interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
-  *** Interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
- ** Zone name STOR_Zone_1_20_25B vsan 20
-  *** Interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
-  *** Interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
-  *** Interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
-  *** Interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+** Zone name FC-VI_Zone_1_10 vsan 10
+*** Interface fc1/1 swwn 20:00:54:7f:ee:e3:86:50
+*** Interface fc1/2 swwn 20:00:54:7f:ee:e3:86:50
+
+NOTE: AFF A700 and FAS9000 systems support four FC-VI ports. You must remove all four ports from the FC-VI zone.
+
+** Zone name STOR_Zone_1_20_25A vsan 20
+*** Interface fc1/5 swwn 20:00:54:7f:ee:e3:86:50
+*** Interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
+*** Interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
+*** Interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
+*** Interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+** Zone name STOR_Zone_1_20_25B vsan 20
+*** Interface fc1/8 swwn 20:00:54:7f:ee:e3:86:50
+*** Interface fc1/9 swwn 20:00:54:7f:ee:e3:86:50
+*** Interface fc1/10 swwn 20:00:54:7f:ee:e3:86:50
+*** Interface fc1/11 swwn 20:00:54:7f:ee:e3:86:50
+
 The following example shows the removal of these interfaces:
 
-+
 ----
 
  FC_switch_B_1# conf t
@@ -241,6 +275,7 @@ The following example shows the removal of these interfaces:
  FC_switch_B_1(config-zone)# end
  FC_switch_B_1# copy running-config startup-config
 ----
+--
 
 [start=8]
 . [[step8]]Add the ports of the new switch to the zones.

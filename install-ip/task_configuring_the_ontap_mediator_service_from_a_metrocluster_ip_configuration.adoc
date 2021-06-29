@@ -33,32 +33,32 @@ Note: You will be prompted for the username and password for the Mediator admin 
 
 . Verify that the automatic switchover feature in enabled: metrocluster show
 . Verify that the Mediator is now running.
-+
- Run: storage disk show -container-type mediator
 
- ClusterA::> storage disk show -container-type mediator
+ .. Show the Mediator virtual disks: storage disk show -container-type mediator
++
+ cluster_A::> storage disk show -container-type mediator
                         Usable           Disk    Container   Container
  Disk                   Size Shelf Bay Type    Type        Name      Owner
  ---------------- ---------- ----- --- ------- ----------- --------- --------
- NET-1.5                   -     -   - VMDISK  mediator    -         ClusterA-02
- NET-1.6                   -     -   - VMDISK  mediator    -         ClusterB-01
- NET-1.7                   -     -   - VMDISK  mediator    -         ClusterB-02
- NET-1.8                   -     -   - VMDISK  mediator    -         ClusterA-01
+ NET-1.5                   -     -   - VMDISK  mediator    -         node_A_2
+ NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
+ NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
+ NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
 
- Run the following command: set advanced
+ .. Set the privilege mode to advanced: set advanced
++
+ cluster_A::> set advanced
 
- ClusterA::> set advanced
-
- Run: storage iscsi-initiator show -label mediator
-
- ClusterA::*> storage iscsi-initiator show -label mediator
+.. Display the initiators labelled as mediator: storage iscsi-initiator show -label mediator
++
+ cluster_A::*> storage iscsi-initiator show -label mediator
    (storage iscsi-initiator show)
-                                                                       Status
+  +                                                                     Status
  Node Type Label    Target Portal      Target Name                      Admin/Op
  ---- ---- -------- ------------------ -------------------------------- --------
- ClusterA-01
+ node_A_1
       mailbox
            mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
- ClusterA-02
+ node_A_2
       mailbox
            mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up

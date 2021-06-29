@@ -13,9 +13,7 @@ You might need to move root volumes to another root aggregate within a two-node 
 
 == Migrating root volumes within a two-node MetroCluster configuration
 
-To migrate root volumes to a new root aggregate within a two-node MetroCluster configuration, you should refer to the procedure in the following Knowledgebase article. This procedure shows you how to non-disruptively migrate the root volumes during a MetroCluster switchover operation. This procedure is slightly different than the procedure used on a four-node configuration.
-
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/How_to_move_mroot_to_a_new_root_aggregate_in_a_2-node_Clustered_MetroCluster_with_Switchover[How to move mroot to a new root aggregate in a 2-node Clustered MetroCluster with Switchover]
+To migrate root volumes to a new root aggregate within a two-node MetroCluster configuration, you should refer to https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/How_to_move_mroot_to_a_new_root_aggregate_in_a_2-node_Clustered_MetroCluster_with_Switchover[How to move mroot to a new root aggregate in a 2-node Clustered MetroCluster with Switchover]. This procedure shows you how to non-disruptively migrate the root volumes during a MetroCluster switchover operation. This procedure is slightly different than the procedure used on a four-node configuration.
 
 == Migrating root volumes within a four-node MetroCluster configuration
 
@@ -23,11 +21,12 @@ To migrate root volumes to a new root aggregate within a four-node MetroCluster 
 
 * You can use system node migrate-root to move root aggregates within a four-node MetroCluster configuration.
 * All root aggregates must be mirrored.
-* You can add new shelves on both sites with smaller SSDs to host the root aggregate.
-* You must check the SSD limits that the platform supports before attaching new disks.
+* You can add new shelves on both sites with smaller drives to host the root aggregate.
+// BURT 1387770
+* You must check the drive limits that the platform supports before attaching new drives.
 +
 https://hwu.netapp.com[NetApp Hardware Universe]
 
-* If you move the root aggregate to smaller disks, you need to accommodate the minimum root volume size of the platform to ensure all core files are saved.
+* If you move the root aggregate to smaller drives, you need to accommodate the minimum root volume size of the platform to ensure all core files are saved.
 
 NOTE: The four-node procedure can also be applied to an eight-node configuration.
