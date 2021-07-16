@@ -17,12 +17,13 @@ You must refresh the MetroCluster configuration when expanding it from a two-nod
 `*set -privilege advanced*`
  .. Refresh the MetroCluster configuration:
  +
-`*metrocluster configure -refresh true*`
+`*metrocluster configure -refresh true -allow-with-one-aggregate true*`
+// ontap-metrocluster/issues/53
 +
 The following command refreshes the MetroCluster configuration on all of the nodes in the DR group that contains controller_A_1:
 +
 ----
-controller_A_1::*> metrocluster configure -refresh true
+controller_A_1::*> metrocluster configure -refresh true -allow-with-one-aggregate true
 
 [Job 726] Job succeeded: Configure is successful.
 ----
