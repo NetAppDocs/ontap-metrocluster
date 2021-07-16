@@ -17,6 +17,8 @@ If the equipment on the ISL link changes and the new link configuration no longe
 
 NOTE: To make changes to OOD from ONTAP software, use the following steps: link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
 
+.Steps
+
 . Disable the FCVI and storage HBA ports:
 +
 `*portcfgpersistentdisable _port number_*`
@@ -73,18 +75,19 @@ To relocate an ISL...
 a|
 Relocating an ISL is the same as removing and then adding an ISL. First, remove the ISL by disconnecting the link and then insert SFPs into the ports you are adding as ISL ports.
 |===
-. Reconfigure for out-of-order delivery \(OOD\) or in-order-delivery (IOD).
+. Reconfigure for out-of-order delivery (OOD) or in-order-delivery (IOD).
 +
 NOTE: If the routing policies remain the same, you do not need to reconfigure and this step can be ignored. The ONTAP configuration needs to match the fabric configuration. If the fabric is configured for OOD, then ONTAP must also be configured for OOD. The same applies for IOD.
 +
 This step should be executed in the following scenarios:
 +
--   More than one ISL formed a trunk before the change, but after the change, trunking is no longer supported. In this case, you must configure the fabric for OOD.
--   There is one ISL before the change and multiple ISLs after the change.
 
-    -   If multiple ISLs form a trunk, configure the fabric for IOD.
-    -   If multiple ISLs **cannot** form a trunk, configure the fabric for OOD.
-..  Persistently disable the switches using the `*switchcfgpersistentdisable*` command as shown in the following example:
+*   More than one ISL formed a trunk before the change, but after the change, trunking is no longer supported. In this case, you must configure the fabric for OOD.
+*   There is one ISL before the change and multiple ISLs after the change.
+
+*   If multiple ISLs form a trunk, configure the fabric for IOD.
+      If multiple ISLs **cannot** form a trunk, configure the fabric for OOD.
+*  Persistently disable the switches using the `*switchcfgpersistentdisable*` command as shown in the following example:
 +
 ----
 
@@ -231,6 +234,7 @@ NOTE: You must run these commands on both switches.
 +
 NOTE: If FEC is enabled, the deskew value of the last online port of the trunk group might show a difference of up to 36 although the cables are all of the same length.
 +
+
 [options="header"]
 |===
 | Are ISLs trunked?| You see the following system output...
