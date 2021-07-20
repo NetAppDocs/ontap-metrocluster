@@ -127,7 +127,9 @@ a|
 * If storage is available: Online
 
 |===
-*Note:* After a switchover, if the unmirrored aggregate is at the DR partner node and there is an inter-switch link (ISL) failure, then that local node might fail.
+
+NOTE:
+After a switchover, if the unmirrored aggregate is at the DR partner node and there is an inter-switch link (ISL) failure, then that local node might fail.
 
 The following illustration shows how disk pools are mirrored between the partner clusters. Data in local plexes (in pool0) is replicated to remote plexes (in pool1).
 
@@ -346,7 +348,7 @@ The following table shows the availability of commands during switchover:
 |===
 | Command| Availability
 a|
-storage aggregate create
+`storage aggregate create`
 a|
 You can create an aggregate:
 
@@ -358,19 +360,19 @@ You cannot create an aggregate:
 * For a node that is part of the surviving cluster
 
 a|
-storage aggregate delete
+`storage aggregate delete`
 a|
 You can delete a data aggregate.
 a|
-storage aggregate mirror
+`storage aggregate mirror`
 a|
 You can create a plex for a non-mirrored aggregate.
 a|
-storage aggregate plex delete
+`storage aggregate plex delete`
 a|
 You can delete a plex for a mirrored aggregate.
 a|
-vserver create
+`vserver create`
 a|
 You can create an SVM:
 
@@ -381,20 +383,20 @@ You cannot create an SVM:
 * If its root volume resides in a data aggregate owned by the disaster-site cluster
 
 a|
-vserver delete
+`vserver delete`
 a|
 You can delete both sync-source and sync-destination SVMs.
 a|
-network interface create -lif
+`network interface create -lif`
 a|
 You can create a data SVM LIF for both sync-source and sync-destination SVMs.
 a|
-network interface delete -lif
+`network interface delete -lif`
 a|
 You can delete a data SVM LIF for both sync-source and sync-destination SVMs.
 // BURT 1385014
 a|
-volume create
+`volume create`
 a|
 You can create a volume for both sync-source and sync-destination SVMs.
 
@@ -402,11 +404,11 @@ You can create a volume for both sync-source and sync-destination SVMs.
 * For a sync-destination SVM, the volume must reside in a data aggregate owned by the disaster-site cluster
 
 a|
-volume delete
+`volume delete`
 a|
 You can delete a volume for both sync-source and sync-destination SVMs.
 a|
-volume move
+`volume move`
 a|
 You can move a volume for both sync-source and sync-destination SVMs.
 
@@ -414,7 +416,7 @@ You can move a volume for both sync-source and sync-destination SVMs.
 * For a sync-destination SVM, the disaster-site cluster must own the destination aggregate
 
 a|
-snapmirror break
+`snapmirror break`
 a|
 You can break a SnapMirror relationship between a source and destination endpoint of a data protection mirror.
 |===
