@@ -13,12 +13,11 @@ You must set up each node in the MetroCluster configuration in ONTAP, including 
 
 image::../media/workflow_high_level_node_and_cluster_configuration_software.gif[]
 
-== Gathering required information
+.Steps
+. Gathering required information
+  You need to gather the required IP addresses for the controller modules before you begin the configuration process.
 
-[.lead]
-You need to gather the required IP addresses for the controller modules before you begin the configuration process.
-
-=== IP network information worksheet for site A
+. IP network information worksheet for site A
 
 [.lead]
 You must obtain IP addresses and other network information for the first MetroCluster site (site A) from your network administrator before you configure the system.
@@ -655,7 +654,7 @@ If storage controller node_B_1 has four shelves, you issue the following command
 == Verifying the HA state of components
 
 [.lead]
-In a stretch MetroCluster configuration that is not preconfigured at the factory, you must verify that the HA state of the controller and chassis component is set to mcc-2n so that they boot up properly. For systems received from the factory, this value is preconfigured and you do not need to verify it.
+In a stretch MetroCluster configuration that is not preconfigured at the factory, you must verify that the HA state of the controller and chassis component is set to `mcc-2n` so that they boot up properly. For systems received from the factory, this value is preconfigured and you do not need to verify it.
 
 The system must be in Maintenance mode.
 
@@ -664,16 +663,18 @@ The system must be in Maintenance mode.
 +
 `*ha-config show*`
 +
-The controller module and chassis should show the value mcc-2n.
+The controller module and chassis should show the value `mcc-2n`.
 
-. If the displayed system state of the controller is not mcc-2n, set the HA state for the controller:
+. If the displayed system state of the controller is not `mcc-2n`, set the HA state for the controller:
 +
 `*ha-config modify controller mcc-2n*`
 . If the displayed system state of the chassis is not mcc-2n, set the HA state for the chassis:
 +
 `*ha-config modify chassis mcc-2n*`
- .. Halt the node.
- .. Wait until the node is back at the LOADER prompt.
++
+Halt the node.
++
+Wait until the node is back at the LOADER prompt.
 . Repeat these steps on each node in the MetroCluster configuration.
 
 == Setting up ONTAP in a two-node MetroCluster configuration
@@ -1824,6 +1825,8 @@ You should verify the switchover, healing, and switchback operations of the Metr
 [.lead]
 You can provide additional protection for the cluster configuration backup files by specifying a remote URL (either HTTP or FTP) where the configuration backup files will be uploaded in addition to the default locations in the local cluster.
 
-. Set the URL of the remote destination for the configuration backup files: `system configuration backup settings modify URL-of-destination`
+. Set the URL of the remote destination for the configuration backup files:
++
+`*system configuration backup settings modify URL-of-destination*`
 +
 The link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[System Administration Guide] contains additional information under the section _Managing configuration backups_.
