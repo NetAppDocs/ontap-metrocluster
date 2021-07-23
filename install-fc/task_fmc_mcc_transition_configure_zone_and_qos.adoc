@@ -11,9 +11,11 @@ summary: 'You must delete the existing TI zoning and reconfigure in-order-delive
 [.lead]
 You must delete the existing TI zoning and reconfigure in-order-delivery (IOD) settings on the switch fabric.
 
+.Steps
+
 . Identify the TI zones that are configured on the fabric:
 +
-`*zone –-show*`
+`zone --show`
 +
 The following example shows the zone FCVI_TI_FAB_2.
 +
@@ -28,7 +30,7 @@ Brocade-6510:admin> zone --show
 
 . Delete the TI zones:
 +
-`*zone -–delete zone-name*`
+`zone --delete _zone-name_`
 +
 The following example shows the deletion of zone FCVI_TI_FAB_2.
 +
@@ -38,7 +40,7 @@ Brocade-6510:admin> zone --delete FCVI_TI_FAB_2
 
 . Confirm that the zones have been deleted:
 +
-`*zone –-show*`
+`zone --show`
 +
 The output should be similar to the following:
 +
@@ -51,23 +53,27 @@ Brocade-6510:admin> zone -–show
 
 . Save the configuration:
 +
-`*cfgsave*`
+`cfgsave`
+
 . Enable in-order-delivery:
 +
-`*iodset*`
+`iodset`
+
 . Select Advanced Performance Tuning (APT) policy 1, the Port Based Routing Policy:
 +
-`*aptpolicy 1*`
+`aptpolicy 1`
+
 . Disable Dynamic Load Sharing (DLS):
 +
-`*dlsreset*`
+`dlsreset`
+
 . Verify the IOD settings using the following commands:
 +
-`*iodshow*`
+`iodshow`
 +
-`*aptpolicy*`
+`aptpolicy`
 +
-`*dlsshow*`
+`dlsshow`
 +
 The output should be similar to the following:
 +
