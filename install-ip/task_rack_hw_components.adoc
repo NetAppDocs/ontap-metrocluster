@@ -11,7 +11,11 @@ summary: If you have not received the equipment already installed in cabinets, y
 [.lead]
 If you have not received the equipment already installed in cabinets, you must rack the components.
 
+.About this task
+
 This task must be performed on both MetroCluster sites.
+
+.Steps
 
 . Plan out the positioning of the MetroCluster components.
 +
@@ -19,12 +23,14 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Properly ground yourself.
 
+[start=3]
 // include reference
 include::../_include/step_rack_controllers_mcip.adoc[]
 // end include reference
 
 . Install the IP switches in the rack or cabinet.
 . Install the disk shelves, power them on, and then set the shelf IDs.
- ** You must power-cycle each disk shelf.
- ** Shelf IDs must be unique for each SAS disk shelf within each MetroCluster DR group (including both sites).
-*Note:* Do not cable disk shelves intended to contain unmirrored aggregates at this time. You must wait to deploy shelves intended for unmirrored aggregates until after the MetroCluster configuration is complete and only deploy them after using the `metrocluster modify -enable-unmirrored-aggr-deployment true` command.
+* You must power-cycle each disk shelf.
+* Shelf IDs must be unique for each SAS disk shelf within each MetroCluster DR group (including both sites).
++
+IMPORTANT: Do not cable disk shelves intended to contain unmirrored aggregates at this time. You must wait to deploy shelves intended for unmirrored aggregates until after the MetroCluster configuration is complete and only deploy them after using the `metrocluster modify -enable-unmirrored-aggr-deployment true` command.

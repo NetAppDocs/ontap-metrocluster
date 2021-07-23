@@ -11,33 +11,37 @@ summary: 'You must disable one of the switch fabrics so you can modify its confi
 [.lead]
 You must disable one of the switch fabrics so you can modify its configuration. After you complete the configuration and reenable the switch fabric, you will repeat the process on the other fabric.
 
+.Before you begin
+
 You must have run the fmc_dc utility on the existing 7-Mode fabric MetroCluster configuration and resolved any issues prior to beginning the configuration process.
+
+.About this task
 
 To ensure continued operation of the MetroCluster configuration, you must not disable the second fabric while the first fabric is disabled.
 
 .Steps
 . Disable each of the switches in the fabric:
 +
-`*switchCfgPersistentDisable*`
+`switchCfgPersistentDisable`
 +
 If this command is not available, use the `switchDisable` command.
 +
-The following example shows the command issued on FC_switch_A_1:
+* The following example shows the command issued on FC_switch_A_1:
 +
 ----
 FC_switch_A_1:admin> switchCfgPersistentDisable
 ----
 +
-The following example shows the command issued on FC_switch_B_1:
+* The following example shows the command issued on FC_switch_B_1:
 +
 ----
 FC_switch_B_1:admin> switchCfgPersistentDisable
 ----
 
 . Ensure that the 7-Mode MetroCluster configuration is functioning correctly using the redundant fabric:
- .. Confirm that controller failover is healthy:
+.. Confirm that controller failover is healthy:
  +
-`*cf status*`
+`cf status`
 +
 ----
 node_A> cf status
@@ -45,9 +49,9 @@ Controller Failover enabled, node_A is up.
 VIA Interconnect is up (link 0 down, link 1 up).
 ----
 
- .. Confirm that disks are visible:
+.. Confirm that disks are visible:
  +
-`*storage show disk –p*`
+`storage show disk –p`
 +
 ----
 node_A> storage show disk –p
@@ -67,7 +71,7 @@ Brocade-6510-2K0GG:5.126L31  B                              1    4
 
  .. Confirm that the aggregates are healthy:
  +
-`*aggr status*`
+`aggr status`
 +
 ----
 node_A> aggr status
