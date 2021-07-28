@@ -11,12 +11,12 @@ summary: 'When using ONTAP in a MetroCluster configuration, you should be aware 
 [.lead]
 When using ONTAP in a MetroCluster configuration, you should be aware of certain considerations for licensing, peering to clusters outside the MetroCluster configuration, performing volume operations, NVFAIL operations, and other ONTAP operations.
 
-== Licensing considerations
+*Licensing considerations*
 
 * Both sites should be licensed for the same site-licensed features.
 * All nodes should be licensed for the same node-locked features.
 
-== SnapMirror consideration
+*SnapMirror consideration*
 
 * SnapMirror SVM disaster recovery is only supported on MetroCluster configurations running versions of ONTAP 9.5 or later.
 
@@ -39,9 +39,9 @@ Starting with ONTAP 9.7, FlexCache volumes are supported on MetroCluster configu
 
 After a negotiated or unplanned switchover, any SVM FlexCache peering relationship within the cluster must be manually configured.
 
-For example, SVMs vs1 (cache) and vs2 (origin) are on site_A. These SVMs are peered.
+For example, SVMs "vs1" (cache) and "vs2" (origin) are on site_A. These SVMs are peered.
 
-After switchover, SVMs vs1-mc and vs2-mc are activated at the partner site (site_B). They must be manually repeered for FlexCache to work using the `vserver peer repeer` command.
+After switchover, SVMs "vs1-mc" and "vs2-mc" are activated at the partner site (site_B). They must be manually repeered for FlexCache to work using the `vserver peer repeer` command.
 
 === SVM repeering after switchover or switchback when a FlexCache destination is on a third cluster and in disconnected mode
 
@@ -49,48 +49,44 @@ For FlexCache relationships to a cluster outside of the MetroCluster configurati
 
 For example:
 
-* One end of the FlexCache (cache_1 on vs1) resides on MetroCluster site_A has one end of the FlexCache
-* The other end of the FlexCache (origin_1 on vs2) resides on site_C (not in the MetroCluster configuration)
+* One end of the FlexCache (cache_1 on vs1) resides on MetroCluster site_A.
+* The other end of the FlexCache (origin_1 on vs2) resides on site_C (not in the MetroCluster configuration).
 
-When switchover is triggered, and if site_A and site_C are not connected, you must manually repeer the SVMs on site_B (the switchover cluster) and site_C using the vserver peer repeer command after the switchover.
+When switchover is triggered, and if site_A and site_C are not connected, you must manually repeer the SVMs on site_B (the switchover cluster) and site_C using the `vserver peer repeer` command after the switchover.
 
 When switchback is performed, you must again repeer the SVMs on site_A (the original cluster) and site_C.
 
-*Related information*
+.Related information
 
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-fc-mgmt/home.html[FlexCache volumes management]
 
 == FabricPool support in MetroCluster configurations
 
-[.lead]
 Starting with ONTAP 9.7, MetroCluster configurations support FabricPool storage tiers.
 
-For general information on using FabricPools, see the _Disks and Aggregates Power Guide_.
-
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+For general information on using FabricPools, see the https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disks and Aggregates Power Guide]
 
 === Considerations when using FabricPools
 
 * The clusters must have FabricPool licenses with matching capacity limits.
-* The clusters must have IPSpaces with matching names.
+* The clusters must have IPspaces with matching names.
 +
-This can be the default IPSpace, or an IP space an administer has created. This IPSpace will be used for FabricPool object store configuration setups.
+This can be the default IPspace, or an IPspace that an administer has created. This IPspace will be used for FabricPool object store configuration setups.
 
-* For the selected IPSpace, each cluster must have an intercluster LIF defined that can reach the external object store
+* For the selected IPspace, each cluster must have an intercluster LIF defined that can reach the external object store
 
 === Configuring an aggregate for use in a mirrored FabricPool
 
-NOTE: Before you configure the aggregate you must set up object stores as described in "Setting up object stores for FabricPool in a MetroCluster configuration" in the _Disks and Aggregates Power Guide_.
+NOTE: Before you configure the aggregate, you must set up object stores as described in "Setting up object stores for FabricPool in a MetroCluster configuration" in the
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disks and Aggregates Power Guide]
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+.Steps
 
 To configure an aggregate for use in a FabricPool:
 
 . Create the aggregate or select an existing aggregate.
 . Mirror the aggregate as a typical mirrored aggregate within the MetroCluster configuration.
-. Create the FabricPool mirror with the aggregate, as described in the _Disks and Aggregates Power Guide_:
-+
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+. Create the FabricPool mirror with the aggregate, as described in the https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disks and Aggregates Power Guide]
 
  .. Attach a primary object store.
 +
@@ -106,14 +102,12 @@ Starting with ONTAP 9.6 MetroCluster configurations support FlexGroup volumes.
 
 == Job schedules in a MetroCluster configuration
 
-[.lead]
 In ONTAP 9.3 and later, user-created job schedules are automatically replicated between clusters in a MetroCluster configuration. If you create, modify, or delete a job schedule on a cluster, the same schedule is automatically created on the partner cluster, using Configuration Replication Service (CRS).
 
 NOTE: System-created schedules are not replicated and you must manually perform the same operation on the partner cluster so that job schedules on both clusters are identical.
 
 == Cluster peering from the MetroCluster site to a third cluster
 
-[.lead]
 Because the peering configuration is not replicated, if you peer one of the clusters in the MetroCluster configuration to a third cluster outside of that configuration, you must also configure the peering on the partner MetroCluster cluster. This is so that peering can be maintained if a switchover occurs.
 
 The non-MetroCluster cluster must be running ONTAP 8.3 or later. If not, peering is lost if a switchover occurs even if the peering has been configured on both MetroCluster partners.
@@ -124,19 +118,26 @@ An LDAP client configuration created on a storage virtual machine (SVM) on a loc
 
 == Networking and LIF creation guidelines for MetroCluster configurations
 
-[.lead]
 You should be aware of how LIFs are created and replicated in a MetroCluster configuration. You must also know about the requirement for consistency so that you can make proper decisions when configuring your network.
 
-*Related information*
+.Related information
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Network and LIF management]
+* https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Network and LIF management]
 
-<<IPspace object replication and subnet configuration requirements>>
+* You should be aware of the requirements for replicating IPspace objects to the partner cluster and for configuring subnets and IPv6 in a MetroCluster configuration.
++
+<<ipspace_obj_rep,IPspace object replication and subnet configuration requirements>>
 
-<<Requirements for LIF creation in a MetroCluster configuration>>
+* You should be aware of the requirements for creating LIFs when configuring your network in a MetroCluster configuration.
++
+<<reqs_lif_create,Requirements for LIF creation in a MetroCluster configuration>>
 
-<<LIF replication and placement requirements and issues>>
+* You should be aware of the LIF replication requirements in a MetroCluster configuration.  You should also know how a replicated LIF is placed on a partner cluster, and you should be aware of the issues that occur when LIF replication or LIF placement fails.
++
 
+<<lif_rep_place,LIF replication and placement requirements and issues>>
+
+[[ipspace_obj_rep]]
 === IPspace object replication and subnet configuration requirements
 
 [.lead]
@@ -181,12 +182,17 @@ subnet1   192.168.2.0/24   Default   192.168.2.1       10/10    192.168.2.21-192
 
 If IPv6 is configured on one site, IPv6 must be configured on the other site as well.
 
-*Related information*
+.Related information
 
-xref:concept_considerations_when_using_ontap_in_a_mcc_configuration.adoc[Requirements for LIF creation in a MetroCluster configuration]
+* You should be aware of the requirements for creating LIFs when configuring your network in a MetroCluster configuration.
++
+<<reqs_lif_create,Requirements for LIF creation in a MetroCluster configuration>>
 
-xref:concept_considerations_when_using_ontap_in_a_mcc_configuration.adoc[LIF replication and placement requirements and issues]
+* You should be aware of the LIF replication requirements in a MetroCluster configuration.  You should also know how a replicated LIF is placed on a partner cluster, and you should be aware of the issues that occur when LIF replication or LIF placement fails.
++
+<<lif_rep_place,LIF replication and placement requirements and issues>>
 
+[[reqs_lif_create]]
 === Requirements for LIF creation in a MetroCluster configuration
 
 [.lead]
@@ -202,14 +208,19 @@ You must consider the following guidelines when creating LIFs:
 
 ==== Verify LIF creation
 
-You can confirm the successful creation of a LIF in a MetroCluster configuration by running the `metrocluster check lif` show command. If you encounter any issues while creating the LIF, you can use the `metrocluster check lif repair-placement` command to fix the issues.
+You can confirm the successful creation of a LIF in a MetroCluster configuration by running the `metrocluster check lif show` command. If you encounter any issues while creating the LIF, you can use the `metrocluster check lif repair-placement` command to fix the issues.
 
-*Related information*
+.Related information
 
-xref:concept_considerations_when_using_ontap_in_a_mcc_configuration.adoc[IPspace object replication and subnet configuration requirements]
+* You should be aware of the requirements for replicating IPspace objects to the partner cluster and for configuring subnets and IPv6 in a MetroCluster configuration.
++
+<<ipspace_obj_rep,IPspace object replication and subnet configuration requirements>>
 
-xref:concept_considerations_when_using_ontap_in_a_mcc_configuration.adoc[LIF replication and placement requirements and issues]
+* You should be aware of the LIF replication requirements in a MetroCluster configuration.  You should also know how a replicated LIF is placed on a partner cluster, and you should be aware of the issues that occur when LIF replication or LIF placement fails.
++
+<<lif_rep_place,LIF replication and placement requirements and issues>>
 
+[[lif_rep_place]]
 === LIF replication and placement requirements and issues
 
 [.lead]
@@ -222,7 +233,8 @@ When you create a LIF on a cluster in a MetroCluster configuration, the LIF is r
 The system must meet the following conditions to place the replicated LIFs on the partner cluster:
 
 |===
-| Condition| LIF type: FC| LIF type: IP/iSCSI
+| Condition | LIF type: FC | LIF type: IP/iSCSI
+
 a|
 Node identification
 a|
@@ -236,24 +248,32 @@ Port identification
 a|
 ONTAP identifies the connected FC target ports on the DR cluster.
 a|
-The ports on the DR cluster that are in the same IPspace as the source LIF are selected for a reachability check.If there are no ports in the DR cluster in the same IPspace, the LIF cannot be placed.
+The ports on the DR cluster that are in the same IPspace as the source LIF are selected for a reachability check.
+
+If there are no ports in the DR cluster in the same IPspace, the LIF cannot be placed.
 
 All of the ports in the DR cluster that are already hosting a LIF in the same IPspace and subnet are automatically marked as reachable; and can be used for placement. These ports are not included in the reachability check.
 
 a|
 Reachability check
 a|
-Reachability is determined by checking for the connectivity of the source fabric WWN on the ports in the DR cluster.If the same fabric is not present at the DR site, the LIF is placed on a random port on the DR partner.
+Reachability is determined by checking for the connectivity of the source fabric WWN on the ports in the DR cluster.
+
+If the same fabric is not present at the DR site, the LIF is placed on a random port on the DR partner.
 
 a|
-Reachability is determined by the response to an Address Resolution Protocol (ARP) broadcast from each previously identified port on the DR cluster to the source IP address of the LIF to be placed.For reachability checks to succeed, ARP broadcasts must be allowed between the two clusters.
+Reachability is determined by the response to an Address Resolution Protocol (ARP) broadcast from each previously identified port on the DR cluster to the source IP address of the LIF to be placed.
+
+For reachability checks to succeed, ARP broadcasts must be allowed between the two clusters.
 
 Each port that receives a response from the source LIF will be marked as possible for placement.
 
 a|
 Port selection
 a|
-ONTAP categorizes the ports based on attributes such as adapter type and speed, and then selects the ports with matching attributes.If no ports with matching attributes are found, the LIF is placed on a random connected port on the DR partner.
+ONTAP categorizes the ports based on attributes such as adapter type and speed, and then selects the ports with matching attributes.
+
+If no ports with matching attributes are found, the LIF is placed on a random connected port on the DR partner.
 
 a|
 From the ports that are marked as reachable during the reachability check, ONTAP prefers ports that are in the broadcast domain that is associated with the subnet of the LIF.
@@ -280,7 +300,7 @@ You should run the `metrocluster check lif show` command after a takeover operat
 
 ==== LIF placement errors
 
-LIF placement errors that are displayed by the `metrocluster check lif show` command are retained after a switchover operation. If the network interface modify, network interface rename, or network interface delete command is issued for a LIF with a placement error, the error is removed and does not appear in the output of the `metrocluster check lif show` command.
+LIF placement errors that are displayed by the `metrocluster check lif show` command are retained after a switchover operation. If the `network interface modify`, `network interface rename`, or `network interface delete` command is issued for a LIF with a placement error, the error is removed and does not appear in the output of the `metrocluster check lif show` command.
 
 ==== LIF replication failure
 
@@ -296,15 +316,17 @@ If any change is made in the FC switch fabric to which the FC target ports of th
 
 You should run the `metrocluster check lif repair-placement` command on the source as well as the DR nodes after a change is made in the FC switch fabric to verify the host connectivity of LIFs. The changes in the switch fabric might result in LIFs getting placed in different target FC ports at the DR partner node.
 
-*Related information*
+.Related information
 
-xref:concept_considerations_when_using_ontap_in_a_mcc_configuration.adoc[IPspace object replication and subnet configuration requirements]
-
-xref:concept_considerations_when_using_ontap_in_a_mcc_configuration.adoc[Requirements for LIF creation in a MetroCluster configuration]
+* You should be aware of the requirements for replicating IPspace objects to the partner cluster and for configuring subnets and IPv6 in a MetroCluster configuration.
++
+<<ipspace_obj_rep,IPspace object replication and subnet configuration requirements>>
+* You should be aware of the requirements for creating LIFs when configuring your network in a MetroCluster configuration.
++
+<<reqs_lif_create,Requirements for LIF creation in a MetroCluster configuration>>
 
 === Volume creation on a root aggregate
 
-[.lead]
 The system does not allow the creation of new volumes on the root aggregate (an aggregate with an HA policy of CFO) of a node in a MetroCluster configuration.
 
 Because of this restriction, root aggregates cannot be added to an SVM using the `vserver add-aggregates` command.
@@ -359,18 +381,28 @@ Unplanned switchovers that occur during the resynchronization will halt the resy
 
 To successfully perform the switchback process, the resynchronization relationship must be broken and deleted. Switchback is not permitted if there are any SnapMirror DR destination SVMs in the MetroCluster configuration or if the cluster has an SVM of subtype "`dp-destination`".
 
-== Output for the storage aggregate plex show command is indeterminate after a MetroCluster switchover
+== Output for the "storage aggregate plex show" command is indeterminate after a MetroCluster switchover
 
-[.lead]
-When you run the `storage aggregate plex show` command after a MetroCluster switchover, the status of plex0 of the switched over root aggregate is indeterminate and is displayed as `failed`. During this time, the switched over root is not updated. The actual status of this plex can only be determined after the MetroCluster healing phase.
+When you run the `storage aggregate plex show` command after a MetroCluster switchover, the status of plex0 of the switched over root aggregate is indeterminate and is displayed as "failed". During this time, the switched over root is not updated. The actual status of this plex can only be determined after the MetroCluster healing phase.
 
 == Modifying volumes to set the NVFAIL flag in case of switchover
 
 [.lead]
 You can modify a volume so that the NVFAIL flag is set on the volume in the event of a MetroCluster switchover. The NVFAIL flag causes the volume to be fenced off from any modification. This is required for volumes that need to be handled as if committed writes to the volume were lost after the switchover.
 
-NOTE: In ONTAP versions earlier than 9.0, the NVFAIL flag is used for each switchover. In ONTAP 9.0 and later versions, the unplanned switchover (USO) is used.
+.About this task
 
-. Enable MetroCluster configuration to trigger NVFAIL on switchover by setting the `vol -dr-force-nvfail` parameter to `on`:
+--
+
+[NOTE]
+====
+In ONTAP versions earlier than 9.0, the NVFAIL flag is used for each switchover. In ONTAP 9.0 and later versions, the unplanned switchover (USO) is used.
+====
+
+--
+
+.Step
+
+. Enable MetroCluster configuration to trigger NVFAIL on switchover by setting the `vol -dr-force-nvfail` parameter to "on":
 +
 `*vol modify -vserver _vserver-name_ -volume _volume-name_ -dr-force-nvfail on*`

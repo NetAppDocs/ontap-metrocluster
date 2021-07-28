@@ -13,11 +13,11 @@ Starting with ONTAP 9.5, ONTAP supports layer 3 connectivity using virtual IP (V
 
 Review the following guidelines and illustration when planning your layer 3 solution. For details on implementing VIP and BGP in ONTAP, refer to the following section:
 
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-A8EF6D34-1717-4813-BBFA-AA33E104CF6F.html[*Configuring virtual IP (VIP) LIFs*]
+https://docs.netapp.com/us-en/networking/configure_virtual_ip_@vip@_lifs.html
 
 image::../media/vip_and_bgp_in_metrocluster_2.png[]
 
-*ONTAP limitations*
+== ONTAP limitations
 
 ONTAP does not automatically verify that all nodes on both sites of the MetroCluster configuration are configured with BGP peering.
 
@@ -25,7 +25,7 @@ ONTAP does not perform route aggregation but announces all individual virtual LI
 
 ONTAP does not support true AnyCast -- only a single node in the cluster presents a specific virtual LIF IP (but is accepted by all physical interfaces, regardless of whether they are BGP LIFs, provided the physical port is part of the correct IPspace). Different LIFs can migrate independently of each other to different hosting nodes.
 
-*Guidelines for using this Layer 3 solution with a MetroCluster configuration*
+==Guidelines for using this Layer 3 solution with a MetroCluster configuration
 
 You must configure your BGP and VIP correctly to provide the required redundancy.
 

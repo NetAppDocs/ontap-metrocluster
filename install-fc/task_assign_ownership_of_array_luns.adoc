@@ -11,8 +11,12 @@ summary: 'Array LUNs must be owned by a node before they can be added to an aggr
 [.lead]
 Array LUNs must be owned by a node before they can be added to an aggregate to be used as storage.
 
+.Before you begin
+
 * Back-end configuration testing (testing of the connectivity and configuration of devices behind the ONTAP systems) must be completed.
 * Array LUNs that you want to assign must be presented to the ONTAP systems.
+
+.About this task
 
 You can assign ownership of array LUNs that have the following characteristics:
 
@@ -28,15 +32,17 @@ ONTAP issues an error message if you try to assign ownership of an array LUN wit
 ONTAP alerts you if you try to assign an array LUN with a redundancy error: for example, all paths to this array LUN are connected to the same controller or only one path to the array LUN. You can fix a redundancy error before or after assigning ownership of the LUN.
 
 .Steps
-. Enter the following command to see the array LUNs that have not yet been assigned to a node:
-+
-`*storage disk show -container-type unassigned*`
-. Enter the following command to assign an array LUN to this node:
-+
-`*storage disk assign -disk array _LUNname_ -owner _nodename_*`
-+
-If you want to fix a redundancy error after disk assignment instead of before, you must use the -force parameter with the storage disk assign command.
 
-*Related information*
+. View the array LUNs that have not yet been assigned to a node:
++
+`storage disk show -container-type unassigned`
+
+. Assign an array LUN to this node:
++
+`storage disk assign -disk _array_LUN_name_ -owner _nodename_`
++
+If you want to fix a redundancy error after disk assignment instead of before, you must use the `-force` parameter with the storage disk assign command.
+
+.Related information
 
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.vs-irrg/home.html[FlexArray virtualization installation requirements and reference]

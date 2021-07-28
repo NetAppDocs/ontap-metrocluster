@@ -15,7 +15,7 @@ Consider the information in the following table when planning your configuration
 
 [options="header"]
 |===
-| Consideration| Guideline
+| Consideration | Guideline
 a|
 Order of setting up access to the storage
 a|
@@ -40,17 +40,26 @@ You must use the same switches to connect to the storage arrays and the FC-to-SA
 a|
 Using FC initiator ports
 a|
-The initiator ports used to connect to an FC-to-SAS bridge must be different from the ports used to connect to the switches, which connect to the storage arrays. A minimum of eight initiator ports is required to connect an ONTAP system to both disks and array LUNs.
+The initiator ports used to connect to an FC-to-SAS bridge must be different from the ports used to connect to the switches, which connect to the storage arrays.
+
+A minimum of eight initiator ports is required to connect an ONTAP system to both disks and array LUNs.
 
 |===
-*Related information*
 
+.Related information
+
+* Switch configuration procedures and commands are different, depending on the switch vendor.
++
 link:task_fcsw_configure_the_cisco_or_brocade_fc_switches_manually.html[Configuring the Cisco or Brocade FC switches manually]
 
-link:concept_example_of_switch_zoning_in_a_four_node_mcc_configuration_with_array_luns.html[Example of switch zoning in a four-node MetroCluster configuration with array LUNs]
-
-link:concept_example_of_switch_zoning_in_an_eight_node_mcc_configuration_with_array_luns.html[Example of switch zoning in an eight-node MetroCluster configuration with array LUNs]
-
+* You install and cable ATTO FibreBridge bridges and SAS disk shelves when adding new storage to the configuration.
++
 link:task_fb_new_install.html[Installing FC-to-SAS bridges and SAS disk shelves]
 
-https://hwu.netapp.com[NetApp Hardware Universe]
+* Switch zoning defines paths between connected nodes.  Configuring the zoning enables you to define which array LUNs can be viewed by a specific ONTAP system.
++
+link:concept_example_of_switch_zoning_in_a_four_node_mcc_configuration_with_array_luns.html[Example of switch zoning in a four-node MetroCluster configuration with array LUNs]
++
+link:concept_example_of_switch_zoning_in_an_eight_node_mcc_configuration_with_array_luns.html[Example of switch zoning in an eight-node MetroCluster configuration with array LUNs]
+
+* https://hwu.netapp.com[NetApp Hardware Universe]
