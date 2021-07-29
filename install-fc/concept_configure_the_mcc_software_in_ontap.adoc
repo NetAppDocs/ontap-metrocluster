@@ -27,9 +27,10 @@ You must obtain IP addresses and other network information for the first MetroCl
 
 When you cable the system, you need a host name and management IP address for each cluster switch. This information is not needed if you are using a two-node switchless cluster or have a two-node MetroCluster configuration (one node at each site).
 
-[cols=5*,options="header"]
+[options="header"]
 |===
-| Cluster switch | Host name | IP address | Network mask | Default gateway
+h| Cluster switch h| Host name h| IP address h| Network mask h| Default gateway
+
 a|
 Interconnect 1
 a|
@@ -75,9 +76,11 @@ a|
 ==== Site A cluster creation information
 
 When you first create the cluster, you need the following information:
+
 [options="header"]
 |===
-| Type of information| Your values
+| Type of information | Your values
+
 a|
 Cluster name
 
@@ -109,7 +112,8 @@ For each node in the cluster, you need a management IP address, a network mask, 
 
 [options="header"]
 |===
-| Node| Port| IP address| Network mask| Default gateway
+| Node | Port | IP address | Network mask | Default gateway
+
 a|
 Node 1 Example used in this guide: controller_A_1
 
@@ -142,7 +146,8 @@ For each node in the cluster, you need the IP addresses of two intercluster LIFs
 
 [options="header"]
 |===
-| Node| Port| IP address of intercluster LIF| Network mask| Default gateway
+| Node | Port | IP address of intercluster LIF | Network mask | Default gateway
+
 a|
 Node 1 IC LIF 1
 a|
@@ -193,7 +198,8 @@ You must synchronize the time, which requires one or more NTP time servers.
 
 [options="header"]
 |===
-| Node| Host name| IP address| Network mask| Default gateway
+| Node | Host name | IP address | Network mask | Default gateway
+
 a|
 NTP server 1
 a|
@@ -216,18 +222,18 @@ a|
 
 |===
 
-==== Site A AutoSupport information
+==== Site A  &nbsp; AutoSupport &nbsp; information
 
 You must configure AutoSupport on each node, which requires the following information:
 
 [options="header"]
 |===
-2+| Type of information| Your values
-a|
-From email address
+2+| Type of information | Your values
+
+2+a|From email address
 a|
 
-a|
+
 
 a|
 Mail hosts
@@ -267,7 +273,8 @@ You must enable access to the Service Processor (SP) of each node for troublesho
 
 [options="header"]
 |===
-| Node| IP address| Network mask| Default gateway
+| Node | IP address | Network mask | Default gateway
+
 a|
 Node 1
 a|
@@ -300,7 +307,8 @@ When you cable the system, you need a host name and management IP address for ea
 
 [options="header"]
 |===
-| Cluster switch| Host name| IP address| Network mask| Default gateway
+| Cluster switch | Host name | IP address | Network mask | Default gateway
+
 a|
 Interconnect 1
 a|
@@ -349,7 +357,8 @@ When you first create the cluster, you need the following information:
 
 [options="header"]
 |===
-| Type of information| Your values
+| Type of information | Your values
+
 a|
 Cluster name
 
@@ -381,7 +390,8 @@ For each node in the cluster, you need a management IP address, a network mask, 
 
 [options="header"]
 |===
-| Node| Port| IP address| Network mask| Default gateway
+| Node | Port | IP address | Network mask | Default gateway
+
 a|
 Node 1
 
@@ -418,7 +428,8 @@ For each node in the cluster, you need the IP addresses of two intercluster LIFs
 
 [options="header"]
 |===
-| Node| Port| IP address of intercluster LIF| Network mask| Default gateway
+| Node | Port | IP address of intercluster LIF | Network mask | Default gateway
+
 a|
 Node 1 IC LIF 1
 a|
@@ -472,7 +483,8 @@ a|
 You must synchronize the time, which requires one or more NTP time servers.
 [options="header"]
 |===
-| Node| Host name| IP address| Network mask| Default gateway
+| Node | Host name | IP address | Network mask | Default gateway
+
 a|
 NTP server 1
 a|
@@ -503,9 +515,7 @@ You must configure AutoSupport on each node, which requires the following inform
 |===
 2+| Type of information | Your values
 
-a|From email address
-a|
-
+2+|From email address
 a|
 
 a|
@@ -546,7 +556,8 @@ You must enable access to the Service Processor (SP) of each node for troublesho
 
 [options="header"]
 |===
-| Node| IP address| Network mask| Default gateway
+| Node | IP address | Network mask | Default gateway
+
 a|
 Node 1 (controller_B_1)
 a|
@@ -577,54 +588,42 @@ The MetroCluster configuration is built on two standard clusters. Physically, th
 
 [options="header"]
 |===
-| Configuration step| Standard cluster configuration| MetroCluster configuration
-a|
-Configure management, cluster, and data LIFs on each node.
-2+a|
-Same in both types of clusters
-a|
-Configure the root aggregate.
-2+a|
-Same in both types of clusters
-a|
-Configure nodes in the cluster as HA pairs
-2+a|
-Same in both types of clusters
-a|
-Set up the cluster on one node in the cluster.
-2+a|
-Same in both types of clusters
-a|
-Join the other node to the cluster.
-2+a|
-Same in both types of clusters
-a|
-Create a mirrored root aggregate.
-a|
-Optional
-a|
-Required
-a|
-Peer the clusters.
-a|
-Optional
-a|
-Required
-a|
-Enable the MetroCluster configuration.
-a|
-Does not apply
-a|
-Required
+| Configuration step ^| Standard cluster configuration ^| MetroCluster configuration
+
+| Configure management, cluster, and data LIFs on each node.
+2+^| Same in both types of clusters
+
+| Configure the root aggregate.
+2+^| Same in both types of clusters
+
+| Configure nodes in the cluster as HA pairs
+2+^| Same in both types of clusters
+
+| Set up the cluster on one node in the cluster.
+2+^|Same in both types of clusters
+
+| Join the other node to the cluster.
+2+^|Same in both types of clusters
+
+a|Create a mirrored root aggregate.
+^a|Optional
+^a|Required
+
+a|Peer the clusters.
+^a|Optional
+^a|Required
+
+a|Enable the MetroCluster configuration.
+^a|Does not apply
+^a|Required
+
 |===
 
 == Restoring system defaults and configuring the HBA type on a controller module
 
 .About this task
 
-// include reference
 include::../_include/steps_restore_defaults_and_configure_hbas.adoc[]
-// end include reference
 
 == Configuring FC-VI ports on a X1132A-R6 quad-port card on FAS8020 systems
 
@@ -736,43 +735,43 @@ New MetroCluster systems have disk assignment completed prior to shipment.
 The following table shows example pool assignments for a MetroCluster configuration. Disks are assigned to pools on a per-shelf basis.
 
 *Disk shelves at Site A*
-[options="header"]
+
 |===
 | Disk shelf (sample_shelf_name)... |  Belongs to... | And is assigned to that node's...
 
-|Disk shelf 1 (shelf_A_1_1)
-.2+|Node A 1
-.2+|Pool 0
+| Disk shelf 1 (shelf_A_1_1)
+.2+| Node A 1
+.2+| Pool 0
 
-|Disk shelf 2 (shelf_A_1_3)
+| Disk shelf 2 (shelf_A_1_3)
 
-|Disk shelf 3 (shelf_B_1_1)
-.2+|Node B 1
-.2+|Pool 1
+| Disk shelf 3 (shelf_B_1_1)
+.2+| Node B 1
+.2+| Pool 1
 
-|Disk shelf 4 (shelf_B_1_3)
+ |Disk shelf 4 (shelf_B_1_3)
 
-|Disk shelf 5 (shelf_A_2_1)
-.2+|Node A 2
-.2+|Pool 0
+| Disk shelf 5 (shelf_A_2_1)
+.2+| Node A 2
+.2+| Pool 0
 
-|Disk shelf 6 (shelf_A_2_3)
+| Disk shelf 6 (shelf_A_2_3)
 
-|Disk shelf 7 (shelf_B_2_1)
-.2+|Node B 2
-.2+|Pool 1
+| Disk shelf 7 (shelf_B_2_1)
+.2+| Node B 2
+.2+| Pool 1
 
-|Disk shelf 8 (shelf_B_2_3)
+| Disk shelf 8 (shelf_B_2_3)
 
-|Disk shelf 1 (shelf_A_3_1)
-.2+|Node A 3
-.2+|Pool 0
+| Disk shelf 1 (shelf_A_3_1)
+.2+| Node A 3
+.2+| Pool 0
 
-|Disk shelf 2 (shelf_A_3_3)
+| Disk shelf 2 (shelf_A_3_3)
 
-|Disk shelf 3 (shelf_B_3_1)
-.2+|Node B 3
-.2+|Pool 1
+| Disk shelf 3 (shelf_B_3_1)
+.2+| Node B 3
+.2+| Pool 1
 
 |Disk shelf 4 (shelf_B_3_3)
 
@@ -780,11 +779,11 @@ The following table shows example pool assignments for a MetroCluster configurat
 .2+|Node A 4
 .2+|Pool 0
 
-|Disk shelf 6 (shelf_A_4_3)
+| Disk shelf 6 (shelf_A_4_3)
 
 |Disk shelf 7 (shelf_B_4_1)
-.2+|Node B 4
-.2+|Pool 1
+.2+| Node B 4
+.2+| Pool 1
 
 |Disk shelf 8 (shelf_B_4_3)
 |===
@@ -864,7 +863,9 @@ Disk shelf 8 (shelf_A_4_4)
 +
 `disk show –v`
 
-. If necessary, explicitly assign disks on the attached disk shelves to the appropriate pool by using the `disk assign` command.
+. If necessary, explicitly assign disks on the attached disk shelves to the appropriate pool:
++
+`disk assign` 
 +
 Using wildcards in the command enables you to assign all of the disks on a disk shelf with one command. You can identify the disk shelf IDs and bays for each disk with the `storage show disk -x` command.
 
