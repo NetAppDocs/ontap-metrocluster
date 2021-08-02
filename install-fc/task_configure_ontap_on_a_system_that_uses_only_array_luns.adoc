@@ -11,15 +11,23 @@ summary: 'If you want to configure ONTAP for use with array LUNs, you must confi
 [.lead]
 If you want to configure ONTAP for use with array LUNs, you must configure the root aggregate and root volume, reserve space for diagnostics and recovery operations, and set up the cluster.
 
+.Before you begin
+
 * The ONTAP system must be connected to the storage array.
 * The storage array administrator must have created LUNs and presented them to ONTAP.
 * The storage array administrator must have configured the LUN security.
 
+.About this task
+
 You must configure each node that you want to use with array LUNs. If the node is in an HA pair, then you must complete the configuration process on one node before proceeding with the configuration on the partner node.
 
 .Steps
-. Power on the primary node and interrupt the boot process by pressing Ctrl-C when you see the following message on the console: Press CTRL-C for special boot menu.
-. Select option 4 (Clean configuration and initialize all disks) on the boot menu.
+
+. Power on the primary node and interrupt the boot process by pressing Ctrl-C when you see the following message on the console:
++
+`Press CTRL-C for special boot menu.`
+
+. Select option *4 (Clean configuration and initialize all disks)* on the boot menu.
 +
 The list of array LUNs made available to ONTAP is displayed. In addition, the array LUN size required for root volume creation is also specified. The size required for root volume creation differs from one ONTAP system to another.
 
@@ -57,7 +65,7 @@ Errors:
 
  ** If array LUNs were previously assigned, for example, through the maintenance mode, they are either marked local or partner in the list of the available array LUNs, depending on whether the array LUNs were selected from the node on which you are installing ONTAP or its HA partner:
 +
-In this example, array LUNs with index numbers 3 and 6 are marked local because they had been previously assigned from this particular node:
+In this example, array LUNs with index numbers 3 and 6 are marked "local" because they had been previously assigned from this particular node:
 +
 ----
 
@@ -102,7 +110,7 @@ Index  Array LUN Name           Model   Vendor    Size    Owner   Checksum  Seri
 +
 The array LUN must be of sufficient size to create the root volume.
 +
-The array LUN selected for root volume creation is marked local (root).
+The array LUN selected for root volume creation is marked "local (root)".
 +
 In the following example, the array LUN with index number 3 is marked for root volume creation:
 +
@@ -176,10 +184,11 @@ A node management interface on port e0M with IP address 192.0.2.66 has been crea
 This node has its management address assigned and is ready for cluster setup.
 ----
 
-After configuring ONTAP on all of the nodes that you want to use with array LUNs, you should complete the cluster setup process.
+.After you finish
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ssg/home.html[Software setup]
+After configuring ONTAP on all of the nodes that you want to use with array LUNs, you should complete the
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ssg/home.html[Cluster setup process]
 
-*Related information*
+.Related information
 
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.vs-irrg/home.html[FlexArray virtualization installation requirements and reference]

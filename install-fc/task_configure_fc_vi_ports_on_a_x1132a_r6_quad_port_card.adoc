@@ -11,16 +11,20 @@ summary: 'If you are using the X1132A-R6 quad-port card on a FAS8020 system, you
 [.lead]
 If you are using the X1132A-R6 quad-port card on a FAS8020 system, you can enter Maintenance mode to configure the 1a and 1b ports for FC-VI and initiator usage. This is not required on MetroCluster systems received from the factory, in which the ports are set appropriately for your configuration.
 
+.About this task
+
 This task must be performed in Maintenance mode.
 
 NOTE: Converting an FC port to an FC-VI port with the `ucadmin` command is only supported on the FAS8020 and AFF 8020 systems. Converting FC ports to FCVI ports is not supported on any other platform.
 
+
 .Steps
+
 . Disable the ports:
 +
-`*storage disable adapter 1a*`
+`storage disable adapter 1a`
 +
-`*storage disable adapter 1b*`
+`storage disable adapter 1b`
 +
 ----
 *> storage disable adapter 1a
@@ -36,7 +40,7 @@ Jun 03 02:18:43 [controller_B_1:fci.adapter.offline:info]: Fibre Channel adapter
 
 . Verify that the ports are disabled:
 +
-`*ucadmin show*`
+`ucadmin show`
 +
 ----
 *> ucadmin show
@@ -52,7 +56,7 @@ Adapter  Mode     Type       Mode     Type       Status
 
 . Set the a and b ports to FC-VI mode:
 +
-`*ucadmin modify -adapter 1a -type fcvi*`
+`ucadmin modify -adapter 1a -type fcvi`
 +
 The command sets the mode on both ports in the port pair, 1a and 1b (even though only 1a is specified in the command).
 +
@@ -65,7 +69,7 @@ Jun 03 02:19:13 [controller_B_1:ucm.type.changed:info]: FC-4 type has changed to
 
 . Confirm that the change is pending:
 +
-`*ucadmin show*`
+`ucadmin show`
 +
 ----
 *> ucadmin show
@@ -82,7 +86,7 @@ Adapter  Mode     Type       Mode     Type       Status
 . Shut down the controller, and then reboot into Maintenance mode.
 . Confirm the configuration change:
 +
-`*ucadmin show local*`
+`ucadmin show local`
 +
 ----
 

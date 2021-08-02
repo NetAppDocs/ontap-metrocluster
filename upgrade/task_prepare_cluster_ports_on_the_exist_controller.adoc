@@ -49,7 +49,7 @@ e4b       Default      Default          up    1500   auto/10000  healthy
 13 entries were displayed.
 ----
 
-. For any data LIF that is using a cluster port as the home-port or current-port, modify the LIF to use a data port as its home-port: `*network interface modify*`
+. For any data LIF that is using a cluster port as the home-port or current-port, modify the LIF to use a data port as its home-port: `network interface modify*`
 +
 The following example changes the home port of a data LIF to a data port:
 +
@@ -78,7 +78,7 @@ network port vlan delete -node node1 -vlan-name e1c-80
 
  .. Remove physical ports from the interface groups:
 +
-`*network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_*`
+`network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
 +
 For example:
 +
@@ -88,10 +88,10 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 
  .. Remove VLAN and interface group ports from broadcast domain::
 +
-`*network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
+`network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
  .. Modify interface group ports to use other physical ports as member as needed.:
  +
-`*ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
+`ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
 . Verify that the port roles have changed: `*network port show*`
 +
 The following example shows that ports e0a, e0b, e0c, and e0d are now cluster ports:
@@ -116,6 +116,14 @@ e4a       Default      Default          up    1500   auto/10000  healthy
 e4b       Default      Default          up    1500   auto/10000  healthy
 13 entries were displayed.
 ----
+
+. Add the ports to the cluster broadcast domain: ``*broadcast-domain add-ports -ipspace Cluster -broadcast-domain Cluster -ports _port-id_, _port-id_, _port-id_...``
++
+For example:
+----
+broadcast-domain add-ports -ipspace Cluster -broadcast-domain Cluster -ports cluster1-01:e0a
+----
+// ontap-metrocluster/issues/47
 
 . If your system is part of a switched cluster, create cluster LIFs on the cluster ports: `*network interface create*`
 +

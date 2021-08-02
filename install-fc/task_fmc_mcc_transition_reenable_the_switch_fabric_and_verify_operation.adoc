@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, fabric, installation, reenable, switch, fabric, verify, operation
 summary: 'You must enable the FC switch fabric and ensure that the switches and devices are operating correctly.'
 ---
-= Reenabling the switch fabric and verify operation
+= Reenabling the switch fabric and verifying the operation
 :icons: font
 :imagesdir: ../media/
 
@@ -14,17 +14,17 @@ You must enable the FC switch fabric and ensure that the switches and devices ar
 .Steps
 . Enable the switches:
 +
-`*switchCfgPersistentEnable*`
+`switchCfgPersistentEnable`
 +
 If this command is not available, the switch should be in the enabled state after the `fastBoot` command is issued.
 +
-The following example shows the command issued on `FC_switch_A_1`:
+* The following example shows the command issued on FC_switch_A_1:
 +
 ----
 FC_switch_A_1:admin> switchCfgPersistentEnable
 ----
 +
-The following example shows the command issued on `FC_switch_B_1`:
+* The following example shows the command issued on FC_switch_B_1:
 +
 ----
 FC_switch_B_1:admin> switchCfgPersistentEnable
@@ -32,21 +32,21 @@ FC_switch_B_1:admin> switchCfgPersistentEnable
 
 . Verify that the switches are online and all devices are properly logged in:
 +
-`*switchShow*`
+`switchShow`
 +
-The following example shows the command issued on `FC_switch_A_1`:
+The following example shows the command issued on FC_switch_A_1:
 +
 ----
 FC_switch_A_1:admin> switchShow
 ----
 +
-The following example shows the command issued on `FC_switch_B_1`:
+The following example shows the command issued on FC_switch_B_1:
 +
 ----
 FC_switch_B_1:admin> switchShow
 ----
 
-. Run the `fmc_dc utility` to ensure that the 7-Mode fabric MetroCluster is functioning correctly.
+. Run the fmc_dc utility to ensure that the 7-Mode fabric MetroCluster is functioning correctly.
 +
 You can ignore errors related to Traffic Isolation (TI) zoning and trunking.
 

@@ -33,6 +33,8 @@ NOTE: This procedure is nondisruptive and takes approximately 30 minutes to comp
 
 NOTE: Starting with ONTAP 9.8, the `*storage bridge*` command is replaced with `*system bridge*`. The following steps show the `*storage bridge*` command, but if you are running ONTAP 9.8 or later, the `*system bridge*` command is preferred.
 
+.Steps
+
 . Invoke an AutoSupport message indicating the start of the maintenance:
 +
 `*system node autosupport invoke -node * -type all -message MAINT=__maintenance-window-in-hours__*`
@@ -107,6 +109,7 @@ Description: Storage bridge firmware update job
   ... Run the `*flashimages*` command on the console of the bridge and confirm that the correct firmware versions are displayed.
 +
 NOTE: The example shows that primary flash image shows the new firmware image, while the secondary flash image shows the old image.
+
 +
 ----
 flashimages
@@ -124,6 +127,7 @@ Ready.
 +
 NOTE: The example shows that primary flash image shows the new firmware image, while the secondary flash image shows the old image.
 +
+
 ----
 cluster_A> storage bridge run-cli -name ATTO_7500N_IB_1 -command FlashImages
 
@@ -142,6 +146,7 @@ Ready.
   ... If necessary, restart the bridge: `*storage bridge run-cli -name ATTO_7500N_IB_1 -command FirmwareRestart*`
 +
 NOTE: Starting with ATTO firmware version 2.95 the bridge will restart automatically and this step is not required.
+
 . Verify that the bridge restarted correctly:
 +
 `*sysconfig*`
@@ -254,8 +259,8 @@ https://mysupport.netapp.com/site/products/all/details/atto-fibrebridge/download
  .. Install the firmware on the FibreBridge bridge.
   *** If you are using ATTO FibreBridge 7500N bridges, you should refer to the instructions provided in the "`Update Firmware`" section of the _ATTO FibreBridge 7500N Installation and Operation Manual_.
   *** If you are using ATTO FibreBridge 6500N bridges, you should refer to the instructions provided in the "`Update Firmware`" section of the _ATTO FibreBridge 6500N Installation and Operation Manual_.
-*Attention:* You should be sure to power-cycle the individual bridge now. If you wait and power-cycle both bridges in a stack simultaneously, the controller might lose access to the drives, resulting in a plex failure or multidisk panic.
-
+  +
+*ATTENTION:* You should be sure to power-cycle the individual bridge now. If you wait and power-cycle both bridges in a stack simultaneously, the controller might lose access to the drives, resulting in a plex failure or multidisk panic.
 +
 The bridge should restart.
  .. From the console of either controller, verify that the bridge restarted correctly:
