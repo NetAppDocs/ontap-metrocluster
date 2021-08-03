@@ -11,20 +11,27 @@ summary: 'If you are setting up an eight-node fabric-attached MetroCluster confi
 [.lead]
 If you are setting up an eight-node fabric-attached MetroCluster configuration with array LUNs, you must cable the FC-VI ports and the HBA ports to the switch ports.
 
+.About this task
+
 * You must repeat this task for each controller at both of the MetroCluster sites.
 * If you plan to use disks in addition to array LUNs in your MetroCluster configuration, you must use the HBA ports and switch ports specified for configuration with disks.
- ** xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
- ** xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.adoc[Port assignments for FC switches when using ONTAP 9.0]
+ ** link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
+ ** link:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.html[Port assignments for FC switches when using ONTAP 9.0]
 
-.Steps
-. Cable the FC-VI ports and HBA ports from each controller to the ports on alternate FC switches.
-+
+.Step
+
+. Cable the FC-VI ports and HBA ports from each controller to the ports on alternate FC switches. Refer to the following tables:
+
+=== Cabling configurations for FibreBridge 7500N or 7600N using both FC ports
+
 |===
-5+| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
-5+| MetroCluster 1 or DR Group 1
-.2+| Component .2+| Port 2+| Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1, and DCX 8510-8| 2+ Brocade switch G720
-| Connects to FC_switch...| Connects to switch port...| Connects to switch port...
-.8+a|
+6+h| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+6+^h| MetroCluster 1 or DR Group 1
+
+2.2+h| Component .2+h| Port 2+h| Brocade switch models 6505, 6510, 6520, 7810, 7840, G610, G620, G620-1, G630, G630-1, and DCX 8510-8
+h| Brocade switch G720
+h| Connects to FC_switch... h| Connects to switch port... h| Connects to switch port...
+2.8+a|
 controller_x_1
 a|
 FC-VI port a
@@ -90,7 +97,7 @@ a|
 3
 a|
 9
-.8+a|
+2.8+a|
 controller_x_2
 a|
 FC-VI port a
@@ -156,8 +163,8 @@ a|
 7
 a|
 13
-.4+a|
-Stack 1
+
+.4+|Stack 1
 .2+a|
 bridge_x_1a
 a|
@@ -308,16 +315,23 @@ a|
 15*
 a|
 21
-a|
-* - Ports 12 through 15 are reserved for the second MetroCluster or DR group on the Brocade 7840 switch.
-
-NOTE: Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1 and G630-1 switches.
+6+h|
+*  Ports 12 through 15 are reserved for the second MetroCluster or DR group on the Brocade 7840 switch.
+6+h|
+*Note*: Additional bridges can be cabled to ports 16, 17, 20 and 21 in G620, G630, G620-1 and G630-1 switches.
 
 |===
-[options="header"]
+
+.After you finish
+
+You should cable the ISLs between the FC switches across the MetroCluster sites.
+
+
+=== Cabling configurations for Cisco 9250i
+
 |===
-4+| Cisco 9250i*
-| Component| Port| Switch 1| Switch 2
+4+h| Cisco 9250i*
+h| Component h| Port h| Switch 1 h| Switch 2
 .6+a|
 controller_x_1
 a|
@@ -470,6 +484,9 @@ a|
 -
 a|
 13
+
 |===
+
+.After you finish
 
 You should cable the ISLs between the FC switches across the MetroCluster sites.
