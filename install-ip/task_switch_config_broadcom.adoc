@@ -15,34 +15,51 @@ You must configure the Broadcom IP switches for use as the cluster interconnect 
 [.lead]
 Before installing a new switch software version and RCFs, you must erase the Broadcom switch settings and perform basic configuration.
 
+.About this task
+
 * You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
 * You must be connected to the switch using the serial console.
 * This task resets the configuration of the management network.
 
+.Steps
+
 . Change to the elevated command prompt (`#`): `enable`
 +
 ----
-(Routing)> enable
-(Routing) #
+(IP_switch_A_1)> enable
+(IP_switch_A_1) #
 ----
 
-. Erase the startup configuration: `erase startup-config`
+. Erase the startup configuration and remove the banner
+.. Erase the startup configuration:
 +
-----
-(Routing) #erase startup-config
+
+*`erase startup-config`*
++
+-----
+(IP_switch_A_1) #erase startup-config
+
 Are you sure you want to clear the configuration? (y/n) y
 
-
-(Routing) #
-----
+(IP_switch_A_1) #
+-----
 +
+
 This command does not erase the banner.
++
 
-. Reboot the switch: `reload`
+..	Remove the banner:
++
+-----
+no set clibanner
+(IP_switch_A_1) # no set clibanner
+(IP_switch_A_1) #
+-----
+
+. Reboot the switch:
+*`(IP_switch_A_1) #reload*`
 +
 ----
-(IP_switch_A_1) #reload
-
 Are you sure you would like to reset the system? (y/n) y
 ----
 +
@@ -114,12 +131,20 @@ NOTE: The RCF file disables the Telnet protocol. If you do not configure the SSH
 (Routing) (Config)#crypto key generate rsa
 ----
 
- .. Generate DSA keys.
+ .. Generate DSA keys (optional)
 +
 ----
 (Routing) #configure
 (Routing) (Config)#crypto key generate dsa
 ----
+
+.. If you are using the FIPS compliant version of EFOS, generate the ECDSA keys. The following example creates the keys with a length of 256. Valid values are 256, 384 or 521.
++
+-----
+(Routing) #configure
+(Routing) (Config)#crypto key generate ecdsa 256
+-----
++
 
  .. Enable the SSH server.
 +
@@ -186,6 +211,7 @@ Configuration Saved!
 
 (IP_switch_A_1) #
 ----
+// BURT-1392530
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
@@ -194,8 +220,56 @@ Configuration Saved!
 [.lead]
 You must download the switch operating system file and RCF file to each switch in the MetroCluster IP configuration.
 
+.About this task
 This task must be repeated on each switch in the MetroCluster IP configuration.
 
+
+
+=====
+*Note the following:*
+
+* When upgrading from EFOS 3.4.x.x to EFOS 3.7.x.x the switch must be running EFOS 3.4.4.6 (or later 3.4.x.x release). If you are running a release prior to that, then upgrade the switch to EFOS 3.4.4.6 (or later 3.4.x.x release) first, then upgrade the switch to EFOS 3.7.x.x.
+
+* The configuration for EFOS 3.4.x.x and 3.7.x.x are different. Changing the EFOS version from 3.4.x.x to 3.7.x.x or vice versa requires the switch to be reset to factory defaults and the RCF files for the corresponding EFOS version to be (re)applied. This procedure requires access via the serial console port.
+
+* Starting with EFOS version 3.7.x.x a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access via the serial console port.
+=====
+// BURT-1392530
+[options="header"]
+|===
+| Procedure | Current EFOS version | New EFOS version | High level steps
+.5+|Steps to upgrade EFOS between two (non) FIPS compliant versions
+| 3.4.x.x | 3.4.x.x | Install the new EFOS image using method 1)
+The configuration and license information is retained
+| 3.4.4.6 (or later 3.4.x.x) | 3.7.x.x non-FIPS compliant |Upgrade EFOS using method 1.
+Reset the switch to factory defaults and apply the RCF file for EFOS 3.7.x.x
+.2+|3.7.x.x non-FIPS compliant |3.4.4.6 (or later 3.4.x.x) |Downgrade EFOS using method 1.
+Reset the switch to factory defaults and apply the RCF file for EFOS 3.4.x.x
+|3.7.x.x non-FIPS compliant |Install the new EFOS image using method 1. The configuration and license information is retained
+|3.7.x.x FIPS compliant |3.7.x.x FIPS compliant |Install the new EFOS image using method 1.
+The configuration and license information is retained
+.2+|Steps to upgrade to/from a FIPS compliant EFOS version |Non-FIPS compliant |FIPS compliant
+.2+|Installation of the EFOS image using method 2. The switch configuration and license information will be lost.
+|FIPS compliant  |Non-FIPS compliant
+|===
+
+* Method 1: <<Steps to upgrade EFOS with downloading the software image to the backup boot partition>>
+
+* Method 2: <<Steps to upgrade EFOS using the ONIE OS installation>>
+// BURT-1392530
+
+=== Steps to upgrade EFOS with downloading the software image to the backup boot partition
+
+[NOTE]
+====
+
+* Follow these steps only if both EFOS version are non-FIPS or both EFOS versions are FIPS compliant. Do not use these steps if one version is FIPS compliant and the other version is non-FIPS compliant.
+
+* If the switch is upgraded from 3.4.x.x to 3.7.x.x and the EFOS was once downgraded, then you need to follow the procedure <<Steps to upgrade EFOS using the ONIE OS installation>>
++
+====
+// BURT-1392530
+.Steps
 . Copy the switch software to the switch: `+copy sftp://user@50.50.50.50/switchsoftware/efos-3.4.3.1.stk backup+`
 +
 In this example, the efos-3.4.3.1.stk operating system file is copied from the SFTP server at 50.50.50.50 to the backup partition. You need to use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
@@ -207,7 +281,7 @@ Remote Password:*************
 Mode........................................... SFTP
 Set Server IP.................................. 50.50.50.50
 Path........................................... /switchsoftware/
-Filename....................................... efos-3.4.3.1.stk
+Filename....................................... efos-3.4.4.6.stk
 Data Type...................................... Code
 Destination Filename........................... backup
 
@@ -279,15 +353,152 @@ Are you sure you would like to reset the system? (y/n) y
 ----
 
 . Wait for the switch to reboot.
++
+NOTE: In rare scenarios the switch may fail to boot. Follow the <<Steps to upgrade EFOS using the ONIE OS installation>> to install the new image.
++
+
+. If you change the switch from EFOS 3.4.x.x to EFOS 3.7.x.x or vice version then follow these two procedures to apply the correct configuration (RCF):
+.. <<Resetting the Broadcom IP switch to factory defaults>>
+.. <<Downloading and installing the Broadcom RCF files>>
+
 . Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
+
+=== Steps to upgrade EFOS using the ONIE OS installation
+
+NOTE: Follow these steps if one EFOS version is FIPS compliant and the other EFOS version is non-FIPS compliant. These steps can be used to install the non-FIPS or FIPS compliant EFOS 3.7.x.x image from ONIE if the switch fails to boot.
+
+.Steps
+
+. Boot the switch into ONIE installation mode.
+
++
+
+------
+
+During boot, select ONIE when the following screen appears:
+ +----------------------------------------------------------------------------+
+ |*EFOS                                                                       |
+ | ONIE                                                                       |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ +----------------------------------------------------------------------------+
+
+After selecting "ONIE", the switch will then load and present you with the following choices:
+ +----------------------------------------------------------------------------+
+ |*ONIE: Install OS                                                           |
+ | ONIE: Rescue                                                               |
+ | ONIE: Uninstall OS                                                         |
+ | ONIE: Update ONIE                                                          |
+ | ONIE: Embed ONIE                                                           |
+ | DIAG: Diagnostic Mode                                                      |
+ | DIAG: Burn-In Mode                                                         |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ |                                                                            |
+ +----------------------------------------------------------------------------+
+
+------
++
+
+The switch now will boot into ONIE installation mode.
+
+. Stop the ONIE discovery and configure the ethernet interface
+
++
+------
+Once the following message appears press <enter> to invoke the ONIE console:
+ Please press Enter to activate this console. Info: eth0:  Checking link... up.
+ ONIE:/ #
+
+Note: the ONIE discovery will continue and message will be printed to the console.
+
+Stop the ONIE discovery
+ONIE:/ # onie-discovery-stop
+discover: installer mode detected.
+Stopping: discover... done.
+ONIE:/ #
+
+Configure the ethernet interface and add the route using "ifconfig eth0 <ipAddress> netmask <netmask> up" and "route add default gw <gatewayAddress>"
+ONIE:/ # ifconfig eth0 10.10.10.10 netmask 255.255.255.0 up
+ONIE:/ # route add default gw 10.10.10.1
+
+Verify that the server hosting the ONIE installation file is reachable:
+
+ONIE:/ # ping 50.50.50.50
+PING 50.50.50.50 (50.50.50.50): 56 data bytes
+64 bytes from 50.50.50.50: seq=0 ttl=255 time=0.429 ms
+64 bytes from 50.50.50.50: seq=1 ttl=255 time=0.595 ms
+64 bytes from 50.50.50.50: seq=2 ttl=255 time=0.369 ms
+^C
+--- 50.50.50.50 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.369/0.464/0.595 ms
+ONIE:/ #
+------
++
+. Install the new switch software
++
+-----
+
+ONIE:/ # onie-nos-install http:// 50.50.50.50/Software/onie-installer-3.7.0.4
+discover: installer mode detected.
+Stopping: discover... done.
+Info: Fetching http:// 50.50.50.50/Software/onie-installer-3.7.0.4 ...
+Connecting to 50.50.50.50 (50.50.50.50:80)
+installer            100% |*******************************| 48841k  0:00:00 ETA
+ONIE: Executing installer: http:// 50.50.50.50/Software/onie-installer-3.7.0.4
+Verifying image checksum ... OK.
+Preparing image archive ... OK.
+
+The software will install and then reboot the switch. Let the switch reboot normally into the new EFOS version.
+-----
++
+
+. Verify that the new switch software is installed
++
+-----
+show bootvar
+(Routing) #show bootvar
+Image Descriptions
+active :
+backup :
+Images currently available on Flash
+---- 	----------- -------- --------------- ------------
+unit 	active 	   backup   current-active  next-active
+---- 	----------- -------- --------------- ------------
+1 	3.7.0.4     3.7.0.4  3.7.0.4         3.7.0.4
+(Routing) #
+-----
++
+// BURT-1392530
+. Complete the installation
++
+
+The switch will reboot with no configuration applied and reset to factory defaults. Follow the two procedures to configure the switch basic settings and apply the RCF file as outlined in the following two documents:
++
+.. Configure the switch basic settings. Follow step 4 and later: <<Resetting the Broadcom IP switch to factory defaults>>
+.. Create and apply the RCF file as outlined in <Downloading and installing the Broadcom RCF files>
+// BURT-1392530
 
 == Downloading and installing the Broadcom RCF files
 
 [.lead]
 You must download and install the switch RCF file to each switch in the MetroCluster IP configuration.
 
+.Before you begin
 This task requires file transfer software, such as FTP, TFTP, SFTP, or SCP, to copy the files to the switches.
 
+.About this task
 These steps must be repeated on each of the IP switches in the MetroCluster IP configuration.
 
 There are four RCF files, one for each of the four switches in the MetroCluster IP configuration. You must use the correct RCF files for the switch model you are using.
@@ -298,21 +509,32 @@ There are four RCF files, one for each of the four switches in the MetroCluster 
 a|
 IP_switch_A_1
 a|
-BES-53248_v1.32_Switch-A1.txt
+v1.32_Switch-A1.txt
 a|
 IP_switch_A_2
 a|
-BES-53248_v1.32_Switch-A2.txt
+v1.32_Switch-A2.txt
 a|
 IP_switch_B_1
 a|
-BES-53248_v1.32_Switch-B1.txt
+v1.32_Switch-B1.txt
 a|
 IP_switch_B_2
 a|
-BES-53248_v1.32_Switch-B2.txt
+v1.32_Switch-B2.txt
 |===
 
+NOTE: The RCF files for EFOS version 3.4.4.6 or later 3.4.x.x. release and EFOS version 3.7.0.4 are different. You need to make sure that you have created the correct RCF files for the EFOS version that the switch is running.
+
+[options="header"]
+|===
+|EFOS version	|RCF file version
+|3.4.x.x	|v1.3x, v1.4x
+|3.7.x.x	|v2.x
+|===
+
+// BURT-1392530
+.Steps
 . Download the MetroCluster IP RCF files for the Broadcom switch.
 +
 https://mysupport.netapp.com/NOW/download/software/metrocluster_ip/rcfs/download.shtml[Broadcom Cluster and Management Network Switch Reference Configuration File Download for MetroCluster IP]
