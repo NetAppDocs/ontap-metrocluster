@@ -26,14 +26,14 @@ In the IMT, you can use the Storage Solution field to select your MetroCluster s
 +
 NOTE: You can configure FAS8020, AFF8020, FAS8200, and AFF A300 systems with two initiators ports per controller (a single initiator port to each fabric) if all the following criteria are met:
 
- ** There are fewer than four FC initiator ports available to connect the disk storage and no additional ports can be configured as FC initiators.
- ** All slots are in use and no FC initiator card can be added.
+** There are fewer than four FC initiator ports available to connect the disk storage and no additional ports can be configured as FC initiators.
+** All slots are in use and no FC initiator card can be added.
 
 .About this task
 
 * You should enable Inter-Switch Link (ISL) trunking when it is supported by the links.
 +
-xref:concept_tdm_wdm.adoc[Considerations for using TDM/WDM equipment with fabric-attached MetroCluster configurations]
+link:concept_tdm_wdm.html[Considerations for using TDM/WDM equipment with fabric-attached MetroCluster configurations]
 
 * All ISLs must have the same length and same speed in one fabric.
 +
@@ -55,8 +55,9 @@ In the IMT, you can use the Storage Solution field to select your MetroCluster s
 
 == Reviewing Brocade license requirements
 
-[.lead]
 You need certain licenses for the switches in a MetroCluster configuration. You must install these licenses on all four switches.
+
+.About this task
 
 The MetroCluster configuration has the following Brocade license requirements:
 
@@ -66,11 +67,16 @@ The MetroCluster configuration has the following Brocade license requirements:
 +
 The Enterprise license includes Brocade Network Advisor and all licenses except for additional port licenses.
 
-You can verify that the licenses are installed by using the `licenseshow` command. If you do not have these licenses, you should contact your sales representative before proceeding.
+.Step
+
+. Verify that the licenses are installed:
++
+`licenseshow`
++
+If you do not have these licenses, you should contact your sales representative before proceeding.
 
 == Setting the Brocade FC switch values to factory defaults
 
-[.lead]
 You must set the switch to its factory defaults to ensure a successful configuration. You must also assign each switch a unique name.
 
 .About this task
@@ -80,9 +86,11 @@ In the examples in this procedure, the fabric consists of BrocadeSwitchA and Bro
 .Steps
 
 . Make a console connection and log in to both switches in one fabric.
-. Disable the switch persistently: `switchcfgpersistentdisable`
+. Disable the switch persistently:
 +
-This ensures the switch will remain disabled after a reboot or fastboot. If this command is not available, use the switchdisable command.
+`switchcfgpersistentdisable`
++
+This ensures the switch will remain disabled after a reboot or fastboot. If this command is not available, use the `switchdisable` command.
 +
 The following example shows the command on BrocadeSwitchA:
 +
@@ -96,7 +104,9 @@ The following example shows the command on BrocadeSwitchB:
 BrocadeSwitchA:admin> switchcfgpersistentdisable
 ----
 
-. Enter `switchname switch_name` to set the switch name.
+. Set the switch name:
++
+`switchname switch_name`
 +
 The switches should each have a unique name. After setting the name, the prompt changes accordingly.
 +
@@ -114,7 +124,9 @@ BrocadeSwitchB:admin> switchname "FC_Switch_B_1"
 FC_switch_B_1:admin>
 ----
 
-. Set all ports to their default values by issuing the following command for each port: `portcfgdefault`
+. Set all ports to their default values:
++
+`portcfgdefault`
 +
 This must be done for all ports on the switch.
 +
@@ -136,7 +148,13 @@ FC_switch_B_1:admin> portcfgdefault 1
 FC_switch_B_1:admin> portcfgdefault 39
 ----
 
-. Clear the zoning information by issuing the following commands: `cfgdisable``cfgclear``cfgsave`
+. Clear the zoning information:
++
+`cfgdisable`
++
+`cfgclear`
++
+`cfgsave`
 +
 The following example shows the commands on FC_switch_A_1:
 +
@@ -154,7 +172,9 @@ FC_switch_B_1:admin> cfgclear
 FC_switch_B_1:admin> cfgsave
 ----
 
-. Set the general switch settings to default: `configdefault`
+. Set the general switch settings to default:
++
+`configdefault`
 +
 The following example shows the command on FC_switch_A_1:
 +
@@ -168,7 +188,9 @@ The following example shows the command on FC_switch_B_1:
 FC_switch_B_1:admin> configdefault
 ----
 
-. Set all ports to non-trunking mode: `switchcfgtrunk 0`
+. Set all ports to non-trunking mode:
++
+`switchcfgtrunk 0`
 +
 The following example shows the command on FC_switch_A_1:
 +
@@ -182,7 +204,9 @@ The following example shows the command on FC_switch_B_1:
 FC_switch_B_1:admin> switchcfgtrunk 0
 ----
 
-. On Brocade 6510 switches, disable the Brocade Virtual Fabrics (VF) feature: `fosconfig options`
+. On Brocade 6510 switches, disable the Brocade Virtual Fabrics (VF) feature:
++
+`fosconfig options`
 +
 The following example shows the command on FC_switch_A_1:
 +
@@ -196,7 +220,9 @@ The following example shows the command on FC_switch_B_1:
 FC_switch_B_1:admin> fosconfig --disable vf
 ----
 
-. Clear the Administrative Domain (AD) configuration: `ad options`
+. Clear the Administrative Domain (AD) configuration:
++
+`ad options`
 +
 The following example shows the commands on FC_switch_A_1:
 +
@@ -224,7 +250,9 @@ FC_switch_B_1:admin> ad --save
 FC_switch_B_1:admin> exit
 ----
 
-. Reboot the switch by issuing the following command: `reboot`
+. Reboot the switch:
++
+`reboot`
 +
 The following example shows the command on FC_switch_A_1:
 +
@@ -240,7 +268,6 @@ FC_switch_B_1:admin> reboot
 
 == Configuring basic switch settings
 
-[.lead]
 You must configure basic global settings, including the domain ID, for Brocade switches.
 
 .About this task
@@ -287,7 +314,7 @@ RDP Polling Cycle(hours)[0 = Disable Polling]: (0..24) [1] 0
 NOTE: The standard IOD settings are recommended. You should configure OOD only if necessary.
 +
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Considerations for using TDM/WDM equipment with fabric-attached MetroCluster configurations]
+link:concept_prepare_for_the_mcc_installation.html[Considerations for using TDM/WDM equipment with fabric-attached MetroCluster configurations]
 
 +
 .. The following steps must be performed on each switch fabric to configure IOD of frames:
@@ -344,7 +371,13 @@ FC_switch_A_1:admin> iodshow
 +
 `dlsreset`
 
-... Verify the OOD settings by using the `iodshow`, `aptpolicy`, and `dlsshow` commands.
+... Verify the OOD settings:
++
+`iodshow`
++
+`aptpolicy`
++
+`dlsshow`
 +
 For example, issue the following commands on FC_switch_A_1:
 +
@@ -375,7 +408,10 @@ https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_th
 
 . Verify that the switch is using the dynamic port licensing method.
 
-.. Run the `licensePort --show` command.
+.. Run the license command:
++
+`licensePort --show`
++
 +
 ----
 FC_switch_A_1:admin> licenseport -show
@@ -431,7 +467,7 @@ Please reboot the switch now for this change to take effect
 
 .. Repeat the previous steps on the second switch fabric.
 
-. *Optional*: If you set the community string to a value other than "`public`", you must configure the ONTAP Health Monitors using the community string you specify:
+. *Optional*: If you set the community string to a value other than "public", you must configure the ONTAP Health Monitors using the community string you specify:
 
 .. Change the existing community string:
 +
@@ -452,9 +488,8 @@ Community (rw): [OrigEquipMfr]
 Trap Recipient's IP address : [0.0.0.0]
 Community (rw): [private]
 Trap Recipient's IP address : [0.0.0.0]
-Community (ro): [public] mcchm                        <<<<<<<<<<<<< change the community string to the
-desired value, in this example it is set to 'mcchm'
-Trap Recipient's IP address : [0.0.0.0]
+Community (ro): [public] mcchm     <<<<<< change the community string to the desired value,
+Trap Recipient's IP address : [0.0.0.0]    in this example it is set to "mcchm"
 Community (ro): [common]
 Trap Recipient's IP address : [0.0.0.0]
 Community (ro): [FibreChannel]
@@ -474,9 +509,8 @@ Community (rw): [OrigEquipMfr]
 Trap Recipient's IP address : [0.0.0.0]
 Community (rw): [private]
 Trap Recipient's IP address : [0.0.0.0]
-Community (ro): [public] mcchm                        <<<<<<<<<<<<< change the community string to the
-desired value, in this example it is set to 'mcchm'
-Trap Recipient's IP address : [0.0.0.0]
+Community (ro): [public] mcchm      <<<<<< change the community string to the desired value,
+Trap Recipient's IP address : [0.0.0.0]     in this example it is set to "mcchm"
 Community (ro): [common]
 Trap Recipient's IP address : [0.0.0.0]
 Community (ro): [FibreChannel]
@@ -518,7 +552,6 @@ FC_switch_B_1:admin> switchcfgpersistentenable
 
 == Configuring basic switch settings on a Brocade DCX 8510-8 switch
 
-[.lead]
 You must configure basic global settings, including the domain ID, for Brocade switches.
 
 .About this task
@@ -600,13 +633,12 @@ switchname unique switch name
 switchenable
 ----
 
-*Related information*
+.Related information
 
-xref:concept_prepare_for_the_mcc_installation.adoc[Requirements for using a Brocade DCX 8510-8 switch]
+link:concept_prepare_for_the_mcc_installation.html[Requirements for using a Brocade DCX 8510-8 switch]
 
 == Configuring E-ports on Brocade FC switches using FC ports
 
-[.lead]
 For Brocade switches on which the Inter-Switch Links (ISL) are configured using FC ports, you must configure the switch ports on each switch fabric that connect the ISL. These ISL ports are also known as E-ports.
 
 .Before you begin
@@ -636,7 +668,7 @@ If your configuration is running ONTAP 9.0 or earlier, see the link:install-fc/c
 You must use the required number of ISLs for your configuration.
 
 |===
-| Switch model | ISL port | Switch port
+h| Switch model h| ISL port h| Switch port
 
 .4+| Brocade 6520 | ISL port 1  | 23
 | ISL port 2 | 47
@@ -757,7 +789,7 @@ a|
 
 .Steps
 
-. [[step1-brocade-config,Step 1]] Configure the port speed:
+. [[step1_brocade_config]] Configure the port speed:
 +
 `portcfgspeed port-numberspeed`
 +
@@ -777,7 +809,7 @@ FC_switch_B_1:admin> portcfgspeed 21 16
 +
 `portcfgtrunkport port-number`
 
- ** If you are configuring the ISLs for trunking (IOD), set the portcfgtrunk port-numberport-number to 1 as shown in the following example:
+** If you are configuring the ISLs for trunking (IOD), set the portcfgtrunk port-numberport-number to 1 as shown in the following example:
 +
 ----
 FC_switch_A_1:admin> portcfgtrunkport 20 1
@@ -786,7 +818,7 @@ FC_switch_B_1:admin> portcfgtrunkport 20 1
 FC_switch_B_1:admin> portcfgtrunkport 21 1
 ----
 
- ** If you do not want to configure the ISL for trunking (OOD), set portcfgtrunkport-number to 0 as shown in the following example:
+** If you do not want to configure the ISL for trunking (OOD), set portcfgtrunkport-number to 0 as shown in the following example:
 +
 ----
 FC_switch_A_1:admin> portcfgtrunkport 20 0
@@ -967,7 +999,7 @@ FC_switch_B_1:admin> fabricshow
 3: fffc03 10:00:00:05:33:8c:2e:9a 10.10.10.65  0.0.0.0    >"FC_switch_B_1
 ----
 
-. [[step10-brocade-config,Step 10]]Confirm the trunking of the ISLs:
+. [[step10_brocade_config]]Confirm the trunking of the ISLs:
 +
 `trunkshow`
 
@@ -992,15 +1024,14 @@ FC_switch_B_1:admin> trunkshow
  1: 20-> 20 10:00:00:05:33:86:89:cb 3 deskew 15 MASTER
  2: 21-> 21 10:00:00:05:33:86:89:cb 3 deskew 16 MASTER
 ----
-. Repeat <<step1-brocade-config>> through <<step10-brocade-config>> for the second FC switch fabric.
+. Repeat <<step1_brocade_config,Step 1>> through <<step10_brocade_config,Step 10>> for the second FC switch fabric.
 
-*Related information*
+.Related information
 
-xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
+link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
 
 == Configuring 10 Gbps VE ports on Brocade FC 7840 switches
 
-[.lead]
 When using the 10 Gbps VE ports (which use FCIP) for ISLs, you must create IP interfaces on each port, and configure FCIP tunnels and circuits in each tunnel.
 
 .About this task
@@ -1134,7 +1165,6 @@ FC_switch_A_1:root> portshow fcipcircuit all
 
 == Configuring 40 Gbps VE-ports on Brocade 7810 and 7840 FC switches
 
-[.lead]
 When using the two 40 GbE VE-ports (which use FCIP) for ISLs, you must create IP interfaces on each port, and configure FCIP tunnels and circuits in each tunnel.
 
 .About this task
@@ -1265,15 +1295,18 @@ FC_switch_A_1:root> portshow fcipcircuit all
 
 == Configuring the non-E-ports on the Brocade switch
 
-[.lead]
 You must configure the non-E-ports on the FC switch. In a MetroCluster configuration, these are the ports that connect the switch to the HBA initiators, FC-VI interconnects, and FC-to-SAS bridges. These steps must be done for each port.
 
 .About this task
 
 In the following example, the ports connect an FC-to-SAS bridge:
 
+--
 * Port 6 on FC_FC_switch_A_1 at Site_A
 * Port 6 on FC_FC_switch_B_1 at Site_B
+--
+
+.Steps
 
 . Configure the port speed for each non-E-port:
 +
@@ -1342,7 +1375,6 @@ Non-DFE                             ..  ..  ..  ..  ..  ..  ..  ..  ..
 
 == Configuring compression on ISL ports on a Brocade G620 switch
 
-[.lead]
 If you are using Brocade G620 switches and enabling compression on the ISLs, you must configure it on each E-port on the switches.
 
 .About this task
@@ -1403,12 +1435,10 @@ Port   Configured    Active   Configured   Active  Speed
 
 == Configuring zoning on Brocade FC switches
 
-[.lead]
 You must assign the switch ports to separate zones to separate controller and storage traffic. The procedure differs depending on whether you are using a FibreBridge 7500N or FibreBridge 6500N bridge.
 
 === Zoning for FC-VI ports
 
-[.lead]
 For each DR group in the MetroCluster, you must configure two zones for the FC-VI connections that allow controller-to-controller traffic. These zones contain the FC switch ports connecting to the controller module FC-VI ports. These zones are Quality of Service (QoS) zones.
 
 A QoS zone name starts with the prefix QOSHid_, followed by a user-defined string to differentiate it from a regular zone. These QoS zones are the same regardless of the model of FibreBridge bridge that is being used.
@@ -1427,7 +1457,7 @@ include::../_include/brocade_zoning_dr_1_qosh1_fcvi_port_ac.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 | QOSH1_MC1_FAB_1_FCVI
 |5,0;5,1;5,4;5,5;7,0;7,1;7,4;7,5
@@ -1443,7 +1473,7 @@ include::../_include/brocade_zoning_dr_1_qosh1_fcvi_port_bd.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 | QOSH1_MC1_FAB_2_FCVI
 | 6,0;6,1;6,4;6,5;8,0;8,1;8,4;8,5
@@ -1459,7 +1489,7 @@ include::../_include/brocade_zoning_dr_2_qosh2_fcvi_port_ac.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 | QOSH2_MC2_FAB_1_FCVI (6510)
 | 5,24;5,25;5,28;5,29;7,24;7,25;7,28;7,29
@@ -1478,7 +1508,7 @@ include::../_include/brocade_zoning_dr_2_qosh2_fcvi_port_bd.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 | QOSH2_MC2_FAB_2_FCVI (6510)
 | 6,24;6,25;6,28;6,29;8,24;8,25;8,28;8,29
@@ -1489,7 +1519,7 @@ include::../_include/brocade_zoning_dr_2_qosh2_fcvi_port_bd.csv[]
 The following table provides a summary of the FC-VI zones:
 
 |===
-| Fabric | Zone name | Member ports
+h| Fabric h| Zone name h| Member ports
 
 .3+| FC_switch_A_1 and FC_switch_B_1
 a| QOSH1_MC1_FAB_1_FCVI
@@ -1514,7 +1544,7 @@ a| 6,48;6,49;6,52;6,53;8,48;8,49;8,52;8,53
 
 === Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N or 7600N bridges using one FC port
 // BURT 1382518
-[.lead]
+
 If you are using FibreBridge 6500N bridges, or FibreBridge 7500N or 7600N bridges using only one of the two FC ports, you need to create storage zones for the bridge ports. You should understand the zones and associated ports before you configure the zones.
 
 The examples show zoning for DR group 1 only. If your configuration includes a second DR group, configure the zoning for the second DR group in the same manner, using the corresponding ports of the controllers and bridges.
@@ -1537,7 +1567,7 @@ The examples show two pairs of bridges connecting two stack groups at each site.
 The bridges use the following example naming: bridge_site_stack grouplocation in pair
 
 |===
-| This portion of the name... | Identifies the... | Possible values...
+h| This portion of the name... h| Identifies the... h| Possible values...
 
 a|
 site
@@ -1585,7 +1615,7 @@ include::../_include/brocade_zoning_dr_1a_grp1_top_fc1.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 | MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
 | 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,8
@@ -1601,7 +1631,7 @@ include::../_include/brocade_zoning_dr_1a_grp1_bottom_fc1.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 | MC1_INIT_GRP_1_SITE_A_STK_GRP_1_BOT_FC1
 | 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,8
@@ -1619,7 +1649,7 @@ include::../_include/brocade_zoning_dr_1a_grp2_top_fc1.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 | MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1
 | 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;5,9
@@ -1635,7 +1665,7 @@ include::../_include/brocade_zoning_dr_1a_grp2_bottom_fc1.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 | MC1_INIT_GRP_1_SITE_A_STK_GRP_2_BOT_FC1
 | 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;6,9
@@ -1653,7 +1683,7 @@ include::../_include/brocade_zoning_dr_1b_grp1_top_fc1.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 | MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC1
 | 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;7,8
@@ -1669,7 +1699,7 @@ include::../_include/brocade_zoning_dr_1b_grp1_bottom_fc1.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 | MC1_INIT_GRP_1_SITE_B_STK_GRP_1_BOT_FC1
 | 5,2;5,3;5,6;5,7;7,2;7,3;7,6;7,7;8,8
@@ -1687,7 +1717,7 @@ include::../_include/brocade_zoning_dr_1b_grp2_top_fc1.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 
 | MC1_INIT_GRP_1_SITE_b_STK_GRP_2_TOP_FC1
@@ -1704,7 +1734,7 @@ include::../_include/brocade_zoning_dr_1b_grp2_bottom_fc1.csv[]
 // end include reference
 
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 | MC1_INIT_GRP_1_SITE_B_STK_GRP_2_BOT_FC1
 | 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;8,9
@@ -1713,7 +1743,7 @@ include::../_include/brocade_zoning_dr_1b_grp2_bottom_fc1.csv[]
 ==== Summary of storage zones
 
 |===
-| Fabric | Zone name | Member ports
+h| Fabric h| Zone name h| Member ports
 
 .4+| FC_switch_A_1 and FC_switch_B_1
 | MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
@@ -1744,7 +1774,6 @@ include::../_include/brocade_zoning_dr_1b_grp2_bottom_fc1.csv[]
 
 === Zoning for FibreBridge 7500N bridges using both FC ports
 
-[.lead]
 If you are using FibreBridge 7500N bridges with both FC ports, you need to create storage zones for the bridge ports. You should understand the zones and associated ports before you configure the zones.
 
 ==== Required zones
@@ -1765,7 +1794,7 @@ The examples show two pairs of bridges connecting two stack groups at each site.
 The bridges use the following example naming: bridge_site_stack grouplocation in pair
 
 |===
-| This portion of the name... | Identifies the... | Possible values...
+h| This portion of the name... h| Identifies the... h| Possible values...
 
 a| site
 a| Site on which the bridge pair physically resides.
@@ -1805,7 +1834,7 @@ Example bridge names for one stack group on each site:
 // end include reference
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610/ G620 port | 6520 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610/ G620 port h| 6520 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -1843,7 +1872,7 @@ a| 6
 a| controller_B_2 port 0a
 |===
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 a| MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
 a| 5,2;5,6;7,2;7,6;5,8
@@ -1852,7 +1881,7 @@ a| 5,2;5,6;7,2;7,6;5,8
 *DrGroup 1 : MC1_INIT_GRP_2_SITE_A_STK_GRP_1_TOP_FC1:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -1895,7 +1924,7 @@ a| 7
 a| controller_B_2 port 0c
 |===
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 a| MC1_INIT_GRP_2_SITE_A_STK_GRP_1_BOT_FC1
 a| 5,3;5,7;7,3;7,7;5,9
@@ -1904,7 +1933,7 @@ a| 5,3;5,7;7,3;7,7;5,9
 *DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_1_BOT_FC1:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 | 6520 | G620 | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 h| 6520 h| G620 h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -1948,7 +1977,7 @@ a| controller_B_2 port 0b
 |===
 
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 a| MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC2
 a| 6,2;6,6;8,2;8,6;6,8
@@ -1957,7 +1986,7 @@ a| 6,2;6,6;8,2;8,6;6,8
 *DrGroup 1 : MC1_INIT_GRP_2_SITE_A_STK_GRP_1_BOT_FC2:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 | 6520 | G620 | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 h| 6520 h| G620 h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2000,7 +2029,7 @@ a| 7
 a| controller_B_2 port 0b
 |===
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 a| MC1_INIT_GRP_2_SITE_A_STK_GRP_1_BOT_FC2
 a| 6,3;6,7;8,3;8,7;6,9
@@ -2011,7 +2040,7 @@ a| 6,3;6,7;8,3;8,7;6,9
 *DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2054,7 +2083,7 @@ a| 6
 a| controller_B_2 port 0a
 |===
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 hh| Member ports
 
 a| MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC1
 a| 5,2;5,6;7,2;7,6;5,10
@@ -2063,7 +2092,7 @@ a| 5,2;5,6;7,2;7,6;5,10
 *DrGroup 1 : MC1_INIT_GRP_2_SITE_A_STK_GRP_2_TOP_FC1:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2106,7 +2135,7 @@ a| 7
 a| controller_B_2 port 0c
 |===
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 a| MC1_INIT_GRP_2_SITE_A_STK_GRP_2_BOT_FC1
 a| 5,3;5,7;7,3;7,7;5,11
@@ -2115,7 +2144,7 @@ a| 5,3;5,7;7,3;7,7;5,11
 *DrGroup 1 : MC1_INIT_GRP_1_SITE_A_STK_GRP_2_BOT_FC2:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2158,7 +2187,7 @@ a| 6
 a| controller_B_2 port 0b
 |===
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 a| MC1_INIT_GRP_1_SITE_A_STK_GRP_2_TOP_FC2
 a| 6,2;6,6;8,2;8,6;6,10
@@ -2167,7 +2196,7 @@ a| 6,2;6,6;8,2;8,6;6,10
 *DrGroup 1 : MC1_INIT_GRP_2_SITE_A_STK_GRP_2_BOT_FC2:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2211,7 +2240,8 @@ a| controller_B_2 port 0b
 |===
 
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
+
 a| MC1_INIT_GRP_2_SITE_A_STK_GRP_2_BOT_FC2
 a| 6,3;6,7;8,3;8,7;6,11
 |===
@@ -2221,7 +2251,7 @@ a| 6,3;6,7;8,3;8,7;6,11
 *DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC1:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2264,7 +2294,7 @@ a| 6
 a| bridge_B_1a FC1
 |===
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 a|MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC1
 a| 5,2;5,6;7,2;7,6;7,8
@@ -2273,7 +2303,7 @@ a| 5,2;5,6;7,2;7,6;7,8
 *DrGroup 1 : MC1_INIT_GRP_2_SITE_B_STK_GRP_1_TOP_FC1:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2317,7 +2347,7 @@ a| bridge_B_1b FC1
 |===
 
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 a| MC1_INIT_GRP_2_SITE_B_STK_GRP_1_BOT_FC1
 a| 5,3;5,7;7,3;7,7;7,9
@@ -2326,7 +2356,7 @@ a| 5,3;5,7;7,3;7,7;7,9
 *DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_1_BOT_FC2:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2369,7 +2399,7 @@ a| 8
 a| bridge_B_1a FC2
 |===
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 a| MC1_INIT_GRP_1_SITE_B_STK_GRP_1_TOP_FC2
 a| 6,2;6,6;8,2;8,6;8,8
@@ -2378,7 +2408,7 @@ a| 6,2;6,6;8,2;8,6;8,8
 *DrGroup 1 : MC1_INIT_GRP_2_SITE_B_STK_GRP_1_BOT_FC2:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2422,7 +2452,7 @@ a| bridge_A_1b FC2
 |===
 
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 a| MC1_INIT_GRP_2_SITE_B_STK_GRP_1_BOT_FC2
 a| 6,3;6,7;8,3;8,7;8,9
@@ -2433,7 +2463,7 @@ a| 6,3;6,7;8,3;8,7;8,9
 *DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_2_TOP_FC1:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2476,7 +2506,7 @@ a| 10
 a| bridge_B_2a FC1
 |===
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 a| MC1_INIT_GRP_1_SITE_B_STK_GRP_2_TOP_FC1
 a| 5,2;5,6;7,2;7,6;7,10
@@ -2485,7 +2515,7 @@ a| 5,2;5,6;7,2;7,6;7,10
 *DrGroup 1 : MC1_INIT_GRP_2_SITE_B_STK_GRP_2_TOP_FC1:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2528,7 +2558,7 @@ a| 11
 a| bridge_B_2b FC1
 |===
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 hh| Member ports
 
 a| MC1_INIT_GRP_2_SITE_B_STK_GRP_2_BOT_FC1
 a| 5,3;5,7;7,3;7,7;7,11
@@ -2537,7 +2567,7 @@ a| 5,3;5,7;7,3;7,7;7,11
 *DrGroup 1 : MC1_INIT_GRP_1_SITE_B_STK_GRP_2_BOT_FC2:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2580,7 +2610,7 @@ a| 10
 a| bridge_B_2a FC2
 |===
 |===
-| Zone in Fabric_1 | Member ports
+h| Zone in Fabric_1 h| Member ports
 
 a| MC1_INIT_GRP_1_SITE_B_STK_GRP_2_TOP_FC2
 a| 6,2;6,6;8,2;8,6;8,10
@@ -2589,7 +2619,7 @@ a| 6,2;6,6;8,2;8,6;8,10
 *DrGroup 1 : MC1_INIT_GRP_2_SITE_B_STK_GRP_2_BOT_FC2:*
 
 |===
-| FC switch | Site | Switch domain | 6505 / 6510 / G610 port | 6520 port | G620 port | Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2632,7 +2662,7 @@ a| 11
 a| bridge_B_2b FC2
 |===
 |===
-| Zone in Fabric_2 | Member ports
+h| Zone in Fabric_2 h| Member ports
 
 a| MC1_INIT_GRP_2_SITE_B_STK_GRP_2_BOT_FC2
 a| 6,3;6,7;8,3;8,7;8,11
@@ -2641,7 +2671,7 @@ a| 6,3;6,7;8,3;8,7;8,11
 ==== Summary of storage zones
 
 |===
-| Fabric | Zone name | Member ports
+h| Fabric h| Zone name h| Member ports
 
 a| FC_switch_A_1 and FC_switch_B_1
 a| MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
@@ -2710,24 +2740,23 @@ a| 6,3;6,7;8,3;8,7;8,11
 
 === Configuring zoning on Brocade FC switches
 
-[.lead]
 You must assign the switch ports to separate zones to separate controller and storage traffic, with zones for the FC-VI ports and zones for the storage ports.
 
 .About this task
 
 The following steps use the standard zoning for the MetroCluster configuration.
 
-xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FC-VI ports]
+link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Zoning for FC-VI ports]
 
-xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N or 7600N bridges using one FC port]
+link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N or 7600N bridges using one FC port]
 
-xref:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 7500N bridges using both FC ports]
+link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Zoning for FibreBridge 7500N bridges using both FC ports]
 
 .Steps
 
 . Create the FC-VI zones on each switch:
 +
-`+zonecreate "QOSH1_FCVI_1", member;member ...+`
+`zonecreate "QOSH1_FCVI_1", member;member ...`
 +
 In this example a QOS FCVI zone is created containing ports 5,0;5,1;5,4;5,5;7,0;7,1;7,4;7,5:
 +
@@ -2761,7 +2790,7 @@ Switch_A_1:admin> cfgcreate "CFG_1", "QOSH1_MC1_FAB_1_FCVI; MC1_INIT_GRP_1_SITE_
 
 .. Add zones to the configuration, if desired:
 +
-`+cfgadd config_namezone;zone...+`
+`cfgadd config_namezone;zone...`
 
 .. Enable the configuration:
 +
@@ -2816,7 +2845,6 @@ zone: MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
 
 == Setting ISL encryption on Brocade 6510 or G620 switches
 
-[.lead]
 On Brocade 6510 or G620 switches, you can optionally use the Brocade encryption feature on the ISL connections. If you want to use the encryption feature, you must perform additional configuration steps on each switch in the MetroCluster configuration.
 
 .Before you begin
@@ -2835,14 +2863,13 @@ The steps must be performed on both the switches in the same fabric.
 
 === Disabling virtual fabric
 
-[.lead]
 In order to set the ISL encryption, you must disable the virtual fabric on all the four switches being used in a MetroCluster configuration.
 
 .Steps
 
 . Disable the virtual fabric by entering the following command at the switch console:
 +
-`fosconfig --disable vf``
+`fosconfig --disable vf`
 
 . Reboot the switch.
 
@@ -2872,7 +2899,6 @@ The data field size must not exceed 2048.
 
 === Setting the authentication policy
 
-[.lead]
 You must set the authentication policy and associated parameters.
 
 .About this task
@@ -2957,7 +2983,6 @@ Auth Policy is set to ON
 
 === Enabling ISL encryption on Brocade switches
 
-[.lead]
 After setting the authentication policy and the authentication secret, you must enable ISL encryption on the ports for it to take effect.
 
 .About this task
@@ -2973,7 +2998,9 @@ After setting the authentication policy and the authentication secret, you must 
 +
 In the following example, the encryption is enabled on ports 8 and 12:
 +
-`portCfgEncrypt --enable 8``portCfgEncrypt --enable 12`
+`portCfgEncrypt --enable 8`
++
+`portCfgEncrypt --enable 12`
 
 . Enable the switch:
 +

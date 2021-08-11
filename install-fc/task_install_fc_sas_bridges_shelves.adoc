@@ -316,7 +316,7 @@ SAS Port B has been disabled.
 . Secure access to the bridge and save the bridge's configuration. Choose an option from below depending on the version of ONTAP your system is running.
 +
 |===
-| ONTAP version | Steps
+h| ONTAP version h| Steps
 
 a|*ONTAP 9.5 or later*
 a|.. View the status of the bridges:
@@ -363,7 +363,7 @@ You are prompted to restart the bridge.
 +
 link:../maintain/index.html[Maintain MetroCluster Components]
 
-*Related information*
+.Related information
 
 link:task_fb_new_install.html[In-band management of the FC-to-SAS bridges]
 
@@ -398,6 +398,8 @@ For disk shelves, you insert a SAS cable connector with the pull tab oriented do
 +
 The _Installation and Service Guide_ for your disk shelf model provides detailed information about daisy-chaining disk shelves.
 
+.Steps
+
 . Power on the disk shelves, and then set the shelf IDs.
 ** You must power-cycle each disk shelf.
 ** Shelf IDs must be unique for each SAS disk shelf within each MetroCluster DR group (including both sites).
@@ -421,9 +423,13 @@ image::../media/mcc_cabling_bridge_and_sas3_stack_with_7500n_and_multiple_stacks
 [.lead]
 After configuring the bridge, you can start cabling your new system. The FibreBridge 7600N or 7500N bridge uses mini-SAS connectors and supports shelves that use IOM6 or IOM3 modules.
 
+.About this task
+
 IOM3 modules are not supported with FibreBridge 7600N bridges.
 
 For disk shelves, you insert a SAS cable connector with the pull tab oriented down (on the underside of the connector).
+
+.Steps
 
 . Daisy-chain the shelves in each stack.
 +
@@ -487,7 +493,7 @@ You should verify that each bridge can detect all of the disk drives, and then c
 . [[step1_bridge]] Verify that each bridge can detect all of the disk drives and disk shelves it is connected to:
 +
 |===
-| If you are using the... | Then...
+h| If you are using the... h| Then...
 
 a|
 ATTO ExpressNAV GUI
@@ -511,6 +517,7 @@ View the connected devices:
 
 `sastargets`
 |===
+
 The output shows the devices (disks and disk shelves) that the bridge is connected to. Output lines are sequentially numbered so that you can quickly count the devices. For example, the following output shows that 10 disks are connected:
 +
 ----
@@ -532,7 +539,7 @@ NOTE: If the text "response truncated" appears at the beginning of the output, y
 . Verify that the command output shows that the bridge is connected to all disks and disk shelves in the stack that it is supposed to be connected to.
 +
 |===
-| If the output is... | Then...
+h| If the output is... h| Then...
 
 a|
 Correct
@@ -560,13 +567,13 @@ See the port assignments for your version of ONTAP.
 
 . Repeat the previous step on the bridges at the partner site.
 
-*Related information*
+.Related information
 
-link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
+link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
 
 You need to verify that you are using the specified port assignments when you cable the FC switches when using ONTAP 9.1 and later.
 
-link:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.adoc[Port assignments for FC switches when using ONTAP 9.0]
+link:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.html[Port assignments for FC switches when using ONTAP 9.0]
 
 You need to verify that you are using the specified port assignments when you cable the FC switches. The port assignments are different between ONTAP 9.0 and later version of ONTAP.
 
