@@ -27,6 +27,7 @@ When you cable the system, you need a host name and management IP address for ea
 
 
 |===
+
 h| Cluster switch h| Host name h| IP address h| Network mask h| Default gateway
 
 a|
@@ -76,6 +77,7 @@ a|
 When you first create the cluster, you need the following information:
 
 |===
+
 h| Type of information h| Your values
 
 a|
@@ -109,6 +111,7 @@ For each node in the cluster, you need a management IP address, a network mask, 
 
 
 |===
+
 h| Node h| Port h| IP address h| Network mask h| Default gateway
 
 a|
@@ -143,6 +146,7 @@ For each node in the cluster, you need the IP addresses of two intercluster LIFs
 
 
 |===
+
 h| Node h| Port h| IP address of intercluster LIF  h| Network mask h| Default gateway
 
 a|
@@ -194,6 +198,7 @@ a|
 You must synchronize the time, which requires one or more NTP time servers.
 
 |===
+
 h| Node h| Host name h| IP address h| Network mask h| Default gateway
 
 a|
@@ -218,16 +223,17 @@ a|
 
 |===
 
-==== Site A AutoSupport information
+==== Site A &nbsp;AutoSupport information
 
 You must configure AutoSupport on each node, which requires the following information:
 
 |===
+
 2+h| Type of information h| Your values
 
-a|
+2+a|
 From email address
-a|
+
 
 a|
 
@@ -263,11 +269,12 @@ a|
 
 |===
 
-==== Site A SP information
+==== Site A &nbsp;SP information
 
 You must enable access to the Service Processor (SP) of each node for troubleshooting and maintenance, which requires the following network information for each node:
 
 |===
+
 h| Node h| IP address h| Network mask h| Default gateway
 
 a|
@@ -300,6 +307,7 @@ You must obtain IP addresses and other network information for the second MetroC
 When you cable the system, you need a host name and management IP address for each cluster switch. This information is not needed if you are using a two-node switchless cluster or you have a two-node MetroCluster configuration (one node at each site).
 
 |===
+
 h| Cluster switch h| Host name h| IP address h| Network mask h| Default gateway
 
 a|
@@ -350,6 +358,7 @@ When you first create the cluster, you need the following information:
 
 
 |===
+
 h| Type of information h| Your values
 
 a|
@@ -383,6 +392,7 @@ For each node in the cluster, you need a management IP address, a network mask, 
 
 
 |===
+
 h| Node h| Port h| IP address h| Network mask h| Default gateway
 
 a|
@@ -420,6 +430,7 @@ a|
 For each node in the cluster, you need the IP addresses of two intercluster LIFs, including a network mask and a default gateway. The intercluster LIFs are used to peer the clusters.
 
 |===
+
 h| Node h| Port h| IP address of intercluster LIF h| Network mask h| Default gateway
 
 a|
@@ -475,6 +486,7 @@ a|
 You must synchronize the time, which requires one or more NTP time servers.
 
 |===
+
 h| Node h| Host name h| IP address h| Network mask h| Default gateway
 
 a|
@@ -499,12 +511,13 @@ a|
 
 |===
 
-==== Site B AutoSupport information
+==== Site B &nbsp;AutoSupport information
 
 You must configure AutoSupport on each node, which requires the following information:
 
 
 |===
+
 2+h| Type of information h| Your values
 
 2+a| From email address
@@ -537,11 +550,12 @@ a|
 
 |===
 
-==== Site B SP information
+==== Site B &nbsp;SP information
 
 You must enable access to the Service Processor (SP) of each node for troubleshooting and maintenance, which requires the following network information for each node:
 
 |===
+
 h| Node h| IP address h| Network mask h| Default gateway
 
 a|
@@ -574,6 +588,7 @@ The MetroCluster configuration is built on two standard clusters. Physically, th
 
 
 |===
+
 h| Configuration step h| Standard cluster configuration h| MetroCluster configuration
 
 a|
@@ -731,6 +746,7 @@ New MetroCluster systems have disk assignment completed prior to shipment.
 The following table shows example pool assignments for a MetroCluster configuration. Disks are assigned to pools on a per-shelf basis.
 
 |===
+
 h| Disk shelf (sample_shelf_name)... h| At site... h| Belongs to... h| And is assigned to that node's...
 
 a|
@@ -893,6 +909,7 @@ Pool 1 always contains the disks that are remote to the storage system that owns
 If your configuration includes DS460C disk shelves, you should manually assign the disks using the following guidelines for each 12-disk drawer:
 
 |===
+
 h| Assign these disks in the drawer... h| To this node and pool...
 
 a|
@@ -1102,6 +1119,7 @@ New MetroCluster systems have disk assignment completed prior to shipment.
 The following table shows example pool assignments for a MetroCluster configuration. Disks are assigned to pools on a per-shelf basis.
 
 |===
+
 h| Disk shelf (example name)... h| At site... h| Belongs to... h| And is assigned to that node's...
 
 a|
@@ -1144,6 +1162,7 @@ Disk shelf 12 (shelf_A_1_4)
 If your configuration includes DS460C disk shelves, you should manually assign the disks using the following guidelines for each 12-disk drawer:
 
 |===
+
 h| Assign these disks in the drawer... h| To this node and pool...
 
 a|
@@ -1221,6 +1240,7 @@ This task is not required on systems that are received from the factory.
 The correct HA state depends on your MetroCluster configuration.
 +
 |===
+
 h| Number of controllers in the MetroCluster configuration h| HA state for all components should be...
 
 a|
@@ -1240,6 +1260,7 @@ mccip
 . If the displayed system state of the controller is not correct, set the HA state for the controller module:
 +
 |===
+
 h| Number of controllers in the MetroCluster configuration h| Command
 
 a|
@@ -1259,6 +1280,7 @@ ha-config modify controller mccip
 . If the displayed system state of the chassis is not correct, set the HA state for the chassis:
 +
 |===
+
 h| Number of controllers in the MetroCluster configuration h| Command
 
 a|
@@ -1618,6 +1640,7 @@ cluster01
 . Create intercluster LIFs on the system SVM and assign them to the failover group.
 +
 |===
+
 h| ONTAP version h| Command
 
 a|
@@ -1742,6 +1765,7 @@ cluster01-02
 . Create intercluster LIFs on the system SVM:
 +
 |===
+
 a|
 *In ONTAP 9.6 and later:*
 a|
@@ -1769,6 +1793,7 @@ policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.
 . Verify that the intercluster LIFs were created:
 +
 |===
+
 a|
 *In ONTAP 9.6 and later:*
 a|
@@ -1795,6 +1820,7 @@ cluster01
 . Verify that the intercluster LIFs are redundant:
 +
 |===
+
 a|
 *In ONTAP 9.6 and later:*
 a|
@@ -2196,6 +2222,7 @@ The `metrocluster configure` command automatically pairs the two nodes with the 
 . Configure the MetroCluster in the following format:
 +
 |===
+
 h| If your MetroCluster configuration has... h| Then do this...
 
 a|
@@ -2563,6 +2590,7 @@ NOTE: Starting with ONTAP 9.8, the `storage bridge` command is replaced with `sy
  .. Add the bridge, using the command for your version of ONTAP:
 +
 |===
+
 h| ONTAP version h| Command
 a|
 9.5 and later

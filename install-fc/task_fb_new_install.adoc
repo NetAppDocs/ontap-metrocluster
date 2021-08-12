@@ -289,6 +289,7 @@ SAS Port B has been disabled.
 . Secure access to the bridge and save the bridge's configuration. Choose an option from below depending on the version of ONTAP your system is running.
 +
 |===
+
 h| ONTAP version h| Steps
 
 a|
@@ -453,6 +454,7 @@ You should verify that each bridge can detect all of the disk drives, and then c
 . [[step1_verify_bridges]] Verify that each bridge can detect all of the disk drives and disk shelves it is connected to:
 +
 |===
+
 h| If you are using the... h| Then...
 
 a|
@@ -477,6 +479,8 @@ View the connected devices:
 
 `sastargets`
 |===
+
++
 The output shows the devices (disks and disk shelves) that the bridge is connected to. Output lines are sequentially numbered so that you can quickly count the devices. For example, the following output shows that 10 disks are connected:
 +
 ----
@@ -493,17 +497,19 @@ Tgt VendorID ProductID        Type        SerialNumber
   9 NETAPP   X410_S15K6288A15 DISK        3QP1FXW600009940VERQ
 ----
 +
+
 NOTE: If the text response truncated appears at the beginning of the output, you can use Telnet to connect to the bridge and enter the same command to see all of the output.
 
 . Verify that the command output shows that the bridge is connected to all disks and disk shelves in the stack that it is supposed to be connected to.
 +
 |===
+
 h| If the output is... h| Then...
 
 a|
 Correct
 a|
-Repeat xref:task_fb_new_install.adocSTEP_524EBC3334F54467B771D9E2FD2B2DDA[Step 1] for each remaining bridge.
+Repeat <<step1_verify_bridges,Step 1>> for each remaining bridge.
 a|
 Not correct
 a|
