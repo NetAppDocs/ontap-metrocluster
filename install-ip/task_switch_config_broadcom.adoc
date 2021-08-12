@@ -228,11 +228,11 @@ This task must be repeated on each switch in the MetroCluster IP configuration.
 =====
 *Note the following:*
 
-* When upgrading from EFOS 3.4.x.x to EFOS 3.7.x.x the switch must be running EFOS 3.4.4.6 (or later 3.4.x.x release). If you are running a release prior to that, then upgrade the switch to EFOS 3.4.4.6 (or later 3.4.x.x release) first, then upgrade the switch to EFOS 3.7.x.x.
+* When upgrading from EFOS 3.4.x.x to EFOS 3.7.x.x, the switch must be running EFOS 3.4.4.6 (or later 3.4.x.x release). If you are running a release prior to that, then upgrade the switch to EFOS 3.4.4.6 (or later 3.4.x.x release) first, then upgrade the switch to EFOS 3.7.x.x.
 
-* The configuration for EFOS 3.4.x.x and 3.7.x.x are different. Changing the EFOS version from 3.4.x.x to 3.7.x.x or vice versa requires the switch to be reset to factory defaults and the RCF files for the corresponding EFOS version to be (re)applied. This procedure requires access via the serial console port.
+* The configuration for EFOS 3.4.x.x and 3.7.x.x are different. Changing the EFOS version from 3.4.x.x to 3.7.x.x or vice versa requires the switch to be reset to factory defaults and the RCF files for the corresponding EFOS version to be (re)applied. This procedure requires access through the serial console port.
 
-* Starting with EFOS version 3.7.x.x a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access via the serial console port.
+* Starting with EFOS version 3.7.x.x, a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access through the serial console port.
 =====
 // BURT-1392530
 [options="header"]
@@ -260,14 +260,11 @@ The configuration and license information is retained
 
 === Steps to upgrade EFOS with downloading the software image to the backup boot partition
 
-[NOTE]
-====
+You can perform the following steps only if both EFOS versions are non-FIPS compliant or both EFOS versions are FIPS compliant.
 
-* Follow these steps only if both EFOS version are non-FIPS or both EFOS versions are FIPS compliant. Do not use these steps if one version is FIPS compliant and the other version is non-FIPS compliant.
+NOTE: Do not use these steps if one version is FIPS compliant and the other version is non-FIPS compliant.
 
-* If the switch is upgraded from 3.4.x.x to 3.7.x.x and the EFOS was once downgraded, then you need to follow the procedure <<Steps to upgrade EFOS using the ONIE OS installation>>
-+
-====
+
 // BURT-1392530
 .Steps
 . Copy the switch software to the switch: `+copy sftp://user@50.50.50.50/switchsoftware/efos-3.4.3.1.stk backup+`
@@ -357,7 +354,7 @@ Are you sure you would like to reset the system? (y/n) y
 NOTE: In rare scenarios the switch may fail to boot. Follow the <<Steps to upgrade EFOS using the ONIE OS installation>> to install the new image.
 +
 
-. If you change the switch from EFOS 3.4.x.x to EFOS 3.7.x.x or vice version then follow these two procedures to apply the correct configuration (RCF):
+. If you change the switch from EFOS 3.4.x.x to EFOS 3.7.x.x or vice version then follow the following two procedures to apply the correct configuration (RCF):
 .. <<Resetting the Broadcom IP switch to factory defaults>>
 .. <<Downloading and installing the Broadcom RCF files>>
 
@@ -365,7 +362,7 @@ NOTE: In rare scenarios the switch may fail to boot. Follow the <<Steps to upgra
 
 === Steps to upgrade EFOS using the ONIE OS installation
 
-NOTE: Follow these steps if one EFOS version is FIPS compliant and the other EFOS version is non-FIPS compliant. These steps can be used to install the non-FIPS or FIPS compliant EFOS 3.7.x.x image from ONIE if the switch fails to boot.
+You can perform the following steps if one EFOS version is FIPS compliant and the other EFOS version is non-FIPS compliant. These steps can be used to install the non-FIPS or FIPS compliant EFOS 3.7.x.x image from ONIE if the switch fails to boot.
 
 .Steps
 
@@ -373,9 +370,9 @@ NOTE: Follow these steps if one EFOS version is FIPS compliant and the other EFO
 
 +
 
-------
-
 During boot, select ONIE when the following screen appears:
++
+------
  +----------------------------------------------------------------------------+
  |*EFOS                                                                       |
  | ONIE                                                                       |
@@ -391,7 +388,15 @@ During boot, select ONIE when the following screen appears:
  |                                                                            |
  +----------------------------------------------------------------------------+
 
+------
+
++
+
 After selecting "ONIE", the switch will then load and present you with the following choices:
+
++
+
+------
  +----------------------------------------------------------------------------+
  |*ONIE: Install OS                                                           |
  | ONIE: Rescue                                                               |
@@ -411,12 +416,15 @@ After selecting "ONIE", the switch will then load and present you with the follo
 +
 
 The switch now will boot into ONIE installation mode.
++
 
 . Stop the ONIE discovery and configure the ethernet interface
 
 +
-------
+
 Once the following message appears press <enter> to invoke the ONIE console:
++
+------
  Please press Enter to activate this console. Info: eth0:  Checking link... up.
  ONIE:/ #
 
@@ -447,6 +455,7 @@ ONIE:/ #
 ------
 +
 . Install the new switch software
+
 +
 -----
 
