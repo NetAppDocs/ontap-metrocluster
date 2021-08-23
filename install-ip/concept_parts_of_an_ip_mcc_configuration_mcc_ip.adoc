@@ -45,20 +45,18 @@ image::../media/mcc_dr_groups_4_node.gif[]
 
 == Illustration of the local HA pairs in a MetroCluster configuration
 
-[.lead]
 Each MetroCluster site consists of storage controllers configured as an HA pair. This allows local redundancy so that if one storage controller fails, its local HA partner can take over. Such failures can be handled without a MetroCluster switchover operation.
 
 Local HA failover and giveback operations are performed with the storage failover commands, in the same manner as a non-MetroCluster configuration.
 
 image::../media/mcc_ip_hardware_architecture_ha_pairs.gif[]
 
-*Related information*
+.Related information
 
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-concepts/home.html[ONTAP concepts]
 
 == Illustration of the MetroCluster IP and cluster interconnect network
 
-[.lead]
 ONTAP clusters typically include a cluster interconnect network for traffic between the nodes in the cluster. In MetroCluster IP configurations, this network is also used for carrying data replication traffic between the MetroCluster sites.
 
 image::../media/mcc_ip_hardware_architecture_ip_interconnect.png[]
@@ -72,20 +70,19 @@ The following illustration shows these interfaces. The port usage shown is for a
 
 image::../media/mcc_ip_lif_usage.gif[]
 
-*Related information*
+.Related information
 
-xref:concept_prepare_for_the_mcc_installation.html#considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration]
+link:concept_prepare_for_the_mcc_installation.html#considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration]
 
 == Illustration of the cluster peering network
 
-[.lead]
 The two clusters in the MetroCluster configuration are peered through a customer-provided cluster peering network. Cluster peering supports the synchronous mirroring of storage virtual machines (SVMs, formerly known as Vservers) between the sites.
 
 Intercluster LIFs must be configured on each node in the MetroCluster configuration, and the clusters must be configured for peering. The ports with the intercluster LIFs are connected to the customer-provided cluster peering network. Replication of the SVM configuration is carried out over this network through the Configuration Replication Service.
 
 image::../media/mcc_ip_hardware_architecture_cluster_peering_network.gif[]
 
-*Related information*
+.Related information
 
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-clus-peer/home.html[Cluster and SVM peering express configuration]
 

@@ -12,30 +12,37 @@ summary: The ONTAP Mediator service must be configured on the ONTAP node for use
 [.lead]
 The ONTAP Mediator service must be configured on the ONTAP node for use in a MetroCluster IP configuration.
 
-*Before you begin*
+.Before you begin
 
 * The ONTAP Mediator must have been successfully installed on a network location that can be reached by both MetroCluster sites.
 * You must have the IP address of the host running the ONTAP Mediator service.
 * You must have the username and password for the ONTAP Mediator service.
 * All nodes of the MetroCluster IP configuration must be online.
 
-*About this task*
+.About this task
 
 * This task enables automatic unplanned switchover by default.
 * This task can be performed on the ONTAP interface of any node in the MetroCluster IP configuration.
 * A single installation of the ONTAP Mediator service can be configured with up to five MetroCluster IP configurations.
 
-*Procedure*
+.Steps
 
-. Add the ONTAP Mediator service to ONTAP using the following command: metrocluster configuration-settings mediator add -mediator-address ip-address-of-mediator-host
+. Add the ONTAP Mediator service to ONTAP using the following command:
 +
-Note: You will be prompted for the username and password for the Mediator admin user account.
+`metrocluster configuration-settings mediator add -mediator-address ip-address-of-mediator-host`
++
+NOTE: You will be prompted for the username and password for the Mediator admin user account.
 
-. Verify that the automatic switchover feature in enabled: metrocluster show
+. Verify that the automatic switchover feature in enabled:
++
+`metrocluster show`
 . Verify that the Mediator is now running.
 
- .. Show the Mediator virtual disks: storage disk show -container-type mediator
+.. Show the Mediator virtual disks:
 +
+`storage disk show -container-type mediator`
++
+....
  cluster_A::> storage disk show -container-type mediator
                         Usable           Disk    Container   Container
  Disk                   Size Shelf Bay Type    Type        Name      Owner
@@ -44,13 +51,21 @@ Note: You will be prompted for the username and password for the Mediator admin 
  NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
  NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
  NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
+....
 
- .. Set the privilege mode to advanced: set advanced
+.. Set the privilege mode to advanced:
 +
+`set advanced`
++
+....
  cluster_A::> set advanced
+....
 
-.. Display the initiators labelled as mediator: storage iscsi-initiator show -label mediator
+.. Display the initiators labelled as mediator:
 +
+`storage iscsi-initiator show -label mediator`
++
+....
  cluster_A::*> storage iscsi-initiator show -label mediator
    (storage iscsi-initiator show)
   +                                                                     Status
@@ -62,3 +77,4 @@ Note: You will be prompted for the username and password for the Mediator admin 
  node_A_2
       mailbox
            mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
+....
