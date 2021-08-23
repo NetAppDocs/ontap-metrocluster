@@ -38,10 +38,20 @@ Prior to ONTAP 9.9.1, a LUN should not be located on an unmirrored aggregate. Co
 
 NOTE: If you are adding shelves that will be used for unmirrored aggregates in a MetroCluster IP configuration, you must do the following:
 
-. Before starting the procedure to add the shelves, issue the following command: `metrocluster modify -enable-unmirrored-aggr-deployment true`
-. Verify that automatic disk assignment is off: `disk option show`
+. Before starting the procedure to add the shelves, issue the following command:
++
+`metrocluster modify -enable-unmirrored-aggr-deployment true`
+. Verify that automatic disk assignment is off:
++
+`disk option show`
 . Follow the steps of the procedure to add the shelf.
 . Manually assign all disks from new shelf to the node that will own the unmirrored aggregate or aggregates.
-. Create the aggregates using the storage aggregate create command. .
-. After completing the procedure, issue the following command: `metrocluster modify -enable-unmirrored-aggr-deployment false`
-. Verify that automatic disk assignment is enabled: `disk option show`
+. Create the aggregates:  
++
+`storage aggregate create`
+. After completing the procedure, issue the following command:
++
+`metrocluster modify -enable-unmirrored-aggr-deployment false`
+. Verify that automatic disk assignment is enabled:
++
+`disk option show`
