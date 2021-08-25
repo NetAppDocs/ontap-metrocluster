@@ -77,6 +77,7 @@ If you are upgrading the ONTAP Mediator you must meet the Linux version requirem
 
 The following table provides the upgrade guidelines if you are upgrading from RHEL/CentOS 7.6 to a later RHEL/CentOS release in addition upgrading the Mediator version.
 
+[cols="20,20,60"]
 |===
 
 h| Target Linux version h| Target Mediator version h| Upgrade notes
@@ -95,7 +96,8 @@ a|
  .. Reboot the host to apply the kernel module changes.
  .. Upgrade the Mediator from version 1.0 to 1.1.
 +
-link:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html#installing-or-upgrading-the-ontap-mediator-service[Installing or upgrading the ONTAP Mediator service]
+link:task_install_configure_mediator.html[Installing or upgrading the ONTAP Mediator service]
+
 * The storage iscsi-initiator show command will report that the connection to the Mediator service is down during the upgrade.
 * The ONTAP operating system will generate cf.mccip.med.auso.stDisabled EMS events during the upgrade.
 * The ONTAP operating system will generate a cf.mccip.med.auso.stEnabled EMS event when automatic unplanned switchover is re-enabled.
@@ -117,7 +119,7 @@ link:../install-ip/task_uninstall_mediator.html[Uninstalling the ONTAP Mediator 
 . Upgrade the Linux operating system to version 8.0 or 8.1.
 . Install the 1.1 version of the Mediator service.
 +
-link:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html#installing-or-upgrading-the-ontap-mediator-service[Installing or upgrading the ONTAP Mediator service]
+link:task_uninstall_mediator.html[Installing or upgrading the ONTAP Mediator service]
 
 . Add the Mediator service to the ONTAP configuration:
 +
@@ -142,7 +144,7 @@ link:../install-ip/task_uninstall_mediator.html[Uninstalling the ONTAP Mediator 
 
 . Install the 1.0 version of the Mediator service.
 +
-link:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html#installing-or-upgrading-the-ontap-mediator-service[Installing or upgrading the ONTAP Mediator service]
+link:task_install_configure_mediator.html[Installing or upgrading the ONTAP Mediator service]
 
 . Add the Mediator service to the ONTAP configuration:
 +
@@ -160,6 +162,7 @@ The ONTAP Mediator requires the SCST kernel module. If the Linux kernel is updat
 
 You can use either of the following procedures to recover from a kernel upgrade that has resulted in loss of service for the Mediator.
 
+[cols="30,70"]
 |===
 
 h| Procedure h| Steps
@@ -206,8 +209,9 @@ a|
 . Delete the Mediator service from the ONTAP configuration:
 +
 `metrocluster configuration-settings mediator remove`
+
 . link:../install-ip/task_uninstall_mediator.html[Uninstall the ONTAP Mediator service].
-. link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html#installing-or-upgrading-the-ontap-mediator-service[Reinstall the Mediator service].
+. link:../install-ip/task_install__configure_mediator.html[Reinstall the Mediator service].
 . Add the Mediator service to the ONTAP configuration:
 +
 `metrocluster configuration-settings add -addressmediator-ip-address`

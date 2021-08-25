@@ -7,7 +7,7 @@ summary: In a MetroCluster IP configuration that is not preconfigured at the fac
 = Verifying the ha-config state of components
 // BURT 1381553
 [.lead]
-In a MetroCluster IP configuration that is not preconfigured at the factory, you must verify that the ha-config state of the controller and chassis components is set to mccip so that they boot up properly. For systems received from the factory, this value is preconfigured and you do not need to verify it.
+In a MetroCluster IP configuration that is not preconfigured at the factory, you must verify that the ha-config state of the controller and chassis components is set to "mccip" so that they boot up properly. For systems received from the factory, this value is preconfigured and you do not need to verify it.
 
 .Before you begin
 
@@ -52,7 +52,7 @@ If the system has not been pre-configured at the factory and does not meet the r
 
 This procedure applies to configurations running ONTAP 9.4 or later.
 
-To determine if your system requires manual disk assignment, you should review link:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
+To determine if your system requires manual disk assignment, you should review link:concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
 
 You perform these steps in Maintenance mode. The procedure must be performed on each node in the configuration.
 
@@ -371,7 +371,10 @@ Where is the controller located []: site_A
 +
 You can use ONTAP System Manager, pointing your web browser to the cluster management IP address (https://172.17.12.153).
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help/GUID-DF04A607-30B0-4B98-99C8-CB065C64E670.html[Cluster management using System Manager]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help/GUID-DF04A607-30B0-4B98-99C8-CB065C64E670.html[Cluster management using System Manager (Versions 9.0 to 9.6)]
++
+https://docs.netapp.com/us-en/ontap/index.html[ONTAP System Manager (Versions 9.7 and later)]
+
 . Boot the next controller and join it to the cluster, following the prompts.
 . Confirm that nodes are configured in high-availability mode:
 +
@@ -447,7 +450,7 @@ This task is not required in ONTAP 9.5 and later.
 
 This task does not apply to an AFF A800 system with an internal shelf and no external shelves.
 
-link:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
+link:concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
 
 .Steps
 
@@ -465,7 +468,7 @@ You must verify that the remote drives are visible to the nodes and have been as
 
 Automatic assignment depends on the storage system platform model and drive shelf arrangement.
 
-link:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
+link:concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
 
 .Steps
 
@@ -572,9 +575,9 @@ The clusters in the MetroCluster configuration must be in a peer relationship so
 
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-clus-peer/home.html[Cluster and SVM peering express configuration]
 
-link:concept_prepare_for_the_mcc_installation.html#considerations-when-using-dedicated-ports[Considerations when using dedicated ports]
+link:concept_considerations_peering.html#considerations-when-using-dedicated-ports[Considerations when using dedicated ports]
 
-link:concept_prepare_for_the_mcc_installation.html#considerations-when-sharing-data-ports[Considerations when sharing data ports]
+link:concept_considerations_peering.html#considerations-when-sharing-data-ports[Considerations when sharing data ports]
 
 === Configuring intercluster LIFs for cluster peering
 
@@ -775,7 +778,7 @@ cluster01
 
 .Related information
 
-link:concept_prepare_for_the_mcc_installation.html#considerations-when-using-dedicated-ports[Considerations when using dedicated ports]
+link:concept_considerations_peering.html#considerations-when-using-dedicated-ports[Considerations when using dedicated ports]
 
 ==== Configuring intercluster LIFs on shared data ports
 
@@ -906,7 +909,7 @@ cluster01
 
 .Related information
 
-link:concept_prepare_for_the_mcc_installation.html#considerations-when-sharing-data-ports[Considerations when sharing data ports]
+link:concept_considerations_peering.html#considerations-when-sharing-data-ports[Considerations when sharing data ports]
 
 === Creating a cluster peer relationship
 
@@ -1077,7 +1080,7 @@ NOTE: You must choose the MetroCluster IP addresses carefully because you cannot
 
 * You must create two interfaces for each node. The interfaces must be associated with the VLANs defined in the MetroCluster RCF file.
 
-* You must create all MetroCluster IP interface "A" ports in the same VLAN and all MetroCluster IP interface "B" ports in the other VLAN.  Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-metrocluster-ip-configuration[Considerations for MetroCluster IP configuration].
+* You must create all MetroCluster IP interface "A" ports in the same VLAN and all MetroCluster IP interface "B" ports in the other VLAN.  Refer to link:concept_considerations_mcip.html[Considerations for MetroCluster IP configuration].
 
 
 // include reference
@@ -1290,7 +1293,7 @@ cluster_B
 [NOTE]
 ====
 * The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
 // 22 APR 2021, BURT 1180776
 * On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
 ====
@@ -1329,7 +1332,7 @@ NOTE: You can verify that these interfaces are present using the `metrocluster c
 [NOTE]
 ====
 * The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
 // 22 APR 2021, BURT 1180776
 * On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
 ====
@@ -1382,7 +1385,7 @@ cluster_A::>
 [NOTE]
 ====
 * The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
 // 22 APR 2021, BURT 1180776
 * On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
 ====
@@ -1418,7 +1421,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [NOTE]
 ====
 * The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_prepare_for_the_mcc_installation.html#Considerations-for-layer-3-wide-area-networks[Considerations for layer 3 wide-area networks].
+* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
 // 22 APR 2021, BURT 1180776
 * On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
 ====
@@ -1672,7 +1675,7 @@ Command output will show disk names in the following format:
 
 `node-name:0m.i1.0L1`
 
-link:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
+link:concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
 
 .Step
 
@@ -1867,7 +1870,7 @@ If the system was not preconfigured at the factory and does not meet the require
 
 This procedure applies to configurations running ONTAP 9.4 or later.
 
-Details for determining whether your system requires manual disk assignment are included in link:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
+Details for determining whether your system requires manual disk assignment are included in link:concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
 
 // BURT 1389935
 When the configuration includes only two external shelves per site, pool 1 drives for each site should be shared from the same shelf as shown in the following examples:
@@ -2041,19 +2044,19 @@ node_A_2:0m.i2.1L90       -    21  19 SSD     unassigned  -         -
 cluster_A::>
 ----
 
-.. Repeat these steps to assign pool 1 disks to the second node on site A (for example, node_A_2).
+.. Repeat these steps to assign pool 1 disks to the second node on site A (for example, "node_A_2").
 .. Repeat these steps on site B.
 
 === Enabling automatic drive assignment in ONTAP 9.4
 
 In ONTAP 9.4, if you disabled automatic drive assignment as directed previously in this procedure, you must reenable it on all nodes.
 
-link:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
+link:concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later]
 
 .Step
 
 . Enable automatic drive assignment:
-
++
 `storage disk option modify -node _node_name_ -autoassign on`
 +
 You must issue this command on all nodes in the MetroCluster IP configuration.
