@@ -11,13 +11,15 @@ summary: 'When you configure a Brocade FC switch, you can install the switch con
 [.lead]
 When you configure a Brocade FC switch, you can install the switch configuration files that provide the complete switch settings for certain configurations.
 
+.About this task
+
 These steps must be repeated on each of the Brocade FC switches in the MetroCluster fabric configuration.
 
 .Steps
 
 . Initiate the download and configuration process:
 +
-`*configDownload*`
+`configDownload`
 +
 Respond to the prompts as shown in the following example.
 +
@@ -37,7 +39,9 @@ Password: <user input>
 +
 After entering your password, the switch downloads and executes the configuration file.
 
-. Persistently enable the switch: `*switchcfgpersistentenable*`
+. Persistently enable the switch:
++
+`switchcfgpersistentenable`
 +
 The example shows how to persistently enable FC switch_A_1.
 +
@@ -47,7 +51,7 @@ FC_switch_A_1:admin> switchcfgpersistentenable
 
 . Run the following command to confirm that the configuration file has set the switch domain:
 +
-`*switchShow*`
+`switchShow`
 +
 Each switch is assigned a different domain number depending on which configuration file the switch used.
 +
@@ -63,9 +67,10 @@ switchDomain: 5
 
 . Verify that your switch is assigned the correct domain value as indicated in the following table.
 +
-[options="header"]
 |===
-| Fabric| Switch| Switch domain
+
+h| Fabric h| Switch h| Switch domain
+
 .2+a|
 1
 a|
@@ -88,7 +93,9 @@ a|
 8
 |===
 
-. Change the port speed: `*portcfgspeed*`
+. Change the port speed:
++
+`portcfgspeed`
 +
 ----
 FC_switch_A_1:admin> portcfgspeed port number port speed
@@ -108,9 +115,11 @@ If the distance is 3 km, then 1.5 × 3 km = 4.5. This is lower than 10; therefor
 +
 The distance is 20 km, then 1.5 × 20 km = 30. You must set the ISL to the LS distance level.
 
-. Set the distance for each ISL port using the following command: `*portcfglongdistance* _port levelvc_link_initdistance_`
+. Set the distance for each ISL port:
 +
-A vc_link_init value of 1 uses the fillword 'ARB' by default. A value of 0 uses the fillword 'IDLE'. The required value might vary depending on the link you use. In this example, the default is set and the distance is assumed to be 20 km. Hence, the setting is '30' with a vc_link_init value of 1, and the ISL port is 21.
+`portcfglongdistance _port level vc_link_init_ -distance _distance_value_`
++
+A vc_link_init value of 1 uses the fillword "ARB" by default. A value of 0 uses the fillword "IDLE". The required value might vary depending on the link you use. In this example, the default is set and the distance is assumed to be 20 km. Hence, the setting is "30" with a vc_link_init value of "1", and the ISL port is "21".
 +
 Example: LS
 +
@@ -124,15 +133,21 @@ Example: LE
 FC_switch_A_1:admin> portcfglongdistance 21 LE 1
 ----
 
-. Verify if the IP address is set correctly: `*ipAddrshow*`
+. Verify if the IP address is set correctly:
++
+`ipAddrshow`
 +
 ----
 FC_switch_A_1:admin> ipAddrshow
 ----
 +
-You can set the IP address with the following command if required: `*ipAddrSet*`
+You can set the IP address with the following command if required:
++
+`ipAddrSet`
 
-. Set the timezone from the switch prompt: `*tstimezone --interactive*`
+. Set the timezone from the switch prompt:
++
+`tstimezone --interactive`
 +
 You should respond to the prompts as required.
 +
@@ -140,7 +155,9 @@ You should respond to the prompts as required.
 FC_switch_A_1:admin>  tstimezone --interactive
 ----
 
-. Reboot the switch: `*reboot*`
+. Reboot the switch:
++
+`reboot`
 +
 The example shows how to reboot FC switch _A_1.
 +
@@ -148,7 +165,9 @@ The example shows how to reboot FC switch _A_1.
 FC_switch_A_1:admin> reboot
 ----
 
-. Verify the distance setting: `*portbuffershow*`
+. Verify the distance setting:
++
+`portbuffershow`
 +
 A distance setting of LE appears as 10 km.
 +
@@ -168,10 +187,12 @@ Port Type Mode Buffers  Usage  Buffers Distance Buffers
 +
 The ISL cables were disconnected when the factory settings were reset to the default settings.
 +
-xref:task_reset_the_brocade_fc_switch_to_factory_defaults.adoc[Resetting the Brocade FC switch to factory defaults]
+link:task_reset_the_brocade_fc_switch_to_factory_defaults.html[Resetting the Brocade FC switch to factory defaults]
 
 . Validate the configuration.
- .. Verify that the switches form one fabric: `*switchshow*`
+ .. Verify that the switches form one fabric:
++
+`switchshow`
 +
 The following example shows the output for a configuration that uses ISLs on ports 20 and 21.
 +
@@ -196,7 +217,9 @@ Index Port Address Media Speed State  Proto
 ...
 ----
 
- .. Confirm the configuration of the fabrics: `*fabricshow*`
+.. Confirm the configuration of the fabrics:
++
+`fabricshow`
 +
 ----
 FC_switch_A_1:admin> fabricshow
@@ -206,21 +229,23 @@ FC_switch_A_1:admin> fabricshow
 3: fffc03 10:00:00:05:33:8c:2e:9a 10.10.10.65  0.0.0.0   >"FC_switch_B_1"
 ----
 
- .. Very that the ISLs are working: `*islshow*`
+.. Verify that the ISLs are working:
++
+`islshow`
 +
 ----
 FC_switch_A_1:admin> islshow
 ----
 
- .. Confirm that zoning is properly replicated by running the following commands:
+.. Confirm that zoning is properly replicated:
++
+`cfgshow`
  +
-`*cfgshow*`
- +
-`*zoneshow*`
+`zoneshow`
 +
 Both outputs should show the same configuration information and zoning information for both switches.
 
- .. If trunking is used, you can confirm the trunking with the following command: `*trunkShow*`
+.. If trunking is used, you can confirm the trunking with the following command: `*trunkShow*`
 +
 ----
 FC_switch_A_1:admin> trunkshow

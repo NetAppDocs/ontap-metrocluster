@@ -2,13 +2,14 @@
 permalink: install-stretch/concept_configuring_the_mcc_software_in_ontap.html
 sidebar: sidebar
 keywords: metrocluster, stretch, installation, configure, software
-summary: 'You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites.'
+summary: 'You must set up each node in the MetroCluster configuration in ONTAP. This includes the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites.'
 ---
 = Configuring the MetroCluster software in ONTAP
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
+
 You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites.
 
 image::../media/workflow_high_level_node_and_cluster_configuration_software.gif[]
@@ -20,6 +21,8 @@ image::../media/workflow_high_level_node_and_cluster_configuration_software.gif[
 . IP network information worksheet for site A
 
 [.lead]
+== IP network informatin worksheet for Site A ==
+
 You must obtain IP addresses and other network information for the first MetroCluster site (site A) from your network administrator before you configure the system.
 
 ==== Site A cluster creation information
@@ -190,7 +193,7 @@ a|
 
 ==== Site A SP information
 
-You must enable access to the Service Processor (SP) of each node for troubleshooting and maintenance, which requires the following network information for each node:
+You must enable access to the Service Processor (SP) of each node for troubleshooting and maintenance. This requires the following network information for each node:
 
 [options="header"]
 |===
@@ -450,6 +453,8 @@ include::../_include/steps_restore_defaults_and_configure_hbas.adoc[]
 [.lead]
 If you are using the X1132A-R6 quad-port card on a FAS8020 system, you can enter Maintenance mode to configure the 1a and 1b ports for FC-VI and initiator usage. This is not required on MetroCluster systems received from the factory, in which the ports are set appropriately for your configuration.
 
+*About this task*
+
 This task must be performed in Maintenance mode.
 
 NOTE: Converting an FC port to an FC-VI port with the ucadmin command is only supported on the FAS8020 and AFF 8020 systems. Converting FC ports to FCVI ports is not supported on any other platform.
@@ -544,7 +549,11 @@ controller_B_1
 [.lead]
 Before fully booting the system to ONTAP, you can optionally boot the system to Maintenance mode and verify the disk assignment on the nodes. The disks should be assigned to create a fully symmetric configuration with both sites owning their own disk shelves and serving data, where each node and each pool have an equal number of mirrored disks assigned to them.
 
+*Before you begin*
+
 The system must be in Maintenance mode.
+
+*About this task*
 
 New MetroCluster systems have disk assignment completed prior to shipment.
 
@@ -656,6 +665,8 @@ If storage controller node_B_1 has four shelves, you issue the following command
 [.lead]
 In a stretch MetroCluster configuration that is not preconfigured at the factory, you must verify that the HA state of the controller and chassis component is set to `mcc-2n` so that they boot up properly. For systems received from the factory, this value is preconfigured and you do not need to verify it.
 
+*Before you begin*
+
 The system must be in Maintenance mode.
 
 .Steps
@@ -682,7 +693,11 @@ Wait until the node is back at the LOADER prompt.
 [.lead]
 In a two-node MetroCluster configuration, on each cluster you must boot up the node, exit the Cluster Setup wizard, and use the `cluster setup` command to configure the node into a single-node cluster.
 
+*Before you begin*
+
 You must not have configured the Service Processor.
+
+*About this task*
 
 This task is for two-node MetroCluster configurations using native NetApp storage.
 
@@ -697,7 +712,7 @@ For more general information about setting up ONTAP, see the link:https://docs.n
 +
 NOTE: You must repeat this step on the node at the disaster recovery (DR) site.
 +
-The node boots, and then the Cluster Setup wizard starts on the console, informing you that AutoSupport will be enabled automatically.
+The node boots, then the Cluster Setup wizard starts on the console informing you that AutoSupport will be enabled automatically.
 +
 
 ----
@@ -743,11 +758,11 @@ Do you intend for this node to be used as a single node cluster? {yes, no} [yes]
 ----
 
 . Accept the system default `*yes*` by pressing Enter, or enter your own values by typing `*no*`, and then pressing Enter.
-. Follow the prompts to complete the Cluster Setup wizard, pressing Enter to accept the default values or typing your own values and then pressing Enter.
+. Follow the prompts to complete the *Cluster Setup* wizard, pressing Enter to accept the default values or typing your own values and then pressing Enter.
 +
 The default values are determined automatically based on your platform and network configuration.
 
-. After you complete the Cluster Setup wizard and it exits, verify that the cluster is active and the first node is healthy:
+. After you complete the *Cluster Setup* wizard and it exits, verify that the cluster is active and the first node is healthy:
 +
 `*cluster show*`
 +
@@ -760,7 +775,7 @@ Node                  Health  Eligibility
 cluster1-01           true    true
 ----
 +
-If it becomes necessary to change any of the settings you entered for the admin SVM or node SVM, you can access the Cluster Setup wizard by using the `cluster setup` command.
+If it becomes necessary to change any of the settings you entered for the admin SVM or node SVM, you can access the *Cluster Setup* wizard by using the `cluster setup` command.
 
 
 == Configuring the clusters into a MetroCluster configuration
@@ -929,6 +944,7 @@ a|
 a|
 `*network interface show -role intercluster*`
 |===
++
 For complete command syntax, see the man page.
 +
 ----
@@ -956,6 +972,7 @@ a|
 a|
 `*network interface show -role intercluster -failover*`
 |===
++
 For complete command syntax, see the man page.
 +
 The following example shows that the intercluster LIFs `cluster01_icl01` and `cluster01_icl02` on the SVMe0e port will fail over to the `e0f` port.
@@ -1108,6 +1125,8 @@ You must create the cluster peer relationship between the MetroCluster clusters.
 [.lead]
 You can use the `cluster peer create` command to create a peer relationship between a local and remote cluster. After the peer relationship has been created, you can run `cluster peer create` on the remote cluster to authenticate it to the local cluster.
 
+*Before you begin*
+
 * You must have created intercluster LIFs on every node in the clusters that are being peered.
 * The clusters must be running ONTAP 9.3 or later.
 
@@ -1206,6 +1225,9 @@ cluster01-02
 [.lead]
 You can use the `cluster peer create` command to initiate a request for a peering relationship between a local and remote cluster. After the peer relationship has been requested by the local cluster, you can run `cluster peer create` on the remote cluster to accept the relationship.
 
+
+*Before you begin*
+
 * You must have created intercluster LIFs on every node in the clusters being peered.
 * The cluster administrators must have agreed on the passphrase each cluster will use to authenticate itself to the other.
 
@@ -1289,6 +1311,8 @@ cluster01-02
 [.lead]
 You must mirror the root aggregates to provide data protection.
 
+*About this task*
+
 By default, the root aggregate is created as RAID-DP type aggregate. You can change the root aggregate from RAID-DP to RAID4 type aggregate. The following command modifies the root aggregate for RAID4 type aggregate:
 
 
@@ -1323,8 +1347,13 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-concepts/home.html[O
 [.lead]
 You must create a mirrored data aggregate on each node in the DR group.
 
+*Before you begin*
+
 * You should know what drives or array LUNs will be used in the new aggregate.
 * If you have multiple drive types in your system (heterogeneous storage), you should understand how you can ensure that the correct drive type is selected.
+
+*About this task*
+
 * Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
 +
@@ -1373,8 +1402,12 @@ cluster_A::> storage aggregate create aggr1_node_A_1 -diskcount 10 -node node_A_
 [.lead]
 You can optionally create unmirrored data aggregates for data that does not require the redundant mirroring provided by MetroCluster configurations.
 
+*Before you begin*
+
 * You should know what drives or array LUNs will be used in the new aggregate.
 * If you have multiple drive types in your system (heterogeneous storage), you should understand how you can verify that the correct drive type is selected.
+
+*About this task*
 
 [ATTENTION]
 ====
@@ -1430,6 +1463,8 @@ controller_A_1::> storage aggregate create aggr1_controller_A_1 -diskcount 10 -n
 [.lead]
 You must run the `metrocluster configure` command to start data protection in a MetroCluster configuration.
 
+*Before you begin*
+
 * There should be at least two non-root mirrored data aggregates on each cluster.
 +
 Additional data aggregates can be either mirrored or unmirrored.
@@ -1440,7 +1475,9 @@ NOTE: If you want to use a single mirrored data aggregate, then see xref:concept
 
 * The ha-config state of the controllers and chassis must be `mcc-2n`.
 
-You issue the `metrocluster configure` command once, on any of the nodes, to enable the MetroCluster configuration. You do not need to issue the command on each of the sites or nodes, and it does not matter which node or site you choose to issue the command on.
+*About this task*
+
+You can issue the `metrocluster configure` command once, on any of the nodes, to enable the MetroCluster configuration. You do not need to issue the command on each of the sites or nodes, and it does not matter which node or site you choose to issue the command on.
 
 .Steps
 . Configure the MetroCluster in the following format:
