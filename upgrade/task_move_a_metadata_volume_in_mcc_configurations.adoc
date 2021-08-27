@@ -11,6 +11,8 @@ summary: 'You can move a metadata volume from one aggregate to another aggregate
 [.lead]
 You can move a metadata volume from one aggregate to another aggregate in a MetroCluster configuration. You might want to move a metadata volume when the source aggregate is decommissioned or unmirrored, or for other reasons that make the aggregate ineligible.
 
+.About this task
+
 * You must have cluster administrator privileges to perform this task.
 * The target aggregate must be mirrored and should not be in the degraded state.
 * The available space in the target aggregate must be larger than the metadata volume that you are moving.
@@ -18,10 +20,10 @@ You can move a metadata volume from one aggregate to another aggregate in a Metr
 .Steps
 . Set the privilege level to advanced:
 +
-`*set -privilege advanced*`
+`set -privilege advanced`
 . Identify the metadata volume that should be moved:
 +
-`*volume show MDV_CRS**`
+`volume show MDV_CRS*`
 +
 ----
 Cluster_A::*> volume show MDV_CRS*
@@ -50,7 +52,7 @@ Cluster_A::>
 
 . Identify an eligible target aggregate:
 +
-`*metrocluster check config-replication show-aggregate-eligibility*`
+`metrocluster check config-replication show-aggregate-eligibility`
 +
 The following command identifies the aggregates in cluster_A that are eligible to host metadata volumes:
 +
@@ -76,9 +78,9 @@ NOTE: In the previous example, Node_A_1_aggr2 and Node_A_2_aggr2 are eligible.
 
 . Start the volume move operation:
 +
-`*volume move start -vserver _svm_name_ -volume _metadata_volume_name_ -destination-aggregate _destination_aggregate_name_*`
+`volume move start -vserver _svm_name_ -volume _metadata_volume_name_ -destination-aggregate _destination_aggregate_name_*`
 +
-The following command moves metadata volume `MDV_CRS_14c00d4ac9f311e7922800a0984395f1` from `aggregate Node_A_1_aggr1` to `aggregate Node_A_1_aggr2`:
+The following command moves metadata volume "MDV_CRS_14c00d4ac9f311e7922800a0984395f1" from "aggregate Node_A_1_aggr1" to "aggregate Node_A_1_aggr2":
 +
 ----
 Cluster_A::*> volume move start -vserver svm_cluster_A -volume MDV_CRS_14c00d4ac9f311e7922800a0984395f1
@@ -96,7 +98,7 @@ MDV_CRS_9da04864ca6011e7b82e0050568be9fe_A" command to view the status of this o
 
 . Verify the state of the volume move operation:
 +
-`*volume move show -volume vol_constituent_name*`
+`volume move show -volume vol_constituent_name`
 . Return to the admin privilege level:
 +
-`*set -privilege admin*`
+`set -privilege admin`

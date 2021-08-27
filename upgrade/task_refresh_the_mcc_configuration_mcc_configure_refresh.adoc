@@ -11,13 +11,15 @@ summary: 'You must refresh the MetroCluster configuration when expanding it from
 [.lead]
 You must refresh the MetroCluster configuration when expanding it from a two-node configuration to a four-node configuration.
 
+.Steps
+
 . Refresh the MetroCluster configuration:
- .. Enter advanced privilege mode:
+.. Enter advanced privilege mode:
  +
-`*set -privilege advanced*`
- .. Refresh the MetroCluster configuration:
+`set -privilege advanced`
+.. Refresh the MetroCluster configuration:
  +
-`*metrocluster configure -refresh true -allow-with-one-aggregate true*`
+`metrocluster configure -refresh true -allow-with-one-aggregate true`
 // ontap-metrocluster/issues/53
 +
 The following command refreshes the MetroCluster configuration on all of the nodes in the DR group that contains controller_A_1:
@@ -28,12 +30,12 @@ controller_A_1::*> metrocluster configure -refresh true -allow-with-one-aggregat
 [Job 726] Job succeeded: Configure is successful.
 ----
 
- .. Return to admin privilege mode:
- +
-`*set -privilege admin*`
+.. Return to admin privilege mode:
++
+`set -privilege admin`
 . Verify the networking status on site A:
 +
-`*network port show*`
+`network port show`
 +
 The following example shows the network port usage on a four-node MetroCluster configuration:
 +
@@ -64,7 +66,7 @@ controller_A_2
 . Verify the MetroCluster configuration from both sites in the MetroCluster configuration.
  .. Verify the configuration from site A:
 +
-`*metrocluster show*`
+`metrocluster show`
 +
 ----
 cluster_A::> metrocluster show
@@ -80,7 +82,7 @@ Remote: cluster_B         Configuration state configured
 
  .. Verify the configuration from site B:
 +
-`*metrocluster show*`
+`metrocluster show`
 +
 ----
 cluster_B::> metrocluster show
@@ -94,9 +96,9 @@ Remote: cluster_A         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
- .. Verify that the DR relationships have been created correctly:
- +
-`*metrocluster node show -fields dr-cluster,dr-auxiliary,node-object-limit,automatic-uso,ha-partner,dr-partner*`
+.. Verify that the DR relationships have been created correctly:
++
+`metrocluster node show -fields dr-cluster,dr-auxiliary,node-object-limit,automatic-uso,ha-partner,dr-partner`
 +
 ----
 metrocluster node show -fields dr-cluster,dr-auxiliary,node-object-limit,automatic-uso,ha-partner,dr-partner

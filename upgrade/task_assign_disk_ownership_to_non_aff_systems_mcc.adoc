@@ -11,6 +11,8 @@ summary: 'If the MetroCluster nodes do not have the disks correctly assigned, or
 [.lead]
 If the MetroCluster nodes do not have the disks correctly assigned, or if you are using DS460C disk shelves in your configuration, you must assign disks to each of the nodes in the MetroCluster configuration on a shelf-by-shelf basis. You will create a configuration in which each node has the same number of disks in its local and remote disk pools.
 
+.About this task
+
 The storage controllers must be in Maintenance mode.
 
 If your configuration does not include DS460C disk shelves, this task is not required if disks were correctly assigned when received from the factory.
@@ -24,9 +26,11 @@ Pool 1 always contains the disks that are remote to the storage system that owns
 
 If your configuration includes DS460C disk shelves, you should manually assign the disks using the following guidelines for each 12-disk drawer:
 
-[options="header"]
+
 |===
-| Assign these disks in the drawer...| To this node and pool...
+
+h| Assign these disks in the drawer... h| To this node and pool...
+
 a|
 0 - 2
 a|
@@ -44,19 +48,22 @@ a|
 a|
 DR partner of the HA partner's pool 1
 |===
+
 This disk assignment pattern ensures that an aggregate is minimally affected in case a drawer goes offline.
 
 .Steps
+
 . If you have not done so, boot each system into Maintenance mode.
+
 . Assign the disk shelves to the nodes located at the first site (site A):
 +
 Disk shelves at the same site as the node are assigned to pool 0 and disk shelves located at the partner site are assigned to pool 1.
 +
 You should assign an equal number of shelves to each pool.
 
- .. On the first node, systematically assign the local disk shelves to pool 0 and the remote disk shelves to pool 1:
- +
-`*disk assign -shelf _local-switch-name:shelf-name.port_ -p _pool_*`
+.. On the first node, systematically assign the local disk shelves to pool 0 and the remote disk shelves to pool 1:
++
+`disk assign -shelf _local-switch-name:shelf-name.port_ -p _pool_`
 +
 If storage controller Controller_A_1 has four shelves, you issue the following commands:
 +
@@ -68,9 +75,9 @@ If storage controller Controller_A_1 has four shelves, you issue the following c
 *> disk assign -shelf FC_switch_B_1:1-4.shelf2 -p 1
 ----
 
- .. Repeat the process for the second node at the local site, systematically assigning the local disk shelves to pool 0 and the remote disk shelves to pool 1:
- +
-`*disk assign -shelf _local-switch-name:shelf-name.port_ -p _pool_*`
+.. Repeat the process for the second node at the local site, systematically assigning the local disk shelves to pool 0 and the remote disk shelves to pool 1:
++
+`disk assign -shelf _local-switch-name:shelf-name.port_ -p _pool_`
 +
 If storage controller Controller_A_2 has four shelves, you issue the following commands:
 +
@@ -88,9 +95,9 @@ Disk shelves at the same site as the node are assigned to pool 0 and disk shelve
 +
 You should assign an equal number of shelves to each pool.
 
- .. On the first node at the remote site, systematically assign its local disk shelves to pool 0 and its remote disk shelves to pool 1:
- +
-`*disk assign -shelf _local-switch-nameshelf-name_ -p _pool_*`
+.. On the first node at the remote site, systematically assign its local disk shelves to pool 0 and its remote disk shelves to pool 1:
++
+`disk assign -shelf _local-switch-nameshelf-name_ -p _pool_`
 +
 If storage controller Controller_B_1 has four shelves, you issue the following commands:
 +
@@ -102,9 +109,9 @@ If storage controller Controller_B_1 has four shelves, you issue the following c
 *> disk assign -shelf FC_switch_A_1:1-5.shelf2 -p 1
 ----
 
- .. Repeat the process for the second node at the remote site, systematically assigning its local disk shelves to pool 0 and its remote disk shelves to pool 1:
- +
-`*disk assign -shelf _shelf-name_ -p _pool_*`
+.. Repeat the process for the second node at the remote site, systematically assigning its local disk shelves to pool 0 and its remote disk shelves to pool 1:
++
+`disk assign -shelf _shelf-name_ -p _pool_`
 +
 If storage controller Controller_B_2 has four shelves, you issue the following commands:
 +
@@ -118,11 +125,12 @@ If storage controller Controller_B_2 has four shelves, you issue the following c
 
 . Confirm the shelf assignments:
 +
-`*storage show shelf*`
+`storage show shelf`
 . Exit Maintenance mode:
 +
-`*halt*`
+`halt`
 . Display the boot menu:
 +
-`*boot_ontap menu*`
+`boot_ontap menu`
+
 . On each node, select option *4* to initialize all disks.

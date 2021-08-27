@@ -11,18 +11,20 @@ summary: 'You must run the metrocluster configure -refresh true command to start
 [.lead]
 You must run the `metrocluster configure -refresh true` command to start data protection on the nodes that you have added to a MetroCluster configuration.
 
+.About this task
+
 You issue the `metrocluster configure -refresh true` command once, on one of the newly added nodes, to refresh the MetroCluster configuration. You do not need to issue the command on each of the sites or nodes.
 
 The `metrocluster configure -refresh true` command automatically pairs the two nodes with the lowest system IDs in each of the two clusters as disaster recovery (DR) partners. In a four-node MetroCluster configuration, there are two DR partner pairs. The second DR pair is created from the two nodes with higher system IDs.
 
 .Steps
 . Refresh the MetroCluster configuration:
- .. Enter advanced privilege mode:
+.. Enter advanced privilege mode:
++
+`set -privilege advanced`
+.. Refresh the MetroCluster configuration on one of the new nodes:
  +
-`*set -privilege advanced*`
- .. Refresh the MetroCluster configuration on one of the new nodes:
- +
-`*metrocluster configure -refresh true*`
+`metrocluster configure -refresh true`
 +
 The following example shows the MetroCluster configuration refreshed on both DR groups:
 +
@@ -38,12 +40,12 @@ controller_A_4::*> metrocluster configure -refresh true
 [Job 740] Job succeeded: Configure is successful.
 ----
 
- .. Return to admin privilege mode:
- +
-`*set -privilege admin*`
+.. Return to admin privilege mode:
++
+`set -privilege admin`
 . Verify the networking status on site A:
 +
-`*network port show*`
+`network port show`
 +
 The following example shows the network port usage on a four-node MetroCluster configuration:
 +
@@ -72,9 +74,9 @@ controller_A_2
 ----
 
 . Verify the MetroCluster configuration from both sites in the MetroCluster configuration:
- .. Verify the configuration from site A:
+.. Verify the configuration from site A:
 +
-`*metrocluster show*`
+`metrocluster show`
 +
 ----
 cluster_A::> metrocluster show
@@ -89,9 +91,9 @@ Remote: cluster_B         Configuration state configured
                           Mode                normal
 ----
 
- .. Verify the configuration from site B:
+.. Verify the configuration from site B:
  +
-`*metrocluster show*`
+`metrocluster show`
 +
 ----
 cluster_B::> metrocluster show
