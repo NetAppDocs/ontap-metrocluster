@@ -14,21 +14,21 @@ After expanding the MetroCluster configuration, you must restart the SVMs.
 .Steps
 . Identify the SVMs that need to be restarted:
 +
-`*metrocluster vserver show*`
+`metrocluster vserver show`
 +
 This command shows the SVMs on both MetroCluster clusters.
 
 . Restart the SVMs on the first cluster:
- .. Enter advanced privilege mode, pressing `*y*` when prompted:
+.. Enter advanced privilege mode, pressing `*y*` when prompted:
 +
-`*set -privilege advanced*`
- .. Restart the SVMs:
+`set -privilege advanced`
+.. Restart the SVMs:
 +
-`*vserver start -vserver _SVM_name_ -force true*`
- .. Return to admin privilege mode:
+`vserver start -vserver _SVM_name_ -force true`
+.. Return to admin privilege mode:
 +
-`*set -privilege admin*`
+`set -privilege admin`
 . Repeat the previous step on the partner cluster.
 . Verify that the SVMs are in a healthy state:
 +
-`*metrocluster vserver show*`
+`metrocluster vserver show`
