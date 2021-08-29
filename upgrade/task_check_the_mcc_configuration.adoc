@@ -11,12 +11,14 @@ summary: 'You can check that the components and relationships in the MetroCluste
 [.lead]
 You can check that the components and relationships in the MetroCluster configuration are working correctly. You should do a check after initial configuration and after making any changes to the MetroCluster configuration. You should also do a check before a negotiated (planned) switchover or a switchback operation.
 
+.About this task
+
 If the `metrocluster check run` command is issued twice within a short time on either or both clusters, a conflict can occur and the command might not collect all data. Subsequent `metrocluster check show` commands do not show the expected output.
 
 .Steps
 . Check the configuration:
 +
-`*metrocluster check run*`
+`metrocluster check run`
 +
 The command runs as a background job and might not be completed immediately.
 +
@@ -45,15 +47,15 @@ connections         ok
 
 . Display more detailed results from the most recent `metrocluster check run` command:
 +
-`*metrocluster check aggregate show*`
+`metrocluster check aggregate show`
 +
-`*metrocluster check cluster show*`
+`metrocluster check cluster show`
 +
-`*metrocluster check config-replication show*`
+`metrocluster check config-replication show`
 +
-`*metrocluster check lif show*`
+`metrocluster check lif show`
 +
-`*metrocluster check node show*`
+`metrocluster check node show`
 +
 The `metrocluster check show` commands show the results of the most recent `metrocluster check run` command. You should always run the `metrocluster check run` command prior to using the `metrocluster check show` commands so that the information displayed is current.
 +

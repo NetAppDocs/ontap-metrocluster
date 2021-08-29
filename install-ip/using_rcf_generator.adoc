@@ -12,19 +12,22 @@ summary: You must understand how to use the information in the port tables to co
 [.lead]
 You must understand how to use the information in the port tables to correctly generate your RCF files.
 
+.Before you begin
+
 Review these considerations before using the tables:
 
 * The following tables show the port usage for site A. The same cabling is used for site B.
 * The switches cannot be configured with ports of different speeds (for example, a mix of 100 Gbps ports and 40 Gbps ports).
-* Keep track of the MetroCluster port group (MetroCluster 1, MetroCluster 2, etc.). You will need it when using the RcfFileGenerator tool as described later in this configuration procedure.
+* Keep track of the MetroCluster port group (MetroCluster 1, MetroCluster 2, etc.). You will need this information when using the RcfFileGenerator tool as described later in this configuration procedure.
 
 * The https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP] also provides a per-port cabling overview for each switch.
-+
 Use this cabling overview to verify your cabling.
 
 == Cabling eight-node MetroCluster configurations
 
 For MetroCluster configuration running ONTAP 9.8 and earlier, some procedures that are performed to transition an upgrade require the addition of a second four-node DR group to the configuration to create a temporary eight-node configuration.  Starting with ONTAP 9.9.1, permanent 8-node MetroCluster configurations are supported.
+
+.About this task
 
 For such configurations, you use the same method as described above. Instead of a second MetroCluster, you are cabling an additional four-node DR group.
 
@@ -34,8 +37,10 @@ For example, your configuration includes the following:
 * MetroCluster 1: FAS2750 platforms
 * MetroCluster 2: AFF A700 platforms (these platforms are being added as a second four-node DR group)
 
-For MetroCluster 1, cable the Cisco 3132Q-V switches using the table for the FAS2750 platform and the rows for MetroCluster 1 interfaces.
+.Steps
 
-For MetroCluster 2 (the second DR group), cable the Cisco 3132Q-V switches using the table for the AFF A700 platform and the rows for MetroCluster 2 interfaces.
+. For MetroCluster 1, cable the Cisco 3132Q-V switches using the table for the FAS2750 platform and the rows for MetroCluster 1 interfaces.
+
+. For MetroCluster 2 (the second DR group), cable the Cisco 3132Q-V switches using the table for the AFF A700 platform and the rows for MetroCluster 2 interfaces.
 
 // 21 APR 2021, BURT 1374268

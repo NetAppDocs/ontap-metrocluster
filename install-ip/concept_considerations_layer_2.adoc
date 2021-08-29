@@ -100,9 +100,10 @@ image::../media/switch_traffic_with_broadcom_switches.png[]
 Configurations using MetroCluster IP Broadcom switches require additional configuration:
 
 * For exterior switches you must configure the access and class maps to classify the traffic on ingress to the customer network.
-
++
 NOTE: This is not required on configurations using MetroCluster IP switches.
 
++
 The following example shows how to configure the access and class maps on the first and last customer switches connecting the ISLs between the MetroCluster IP Broadcom switches.
 
 ----
@@ -120,11 +121,12 @@ class-map type qos match-all rdma
 ----
 
 * You need to assign the ingress policy to the ISL switch port on the first customer switch.
-
++
 The following example shows the class map definitions:
-
++
 NOTE: This example is for configurations using Cisco MetroCluster IP switches. You can follow this example regardless of the switch types of the switches carrying MetroCluster traffic that do not connect to a MetroCluster IP switch.
 
++
 ----
 class-map type qos match-all rdma
    match cos 5
@@ -132,8 +134,10 @@ class-map type qos match-all storage
    match cos 4
 ----
 
++
 The following example shows the policy map definitions:
 
++
 ----
 policy-map type qos MetroClusterIP_Ingress
    class rdma

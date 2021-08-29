@@ -12,9 +12,10 @@ summary: 'You should check the health of the MetroCluster configuration to verif
 You should check the health of the MetroCluster configuration to verify proper operation.
 
 .Steps
+
 . Check that the MetroCluster is configured and in normal mode on each cluster:
 +
-`*metrocluster show*`
+`metrocluster show`
 +
 ----
 cluster_A::> metrocluster show
@@ -30,7 +31,7 @@ Remote: cluster_B         Configuration state configured
 
 . Check that mirroring is enabled on each node:
 +
-`*metrocluster node show*`
+`metrocluster node show`
 +
 ----
 cluster_A::> metrocluster node show
@@ -46,7 +47,7 @@ Group Cluster Node           State          Mirroring Mode
 
 . Check that the MetroCluster components are healthy:
 +
-`*metrocluster check run*`
+`metrocluster check run`
 +
 ----
 cluster_A::> metrocluster check run
@@ -67,17 +68,17 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 
 . Check that there are no health alerts:
 +
-`*system health alert show*`
+`system health alert show`
 . Simulate a switchover operation:
  .. From any node's prompt, change to the advanced privilege level:
  +
-`*set -privilege advanced*`
+`set -privilege advanced`
 +
 You need to respond with `*y*` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
  .. Perform the switchover operation with the -simulate parameter:
  +
-`*metrocluster switchover -simulate*`
+`metrocluster switchover -simulate`
  .. Return to the admin privilege level:
  +
-`*set -privilege admin*`
+`set -privilege admin`

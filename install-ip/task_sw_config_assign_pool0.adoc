@@ -17,7 +17,7 @@ If the system has not been pre-configured at the factory and does not meet the r
 
 This procedure applies to configurations running ONTAP 9.4 or later.
 
-To determine if your system requires manual disk assignment, you should review link:concept_prepare_for_the_mcc_installation.html#considerations-for-automatic-drive-assignment-and-adp-systems-in-ontap-9-4-and-later[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
+To determine if your system requires manual disk assignment, you should review link:concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems in ONTAP 9.4 and later].
 
 You perform these steps in Maintenance mode. The procedure must be performed on each node in the configuration.
 
@@ -71,7 +71,7 @@ Please choose one of the following:
 . When the node restarts, press Ctrl-C when prompted to display the boot menu and then select the option for *Maintenance mode boot*.
 . In Maintenance mode, manually assign drives for the local aggregates on the node:
 +
-`disk assign disk-id -p 0 -s local-node-sysid`
+`disk assign _disk-id_ -p 0 -s _local-node-sysid_`
 +
 The drives should be assigned symmetrically, so each node has an equal number of drives. The following steps are for a configuration with two storage shelves at each site.
 
@@ -88,7 +88,7 @@ The drives should be assigned symmetrically, so each node has an equal number of
 `boot_ontap menu`
 . Select option "4" from the boot menu and let the system boot.
 . Repeat these steps on the other nodes in the MetroCluster IP configuration.
-. Proceed to link:concept_configure_the_mcc_software_in_ontap.html#setting-up-ontap[Setting up ONTAP].
+. Proceed to link:task_sw_config_setup_ontap.html[Setting up ONTAP].
 
 == Manually assigning drives for pool 0 (ONTAP 9.3)
 
@@ -125,7 +125,7 @@ Examples in this section assume the following disk shelves:
 
 . Manually assign a single disk for root aggregate on each node:
 +
-`disk assign disk-id -p 0 -s local-node-sysid`
+`disk assign _disk-id_ -p 0 -s _local-node-sysid_`
 +
 The manual assignment of these disks allows the ONTAP autoassignment feature to assign the rest of the disks on each shelf.
 
@@ -139,7 +139,8 @@ The manual assignment of these disks allows the ONTAP autoassignment feature to 
 You should complete this step on a node before proceeding to the next node.
 
 .. Exit Maintenance mode:
-+ `halt`
++
+`halt`
 .. Display the boot menu:
 +
 `boot_ontap menu`
