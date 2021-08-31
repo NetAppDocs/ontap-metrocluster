@@ -11,20 +11,25 @@ summary: 'Before installing a new controller module, you must configure cluster 
 [.lead]
 Before installing a new controller module, you must configure cluster ports on the existing controller module so that the cluster ports can provide cluster communication with the new controller module.
 
+.About this task
+
 If you are creating a two-node switchless cluster (with no cluster network switches), you must enable the switchless cluster networking mode.
 
 For detailed information about port, LIF, and network configuration in ONTAP, see the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Network Management Guide].
 
 .Steps
+
 . Determine which ports should be used as the node's cluster ports.
 +
 For a list of the default port roles for your platform, see the https://hwu.netapp.com/[Hardware Universe]
 +
 The _Installation and Setup Instructions_ for your platform on the NetApp Support Site contains information about the ports for cluster network connections.
 
-. For each cluster port, identify the port roles: `*network port show*`
+. For each cluster port, identify the port roles:
 +
-In the following example, ports e0a, e0b, e0c, and e0d must be changed to cluster ports:
+`network port show`
++
+In the following example, ports "e0a", "e0b", "e0c", and "e0d" must be changed to cluster ports:
 +
 ----
 cluster_A::> network port show
@@ -49,7 +54,9 @@ e4b       Default      Default          up    1500   auto/10000  healthy
 13 entries were displayed.
 ----
 
-. For any data LIF that is using a cluster port as the home-port or current-port, modify the LIF to use a data port as its home-port: `network interface modify*`
+. For any data LIF that is using a cluster port as the home-port or current-port, modify the LIF to use a data port as its home-port:
++
+`network interface modify`
 +
 The following example changes the home port of a data LIF to a data port:
 +
@@ -57,18 +64,20 @@ The following example changes the home port of a data LIF to a data port:
 cluster1::> network interface modify -lif datalif1 -vserver vs1 -home-port e1b
 ----
 
-. For each LIF that you modified, revert the LIF to its new home port: `*network interface revert*`
+. For each LIF that you modified, revert the LIF to its new home port:
 +
-The following example reverts the LIF datalif1 to its new home port e1b:
+`network interface revert`
++
+The following example reverts the LIF "datalif1" to its new home port "e1b":
 +
 ----
 cluster1::> network interface revert -lif datalif1 -vserver vs1
 ----
 
 . Remove any VLAN ports using cluster ports as member ports and ifgrps using cluster ports as member ports.
- .. Delete VLAN ports:
+.. Delete VLAN ports:
  +
-`*network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_*`
+`network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
 +
 For example:
 +
@@ -76,7 +85,7 @@ For example:
 network port vlan delete -node node1 -vlan-name e1c-80
 ----
 
- .. Remove physical ports from the interface groups:
+.. Remove physical ports from the interface groups:
 +
 `network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
 +
@@ -86,15 +95,17 @@ For example:
 network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 ----
 
- .. Remove VLAN and interface group ports from broadcast domain::
+.. Remove VLAN and interface group ports from broadcast domain::
 +
 `network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
- .. Modify interface group ports to use other physical ports as member as needed.:
+.. Modify interface group ports to use other physical ports as member as needed.:
  +
 `ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
-. Verify that the port roles have changed: `*network port show*`
+. Verify that the port roles have changed:
 +
-The following example shows that ports e0a, e0b, e0c, and e0d are now cluster ports:
+`network port show`
++
+The following example shows that ports "e0a", "e0b", "e0c", and "e0d" are now cluster ports:
 +
 ----
 Node: controller_A_1
@@ -117,15 +128,18 @@ e4b       Default      Default          up    1500   auto/10000  healthy
 13 entries were displayed.
 ----
 
-. Add the ports to the cluster broadcast domain: ``*broadcast-domain add-ports -ipspace Cluster -broadcast-domain Cluster -ports _port-id_, _port-id_, _port-id_...``
+. Add the ports to the cluster broadcast domain:
++
+`broadcast-domain add-ports -ipspace Cluster -broadcast-domain Cluster -ports _port-id_, _port-id_, _port-id_...`
 +
 For example:
++
 ----
 broadcast-domain add-ports -ipspace Cluster -broadcast-domain Cluster -ports cluster1-01:e0a
 ----
 // ontap-metrocluster/issues/47
 
-. If your system is part of a switched cluster, create cluster LIFs on the cluster ports: `*network interface create*`
+. If your system is part of a switched cluster, create cluster LIFs on the cluster ports: `network interface create`
 +
 The following example creates a cluster LIF on one of the node's cluster ports. The `-auto` parameter configures the LIF to use a link-local IP address.
 +
@@ -134,15 +148,18 @@ cluster1::> network interface create -vserver Cluster -lif clus1 -role cluster -
 ----
 
 . If you are creating a two-node switchless cluster, enable the switchless cluster networking mode:
- .. Change to the advanced privilege level from either node:
+.. Change to the advanced privilege level from either node:
 +
-`*set -privilege advanced*`
+`set -privilege advanced`
 +
 You can respond `y` when prompted whether you want to continue into advanced mode. The advanced mode prompt appears (`*>`).
-
- .. Enable the switchless cluster networking mode:
-`*network options switchless-cluster modify -enabled true*`
- .. Return to the admin privilege level: `*set -privilege admin*`
-
+.. Enable the switchless cluster networking mode:
 +
+`network options switchless-cluster modify -enabled true`
+
+ .. Return to the admin privilege level:
++
+`set -privilege admin`
+
+
 IMPORTANT: Cluster interface creation for the existing node in a two-node switchless cluster system is completed after cluster setup is completed through a netboot on the new controller module.

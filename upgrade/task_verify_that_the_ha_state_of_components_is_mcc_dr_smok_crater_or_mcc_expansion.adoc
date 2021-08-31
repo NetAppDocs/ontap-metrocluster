@@ -11,21 +11,24 @@ summary: 'In a MetroCluster configuration, the ha-config state of the controller
 [.lead]
 In a MetroCluster configuration, the ha-config state of the controller module and chassis components must be set to *mcc* so they boot up properly.
 
-The system must be in Maintenance mode.
+.About this task
 
-This task must be performed on each new controller module.
+* The system must be in Maintenance mode.
+
+* This task must be performed on each new controller module.
 
 .Steps
+
 . In Maintenance mode, display the HA state of the controller module and chassis:
 +
-`*ha-config show*`
+`ha-config show`
 +
-The HA state for all components should be mcc.
+The HA state for all components should be "mcc".
 
 . If the displayed system state of the controller is not correct, set the HA state for the controller module:
 +
-`*ha-config modify controller mcc*`
+`ha-config modify controller mcc`
 . If the displayed system state of the chassis is not correct, set the HA state for the chassis:
 +
-`*ha-config modify chassis mcc*`
+`ha-config modify chassis mcc`
 . Repeat these steps on the other replacement node.

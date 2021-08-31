@@ -8,34 +8,38 @@ summary: 'Third-party SNMP monitoring tools are not supported for FibreBridge br
 :icons: font
 :imagesdir: ../media/
 
-[.lead]
+
+.About this task
+
 * Third-party SNMP monitoring tools are not supported for FibreBridge bridges.
 * Starting with ONTAP 9.8, FC-to-SAS bridges are monitored via in-band connections by default, and additional configuration is not required.
 
-NOTE: Starting with ONTAP 9.8, the `*storage bridge*` command is replaced with `*system bridge*`. The following steps show the `*storage bridge*` command, but if you are running ONTAP 9.8 or later, the `*system bridge*` command is preferred.
+NOTE: Starting with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
 
-.Steps
+.Step
 . From the ONTAP cluster prompt, add the bridge to health monitoring:
  .. Add the bridge, using the command for your version of ONTAP:
 +
-[options="header"]
+
 |===
-| ONTAP version| Command
+
+h| ONTAP version h| Command
+
 a|
 9.5 and later
 a|
-`*storage bridge add -address 0.0.0.0 -managed-by in-band -name _bridge-name_*`
+`storage bridge add -address 0.0.0.0 -managed-by in-band -name _bridge-name_`
 a|
 9.4 and earlier
 a|
-`*storage bridge add -address _bridge-ip-address_ -name _bridge-name_*`
+`storage bridge add -address _bridge-ip-address_ -name _bridge-name_`
 |===
 
- .. Verify that the bridge has been added and is properly configured:
- +
-`*storage bridge show*`
+.. Verify that the bridge has been added and is properly configured:
 +
-It might take as long as 15 minutes to reflect all data because of the polling interval. The ONTAP health monitor can contact and monitor the bridge if the value in the `*Status*` column is `*ok*`, and other information, such as the worldwide name (WWN), is displayed.
+`storage bridge show`
++
+It might take as long as 15 minutes to reflect all data because of the polling interval. The ONTAP health monitor can contact and monitor the bridge if the value in the "Status" column is "ok", and other information, such as the worldwide name (WWN), is displayed.
 +
 The following example shows that the FC-to-SAS bridges are configured:
 +
