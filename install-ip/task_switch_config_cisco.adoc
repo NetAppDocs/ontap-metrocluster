@@ -11,25 +11,34 @@ You must configure the Cisco IP switches for use as the cluster interconnect and
 
 == Resetting the Cisco IP switch to factory defaults
 
-[.lead]
 Before installing a new software version and RCFs, you must erase the Cisco switch configuration and perform basic configuration.
+
+.About this task
 
 You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
 
-. Reset the switch to factory defaults:
- .. Erase the existing configuration: `write erase`
- .. Reload the switch software: `reload`
-+
-The system reboots and enters the configuration wizard. During the boot, if you receive the prompt Abort Auto Provisioning and continue with normal setup?(yes/no)[n], you should respond `yes` to proceed.
+.Steps
 
- .. In the configuration wizard, enter the basic switch settings:
+. Reset the switch to factory defaults:
+.. Erase the existing configuration:
++
+`write erase`
+.. Reload the switch software:
++
+`reload`
++
+The system reboots and enters the configuration wizard. During the boot, if you receive the prompt `Abort Auto Provisioning and continue with normal setup?(yes/no)[n]`, you should respond `yes` to proceed.
+
+.. In the configuration wizard, enter the basic switch settings:
   *** Admin password
   *** Switch name
   *** Out-of-band management configuration
   *** Default gateway
   *** SSH service (RSA)
++
 After completing the configuration wizard, the switch reboots.
- .. When prompted, enter the user name and password to log in to the switch.
+
+.. When prompted, enter the user name and password to log in to the switch.
 +
 The following example shows the prompts and system responses when configuring the switch. The angle brackets (`<<<`) show where you enter the information.
 +
@@ -116,22 +125,22 @@ IP_switch_A_1#
 ----
 . Save the configuration:
 +
-----
- IP_switch-A-1# copy running-config startup-config
-----
+`IP_switch-A-1# copy running-config startup-config`
+
 
 . Reboot the switch and wait for the switch to reload:
 +
-----
- IP_switch-A-1# reload
-----
+`IP_switch-A-1# reload`
+
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
 == Downloading and installing the Cisco switch NX-OS software
 
-[.lead]
+
 You must download the switch operating system file and RCF file to each switch in the MetroCluster IP configuration.
+
+.About this task
 
 This task requires file transfer software, such as FTP, TFTP, SFTP, or SCP, to copy the files to the switches.
 
@@ -141,14 +150,18 @@ You must use the supported switch software version.
 
 https://hwu.netapp.com[NetApp Hardware Universe]
 
+.Steps
+
 . Download the supported NX-OS software file.
 +
 https://software.cisco.com/download/home[Cisco Software Download]
 // BURT 1380522
 
-. Copy the switch software to the switch: `+copy sftp://root@server-ip-address/tftpboot/NX-OS-file-name bootflash: vrf management+`
+. Copy the switch software to the switch:
 +
-In this example, the nxos.7.0.3.I4.6.bin file is copied from SFTP server 10.10.99.99 to the local bootflash:
+`copy sftp://root@server-ip-address/tftpboot/NX-OS-file-name bootflash: vrf management`
++
+In this example, the "nxos.7.0.3.I4.6.bin" file is copied from SFTP server "10.10.99.99" to the local bootflash:
 +
 ----
 IP_switch_A_1# copy sftp://root@10.10.99.99/tftpboot/nxos.7.0.3.I4.6.bin bootflash: vrf management
@@ -162,7 +175,9 @@ sftp> exit
 Copy complete, now saving to disk (please wait)...
 ----
 
-. Verify on each switch that the switch NX-OS files are present in each switch's bootflash directory: `dir bootflash:`
+. Verify on each switch that the switch NX-OS files are present in each switch's bootflash directory:
++
+`dir bootflash:`
 +
 The following example shows that the files are present on IP_switch_A_1:
 +
@@ -183,11 +198,13 @@ Usage for bootflash://sup-local
 IP_switch_A_1#
 ----
 
-. Install the switch software: `install all nxos bootflash:nxos.version-number.bin`
+. Install the switch software:
++
+`install all nxos bootflash:nxos.version-number.bin`
 +
 The switch will reload (reboot) automatically after the switch software has been installed.
 +
-The following example shows the software installation on IP_switch_A_1:
+The following example shows the software installation on "IP_switch_A_1":
 +
 ----
 IP_switch_A_1# install all nxos bootflash:nxos.7.0.3.I4.6.bin
@@ -270,7 +287,9 @@ IP_switch_A_1#
 The switch software is now installed.
 ----
 
-. Verify that the switch software has been installed: `show version`
+. Verify that the switch software has been installed:
++
+`show version`
 +
 The following example shows the output:
 +
@@ -318,8 +337,9 @@ IP_switch_A_1#
 
 == Downloading and installing the Cisco IP RCF files
 
-[.lead]
 You must download the RCF file to each switch in the MetroCluster IP configuration.
+
+.About this task
 
 This task requires file transfer software, such as FTP, TFTP, SFTP, or SCP, to copy the files to the switches.
 
@@ -331,9 +351,10 @@ https://hwu.netapp.com[NetApp Hardware Universe]
 
 There are four RCF files, one for each of the four switches in the MetroCluster IP configuration. You must use the correct RCF files for the switch model you are using.
 
-[options="header"]
 |===
-| Switch| RCF file
+
+h| Switch h| RCF file
+
 a|
 IP_switch_A_1
 a|
@@ -352,11 +373,15 @@ a|
 NX3232_v1.80_Switch-B2.txt
 |===
 
+.Steps
+
 . Download the MetroCluster IP RCF files from the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF download page].
 . Copy the RCF files to the switches:
- .. Copy the RCF files to the first switch: `+copy sftp://root@FTP-server-IP-address/tftpboot/switch-specific-RCF bootflash: vrf management+`
+.. Copy the RCF files to the first switch:
 +
-In this example, the NX3232_v1.80_Switch-A1.txt RCF file is copied from the SFTP server at 10.10.99.99 to the local bootflash. You must use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
+`copy sftp://root@FTP-server-IP-address/tftpboot/switch-specific-RCF bootflash: vrf management`
++
+In this example, the "NX3232_v1.80_Switch-A1.txt" RCF file is copied from the SFTP server at "10.10.99.99" to the local bootflash. You must use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
 +
 ----
 IP_switch_A_1# copy sftp://root@10.10.99.99/tftpboot/NX3232_v1.80_Switch-A1.txt bootflash: vrf management
@@ -371,8 +396,10 @@ Copy complete, now saving to disk (please wait)...
 IP_switch_A_1#
 ----
 
- .. Repeat the previous substep for each of the other three switches, being sure to copy the matching RCF file to the corresponding switch.
-. Verify on each switch that the RCF file is present in each switch's bootflash directory: `dir bootflash:`
+.. Repeat the previous substep for each of the other three switches, being sure to copy the matching RCF file to the corresponding switch.
+. Verify on each switch that the RCF file is present in each switch's bootflash directory:
++
+`dir bootflash:`
 +
 The following example shows that the files are present on IP_switch_A_1:
 +
@@ -393,8 +420,13 @@ Usage for bootflash://sup-local
 IP_switch_A_1#
 ----
 
-. Copy the matching RCF file from the local bootflash to the running configuration on each switch: `copy bootflash:switch-specific-RCF.txt running-config`
-. Copy the RCF files from the running configuration to the startup configuration on each switch: `copy running-config startup-config`
+. Copy the matching RCF file from the local bootflash to the running configuration on each switch:
++
+`copy bootflash:switch-specific-RCF.txt running-config`
+
+. Copy the RCF files from the running configuration to the startup configuration on each switch:
++
+`copy running-config startup-config`
 +
 You should see output similar to the following:
 +
@@ -403,17 +435,23 @@ IP_switch_A_1# copy bootflash:NX3232_v1.80_Switch-A1.txt running-config
 IP_switch-A-1# copy running-config startup-config
 ----
 
-. Reload the switch: `reload`
+. Reload the switch:
++
+`reload`
 +
 ----
 IP_switch_A_1# reload
 ----
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
-
+// begin delete
+// begin delete
+// begin delete
+// begin delete
+//
+//
 == Configuring MACsec encryption on Cisco 9336C switches
 
-[.lead]
 You must only configure MACsec encryption on the WAN ISL ports that run between the sites. You must configure MACsec after applying the correct RCF file.
 
 === Licensing requirements for MACsec
@@ -421,23 +459,31 @@ You must only configure MACsec encryption on the WAN ISL ports that run between 
 MACsec requires a security license. For a complete explanation of the Cisco NX-OS licensing scheme and how to obtain and apply for licenses, see the https://www.cisco.com/c/en/us/td/docs/switches/datacenter/sw/nx-os/licensing/guide/b_Cisco_NX-OS_Licensing_Guide/b_Cisco_NX-OS_Licensing_Guide_chapter_01.html[Cisco NX-OS Licensing Guide]
 
 === Enabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
-[.lead]
+
 You can enable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
 
-. Enter the global configuration mode: `configure terminal`
+.Steps
+
+. Enter the global configuration mode:
++
+`configure terminal`
 +
 ----
 IP_switch_A_1# configure terminal
 IP_switch_A_1(config)#
 ----
 
-. Enable MACsec and MKA on the device: `feature macsec`
+. Enable MACsec and MKA on the device:
++
+`feature macsec`
 +
 ----
 IP_switch_A_1(config)# feature macsec
 ----
 
-. Copy the running configuration to the startup configuration: `copy running-config startup-config`
+. Copy the running configuration to the startup configuration:
++
+`copy running-config startup-config`
 +
 ----
 IP_switch_A_1(config)# copy running-config startup-config
@@ -445,17 +491,22 @@ IP_switch_A_1(config)# copy running-config startup-config
 
 === Disabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
 
-[.lead]
 You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
 
-. Enter the global configuration mode: `configure terminal`
+.Steps
+
+. Enter the global configuration mode:
++
+`configure terminal`
 +
 ----
 IP_switch_A_1# configure terminal
 IP_switch_A_1(config)#
 ----
 
-. Disable the MACsec configuration on the device: `macsec shutdown`
+. Disable the MACsec configuration on the device:
++
+`macsec shutdown`
 +
 ----
 IP_switch_A_1(config)# macsec shutdown
@@ -472,14 +523,18 @@ IP_switch_A_1(config)# interface ethernet 1/15
 switch(config-if)#
 ----
 
-. Remove the keychain, policy and fallback-keychain configured on the interface to remove the MACsec configuration: `no macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
+. Remove the keychain, policy, and fallback-keychain configured on the interface to remove the MACsec configuration:
++
+`no macsec keychain _keychain-name_ policy _policy-name_ fallback-keychain _fallback-keychain-name_`
 +
 ----
 IP_switch_A_1(config-if)# no macsec keychain kc2 policy abc fallback-keychain fb_kc2
 ----
 
 . Repeat steps 3 and 4 on all interfaces where MACsec is configured.
-. Copy the running configuration to the startup configuration: `copy running-config startup-config`
+. Copy the running configuration to the startup configuration:
++
+`copy running-config startup-config`
 +
 ----
 IP_switch_A_1(config)# copy running-config startup-config
@@ -487,8 +542,9 @@ IP_switch_A_1(config)# copy running-config startup-config
 
 === Configuring a MACsec key chain and keys
 
-[.lead]
 You can create a MACsec key chain or keys on your configuration.
+
+.About this task
 
 *Key Lifetime and Hitless Key Rollover*
 
@@ -498,33 +554,40 @@ A MACsec keychain can have multiple pre-shared keys (PSKs), each configured with
 
 A MACsec session can fail due to a key/key name (CKN) mismatch or a finite key duration between the switch and a peer. If a MACsec session does fail, a fallback session can take over if a fallback key is configured. A fallback session prevents downtime due to primary session failure and allows a user time to fix the key issue causing the failure. A fallback key also provides a backup session if the primary session fails to start. This feature is optional.
 
-. Enter the global configuration mode: `configure terminal`
+.Steps
+
+. Enter the global configuration mode:
++
+`configure terminal`
 +
 ----
 IP_switch_A_1# configure terminal
 IP_switch_A_1(config)#
 ----
 
-. To hide the encrypted key octet string, replace the string with a wildcard character in the output of the show running-config and show startup-config commands:
+. To hide the encrypted key octet string, replace the string with a wildcard character in the output of the `show running-config` and `show startup-config` commands:
 +
 ----
 IP_switch_A_1(config)# key-chain macsec-psk no-show
 ----
 +
-NOTE:
-+
-The octet string is also hidden when you save the configuration to a file.
+NOTE: The octet string is also hidden when you save the configuration to a file.
+
 +
 By default, PSK keys are displayed in encrypted format and can easily be decrypted. This command applies only to MACsec key chains.
 
-. Create a MACsec key chain to hold a set of MACsec keys and enter MACsec key chain configuration mode: `key chain name macsec`
+. Create a MACsec key chain to hold a set of MACsec keys and enter MACsec key chain configuration mode:
++
+`key chain name macsec`
 +
 ----
 IP_switch_A_1(config)# key chain 1 macsec
 IP_switch_A_1(config-macseckeychain)#
 ----
 
-. Create a MACsec key and enter MACsec key configuration mode: `key key-id`
+. Create a MACsec key and enter MACsec key configuration mode:
++
+`key key-id`
 +
 The range is from 1 to 32 hex digit key-string, and the maximum size is 64 characters.
 +
@@ -533,30 +596,38 @@ IP_switch_A_1 switch(config-macseckeychain)# key 1000
 IP_switch_A_1 (config-macseckeychain-macseckey)#
 ----
 
-. Configure the octet string for the key: `key-octet-string octet-string cryptographic-algorithm AES_128_CMAC | AES_256_CMAC`
+. Configure the octet string for the key:
++
+`key-octet-string octet-string cryptographic-algorithm AES_128_CMAC | AES_256_CMAC`
 +
 ----
 IP_switch_A_1(config-macseckeychain-macseckey)# key-octet-string abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
 cryptographic-algorithm AES_256_CMAC
 ----
 +
-NOTE: The octet-string argument can contain up to 64 hexadecimal characters. The octet key is encoded internally, so the key in clear text does not appear in the output of theshow running-config macsec command.
+NOTE: The `octet-string` argument can contain up to 64 hexadecimal characters. The octet key is encoded internally, so the key in clear text does not appear in the output of the `show running-config macsec` command.
 
-. Configure a send lifetime for the key (in seconds): `send-lifetime start-time duration duration`
+. Configure a `send lifetime` for the key (in seconds):
++
+`send-lifetime start-time duration _duration_`
 +
 ----
 IP_switch_A_1(config-macseckeychain-macseckey)# send-lifetime 00:00:00 Oct 04 2020 duration 100000
 ----
 +
-By default, the device treats the start time as UTC. The start-time argument is the time of day and date that the key becomes active. The duration argument is the length of the lifetime in seconds. The maximum length is 2147483646 seconds (approximately 68 years).
+By default, the device treats the start time as UTC. The `start-time` argument is the time of day and date that the key becomes active. The `duration` argument is the length of the lifetime in seconds. The maximum length is 2147483646 seconds (approximately 68 years).
 
-. Copy the running configuration to the startup configuration: `copy running-config startup-config`
+. Copy the running configuration to the startup configuration: `
++
+copy running-config startup-config`
 +
 ----
 IP_switch_A_1(config)# copy running-config startup-config
 ----
 
-. Displays the keychain configuration: `show keychain name`
+. Display the keychain configuration:
++
+`show keychain name`
 +
 ----
 IP_switch_A_1(config-macseckeychain-macseckey)# show key chain 1
@@ -564,34 +635,49 @@ IP_switch_A_1(config-macseckeychain-macseckey)# show key chain 1
 
 === Configuring a MACsec policy
 
-[.lead]
-. Enter the global configuration mode: `configure terminal`
+.Steps
+
+. Enter the global configuration mode:
++
+`configure terminal`
 +
 ----
 IP_switch_A_1# configure terminal
 IP_switch_A_1(config)#
 ----
 
-. Create a MACsec policy: `macsec policy name`
+. Create a MACsec policy:
++
+`macsec policy name`
 +
 ----
 IP_switch_A_1(config)# macsec policy abc
 IP_switch_A_1(config-macsec-policy)#
 ----
 
-. Configure one of the following ciphers, GCM-AES-128, GCM-AES-256, GCM-AES-XPN-128, or GCM-AES-XPN-256: `cipher-suite name`
+. Configure one of the following ciphers:
+* GCM-AES-128
+* GCM-AES-256
+* GCM-AES-XPN-128
+* GCM-AES-XPN-256
++
+`cipher-suite name`
 +
 ----
 IP_switch_A_1(config-macsec-policy)# cipher-suite GCM-AES-256
 ----
 
-. Configure the key server priority to break the tie between peers during a key exchange: `key-server-priority number`
+. Configure the key server priority to break the tie between peers during a key exchange:
++
+`key-server-priority _number_`
 +
 ----
 switch(config-macsec-policy)# key-server-priority 0
 ----
 
-. Configure the security policy to define the handling of data and control packets: `security-policy security policy`
+. Configure the security policy to define the handling of data and control packets:
++
+`security-policy _security-policy_`
 +
 Choose a security policy from the following options:
 
@@ -603,44 +689,56 @@ Choose a security policy from the following options:
 IP_switch_A_1(config-macsec-policy)# security-policy should-secure
 ----
 
-. Configure the replay protection window so the secured interface does not accept a packet that is less than the configured window size: `window-size number`
+. Configure the replay protection window so the secured interface does not accept a packet that is less than the configured window size:
++
+`window-size _number_`
 +
 NOTE: The replay protection window size represents the maximum out-of-sequence frames that MACsec accepts and are not discarded. The range is from 0 to 596000000.
+
 +
 ----
 IP_switch_A_1(config-macsec-policy)# window-size 512
 ----
 
-. Configure the time in seconds to force an SAK rekey: `sak-expiry-time time`
+. Configure the time in seconds to force an SAK rekey:
 +
-You can use this command to change the session key to a predictable time interval. The default is 0.
+`sak-expiry-time _time_`
++
+You can use this command to change the session key to a predictable time interval. The default is "0".
 +
 ----
 IP_switch_A_1(config-macsec-policy)# sak-expiry-time 100
 ----
 
-. Configure one of the following confidentiality offsets in the layer 2 frame where encryption begins: `conf-offsetconfidentiality offset`
+. Configure one of the following confidentiality offsets in the layer 2 frame where encryption begins:
++
+`conf-offsetconfidentiality offset`
 +
 Choose from the following options:
 
- ** CONF-OFFSET-0.
- ** CONF-OFFSET-30.
- ** CONF-OFFSET-50.
+ ** CONF-OFFSET-0
+ ** CONF-OFFSET-30
+ ** CONF-OFFSET-50
 
 +
 ----
 IP_switch_A_1(config-macsec-policy)# conf-offset CONF-OFFSET-0
 ----
+
 +
 NOTE: This command might be necessary for intermediate switches to use packet headers (dmac, smac, etype) like MPLS tags.
 
-. Copy the running configuration to the startup configuration: `copy running-config startup-config`
+. Copy the running configuration to the startup configuration:
++
+`copy running-config startup-config`
 +
 ----
 IP_switch_A_1(config)# copy running-config startup-config
 ----
 
-. Display the MACsec policy configuration: `show macsec policy`
+. Display the MACsec policy configuration:
++
+`show macsec policy`
 +
 ----
 IP_switch_A_1(config-macsec-policy)# show macsec policy
@@ -648,18 +746,25 @@ IP_switch_A_1(config-macsec-policy)# show macsec policy
 
 === Verifying the MACsec configuration
 
+.Steps
+
 . Repeat *all* of the previous procedures on the second switch within the configuration to establish a MACsec session.
 . Run the following commands to verify that both switches are successfully encrypted:
- .. Run: `show macsec mka summary`
- .. Run: `show macsec mka session`
- .. Run: `show macsec mka statistics`
++
+`show macsec mka summary`
++
+`show macsec mka session`
++
+`show macsec mka statistics`
 
 +
 You can verify the MACsec configuration using the following commands:
 +
-[options="header"]
+
 |===
-| Command| Displays information about...
+
+h| Command h| Displays information about...
+
 a|
 `show macsec mka session interface typeslot/port number`
 a|
@@ -680,10 +785,13 @@ The configuration for a specific MACsec policy or for all MACsec policies
 
 === Configuring a MACsec fallback key on a WAN ISL port
 
-[.lead]
 You can configure a fallback key to initiate a backup session if the primary session fails as a result of a key/key name (CKN) mismatch or a finite key duration between the switch and peer.
 
-. Enter the global configuration mode: `configure terminal`
+.Steps
+
+. Enter the global configuration mode:
++
+`configure terminal`
 +
 ----
 IP_switch_A_1# configure terminal
@@ -699,25 +807,34 @@ IP_switch_A_1(config)# interface ethernet 1/15
 switch(config-if)#
 ----
 
-. Specify the fallback key chain for use after a MACsec session failure due to a key/key ID mismatch or a key expiration: `macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
+. Specify the fallback key chain for use after a MACsec session failure due to a key/key ID mismatch or a key expiration:
 +
-NOTE: You should configure the fallback-keychain using the steps, _Configuring a MACsec key chain and keys_ before proceeding with this step.
+`macsec keychain _keychain-name_ policy _policy-name_ fallback-keychain _fallback-keychain-name_`
++
+NOTE: You should configure the fallback-keychain using the steps, <<Configuring a MACsec key chain and keys>> before proceeding with this step.
+
 +
 ----
 IP_switch_A_1(config-if)# macsec keychain kc2 policy abc fallback-keychain fb_kc2
 ----
 
 . Repeat the previous steps to configure additional WAN ISL ports with MACsec.
-. Copy the running configuration to the startup configuration: `copy running-config startup-config`
+. Copy the running configuration to the startup configuration:
++
+`copy running-config startup-config`
 +
 ----
 IP_switch_A_1(config)# copy running-config startup-config
 ----
+//end delete
+//end delete
+//end delete
 
 == Setting Forward Error Correction for and systems using 25-Gbps connectivity
 
-[.lead]
 If your system is configured using 25-Gbps connectivity, you need to set the Forward Error Correction (fec) parameter manually to off after applying the RCF file. The RCF file does not apply this setting.
+
+.Before you begin
 
 The 25-Gbps ports must be cabled prior to performing this procedure.
 
@@ -725,17 +842,29 @@ The 25-Gbps ports must be cabled prior to performing this procedure.
 
 link:port_usage_3232c_9336c.html[Platform port assignments for Cisco 3232C or Cisco 9336C switches]
 
+.About this task
+
 This task only applies to AFF A300 and FAS8200 platforms using 25-Gbps connectivity.
 
 This task must be performed on all four switches in the MetroCluster IP configuration.
 
-. Set the fec parameter to off on each 25-Gbps port that is connected to a controller module, and then copy the running configuration to the startup configuration:
- .. Enter configuration mode: `config t`
- .. Specify the 25-Gbps interface to configure: `interface interface-ID`
- .. Set fec to off: `fec off`
- .. Repeat the previous steps for each 25-Gbps port on the switch.
- .. Exit configuration mode: `exit`
+.Steps
 
+. Set the `fec` parameter to "off" on each 25-Gbps port that is connected to a controller module, and then copy the running configuration to the startup configuration:
+.. Enter configuration mode:
++
+`config t`
+.. Specify the 25-Gbps interface you want to configure:
++
+`interface _interface-ID_`
+.. Set `fec` to "off":
++
+`fec off`
+
+.. Repeat the previous steps for each 25-Gbps port on the switch.
+.. Exit configuration mode:
++
+`exit`
 +
 The following example shows the commands for interface Ethernet1/25/1 on switch IP_switch_A_1:
 +

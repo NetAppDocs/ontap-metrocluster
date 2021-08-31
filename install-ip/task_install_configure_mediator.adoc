@@ -13,9 +13,11 @@ summary: To install the ONTAP Mediator service, you must ensure all prerequisite
 To install the ONTAP Mediator service, you must ensure all prerequisites are met, get the installation package and run the installer on the host.
 
 .Before you begin
+
 //ontap-metrocluster/issues/35
 You must meet the following prerequisites.
 
+[cols="30,70"]
 |===
 
 h| Mediator version h| Supported Linux versions
@@ -48,16 +50,17 @@ See the Red Hat documentation for information about the Red Hat Subscription Man
 * The following ports must be unused and available for the Mediator:
  ** 31784
  ** 3260
-* If using a third-party firewall: refer to link:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html#firewall-requirements-for-ontap-mediator[Firewall requirements for ONTAP Mediator]
+* If using a third-party firewall: refer to link:concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator[Firewall requirements for ONTAP Mediator]
 * If the Linux host is in a location without access to the internet, you can either install the packages manually or you must ensure that the required packages are available in a local repository.
 +
 You can use the following link for information about setting up a repository.
 +
-If you are using Link Aggregation Control Protocol (LACP) in a Linux environment, you must correctly configure the kernel and make sure the sysctl net.ipv4.conf.all.arp_ignore is set to `2`.
+If you are using Link Aggregation Control Protocol (LACP) in a Linux environment, you must correctly configure the kernel and make sure the `sysctl net.ipv4.conf.all.arp_ignore` is set to "2".
 +
 The following packages are required by the ONTAP Mediator service:
 +
 
+[cols="25,35,40"]
 |===
 
 h| All RHEL/CentOS versions h| Additional packages for RHEL/CentOS 7.x h| Additional packages for RHEL/CentOS 8.x
@@ -97,7 +100,9 @@ a|
  ** Disable the signature verification mechanism by updating and regenerating the grub.cfg file:
   ... Open the /etc/default/grub file.
   ... Add the string module.sig_enforce=0 to the end of the GRUB_CMDLINE_LINUX statement.
-  ... Regenerate the grub.cfg file to implement the change: `update-bootloader || update-grub || grub2-mkconfig -o /boot/grub2/grub.cfg`
+  ... Regenerate the grub.cfg file to implement the change:
++
+`update-bootloader || update-grub || grub2-mkconfig -o /boot/grub2/grub.cfg`
   ... Reboot the host.
 
 The Mediator installation package is a self-extracting compressed tar file that includes:
@@ -109,7 +114,7 @@ A valid SSL certification is recommended, as documented in this procedure.
 
 This procedure is used for an installation or an upgrade of an existing installation.
 
-link:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html#guidelines-for-upgrading-the-ontap-mediator-in-a-metrocluster-configuration[Guidelines for upgrading the ONTAP Mediator in a MetroCluster configuration]
+link:concept_mediator_requirements.html#guidelines-for-upgrading-the-ontap-mediator-in-a-metrocluster-configuration[Guidelines for upgrading the ONTAP Mediator in a MetroCluster configuration]
 
 == Enable access to the repositories
 
@@ -140,14 +145,15 @@ kernel-devel
 
 Enable access to the repositories listed above so Mediator can access the required packages during the installation process. Use the procedure below for your operating system.
 
-* Procedure for <<rhel7x, RHEL 7.x>>
-* Procedure for <<rhel8x, RHEL 8.x>>
-* Procedure for <<centos7x, CentOS 7.x>>
-* Procedure for <<centos8x, CentOS 8.0.1095 or later>>
+* Procedure for <<rhel7x, RHEL 7.x>> operating system.
+* Procedure for <<rhel8x, RHEL 8.x>> operating system.
+* Procedure for <<centos7x, CentOS 7.x>> operating system.
+* Procedure for <<centos8x, CentOS 8.0.1095 or later>> operating system.
 
-.Steps
 
 [[rhel7x]]
+=== Procedure for RHEL 7.x operating system
+
 If your operating system is *RHEL 7.x*:
 
 .Steps
@@ -181,6 +187,9 @@ repolist: 46,205
 [root@localhost ~]#
 ----
 
+[[rhel8x]]
+=== Procedure for RHEL 8.x operating system
+
 If your operating system is *RHEL 8.x*:
 
 .Steps
@@ -205,6 +214,8 @@ Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
 The newly subscribed repositories should appear in the list.
 
 [[centos7x]]
+=== Procedure for CentOS 7.x operating system
+
 If your operating system is *CentOS 7.x*:
 
 .Steps
@@ -245,23 +256,29 @@ repolist: 21,433
 ----
 
 [[centos8x]]
+=== Procedure for CentOS 8.0.1905 or later operating system
+
 If your operating system is *CentOS 8.0.1905 or later builds*:
 
-Because the latest version of the 8.0 (CentOS 8.0.1905) core resides in the CentOS Vault, you must provide access to the matching kernel-devel package to compile the needed kernel module.
+Because the latest version of the 8.0 (CentOS 8.0.1905) core resides in the https://vault.centos.org[CentOS Vault], you must provide access to the matching kernel-devel package to compile the needed kernel module.
 
 .Steps
 
 . [[step1-rpm]] Issue the following command to directly install the kernel-devel package:
++
+`rpm -i \http://vault.centos.org/8.0.1905/BaseOS/x86_64/os/Packages/kernel-devel-$(uname -r).rpm`
++
+--
+NOTE: the above command is an example that is specific to CentOS 8.0.1905.  Change the path where appropriate for other CentoOS 8.x builds.
+--
 
-`rpm -i http://vault.centos.org/8.0.1905/BaseOS/x86_64/os/Packages/kernel-devel-$(uname -r).rpm`
+. If the system displays an error indicating that the package is already installed, remove the package and try again:
 
-If the system displays an error indicating that the package is already installed, remove the package and try again:
-
-. Remove the kernel-devel package:
+.. Remove the kernel-devel package:
 +
 `yum remove kernel-devel`
 
-. Repeat the `rpm` command shown in <<step1-rpm, Step 1>>.
+.. Repeat the `rpm` command shown in <<step1-rpm, Step 1>>.
 
 
 == Download the Mediator installation package
@@ -297,9 +314,9 @@ The installation process proceeds to create the required accounts and install re
 
 link:../media/console_output_mediator_installation.txt[Example of ONTAP Mediator installation (console output)]
 
-== Verify the installation.
+== Verify the installation
 
-.Steps 
+.Steps
 
 . Run the following command to view the status of the ONTAP Mediator services:
 +

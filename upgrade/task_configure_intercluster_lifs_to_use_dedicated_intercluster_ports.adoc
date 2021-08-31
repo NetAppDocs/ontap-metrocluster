@@ -12,9 +12,10 @@ summary: 'You can configure intercluster LIFs on dedicated ports. Doing so typic
 You can configure intercluster LIFs on dedicated ports. Doing so typically increases the available bandwidth for replication traffic.
 
 .Steps
+
 . List the ports in the cluster:
 +
-`*network port show*`
+`network port show`
 +
 For complete command syntax, see the man page.
 +
@@ -44,11 +45,11 @@ cluster01-02
 
 . Determine which ports are available to dedicate to intercluster communication:
 +
-`*network interface show -fields home-port,curr-port*`
+`network interface show -fields home-port,curr-port`
 +
 For complete command syntax, see the man page.
 +
-The following example shows that ports e0e and e0f have not been assigned LIFs:
+The following example shows that ports "e0e" and "e0f" have not been assigned LIFs:
 +
 ----
 
@@ -69,9 +70,9 @@ cluster01
 
 . Create a failover group for the dedicated ports:
 +
-`*network interface failover-groups create -vserver _system_SVM_ -failover-group _failover_group_ -targets _physical_or_logical_ports_*`
+`network interface failover-groups create -vserver _system_SVM_ -failover-group _failover_group_ -targets _physical_or_logical_ports_`
 +
-The following example assigns ports e0e and e0f to the failover group intercluster01 on the system SVMcluster01:
+The following example assigns ports "e0e" and "e0f" to the failover group "intercluster01" on the system SVM "cluster01":
 +
 ----
 cluster01::> network interface failover-groups create -vserver cluster01 -failover-group
@@ -81,7 +82,7 @@ cluster01-01:e0e,cluster01-01:e0f,cluster01-02:e0e,cluster01-02:e0f
 
 . Verify that the failover group was created:
 +
-`*network interface failover-groups show*`
+`network interface failover-groups show`
 +
 For complete command syntax, see the man page.
 +
@@ -109,7 +110,9 @@ cluster01
 +
 [cols="1,3"]
 |===
-| ONTAP version | Command
+
+h| ONTAP version h| Command
+
 a|
 9.6 and later
 a|
@@ -123,7 +126,7 @@ a|
 |===
 For complete command syntax, see the man page.
 +
-The following example creates intercluster LIFs `cluster01_icl01` and `cluster01_icl02` in the failover group intercluster01:
+The following example creates intercluster LIFs "cluster01_icl01" and "cluster01_icl02" in the failover group "intercluster01":
 +
 ----
 cluster01::> network interface create -vserver cluster01 -lif cluster01_icl01 -service-
@@ -137,17 +140,22 @@ policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.
 
 . Verify that the intercluster LIFs were created:
 +
-[options="header"]
+
 |===
-    a|
+
+h|
 *In ONTAP 9.6 and later:*
+
 a|
-`*network interface show -service-policy default-intercluster*`
-a|
+`network interface show -service-policy default-intercluster`
+
+h|
 *In ONTAP 9.5 and earlier:*
 a|
-`*network interface show -role intercluster*`
+`network interface show -role intercluster`
 |===
+
++
 For complete command syntax, see the man page.
 +
 ----
@@ -165,18 +173,23 @@ cluster01
 . Verify that the intercluster LIFs are redundant:
 +
 |===
-    a|
+
+h|
 *In ONTAP 9.6 and later:*
+
 a|
-`*network interface show -service-policy default-intercluster -failover*`
-a|
+`network interface show -service-policy default-intercluster -failover`
+
+h|
 *In ONTAP 9.5 and earlier:*
+
 a|
-`*network interface show -role intercluster -failover*`
+`network interface show -role intercluster -failover`
 |===
++
 For complete command syntax, see the man page.
 +
-The following example shows that the intercluster LIFs `cluster01_icl01` and `cluster01_icl02` on the SVMe0e port will fail over to the e0f port.
+The following example shows that the intercluster LIFs "cluster01_icl01" and "cluster01_icl02" on the SVM "e0e" port will fail over to the "e0f" port.
 +
 ----
 cluster01::> network interface show -service-policy default-intercluster –failover

@@ -31,7 +31,7 @@ image::../media/mcc_dr_groups_4_node.gif[]
 . Prepare for the removal of the DR group, if you haven't already.
  .. Move all data volumes to another DR group.
  .. Move all MDV_CRS metadata volumes to another DR group. Follow the steps in the following procedure: https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations]
- .. Delete all MDV_aud metadata volumes that may exist in the DR group to be removed.
+ .. Delete all MDV_aud metadata volumes that might exist in the DR group to be removed.
  .. Delete all data aggregates in the DR group to be removed as shown in the following example:
 +
 ----
@@ -45,18 +45,18 @@ NOTE: Root aggregates are not deleted.
 
  .. Migrate all data LIFs to home nodes in another DR group.
  +
-`*network interface show -home-node _old_node_*`
+`network interface show -home-node _old_node_`
 +
-`*network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_*`
+`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
  .. Migrate the cluster management LIF to a home node in another DR group.
- +
- `*network interface show -role cluster-mgmt*`
 +
-`*network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_*`
+`network interface show -role cluster-mgmt`
++
+`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
 +
 Node management and inter-cluster LIFs are not migrated.
 
- .. Transfer epsilon to a node in another DR group if required.
+.. Transfer epsilon to a node in another DR group if required.
 +
 ----
 ClusterA::> set advanced
@@ -72,12 +72,12 @@ ClusterB::*> cluster modify -node nodename -epsilon true
 ClusterB::*> set admin
 ----
 . Identify and remove the DR group.
- .. Identify the correct DR group for removal:
+.. Identify the correct DR group for removal:
++
+`metrocluster node show`
+.. Remove the DR group nodes:
  +
-`*metrocluster node show*`
- .. Remove the DR group nodes:
- +
-`*metrocluster remove-dr-group -dr-group-id 1*`
+`metrocluster remove-dr-group -dr-group-id 1`
 +
 The following example shows the removal of the DR group configuration on cluster_A.
 +
@@ -118,36 +118,36 @@ cluster_A::*>
 +
 These commands can be issued from either cluster and apply to the entire DR group spanning both the clusters.
 
- .. Disconnect the connections:
+.. Disconnect the connections:
++
+`metrocluster configuration-settings connection disconnect _dr-group-id_`
+.. Delete the MetroCluster interfaces on the nodes of the old DR group:
++
+`metrocluster configuration-settings interface delete`
+.. Delete the old DR group's configuration.
  +
-`*metrocluster configuration-settings connection disconnect _dr-group-id_*`
- .. Delete the MetroCluster interfaces on the nodes of the old DR group:
- +
-`*metrocluster configuration-settings interface delete*`
- .. Delete the old DR group's configuration.
- +
-`*metrocluster configuration-settings dr-group delete*`
+`metrocluster configuration-settings dr-group delete`
 
 . Unjoin the nodes in the old DR group.
 +
 You must perform this step on each cluster.
 
- .. Set the advanced privilege level:
- +
-`*set -privilege advanced*`
+.. Set the advanced privilege level:
++
+`set -privilege advanced`
  .. Unjoin the node:
  +
-`*cluster unjoin -node _node-name_*`
+`cluster unjoin -node _node-name_`
 +
 Repeat this step for the other local node in the old DR group.
 
- .. Set the admin privilege level:
+.. Set the admin privilege level:
  +
-`*set -privilege admin*`
+`set -privilege admin`
 
 . Re-enable cluster HA in the new DR group:
 +
-`*cluster ha modify -configured true*`
+`cluster ha modify -configured true`
 +
 You must perform this step on each cluster.
 
