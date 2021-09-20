@@ -23,6 +23,7 @@ Before installing a new switch software version and RCFs, you must erase the Bro
 
 .Steps
 
+
 . Change to the elevated command prompt (`#`): `enable`
 +
 ----
@@ -47,7 +48,6 @@ Are you sure you want to clear the configuration? (y/n) y
 
 This command does not erase the banner.
 +
-
 ..	Remove the banner:
 +
 
@@ -76,14 +76,18 @@ The default user is "`admin`", and no password is set. A prompt similar to the f
 (Routing)>
 ----
 
-. Change to the elevated command prompt: `enable`
+. Change to the elevated command prompt:
++
+`enable`
 +
 ----
 Routing)> enable
 (Routing) #
 ----
 
-. Set the serviceport protocol to `none`: `serviceport protocol none`
+. Set the service port protocol to `none`:
++
+`serviceport protocol none`
 +
 ----
 (Routing) #serviceport protocol none
@@ -93,15 +97,19 @@ Are you sure you want to continue? (y/n) y
 (Routing) #
 ----
 
-. Assign the IP address to the service port: `serviceport ip ip-addressnetmaskgateway`
+. Assign the IP address to the service port:
 +
-The following example shows a service port assigned IP address 10.10.10.10 with subnet 255.255.255.0 and gateway 10.10.10.1:
+`serviceport ip _ip-address_ _netmask_ _gateway_`
++
+The following example shows a service port assigned IP address "10.10.10.10" with subnet "255.255.255.0" and gateway "10.10.10.1":
 +
 ----
 (Routing) #serviceport ip 10.10.10.10 255.255.255.0 10.10.10.1
 ----
 
-. Verify that the service port is correctly configured: `show serviceport`
+. Verify that the service port is correctly configured:
++
+`show serviceport`
 +
 The following example shows that the port is up and the correct addresses have been assigned:
 +
@@ -160,9 +168,11 @@ If necessary, exit the configuration context.
 +
 NOTE: If keys already exist, then you might be asked to overwrite them.
 
-. If desired, configure the domain and name server: `configure`
+. If desired, configure the domain and name server:
 +
-The following example shows the ip domain and ip name server commands:
+`configure`
++
+The following example shows the `ip domain` and `ip name server` commands:
 +
 ----
 (Routing) # configure
@@ -174,7 +184,7 @@ The following example shows the ip domain and ip name server commands:
 
 . If desired, configure the time zone and time synchronization (SNTP).
 +
-The following example shows the sntp commands, specifying the IP address of the SNTP server and the relative timezone.
+The following example shows the `sntp` commands, specifying the IP address of the SNTP server and the relative time zone.
 +
 ----
 (Routing) #
@@ -185,7 +195,9 @@ The following example shows the sntp commands, specifying the IP address of the 
 (Routing) (Config)#
 ----
 
-. Configure the switch name: `hostname IP_switch_A_1`
+. Configure the switch name:
++
+`hostname IP_switch_A_1`
 +
 The switch prompt will display the new name:
 +
@@ -195,7 +207,9 @@ The switch prompt will display the new name:
 (IP_switch_A_1) #
 ----
 
-. Save the configuration: `write memory`
+. Save the configuration:
++
+`write memory`
 +
 You receive prompts and output similar to the following example:
 +
@@ -220,10 +234,10 @@ Configuration Saved!
 
 == Downloading and installing the Broadcom switch EFOS software
 
-[.lead]
 You must download the switch operating system file and RCF file to each switch in the MetroCluster IP configuration.
 
 .About this task
+
 This task must be repeated on each switch in the MetroCluster IP configuration.
 
 
@@ -298,7 +312,9 @@ File transfer operation completed successfully.
 (IP_switch_A_1) #
 ----
 
-. Set the switch to boot from the backup partition on the next switch reboot: `boot system backup`
+. Set the switch to boot from the backup partition on the next switch reboot:
++
+`boot system backup`
 +
 ----
 (IP_switch_A_1) #boot system backup
@@ -307,7 +323,9 @@ Activating image backup ..
 (IP_switch_A_1) #
 ----
 
-. Verify that the new boot image will be active on the next boot: `show bootvar`
+. Verify that the new boot image will be active on the next boot:
++
+`show bootvar`
 +
 ----
 (IP_switch_A_1) #show bootvar
@@ -329,7 +347,9 @@ Image Descriptions
 (IP_switch_A_1) #
 ----
 
-. Save the configuration: `write memory`
+. Save the configuration:
++
+`write memory`
 +
 ----
 (IP_switch_A_1) #write memory
@@ -345,7 +365,9 @@ Configuration Saved!
 (IP_switch_A_1) #
 ----
 
-. Reboot the switch: `reload`
+. Reboot the switch:
++
+`reload`
 +
 ----
 (IP_switch_A_1) #reload
@@ -520,10 +542,10 @@ The switch will reboot with no configuration applied and reset to factory defaul
 
 == Downloading and installing the Broadcom RCF files
 
-[.lead]
 You must download and install the switch RCF file to each switch in the MetroCluster IP configuration.
 
 .Before you begin
+
 This task requires file transfer software, such as FTP, TFTP, SFTP, or SCP, to copy the files to the switches.
 
 .About this task
@@ -531,9 +553,10 @@ These steps must be repeated on each of the IP switches in the MetroCluster IP c
 
 There are four RCF files, one for each of the four switches in the MetroCluster IP configuration. You must use the correct RCF files for the switch model you are using.
 
-[options="header"]
 |===
-| Switch| RCF file
+
+h| Switch h| RCF file
+
 a|
 IP_switch_A_1
 a|
@@ -570,9 +593,10 @@ NOTE: The RCF files for EFOS version 3.4.4.6 or later 3.4.x.x. release and EFOS 
 .. Generate the RCF file for your configuration using the RcfFileGenerator for MetroCluster IP
 
 . Copy the RCF files to the switches:
- .. Copy the RCF files to the first switch: `+copy sftp://user@FTP-server-IP-address/RcfFiles/switch-specific-RCF nvram:script BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr+`
+.. Copy the RCF files to the first switch:
+`copy sftp://user@FTP-server-IP-address/RcfFiles/switch-specific-RCF nvram:script BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr`
 +
-In this example, the BES-53248_v1.32_Switch-A1.txt RCF file is copied from the SFTP server at 50.50.50.50 to the local bootflash. You need to use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
+In this example, the "BES-53248_v1.32_Switch-A1.txt" RCF file is copied from the SFTP server at "50.50.50.50" to the local bootflash. You need to use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
 +
 ----
 (IP_switch_A_1) #copy sftp://user@50.50.50.50/RcfFiles/BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr
@@ -617,7 +641,9 @@ File transfer operation completed successfully.
 (IP_switch_A_1) #
 ----
 
- .. Verify that the RCF file is saved as a script: `script list`
+.. Verify that the RCF file is saved as a script:
++
+`script list`
 +
 ----
 (IP_switch_A_1) #script list
@@ -631,7 +657,9 @@ BES-53248_v1.32_Switch-A1.scr             852   2019 01 29 18:41:25
 (IP_switch_A_1) #
 ----
 
- .. Apply the RCF script: `script apply BES-53248_v1.32_Switch-A1.scr`
+.. Apply the RCF script:
++
+`script apply BES-53248_v1.32_Switch-A1.scr`
 +
 ----
 (IP_switch_A_1) #script apply BES-53248_v1.32_Switch-A1.scr
@@ -658,7 +686,9 @@ Configuration script 'BES-53248_v1.32_Switch-A1.scr' applied.
 (IP_switch_A_1) #
 ----
 
- .. Save the configuration: `write memory`
+.. Save the configuration:
++
+`write memory`
 +
 ----
 (IP_switch_A_1) #write memory
@@ -674,7 +704,9 @@ Configuration Saved!
 (IP_switch_A_1) #
 ----
 
- .. Reboot the switch: `reload`
+.. Reboot the switch:
++
+`reload`
 +
 ----
 (IP_switch_A_1) #reload
@@ -682,8 +714,11 @@ Configuration Saved!
 Are you sure you would like to reset the system? (y/n) y
 ----
 
- .. Repeat the previous steps for each of the other three switches, being sure to copy the matching RCF file to the corresponding switch.
-. Reload the switch: `reload`
+.. Repeat the previous steps for each of the other three switches, being sure to copy the matching RCF file to the corresponding switch.
+
+. Reload the switch:
++
+`reload`
 +
 ----
 IP_switch_A_1# reload

@@ -12,46 +12,50 @@ summary: 'Before upgrading to an HA pair, you must verify that your system meets
 Before upgrading to an HA pair, you must verify that your system meets all requirements and that you have all of the necessary information.
 
 .Steps
+
 . You need to identify unassigned disks or spare disks that you can assign to the new controller module.
-
++
 https://library.netapp.com/ecm/ecm_download_file/ECMLP2427462[Physical Storage Management Guide]
-
++
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
 
 . Based on the results of the previous step, perform either of the following:
 +
-[options="header"]
+
 |===
-| If the result showed...| Then...
+
+h| If the result showed... h| Then...
+
 a|
 Not enough spare disks available for the new controller module on a system without root-data partitioning
 a|
 Contact technical support for more information.
+
 a|
+Other results
 
 a|
 Complete the following substeps:
 
- .. Determine where the aggregates for the existing node are located:
- +
-`*storage aggregate show*`
- .. If disk ownership automatic assignment is on, turn it off:
- +
-`*storage disk option modify -node _node_name_ -autoassign off*`
- .. Remove ownership on disks that do not have aggregates on them:
- +
-`*storage disk removeowner _disk_name_*`
- .. Repeat the previous step for as many disks as you need for the new node.
-
+.. Determine where the aggregates for the existing node are located:
++
+`storage aggregate show`
+.. If disk ownership automatic assignment is on, turn it off:
++
+`storage disk option modify -node _node_name_ -autoassign off`
+.. Remove ownership on disks that do not have aggregates on them:
++
+`storage disk removeowner _disk_name_`
+.. Repeat the previous step for as many disks as you need for the new node.
 
 |===
 
 . Verify that you have cables ready for the following connections:
- ** Cluster connections
+** Cluster connections
 +
 If you are creating a two-node switchless cluster, you require two cables to connect the controller modules. Otherwise, you require a minimum of four cables, two for each controller module connection to the cluster-network switch. Other systems (like the 80xx series) have defaults of either four or six cluster connections.
 
- ** HA interconnect connections, if the system is in a dual-chassis HA pair
+** HA interconnect connections, if the system is in a dual-chassis HA pair
 . Verify that you have a serial port console available for the controller modules.
 . Verify that your environment meets the site and system requirements.
 +

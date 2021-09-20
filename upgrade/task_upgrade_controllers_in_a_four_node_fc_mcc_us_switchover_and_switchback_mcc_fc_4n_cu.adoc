@@ -11,13 +11,15 @@ summary: 'You can use the MetroCluster switchover operation to provide nondisrup
 [.lead]
 You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
+.About this task
+
 * You can use this procedure only for controller upgrade.
 +
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
 
 * You can use this procedures with certain ONTAP versions:
- ** Two-node configurations are supported in ONTAP 9.3 and later.
- ** Four and eight node configurations are supported in ONTAP 9.8 and later.
+** Two-node configurations are supported in ONTAP 9.3 and later.
+** Four and eight node configurations are supported in ONTAP 9.8 and later.
 +
 Do not use this procedure on four- or eight-node configurations running ONTAP versions prior to 9.8.
 * Your original and new platforms must be compatible and supported.
@@ -35,9 +37,11 @@ Operating the MetroCluster configuration with different controller types is not 
 +
 Platform models with internal shelves are not supported.
 +
-[options="header"]
+
 |===
-| Old platform model| New platform model
+
+h| Old platform model h| New platform model
+
 a|
 
  ** FAS80xx
@@ -84,90 +88,93 @@ The following example names are used in this procedure:
 
 == Preparing for the upgrade
 
-[.lead]
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
 === Verifying the health of the MetroCluster configuration
 
-[.lead]
 You must verify the health and connectivity of the MetroCluster configuration prior to performing the upgrade.
 
 .Steps
+
 . Verify the operation of the MetroCluster configuration in ONTAP:
  .. Check whether the nodes are multipathed:
  +
-`*node run -node _node-name_ sysconfig -a*`
+`node run -node _node-name_ sysconfig -a`
 +
 You should issue this command for each node in the MetroCluster configuration.
 
- .. Verify that there are no broken disks in the configuration:
- +
-`*storage disk show -broken*`
+.. Verify that there are no broken disks in the configuration:
++
+`storage disk show -broken`
 +
 You should issue this command on each node in the MetroCluster configuration.
 
- .. Check for any health alerts:
- +
-`*system health alert show*`
+.. Check for any health alerts:
++
+`system health alert show`
 +
 You should issue this command on each cluster.
 
- .. Verify the licenses on the clusters:
- +
-`*system license show*`
+.. Verify the licenses on the clusters:
++
+`system license show`
 +
 You should issue this command on each cluster.
 
- .. Verify the devices connected to the nodes:
+.. Verify the devices connected to the nodes:
 +
-`*network device-discovery show*`
+`network device-discovery show`
 +
 You should issue this command on each cluster.
 
- .. Verify that the timezone and time is set correctly on both sites:
- +
-`*cluster date show*`
+.. Verify that the time zone and time are set correctly on both sites:
 +
-You should issue this command on each cluster. You can use the `cluster date` commands to configure the time and timezone.
+`cluster date show`
++
+You should issue this command on each cluster. You can use the `cluster date` commands to configure the time and time zone.
 . Check for any health alerts on the switches (if present):
 +
-`*storage switch show*`
+`storage switch show`
 +
 You should issue this command on each cluster.
 
 . Confirm the operational mode of the MetroCluster configuration and perform a MetroCluster check.
- .. Confirm the MetroCluster configuration and that the operational mode is normal:
- +
-`*metrocluster show*`
- .. Confirm that all expected nodes are shown:
- +
-`*metrocluster node show*`
- .. Issue the following command:
- +
-`*metrocluster check run*`
- .. Display the results of the MetroCluster check:
- +
-`*metrocluster check show*`
+.. Confirm the MetroCluster configuration and that the operational mode is normal:
++
+`metrocluster show`
+
+.. Confirm that all expected nodes are shown:
++
+`metrocluster node show`
+
+.. Issue the following command:
++
+`metrocluster check run`
+.. Display the results of the MetroCluster check:
++
+`metrocluster check show`
 . Check the MetroCluster cabling with the Config Advisor tool.
- .. Download and run Config Advisor.
+.. Download and run Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
 
- .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+.. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
 === Mapping ports from the old nodes to the new nodes
 
-[.lead]
 You must plan the mapping of the LIFs on physical ports on the old nodes to the physical ports on the new nodes.
+
+.About this task
 
 When the new node is first booted during the upgrade process, it will replay the most recent configuration of the old node it is replacing. When you boot node_A_1-new, ONTAP attempts to host LIFs on the same ports that were used on node_A_1-old. Therefore, as part of the upgrade you must adjust the port and LIF configuration so it is compatible with that of the old node. During the upgrade procedure, you will perform steps on both the old and new nodes to ensure correct cluster, management, and data LIF configuration.
 
 The following table shows examples of configuration changes related to the port requirements of the new nodes.
 
-[options="header"]
 |===
-2+| Cluster interconnect physical ports|
-| Old controller| New controller| Required action
+
+3+h| Cluster interconnect physical ports
+ h| Old controller h| New controller h| Required action
+
 a|
 e0a, e0b
 
@@ -199,10 +206,12 @@ Also identify the FC-VI card slot usage.
 +
 You will refer to the table as you carry out the upgrade procedure.
 +
-[options="header"]
+
 |===
-|  3+| node_A_1-old 3+| node_A_1-new
-| LIF| Ports| IPspaces| Broadcast domains| Ports| IPspaces| Broadcast domains
+
+h|  3+h| node_A_1-old 3+h| node_A_1-new
+h| LIF h| Ports h| IPspaces h| Broadcast domains h| Ports h| IPspaces h| Broadcast domains
+
 a|
 Cluster 1
 a|
@@ -375,16 +384,18 @@ a|
 
 === Gathering information before the upgrade
 
-[.lead]
 Before upgrading, you must gather information for each of the nodes, and, if necessary, adjust the network broadcast domains, remove any VLANs and interface groups, and gather encryption information.
+
+.About this task
 
 This task is performed on the existing MetroCluster FC configuration.
 
 .Steps
+
 . Label the cables for the existing controllers, to allow easy identification of cables when setting up the new controllers.
 . Gather the system IDs of the nodes in the MetroCluster configuration:
 +
-`*metrocluster node show -fields node-systemid,dr-partner-systemid*`
+`metrocluster node show -fields node-systemid,dr-partner-systemid`
 +
 During the replacement procedure you will replace these system IDs with the system IDs of the new controller modules.
 +
@@ -449,29 +460,29 @@ You should gather the output of the following commands:
 
 . If the root volume is encrypted, collect and save the passphrase used for key-manager:
 +
-`*security key-manager backup show*`
+`security key-manager backup show`
 . If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
 +
 For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually].
 
- .. If Onboard Key Manager is configured:
- +
-`*security key-manager onboard show-backup*`
+.. If Onboard Key Manager is configured:
++
+`security key-manager onboard show-backup`
 +
 You will need the passphrase later in the upgrade procedure.
 
- .. If enterprise key management (KMIP) is configured, issue the following commands:
- +
-`*security key-manager external show -instance*`
+.. If enterprise key management (KMIP) is configured, issue the following commands:
 +
-`*security key-manager key query*`
+`security key-manager external show -instance`
++
+`security key-manager key query`
 
 === Removing the existing configuration from the Tiebreaker or other monitoring software
 
-[.lead]
 If the existing configuration is monitored with the MetroCluster Tiebreaker configuration or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the Tiebreaker or other software prior to transition.
 
 .Steps
+
 . Remove the existing MetroCluster configuration from the Tiebreaker software.
 +
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster configurations]
@@ -482,27 +493,30 @@ Refer to the documentation for the application.
 
 === Sending a custom AutoSupport message prior to maintenance
 
-[.lead]
 Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
+
+.About this task
 
 This task must be performed on each MetroCluster site.
 
 .Steps
+
 . To prevent automatic support case generation, send an Autosupport message to indicate maintenance is underway.
- .. Issue the following command:
- +
-`*system node autosupport invoke -node * -type all -message MAINT=__maintenance-window-in-hours__*`
+.. Issue the following command:
++
+`system node autosupport invoke -node * -type all -message MAINT=__maintenance-window-in-hours__`
 +
 `maintenance-window-in-hours` specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
 +
-`*system node autosupport invoke -node * -type all -message MAINT=end*`
+`system node autosupport invoke -node * -type all -message MAINT=end`
 
- .. Repeat the command on the partner cluster.
+.. Repeat the command on the partner cluster.
 
 == Switching over the MetroCluster configuration
 
-[.lead]
 You must switch over the configuration to site_A so that the platforms on site_B can be upgraded.
+
+.About this task
 
 This task must be performed on site_A.
 
@@ -511,27 +525,31 @@ After completing this task, cluster_A is active and serving data for both sites.
 image::../media/mcc_upgrade_cluster_a_in_switchover.png[]
 
 .Steps
+
 . Switch over the MetroCluster configuration to site_A so that site_B's nodes can be upgraded:
- .. Issue the following command on cluster_A:
- +
-`*metrocluster switchover -controller-replacement true*`
+
+.. Issue the following command on cluster_A:
++
+`metrocluster switchover -controller-replacement true`
 +
 The operation can take several minutes to complete.
 
- .. Monitor the switchover operation:
- +
-`*metrocluster operation show*`
- .. After the operation is complete, confirm that the nodes are in switchover state:
- +
-`*metrocluster show*`
- .. Check the status of the MetroCluster nodes:
- +
-`*metrocluster node show*`
+.. Monitor the switchover operation:
++
+`metrocluster operation show`
+.. After the operation is complete, confirm that the nodes are in switchover state:
++
+`metrocluster show`
+
+.. Check the status of the MetroCluster nodes:
++
+`metrocluster node show`
+
 . Heal the data aggregates.
- .. Heal the data aggregates:
- +
-`*metrocluster heal data-aggregates*`
- .. Confirm the heal operation is complete by running the `metrocluster operation show` command on the healthy cluster:
+.. Heal the data aggregates:
++
+`metrocluster heal data-aggregates`
+.. Confirm the heal operation is complete by running the `metrocluster operation show` command on the healthy cluster:
 +
 ----
 
@@ -543,10 +561,10 @@ cluster_A::> metrocluster operation show
      Errors: -
 ----
 . Heal the root aggregates.
- .. Heal the data aggregates:
- +
-`*metrocluster heal root-aggregates*`
- .. Confirm the heal operation is complete by running the `metrocluster operation show` command on the healthy cluster:
+.. Heal the data aggregates:
++
+`metrocluster heal root-aggregates`
+.. Confirm the heal operation is complete by running the `metrocluster operation show` command on the healthy cluster:
 +
 ----
 
@@ -560,34 +578,38 @@ cluster_A::> metrocluster operation show
 
 == Preparing the network configuration of the old controllers
 
-[.lead]
 To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
 
+.About this task
+
 * This task must be performed on each of the old nodes.
-* You will use the information gathered in xref:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.adoc[Mapping ports from the old nodes to the new nodes].
+* You will use the information gathered in link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Mapping ports from the old nodes to the new nodes].
 
 .Steps
+
 . Boot the old nodes and then log in to the nodes:
 +
-`*boot_ontap*`
+`boot_ontap`
+
 . Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
- .. Display the LIFs:
- +
-`*network interface show*`
+
+.. Display the LIFs:
++
+`network interface show`
 +
 All data LIFS including SAN and NAS will be admin up and operationally down since those are up at switchover site (cluster_A).
 
- .. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
+.. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
 +
 For example, e0d is a physical port on old controllers and is also present on new controllers. e0d is not used as a cluster port or otherwise on the new controllers.
 +
 For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe]
 
- .. Modify all data LIFS to use the common port as the home port:
+.. Modify all data LIFS to use the common port as the home port:
 +
-`*network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_*`
+`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
 +
-In our example this is e0d.
+In the following example, this is "e0d".
 +
 For example:
 +
@@ -596,14 +618,14 @@ network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
 . Modify broadcast domains to remove vlan and physical ports that need to be deleted:
 +
-`*broadcast-domain remove-ports -broadcast-domain _broadcast-domain-name_ -ports _node-name:port-id_*`
+`broadcast-domain remove-ports -broadcast-domain _broadcast-domain-name_ -ports _node-name:port-id_`
 +
 Repeat this step for all VLAN and physical ports.
 
 . Remove any VLAN ports using cluster ports as member ports and ifgrps using cluster ports as member ports.
- .. Delete VLAN ports:
- +
-`*network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_*`
+.. Delete VLAN ports:
++
+`network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
 +
 For example:
 +
@@ -611,9 +633,9 @@ For example:
 network port vlan delete -node node1 -vlan-name e1c-80
 ----
 
- .. Remove physical ports from the interface groups:
- +
-`*network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_*`
+.. Remove physical ports from the interface groups:
++
+`network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
 +
 For example:
 +
@@ -621,47 +643,53 @@ For example:
 network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 ----
 
- .. Remove VLAN and interface group ports from broadcast domain::
- +
-`*network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..*`
- .. Modify interface group ports to use other physical ports as member as needed.:
- +
-`*ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_*`
+.. Remove VLAN and interface group ports from broadcast domain::
++
+`network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
+.. Modify interface group ports to use other physical ports as member as needed.:
++
+`ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
+
 . Halt the nodes:
 +
-`*halt -inhibit-takeover true -node _node-name_*`
+`halt -inhibit-takeover true -node _node-name_`
 +
 This step must be performed on both nodes.
 
 == Removing the old platforms
 
-[.lead]
 The old controllers must be removed from the configuration.
+
+.About this task
 
 This task is performed on site_B.
 
 .Steps
+
 . Connect to the serial console of the old controllers (node_B_1-old and node_B_2-old) at site_B and verify it is displaying the LOADER prompt.
+
 . Disconnect the storage and network connections on node_B_1-old and node_B_2-old and label the cables so they can be reconnected to the new nodes.
+
 . Disconnect the power cables from node_B_1-old and node_B_2-old.
+
 . Remove the node_B_1-old and node_B_2-old controllers from the rack.
 
 == Configuring the new controllers
 
-[.lead]
 You must rack and install the controllers, perform required setup in Maintenance mode, and then boot the controllers, and verify the LIF configuration on the controllers.
 
 === Setting up the new controllers
 
-[.lead]
 You must rack and cable the new controllers.
 
 .Steps
+
 . Plan out the positioning of the new controller modules and storage shelves as needed.
 +
 The rack space depends on the platform model of the controller modules, the switch types, and the number of storage shelves in your configuration.
 
 . Properly ground yourself.
+
 . Install the controller modules in the rack or cabinet.
 +
 https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
@@ -680,7 +708,6 @@ https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
 
 === Netbooting the new controllers
 
-[.lead]
 After you install the new nodes, you need to netboot to ensure the new nodes are running the same version of ONTAP as the original nodes. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must put a copy of the ONTAP 9 boot image onto a web server that the system can access.
 
 This task is performed on each of the new controller modules.
@@ -698,18 +725,20 @@ include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 
 === Restoring the HBA configuration
 
-[.lead]
 Depending on the presence and configuration of HBA cards in the controller module, you need to configure them correctly for your site's usage.
 
 .Steps
+
 . In Maintenance mode configure the settings for any HBAs in the system:
- .. Check the current settings of the ports: `*ucadmin show*`
- .. Update the port settings as needed.
+.. Check the current settings of the ports: `ucadmin show`
+.. Update the port settings as needed.
 
 +
-[options="header"]
+
 |===
-| If you have this type of HBA and desired mode...| Use this command...
+
+h| If you have this type of HBA and desired mode... h| Use this command...
+
 a|
 CNA FC
 a|
@@ -727,16 +756,22 @@ FC initiator
 a|
 `fcadmin config -t initiator _adapter-name_`
 |===
-. Exit Maintenance mode: `*halt*`
+. Exit Maintenance mode:
++
+`halt`
 +
 After you run the command, wait until the node stops at the LOADER prompt.
 
-. Boot the node back into Maintenance mode to enable the configuration changes to take effect: `*boot_ontap maint*`
+. Boot the node back into Maintenance mode to enable the configuration changes to take effect:
++
+`boot_ontap maint`
 . Verify the changes you made:
 +
-[options="header"]
+
 |===
-| If you have this type of HBA...| Use this command...
+
+h| If you have this type of HBA... h| Use this command...
+
 a|
 CNA
 a|
@@ -749,19 +784,22 @@ a|
 
 === Setting the HA state on the new controllers and chassis
 
-[.lead]
+
 You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
 
 .Steps
+
 . In Maintenance mode, display the HA state of the controller module and chassis:
 +
-`*ha-config show*`
+`ha-config show`
 +
 The HA state for all components should be mcc.
 +
-[options="header"]
+
 |===
-| If the MetroCluster configuration has...| The HA state should be...
+
+h| If the MetroCluster configuration has... h| The HA state should be...
+
 a|
 Two nodes
 a|
@@ -774,37 +812,42 @@ mcc
 
 . If the displayed system state of the controller is not correct, set the HA state for the controller module and chassis:
 +
-[options="header"]
+
 |===
-| If the MetroCluster configuration has...| Issue these commands...
+
+h| If the MetroCluster configuration has... h| Issue these commands...
+
 a|
 *Two nodes*
 a|
-`*ha-config modify controller mcc-2n*`
+`ha-config modify controller mcc-2n`
 
-`*ha-config modify chassis mcc-2n*`
+`ha-config modify chassis mcc-2n`
 a|
 *Four or eight nodes*
 a|
-`*ha-config modify controller mcc*`
+`ha-config modify controller mcc`
 
-`*ha-config modify chassis mcc*`
+`ha-config modify chassis mcc`
 |===
 
 === Reassigning root aggregate disks
 
-[.lead]
+
 Reassign the root aggregate disks to the new controller module, using the sysids gathered earlier
+
+.About this task
 
 This task is performed in Maintenance mode.
 
-The old system IDs were identified in xref:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.adoc[Gathering information before the upgrade].
+The old system IDs were identified in link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Gathering information before the upgrade].
 
 The examples in this procedure use controllers with the following system IDs:
 
-[options="header"]
 |===
-| Node| Old system ID| New system ID
+
+h| Node h| Old system ID h| New system ID
+
 a|
 node_B_1
 a|
@@ -814,13 +857,16 @@ a|
 |===
 
 .Steps
+
 . Cable all other connections to the new controller modules (FC-VI, storage, cluster interconnect, etc.).
+
 . Halt the system and boot to Maintenance mode from the LOADER prompt:
 +
-`*boot_ontap maint*`
+`boot_ontap maint`
+
 . Display the disks owned by node_B_1-old:
 +
-`*disk show -a*`
+`disk show -a`
 +
 The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration.
 +
@@ -842,7 +888,7 @@ rr18:9.126L27 node_B_1-old(4068741254)   Pool0  S0M1PSDW         node_B_1-old(40
 
 . Reassign the root aggregate disks on the drive shelves to the new controller:
 +
-`*disk reassign -s _old-sysid_ -d _new-sysid_*`
+`disk reassign -s _old-sysid_ -d _new-sysid_`
 +
 The following example shows reassignment of drives:
 +
@@ -861,7 +907,7 @@ Do you want to continue (y/n)? y
 
 . Check that all disks are reassigned as expected:
 +
-`*disk show*`
+`disk show`
 +
 ----
 *> disk show
@@ -880,7 +926,7 @@ rr18:8.126L1  node_B_1-new(1574774970)   Pool0  S0M1PSDW        node_B_1-new(157
 
 . Display the aggregate status:
 +
-`*aggr status*`
+`aggr status`
 +
 ----
 *> aggr status
@@ -895,38 +941,43 @@ aggr0_node_b_1-root    online      raid_dp, aggr    root, nosnap=on,
 
 === Booting up the new controllers
 
-[.lead]
 You must reboot the controllers from the boot menu to update the controller flash image. Additional steps are required if encryption is configured.
+
+.About this task
 
 This task must be performed on all the new controllers.
 
 .Steps
+
 . Halt the node:
 +
-`*halt*`
+`halt`
+
 . If external key manager is configured, set the related bootargs:
 +
-`*setenv bootarg.kmip.init.ipaddr _ip-address_*`
+`setenv bootarg.kmip.init.ipaddr _ip-address_`
 +
-`*setenv bootarg.kmip.init.netmask _netmask_*`
+`setenv bootarg.kmip.init.netmask _netmask_`
 +
-`*setenv bootarg.kmip.init.gateway _gateway-address_*`
+`setenv bootarg.kmip.init.gateway _gateway-address_`
 +
-`*setenv bootarg.kmip.init.interface _interface-id_*`
+`setenv bootarg.kmip.init.interface _interface-id_`
 . Display the boot menu:
 +
-`*boot_ontap menu*`
+`boot_ontap menu`
 . If root encryption is used, issue the boot menu command for your key management configuration.
 +
-[options="header"]
+
 |===
-| If you are using...| Issue this command at the boot menu prompt...
+
+h| If you are using... h| Issue this command at the boot menu prompt...
+
 a|
-*Onboard key management*
+Onboard key management
 a|
 `recover_onboard_keymanager`
 a|
-*External key management*
+External key management
 a|
 `recover_external_keymanager`
 |===
@@ -934,9 +985,10 @@ a|
 . If autoboot is enabled, interrupt autoboot by pressing control-C.
 . From the boot menu, run option (6).
 +
-NOTE: Option 6 will reboot the node twice before completing
+NOTE: Option 6 will reboot the node twice before completing.
 +
-Respond y to the system id change prompts. Wait for the second reboot messages:
+
+Respond `y` to the system id change prompts. Wait for the second reboot messages:
 +
 ----
 Successfully restored env file from boot media...
@@ -944,54 +996,60 @@ Successfully restored env file from boot media...
 Rebooting to load the restored env file...
 ----
 
-. Double-check that the partner-sysid is the correct:
+. Double-check that the partner-sysid is correct:
 +
-`*printenv partner-sysid*`
+`printenv partner-sysid`
 +
 If the partner-sysid is not correct, set it:
 +
-`*setenv partner-sysid _partner-sysID_*`
+`setenv partner-sysid _partner-sysID_`
 
-. If root encryption is used, again issue the boot menu command for your key management configuration.
+. If root encryption is used, issue the boot menu command again for your key management configuration.
 +
-[options="header"]
+
 |===
-| If you are using...| Issue this command at the boot menu prompt...
+
+h| If you are using... h| Issue this command at the boot menu prompt...
+
 a|
-*Onboard key management*
+Onboard key management
 a|
 `recover_onboard_keymanager`
 a|
-*External key management*
+External key management
 a|
 `recover_external_keymanager`
 |===
-You may need to issue the recover_xxxxxxxx_keymanager command and option 6 at the boot menu prompt multiple times until the nodes fully boot.
+
+You may need to issue the recover_xxxxxxxx_keymanager command and option 6 at the boot menu prompt multiple times until the nodes completely boot.
 
 . Boot the nodes:
 +
-`*boot_ontap*`
+`boot_ontap`
+
 . Wait for the replaced nodes to boot up.
 +
 If either node is in takeover mode, perform a giveback using the `storage failover giveback` command.
 
 . Verify that all ports are in a broadcast domain:
- .. View the broadcast domains:
- +
-`*network port broadcast-domain show*`
- .. Add any ports to a broadcast domain as needed.
+
+.. View the broadcast domains:
++
+`network port broadcast-domain show`
+
+.. Add any ports to a broadcast domain as needed.
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Adding or removing ports from a broadcast domain]
 
- .. Add the physical port that will host the intercluster LIFs to the corresponding Broadcast domain.
- .. Modify intercluster LIFs to use the new physical port as home port.
- .. After the intercluster LIFs are up, check the cluster peer status and re-establish cluster peering as needed.
+.. Add the physical port that will host the intercluster LIFs to the corresponding Broadcast domain.
+.. Modify intercluster LIFs to use the new physical port as home port.
+.. After the intercluster LIFs are up, check the cluster peer status and re-establish cluster peering as needed.
 +
 You may need to reconfigure cluster peering.
 +
 link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Creating a cluster peer relationship]
 
- .. Recreate VLANs and interface groups as needed.
+.. Recreate VLANs and interface groups as needed.
 +
 VLAN and interface group membership might be different than that of the old node.
 +
@@ -1000,19 +1058,21 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-58
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups]
 . If encryption is used, restore the keys using the correct command for your key management configuration.
 +
-[options="header"]
+
 |===
-| If you are using...| Use this command...
+
+h| If you are using... h| Use this command...
+
 a|
-*Onboard key management*
+Onboard key management
 a|
 `security key-manager onboard sync`
 
 For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys].
 a|
-*External key management*
+External key management
 a|
-`*security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag* _node-name_`
+`security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag _node-name_`
 
 For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys].
 
@@ -1020,48 +1080,57 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 
 === Verifying LIF configuration
 
-[.lead]
+
 Verify that LIFs are hosted on appropriate node/ports prior to switchback. The following steps need to be performed
+
+.About this task
 
 This task is performed on site_B, where the nodes have been booted up with root aggregates.
 
 .Steps
-. Verify that LIFs are hosted on the appropriate node and ports prior to switchback.
- .. Change to the advanced privilege level:
- +
-`*set -privilege advanced*`
- .. Override the port configuration to ensure proper LIF placement:
- +
-`*vserver config override -command "network interface modify -vserver _vserver_name_ -home-port _active_port_after_upgrade_ -lif _lif_name_ -home-node _new_node_name_"*`
-+
-When entering the network interface modify command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the `network interface modify` using autocomplete and then enclose it in the `vserver config override` command.
 
- .. Return to the admin privilege level:
+. Verify that LIFs are hosted on the appropriate node and ports prior to switchback.
+.. Change to the advanced privilege level:
++
+`set -privilege advanced`
+.. Override the port configuration to ensure proper LIF placement:
++
+`vserver config override -command "network interface modify" -vserver _vserver_name_ -home-port _active_port_after_upgrade_ -lif _lif_name_ -home-node _new_node_name_"`
++
+When entering the `network interface modify` command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the `network interface modify` using autocomplete and then enclose it in the `vserver config override` command.
+
+.. Return to the admin privilege level:
  +
-`*set -privilege admin*`
+`set -privilege admin`
 . Revert the interfaces to their home node:
 +
-`*network interface revert * -vserver _vserver-name_*`
+`network interface revert * -vserver _vserver-name_`
 +
 Perform this step on all SVMs as required.
 
 == Switching back the MetroCluster configuration
 
-[.lead]
 After the new controllers have been configured, you switch back the MetroCluster configuration to return the configuration to normal operation.
+
+.About this task
 
 In this task, you will perform the switchback operation, returning the MetroCluster configuration to normal operation. The nodes on site_A are still awaiting upgrade.
 
 image::../media/mcc_upgrade_cluster_a_switchback.png[]
 
 .Steps
+
 . Issue the `metrocluster node show` command on site_B and check the output.
- .. Verify that the new nodes are represented correctly.
- .. Verify that the new nodes are in "Waiting for switchback state."
-. Switchback the cluster: `metrocluster switchback`
+
+.. Verify that the new nodes are represented correctly.
+.. Verify that the new nodes are in "Waiting for switchback state."
+
+. Switchback the cluster:
++
+`metrocluster switchback`
 . Check the progress of the switchback operation:
 +
-`*metrocluster show*`
+`metrocluster show`
 +
 The switchback operation is still in progress when the output displays `waiting-for-switchback`:
 +
@@ -1095,48 +1164,48 @@ If a switchback takes a long time to finish, you can check on the status of in-p
 
 == Checking the health of the MetroCluster configuration
 
-[.lead]
 After upgrading the controller modules you must verify the health of the MetroCluster configuration.
+
+.About this task
 
 This task can be performed on any node in the MetroCluster configuration.
 
 .Steps
+
 . Verify the operation of the MetroCluster configuration:
- .. Confirm the MetroCluster configuration and that the operational mode is normal:
- +
-`*metrocluster show*`
- .. Perform a MetroCluster check:
- +
-`*metrocluster check run*`
- .. Display the results of the MetroCluster check:
- +
-`*metrocluster check show*`
+
+.. Confirm the MetroCluster configuration and that the operational mode is normal:
++
+`metrocluster show`
+.. Perform a MetroCluster check:
++
+`metrocluster check run`
+.. Display the results of the MetroCluster check:
++
+`metrocluster check show`
 
 == Upgrading the nodes on cluster_A
 
-[.lead]
 You must repeat the upgrade tasks on cluster_A.
 
-.Steps
-. Repeat the steps to upgrade the nodes on cluster_A, beginning with xref:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.adoc[Preparing for the upgrade].
+.Step
+. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Preparing for the upgrade].
 +
 As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
 
 == Sending a custom AutoSupport message after maintenance
 
-[.lead]
 After completing the upgrade, you should send an AutoSupport message indicating the end of maintenance, so automatic case creation can resume.
 
-.Steps
+.Step
 . To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
- .. Issue the following command:
- +
-`*system node autosupport invoke -node * -type all -message MAINT=end*`
- .. Repeat the command on the partner cluster.
+.. Issue the following command:
++
+`system node autosupport invoke -node * -type all -message MAINT=end`
+.. Repeat the command on the partner cluster.
 
 == Restoring Tiebreaker monitoring
 
-[.lead]
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
 . Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_.

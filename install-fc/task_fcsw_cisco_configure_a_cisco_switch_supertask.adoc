@@ -11,6 +11,8 @@ summary: Each Cisco switch in the MetroCluster configuration must be configured 
 [.lead]
 Each Cisco switch in the MetroCluster configuration must be configured appropriately for the ISL and storage connections.
 
+.Before you begin
+
 The following requirements apply to the Cisco FC switches:
 
 * You must be using four supported Cisco switches of the same model with the same NX-OS version and licensing.
@@ -22,6 +24,8 @@ The four switches must be connected into two fabrics of two switches each, with 
 * You cannot be using encryption or compression in the Cisco FC storage fabric. It is not supported in the MetroCluster configuration.
 
 In the https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool (IMT)], you can use the Storage Solution field to select your MetroCluster solution. You use the *Component Explorer* to select the components and ONTAP version to refine your search. You can click *Show Results* to display the list of supported configurations that match the criteria.
+
+.About this task
 
 The following requirement applies to the Inter-Switch Link (ISL) connections:
 
@@ -43,7 +47,7 @@ You can configure FAS8020, AFF8020, FAS8200, and AFF A300 systems with two initi
 * All slots are in use and no FC initiator card can be added.
 ====
 
-*Related information*
+.Related information
 
 https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool]
 
@@ -187,7 +191,7 @@ Determine which ports require licenses. If some of those ports are unlicensed, d
 +
 `interface _interface-name_`
 
-.. Remove the license from the port using the following command:
+.. Remove the license from the port:
 +
 `no port-license acquire`
 
@@ -314,8 +318,8 @@ Each port must be configured individually.
 
 Refer to the following sections to identify the F-ports (switch-to-node) for your configuration:
 
-* xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
-* xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.adoc[Port assignments for FC switches when using ONTAP 9.0]
+* link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
+* link:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.html[Port assignments for FC switches when using ONTAP 9.0]
 
 This task must be performed on each switch in the MetroCluster configuration.
 
@@ -507,10 +511,11 @@ You must create a VSAN for the FC-VI ports and a VSAN for the storage ports on e
 
 The VSANs should have a unique number and name. You must do additional configuration if you are using two ISLs with in-order delivery of frames.
 
-The examples here use the following naming conventions:
+The examples of this task use the following naming conventions:
 
 |===
-| Switch fabric | VSAN name | ID number
+
+h| Switch fabric h| VSAN name h| ID number
 
 .2+|
 1
@@ -867,7 +872,8 @@ This task must be performed on each ISL port.
 To determine the correct number of BBCs, you multiply the Adjusted BBCs required (determined from the following table) by the distance in kilometers between the switches. An adjustment factor of 1.5 is required to account for FC-VI framing behavior.
 +
 |===
-| Speed in Gbps | BBCs required per kilometer | Adjusted BBCs required (BBCs per km x 1.5)
+
+h| Speed in Gbps h| BBCs required per kilometer h| Adjusted BBCs required (BBCs per km x 1.5)
 
 a|
 1
@@ -900,6 +906,7 @@ a|
 a|
 12
 |===
+
 For example, to compute the required number of credits for a distance of 30 km on a 4-Gbps link, make the following calculation:
 
  ** `Speed in Gbps` is 4
@@ -1052,14 +1059,13 @@ FC_switch_B_1# copy running-config startup-config
 
 . Repeat the previous steps on the second switch fabric.
 
-*Related information*
+.Related information
 
-You need to verify that you are using the specified port assignments when you cable the FC switches when using ONTAP 9.1 and later. Refer to link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
+You need to verify that you are using the specified port assignments when you cable the FC switches when using ONTAP 9.1 and later. Refer to link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
 
 [[config-fcip-ports-single-isl-cisco-9250i]]
 === Configuring FCIP ports for a single ISL on Cisco 9250i FC switches
 
-[.lead]
 You must configure the FCIP switch ports that connect the ISL (E-ports) by creating FCIP profiles and interfaces, and then assigning them to the IPStorage1/1 GbE interface.
 
 .About this task
@@ -1411,7 +1417,8 @@ The task and examples use the following profile configuration tables:
 *Fabric 1 profile configuration table*
 
 |===
-| Switch fabric | IPStorage interface | IP Address | Port type | FCIP interface | FCIP profile | Port | Peer IP/port | VSAN ID
+
+h| Switch fabric h| IPStorage interface h| IP Address h| Port type h| FCIP interface h| FCIP profile h| Port h| Peer IP/port h| VSAN ID
 
 .4+| FC_switch_A_1
 .2+| IPStorage1/1
@@ -1486,7 +1493,8 @@ a| 20
 *Fabric 2 profile configuration table*
 
 |===
-| Switch fabric | IPStorage interface | IP Address | Port type | FCIP interface | FCIP profile | Port | Peer IP/port | VSAN ID
+
+h| Switch fabric h| IPStorage interface h| IP Address h| Port type h| FCIP interface h| FCIP profile h| Port h| Peer IP/port h| VSAN ID
 
 .4+| FC_switch_A_2
 .2+| IPStorage1/1
@@ -2112,8 +2120,8 @@ The zoning depends on the model FC-to-SAS bridge you are using. For details, see
 +
 --
 
-** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N, or 7600N bridges using one FC port]
-** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 7500N bridges using both FC ports]
+** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N, or 7600N bridges using one FC port]
+** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Zoning for FibreBridge 7500N bridges using both FC ports]
 --
 
 +
@@ -2185,8 +2193,8 @@ The zoning depends on the model FC-to-SAS bridge you are using. For details, see
 +
 --
 
-** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N, or 7600N bridges using one FC port]
-** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.adoc[Zoning for FibreBridge 7500N bridges using both FC ports]
+** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Zoning for FibreBridge 6500N bridges, or FibreBridge 7500N, or 7600N bridges using one FC port]
+** link:task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Zoning for FibreBridge 7500N bridges using both FC ports]
 --
 
 +

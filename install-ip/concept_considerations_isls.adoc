@@ -32,7 +32,6 @@ For example, the MetroCluster switches can connect using a 40-Gbps ISL to the in
 
 == ISL requirements in shared layer 2 networks
 
-[.lead]
 When link:../install-ip/concept_considerations_layer_2.html[sharing ISL traffic in a shared network], you must ensure that you have adequate capacity and size the ISLs appropriately. Low latency is critical for replication of data between the MetroCluster sites. Latency issues on these connections can impact client I/O.
 
 You should review these sections to correctly calculate the required end-to-end capacity of the ISLs. Continuous nonvolatile cache and storage replication with low latency is critical for MetroCluster configurations. The latency in the back-end network impacts the latency and throughput seen by client IO.
@@ -87,11 +86,14 @@ Layer 2 VLANs with IDs that match the MetroCluster VLAN IDs must span the shared
 ** In ONTAP 9.8 and later, FAS2750, AFF A220, FAS500f, AFF A250, FAS8300, AFF A400, and FAS8700 systems use VLAN 10 and 20 by default. You can configure other VLANs during interface creation, and they must be withing the range 101-4096.
 For all the platforms mentioned previously, you can only specify the VLAN during interface creation. Once the MetroCluster interfaces are created, the VLAN ID cannot not be changed. For all other platforms not mentioned previously, you can use any VLAN and you can change the VLAN ID for those platforms at any time, but it requires that a new RCF file is created and applied.
 
+--
+[NOTE]
+====
+The RcfFileGenerator does not allow the creation of an RCF file using VLANs that are not supported by the platform.
 
-NOTE: The RcfFileGenerator does not allow the creation of an RCF file using VLANs that are not supported by the platform.
-
-
-NOTE: The RcfFileGenerator might restrict the use of certain VLAN IDs (for example, if they are intended for future use). Generally, reserved VLANs are up to and including 100.
+The RcfFileGenerator might restrict the use of certain VLAN IDs (for example, if they are intended for future use). Generally, reserved VLANs are up to and including 100.
+====
+--
 
 * The MTU size must be set to 9216 on all devices in the end-to-end network.
 * No other traffic can be configured with a higher priority than class of service (COS) five.
@@ -102,15 +104,16 @@ NOTE: The RcfFileGenerator might restrict the use of certain VLAN IDs (for examp
 [.lead]
 When using shared ISLs in a MetroCluster IP configuration, you must be aware of the requirements for the end-to-end MetroCluster ISL running from controller ports on site A to controller ports on site B.
 
-NOTE: You must follow the basic ISL requirements: xref:concept_prepare_for_the_mcc_installation.html#considerations-for-isls[Considerations for ISLs]
+NOTE: You must follow the <<Basic MetroCluster ISL requirements>>.
 
 === Number of ISLs and breakout cables in the shared network
 
 The number of ISLs connecting the MetroCluster IP switches to the shared network varies depending on the switch model and port type.
 
-[cols=3*,options="header"]
+
 |===
-| MetroCluster IP switch model | Port type | Number of ISLs
+
+h| MetroCluster IP switch model h| Port type h| Number of ISLs
 
 a| Broadcom-supported BES-53248 switches
 a| Native ports

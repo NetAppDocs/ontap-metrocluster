@@ -173,7 +173,16 @@ a|
 `metrocluster vserver show`
 |===
 
-== Detecting failures with NetApp MetroCluster Tiebreaker software
+== Using the MetroCluster Tiebreaker or ONTAP Mediator to monitor the configuration
+See link:../install-ip/concept_considerations_mediator.html[Differences between ONTAP Mediator and MetroCluster Tiebreaker] to understand the differences between these two methods of monitoring your MetroCluster configuration and initiating an automatic switchover.
+
+Use these links to install and configure Tiebreaker or Mediator:
+
+* link:../tiebreaker/index.html[Install and configure the MetroCluster Tiebreaker software]
+* link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configure the ONTAP Mediator service for unplanned automatic switchover]
+//ontap-metrocluster/issues/78
+
+== How the NetApp MetroCluster Tiebreaker software detects failures
 
 [.lead]
 The Tiebreaker software resides on a Linux host. You need the Tiebreaker software only if you want to monitor two clusters and the connectivity status between them from a third site. Doing so enables each partner in a cluster to distinguish between an ISL failure, when inter-site links are down, from a site failure.
@@ -236,3 +245,13 @@ The Tiebreaker software does not trigger an alert (or the alert is vetoed) in th
 The Tiebreaker software triggers an alert, but ONTAP vetoes that alert. In this situation, a manual switchover is also vetoed
 
 * Any scenario in which the Tiebreaker software can either reach at least one node or the cluster interface at the disaster site, or the surviving site still can reach either node at the disaster site through either FC (NV interconnect and storage) or intercluster peering
+
+
+=== How the ONTAP Mediator supports automatic unplanned switchover
+//ontap-metrocluster/issues/78
+[.lead]
+The ONTAP Mediator stores state information about the MetroCluster nodes in mailboxes located on the Mediator host. The MetroCluster nodes can use this information to monitor the state of their DR partners and implement a Mediator-assisted automatic unplanned switchover (MAUSO) in the case of a disaster.
+
+When a node detects a site failure requiring a switchover, it takes steps to confirm that the switchover is appropriate and, if so, performs the switchover.
+
+MAUSO is only initiated if both SyncMirror mirroring and DR mirroring of each node’s nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.

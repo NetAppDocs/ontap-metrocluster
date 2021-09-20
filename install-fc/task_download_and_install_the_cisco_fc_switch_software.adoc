@@ -11,7 +11,11 @@ summary: 'You must download the switch operating system file and RCF file to eac
 [.lead]
 You must download the switch operating system file and RCF file to each switch in the MetroCluster fabric configuration.
 
+.Before you begin
+
 This task requires file transfer software, such as FTP, TFTP, SFTP, or SCP, to copy the files to the switches.
+
+.About this task
 
 These steps must be repeated on each of the FC switches in the MetroCluster fabric configuration.
 
@@ -21,13 +25,15 @@ https://hwu.netapp.com[NetApp Hardware Universe]
 
 NOTE: The outputs shown are for Cisco IP switches; however, these steps are also applicable for Cisco FC switches.
 
+.Steps
+
 . Download the supported NX-OS software file.
 +
 https://software.cisco.com/download/home[Cisco download page]
 
 . Copy the switch software to the switch:
 +
-`*+copy sftp://root@server-ip-address/tftpboot/NX-OS-file-name bootflash: vrf management+*`
+`copy sftp://root@server-ip-address/tftpboot/NX-OS-file-name bootflash: vrf management`
 +
 In this example, the `nxos.7.0.3.I4.6.bin` file is copied from SFTP server 10.10.99.99 to the local bootflash:
 +
@@ -45,7 +51,7 @@ Copy complete, now saving to disk (please wait)...
 
 . Verify on each switch that the switch NX-OS files are present in each switch's bootflash directory:
 +
-`*dir bootflash*`
+`dir bootflash`
 +
 The following example shows that the files are present on `IP_switch_A_1`:
 +
@@ -68,7 +74,7 @@ IP_switch_A_1#
 
 . Install the switch software:
 +
-`*install all system bootflash:nxos.version-number.bin kickstart bootflash:nxos.version-kickstart-number.bin*`
+`install all system bootflash:nxos.version-number.bin kickstart bootflash:nxos.version-kickstart-number.bin`
 +
 ----
 IP_switch_A_1#  install all system bootflash:nxos.7.0.3.I4.6.bin kickstart bootflash:nxos.7.0.3.I4.6.bin
@@ -118,7 +124,7 @@ The switch software is now installed.
 
 . Verify that the switch software has been installed:
 +
-`*show version*`
+`show version`
 +
 The following example shows the output:
 +

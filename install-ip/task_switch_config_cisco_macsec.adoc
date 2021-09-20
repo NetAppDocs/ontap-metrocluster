@@ -1,0 +1,88 @@
+---
+permalink: install-ip/task_switch_config_cisco_macsec.html
+sidebar: sidebar
+keywords:  cisco, MACsec encryption
+summary: You must only configure MACsec encryption on the WAN ISL ports that run between the sites. You must configure MACsec after applying the correct RCF file.
+---
+= Configuring MACsec encryption on Cisco 9336C switches
+//burt 1354395
+
+[.lead]
+If desired, you can configure MACsec encryption on the WAN ISL ports that run between the sites. You must configure MACsec after applying the correct RCF file.
+
+NOTE: MACsec encryption can only be applied to the WAN ISL ports.
+
+== Licensing requirements for MACsec
+
+MACsec requires a security license. For a complete explanation of the Cisco NX-OS licensing scheme and how to obtain and apply for licenses, see the https://www.cisco.com/c/en/us/td/docs/switches/datacenter/sw/nx-os/licensing/guide/b_Cisco_NX-OS_Licensing_Guide/b_Cisco_NX-OS_Licensing_Guide_chapter_01.html[Cisco NX-OS Licensing Guide]
+
+== Enabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
+[.lead]
+You can enable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
+
+. Enter the global configuration mode: `configure terminal`
++
+----
+IP_switch_A_1# configure terminal
+IP_switch_A_1(config)#
+----
+
+. Enable MACsec and MKA on the device: `feature macsec`
++
+----
+IP_switch_A_1(config)# feature macsec
+----
+
+. Copy the running configuration to the startup configuration: `copy running-config startup-config`
++
+----
+IP_switch_A_1(config)# copy running-config startup-config
+----
+
+== Disabling Cisco MACsec Encryption
+
+[.lead]
+You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
+
+NOTE: If you disable encryption, you must also delete your keys, as described in XXX.
+
+. Enter the global configuration mode: `configure terminal`
++
+----
+IP_switch_A_1# configure terminal
+IP_switch_A_1(config)#
+----
+
+. Disable the MACsec configuration on the device: `macsec shutdown`
++
+----
+IP_switch_A_1(config)# macsec shutdown
+----
++
+NOTE: Selecting the no option restores the MACsec feature.
+
+. Select the interface that you already configured with MACsec.
++
+You can specify the interface type and identity. For an Ethernet port, use ethernet slot/port.
++
+----
+IP_switch_A_1(config)# interface ethernet 1/15
+switch(config-if)#
+----
+
+. Remove the keychain, policy and fallback-keychain configured on the interface to remove the MACsec configuration: `no macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
++
+----
+IP_switch_A_1(config-if)# no macsec keychain kc2 policy abc fallback-keychain fb_kc2
+----
+
+. Repeat steps 3 and 4 on all interfaces where MACsec is configured.
+. Copy the running configuration to the startup configuration: `copy running-config startup-config`
++
+----
+IP_switch_A_1(config)# copy running-config startup-config
+----
+
+== Configuring a MACsec key chain and keys
+
+For details on configuring a MACsec key chain, see the Cisco documentation for your switch.
