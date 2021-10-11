@@ -1,0 +1,18 @@
+= Port assignments for FC switches when using ONTAP 9.1 or later
+
+You need to verify that you are using the specified port assignments when you cable the FC switches when using ONTAP 9.1 and later.
+
+Ports that are not used for attaching initiator ports, FC-VI ports, or ISLs can be reconfigured to act as storage ports. However, if the supported RCFs are being used, the zoning must be changed accordingly.
+
+If the supported RCFs are used, ISL ports might not connect to the same ports shown and might need to be reconfigured manually.
+
+If you configured your switches using the port assignments for ONTAP 9, you can continue to use the older assignments. However, new configurations running ONTAP 9.1 or later releases should use the port assignments shown here.
+
+== Overall cabling guidelines
+
+You should be aware of the following guidelines when using the cabling tables:
+
+* #AFF A900 storage systems require eight FC-VI ports. If you are using A900, you need to use the eight port configuration. For other storage systems, use the cabling shown in the tables but ignore the cabling for unneeded FC-VI ports.#
+* If you have two MetroCluster configurations sharing ISLs, use the same port assignments as that for an eight-node MetroCluster cabling.
+* The number of ISLs you cable may vary depending on site's requirements.
+* See the section on ISL considerations.
