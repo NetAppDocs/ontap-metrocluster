@@ -9,7 +9,7 @@ summary: 'You can use this guided automated MetroCluster switchover operation to
 :imagesdir: ../media/
 
 [.lead]
-You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster FC configuration. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
+You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade on a four-node MetroCluster FC configuration. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
 .About this task
 
@@ -18,14 +18,14 @@ You can use this guided automated MetroCluster switchover operation to perform a
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
 * This procedure applies to controller modules in a four-node MetroCluster FC configuration.
 * The platforms must be running ONTAP 9.10.1 or later.
-* If you replace the source controller with a controller that has a different ONTAP version, it is detected by the automation procedure after the new controller boots up. After precheck, the current source system and all compatible target systems are displayed. To bring the cluster back to a healthy state, you need to use the manual NSO based controller replacement procedure.
+* If you replace the source controller with a controller that has a different ONTAP version, it is detected by the automation procedure after the new controller boots up. After precheck, the current source system and all compatible target systems are displayed. To bring the cluster back to a healthy state, you need to use the manual negotiated switchover (NSO) based controller replacement procedure.
 * Your original and new platforms must be compatible and supported.
 +
 https://hwu.netapp.com[NetApp Hardware Universe^]
 
 * Beginning with ONTAP 9.10.1, both ARL based and NSO based automated controller upgrade procedures are available for a four-node MetroCluster FC configuration. The NSO based procedure is the default. If you want to select the automated ARL upgrade procedure, when you trigger the CLI command, you need to select -`nso` as `false`.
 * If your MetroCluster sites are physically at two different locations, you must perform the automated NSO based controller upgrade at each MetroCluster site.
-* This automated switchover based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster donor site. You can only initiate a controller replacement at one site at a time.
+* This automated NSO based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster donor site. You can only initiate a controller replacement at one site at a time.
 * To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The process guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
 
 The following example names are used in this procedure:
@@ -378,17 +378,13 @@ Verify that the new nodes (Site B) are in *Waiting for switchback state* from si
 == Booting up the new controllers
 You must reboot the controllers from the boot menu to update the controller flash image. Additional steps are required if encryption is configured.
 
+The automation process pauses at the network reachability task status so you can reconfigure VLANs and interface groups. If required, manually modify the ports for the cluster LIFs and broadcast domain details before resuming the operation by using the `system controller replace resume` command.
+
 .About this task
 
 This task must be performed on all the new controllers.
 
 .Steps
-
-. If required, manually modify the ports for the cluster LIFs and broadcast domain details by using manual commands.
-
-. Resume the operation:
-+
-`system controller replace resume`
 
 . Halt the node:
 +
@@ -524,8 +520,6 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 `metrocluster node show`
 +
 Verify that the new nodes (Site B) are in *Waiting for switchback state* from site A.
-
-. The automation process pauses at the network reachability task status so you can reconfigure VLANs and interface groups. If required, manually modify the ports for the cluster LIFs and broadcast domain details before resuming the operation.
 
 . Resume the operation:
 +
