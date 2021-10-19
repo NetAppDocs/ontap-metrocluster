@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, system, commands
 summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster FC configuration.'
 ---
-= Using "system controller replace" commands to upgrade controllers in a four-node MetroClsuter FC configuration (ONTAP 9.10.1 or later)
+= Using "system controller replace" commands to upgrade controllers in a MetroCluster FC configuration (ONTAP 9.10.1 or later)
 :icons: font
 :imagesdir: ../media/
 
@@ -16,16 +16,16 @@ You can use this guided automated MetroCluster switchover operation to perform a
 * You can use this procedure only for controller upgrade.
 +
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
-* This procedure applies to controller modules in a four-node MetroCluster FC configuration
-* The platforms must be running ONTAP 9.10.1 or later
+* This procedure applies to controller modules in a four-node MetroCluster FC configuration.
+* The platforms must be running ONTAP 9.10.1 or later.
 * If you replace the source controller with a controller that has a different ONTAP version, it is detected by the automation procedure after the new controller boots up. After precheck, the current source system and all compatible target systems are displayed. To bring the cluster back to a healthy state, you need to use the manual NSO based controller replacement procedure.
 * Your original and new platforms must be compatible and supported.
 +
-https://hwu.netapp.com[NetApp Hardware Universe]
+https://hwu.netapp.com[NetApp Hardware Universe^]
 
 * Beginning with ONTAP 9.10.1, both ARL based and NSO based automated controller upgrade procedures are available for a four-node MetroCluster FC configuration. The NSO based procedure is the default. If you want to select the automated ARL upgrade procedure, when you trigger the CLI command, you need to select -`nso` as `false`.
 * If your MetroCluster sites are physically at two different locations, you must perform the automated NSO based controller upgrade at each MetroCluster site.
-* The automated NSO based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster donor site. You can only initiate a controller replacement at one site at a time.
+* This automated switchover based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster donor site. You can only initiate a controller replacement at one site at a time.
 * To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The process guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
 
 The following example names are used in this procedure:
@@ -55,17 +55,17 @@ To prepare for the controller upgrade, you need to perform system prechecks and 
 +
 `system controller replace start`
 +
-NOTE:	At any stage in the upgrade, you can run the `system controller replace show` or `system controller replace show-details` command from site A to check the status. If the command returns a blank output, wait for a few minutes, and then rerun the command.
-
-.	[[prepare_upgrade_step_2]]The automated process executes the prechecks. If no issues are found, the process pauses to allow you to manually collect the configuration related information.
+NOTE:	At any stage in the upgrade, you can run the `system controller replace show` or `system controller replace show-details` commands from site A to check the status. If the commands return a blank output, wait for a few minutes, and then rerun the command.
 +
-To manually collect the configuration information, log in at site B and follow the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
+The automated process executes the prechecks. If no issues are found, the process pauses so you can manually collect the configuration related information.
+
+.	[[prepare_upgrade_step_2]]Manually collect the configuration information by logging in at site B and following the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
 
 .	After you finish collecting the configuration information, resume the operation:
 +
 `system controller replace resume`
 +
-The automation procedure pauses to allow you, if necessary, to prepare the network configuration of the old controllers at site B by manually removing VLANS and interface groups.
+The automation procedure pauses so you can, if necessary, prepare the network configuration of the old controllers at site B by manually removing VLANS and interface groups.
 
 == Preparing the network configuration of the old controllers
 
@@ -107,13 +107,13 @@ For example:
 ----
 network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
-. Modify broadcast domains to remove vlan and physical ports that need to be deleted:
+. Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
 +
 `broadcast-domain remove-ports -broadcast-domain _broadcast-domain-name_ -ports _node-name:port-id_`
 +
 Repeat this step for all VLAN and physical ports.
 
-. Remove any VLAN ports using cluster ports as member ports and ifgrps using cluster ports as member ports.
+. Remove any VLAN ports using cluster ports as member ports and interface groups using cluster ports as member ports.
 .. Delete VLAN ports:
 +
 `network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
@@ -147,9 +147,13 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 +
 This step must be performed on both nodes.
 
+. Resume the operation:
++
+`system controller replace resume`
+
 == Gathering information before the upgrade
 
-Before upgrading, if the root volume is encrypted, you must gather the backup key and other information to boot the new the new controllers with the old encrypted root volumes.
+Before upgrading, if the root volume is encrypted, you must gather the backup key and other information to boot the new controllers with the old encrypted root volumes.
 
 .About this task
 
@@ -157,7 +161,13 @@ This task is performed on the existing MetroCluster FC configuration.
 
 .Steps
 
-. Label the cables for the existing controllers, to allow easy identification of cables when setting up the new controllers.
+. Label the cables for the existing controllers, so you can easily identify the cables when setting up the new controllers.
+. Display the commands to capture the backup key and other information:
++
+`system controller replace show`
++
+Run the commands listed under the `show` command from the partner cluster.
+
 . Gather the system IDs of the nodes in the MetroCluster configuration:
 +
 `metrocluster node show -fields node-systemid,dr-partner-systemid`
@@ -228,7 +238,7 @@ You should gather the output of the following commands:
 `security key-manager backup show`
 . If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
 +
-For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually].
+For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually^].
 
 .. If Onboard Key Manager is configured:
 +
@@ -249,13 +259,13 @@ You will need the passphrase later in the upgrade procedure.
 
 == Replace the old controller and boot up the new controllers
 
-The automation process initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the process pauses at *paused for user intervention* to allow you to replace and boot up the partner controllers and reassign the root aggregate disks to the new controller module, using the `sysids` gathered earlier
+The automation process initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the process pauses at *paused for user intervention* so you can replace and boot up the partner controllers and reassign the root aggregate disks to the new controller module from flash backup, using the `sysids` gathered earlier.
 
 .About this task
 
 These steps are performed in Maintenance mode.
 
-The old system IDs were identified in link:task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_fc.html[Gathering information before the upgrade].
+The old system IDs were identified in link:task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_fc.html#gathering-information-before-the-upgrade[Gathering information before the upgrade].
 
 The examples in this procedure use controllers with the following system IDs:
 
@@ -354,13 +364,18 @@ aggr0_node_b_1-root    online      raid_dp, aggr    root, nosnap=on,
 ----
 
 . Repeat the above steps on the partner node (node_B_2-new).
+
+. Before you resume the operation, verify that the MetroClsuter is configured correctly. Check the node status:
++
+`metrocluster node show`
++
+Verify that the new nodes (Site B) are in *Waiting for switchback state* from site A.
+
 . Resume the operation to initiate the verification process:
 +
 `system controller replace resume`
 
 == Booting up the new controllers
-The automation process pauses at the network reachability task status to allow you to reconfigure VLANs and interface groups. If required, manually modify the ports for the cluster LIFs and broadcast domain details.
-
 You must reboot the controllers from the boot menu to update the controller flash image. Additional steps are required if encryption is configured.
 
 .About this task
@@ -368,6 +383,12 @@ You must reboot the controllers from the boot menu to update the controller flas
 This task must be performed on all the new controllers.
 
 .Steps
+
+. If required, manually modify the ports for the cluster LIFs and broadcast domain details by using manual commands.
+
+. Resume the operation:
++
+`system controller replace resume`
 
 . Halt the node:
 +
@@ -440,7 +461,7 @@ External key management
 a|
 `recover_external_keymanager`
 |===
-
++
 You may need to issue the recover_xxxxxxxx_keymanager command and option 6 at the boot menu prompt multiple times until the nodes completely boot.
 
 . Boot the nodes:
@@ -488,21 +509,23 @@ Onboard key management
 a|
 `security key-manager onboard sync`
 
-For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys].
+For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys^].
 a|
 External key management
 a|
 `security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag _node-name_`
 
-For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys].
+For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys^].
 
 |===
 
-. Before you resume the operation, verify that the MetroClsuter is configured correctly. Check the node status:
+. Before you resume the operation, verify that the MetroCluster is configured correctly. Check the node status:
 +
 `metrocluster node show`
 +
 Verify that the new nodes (Site B) are in *Waiting for switchback state* from site A.
+
+. The automation process pauses at the network reachability task status so you can reconfigure VLANs and interface groups. If required, manually modify the ports for the cluster LIFs and broadcast domain details before resuming the operation.
 
 . Resume the operation:
 +
@@ -510,18 +533,18 @@ Verify that the new nodes (Site B) are in *Waiting for switchback state* from si
 
 == Completing the upgrade
 
-In the resource regain phase, the automated procedure initiates switchback from site A and then executes verifications and post checks.
+In the resource regain phase, the automated procedure initiates switchback from site A and then executes verifications and post upgrade checks.
 
 .Steps
 
-.	After the verification and post checks complete, resume the operation:
+.	After the verification and post upgrade checks complete, resume the operation:
 +
 `system controller replace resume`
-.	Check the post checks status:
+.	Check the post upgrade checks status:
 +
 `system controller replace show`
 +
-If post checks did not report any errors, the automation process is complete.
-.	After you complete the controller upgrade, log in to site B and verify that the replaced controllers are configured correctly.
+If the post upgrade checks did not report any errors, the automation process is complete.
+.	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
 
 // BURT 1404898 Oct-19-2021
