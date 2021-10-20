@@ -2,14 +2,14 @@
 permalink: install-ip/task_modify_ip_netmask_gateway_properties.html
 sidebar: sidebar
 keywords:  vlan, ip, gateway,netmask, address, network, interface, subnet
-summary: You can change the following properties of a MetroCluster IP interface, IP address and mask, gateway, and VLAN. You can use any combination of parameters to update.
+summary: You can change the following properties of a MetroCluster IP interface, IP address and mask, and gateway. You can use any combination of parameters to update.
 ---
 = Modifying address, netmask, and gateway in a MetroCluster IP
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Starting from ONTAP 9.10.1, you can change the following properties of a MetroCluster IP interface: IP address and mask, gateway, and VLAN. You can use any combination of parameters to update.
+Starting from ONTAP 9.10.1, you can change the following properties of a MetroCluster IP interface: IP address and mask, and gateway. You can use any combination of parameters to update.
 
 You might need to update these properties, for example, if a duplicate IP address is detected or if a gateway needs to change in the case of a layer 3 network due to router configuration changes.
 
@@ -28,6 +28,9 @@ Use the `metrocluster configuration-settings interface show`, `metrocluster conn
 cluster_A::* metrocluster configuration-settings interface modify -cluster-name cluster_A -home-node node_A_1 -home-port e0a-10 -address 192.168.12.101 -gateway 192.168.12.1 -netmask 255.255.254.0
 (metrocluster configuration-settings interface modify)
 
+Warning: This operation will disconnect and reconnect iSCSI and RDMA connections used for DR protection through port “e0a-10”. Partner nodes may need modifications for port “e0a-10” in order to completely establish network connectivity.
+Do you want to continue?" yes
+
 [Job 28] Setting up iSCSI target configuration. (pass2:iscsi13:0:-1:0): xpt_action_default: CCB type 0xe XPT_DEV_ADVINFO not supported
 [Job 28] Establishing iSCSI initiator connections.
 (pass6:iscsi14:0:-1:0): xpt_action_default: CCB type 0xe XPT_DEV_ADVINFO not supported
@@ -37,6 +40,8 @@ cluster_A::* metrocluster configuration-settings interface modify -cluster-name 
 
 cluster_A::*> metrocluster configuration-settings interface modify -cluster-name cluster_A -home-node node_A_2 -home-port e0a-10 -address 192.168.12.201 -gateway 192.168.12.1 -netmask 255.255.254.0
 (metrocluster configuration-settings interface modify)
+Warning: This operation will disconnect and reconnect iSCSI and RDMA connections used for DR protection through port “e0a-10”. Partner nodes may need modifications for port “e0a-10” in order to completely establish network connectivity.
+Do you want to continue?" yes
 [Job 28] Job succeeded: Interface Modify is successful
 ----
 [start=2]
