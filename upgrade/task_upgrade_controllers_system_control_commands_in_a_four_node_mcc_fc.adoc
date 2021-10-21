@@ -61,8 +61,6 @@ NOTE:	At any stage in the upgrade, you can run the `system controller replace sh
 The automated process executes the prechecks. If no issues are found, the process pauses so you can manually collect the configuration related information.
 
 .	[[prepare_upgrade_step_2]]Manually collect the configuration information by logging in at site B and following the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
-+
-NOTE: An *onbox message* displays that instructs you to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html#removing-the-existing-configuration-from-the-tiebreaker-or-other-monitoring-software[remove the Tiebreaker] before proceeding with the controller replacement. 
 
 .	After you finish collecting the configuration information, resume the operation:
 +
@@ -259,6 +257,19 @@ You will need the passphrase later in the upgrade procedure.
 +
 `system controller replace resume`
 
+== Removing the existing configuration from the Tiebreaker or other monitoring software
+
+If the existing configuration is monitored with the MetroCluster Tiebreaker configuration or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the Tiebreaker or other software prior to replacing the old controller.
+
+.Steps
+
+. Remove the existing MetroCluster configuration from the Tiebreaker software.
++
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster configurations]
+
+. Remove the existing MetroCluster configuration from any third-party application that can initiate switchover.
++
+Refer to the documentation for the application.
 
 == Replacing the old controller and booting up the new controller
 
@@ -538,13 +549,17 @@ In the resource regain phase, the automated procedure initiates switchback from 
 +
 `system controller replace resume`
 
-NOTE: After you complete the controller replacement, an *onbox message* displays that instructs you to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html#restoring-tiebreaker-monitoring[enable the Tiebreaker].
-
 .	Check the post upgrade checks status:
 +
 `system controller replace show`
 +
 If the post upgrade checks did not report any errors, the upgrade is complete.
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
+
+== Restoring Tiebreaker monitoring
+
+If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
+
+. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_.
 
 // BURT 1404898 Oct-19-2021
