@@ -61,6 +61,8 @@ NOTE:	At any stage in the upgrade, you can run the `system controller replace sh
 The automated process executes the prechecks. If no issues are found, the process pauses so you can manually collect the configuration related information.
 
 .	[[prepare_upgrade_step_2]]Manually collect the configuration information by logging in at site B and following the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
++
+NOTE: An *onbox message* displays that instructs you to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html#removing-the-existing-configuration-from-the-tiebreaker-or-other-monitoring-software[remove the Tiebreaker] before proceeding with the controller replacement. 
 
 .	After you finish collecting the configuration information, resume the operation:
 +
@@ -535,11 +537,14 @@ In the resource regain phase, the automated procedure initiates switchback from 
 .	After the verification and post upgrade checks complete, resume the operation:
 +
 `system controller replace resume`
+
+NOTE: After you complete the controller replacement, an *onbox message* displays that instructs you to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html#restoring-tiebreaker-monitoring[enable the Tiebreaker].
+
 .	Check the post upgrade checks status:
 +
 `system controller replace show`
 +
-If the post upgrade checks did not report any errors, the automation process is complete.
+If the post upgrade checks did not report any errors, the upgrade is complete.
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
 
 // BURT 1404898 Oct-19-2021
