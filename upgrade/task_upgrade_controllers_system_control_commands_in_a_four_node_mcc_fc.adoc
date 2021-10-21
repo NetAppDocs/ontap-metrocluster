@@ -68,7 +68,7 @@ The automated process executes the prechecks. If no issues are found, the proces
 +
 The automation procedure pauses so you can, if necessary, prepare the network configuration of the old controllers at site B by manually removing VLANS and interface groups.
 
-== Preparing the network configuration of the old controllers
+=== Preparing the network configuration of the old controllers
 
 To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
 
@@ -152,7 +152,7 @@ This step must be performed on both nodes.
 +
 `system controller replace resume`
 
-== Gathering information before the upgrade
+=== Gathering information before the upgrade
 
 Before upgrading, if the root volume is encrypted, you must gather the backup key and other information to boot the new controllers with the old encrypted root volumes.
 
@@ -257,7 +257,7 @@ You will need the passphrase later in the upgrade procedure.
 +
 `system controller replace resume`
 
-== Removing the existing configuration from the Tiebreaker or other monitoring software
+=== Removing the existing configuration from the Tiebreaker or other monitoring software
 
 If the existing configuration is monitored with the MetroCluster Tiebreaker configuration or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the Tiebreaker or other software prior to replacing the old controller.
 
@@ -271,13 +271,11 @@ http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/G
 +
 Refer to the documentation for the application.
 
-== Replacing the old controller and booting up the new controller
+== Replacing the old controllers and booting up the new controllers
 
 The automation process initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the process pauses at *paused for user intervention* so you can replace and boot up the partner controllers and reassign the root aggregate disks to the new controller module from flash backup, using the `sysids` gathered earlier.
 
 .About this task
-
-These steps are performed in Maintenance mode.
 
 The old system IDs were identified in link:task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_fc.html#gathering-information-before-the-upgrade[Gathering information before the upgrade].
 
@@ -294,6 +292,10 @@ a|
 a|
 1574774970
 |===
+
+=== Replacing the old controllers
+
+These steps are performed in Maintenance mode.
 
 .Steps
 
@@ -389,7 +391,7 @@ Verify that the new nodes (Site B) are in *Waiting for switchback state* from si
 +
 `system controller replace resume`
 
-== Booting up the new controllers
+=== Booting up the new controllers
 You must reboot the controllers from the boot menu to update the controller flash image. Additional steps are required if encryption is configured.
 
 The automation process pauses at the network reachability task status so you can reconfigure VLANs and interface groups. If required, manually modify the ports for the cluster LIFs and broadcast domain details before resuming the operation by using the `system controller replace resume` command.
@@ -556,7 +558,7 @@ In the resource regain phase, the automated procedure initiates switchback from 
 If the post upgrade checks did not report any errors, the upgrade is complete.
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
 
-== Restoring Tiebreaker monitoring
+=== Restoring Tiebreaker monitoring
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
