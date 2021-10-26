@@ -50,15 +50,27 @@ The following example names are used in this procedure:
 
 To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
 
+At any stage during the upgrade, you can run the `system controller replace show` or `system controller replace show-details` commands from site A to check the status. If the commands return a blank output, wait for a few minutes, and then rerun the command.
+
 .Steps
 
 .	Start the automated controller replacement process from site A to replace the controllers at site B:
 +
 `system controller replace start`
 +
-NOTE:	At any stage in the upgrade, you can run the `system controller replace show` or `system controller replace show-details` commands from site A to check the status. If the commands return a blank output, wait for a few minutes, and then rerun the command.
-+
 The automated process executes the prechecks. If no issues are found, the process pauses so you can manually collect the configuration related information.
++
+[NOTE]
+====
+If you have unmirrored aggregates, you cannot proceed with the upgrade and the `system controller replace start` command reports the following precheck error:
+----
+Cluster-A::*>system controller replace show
+Node       Status        Error-Action
+---------- ------------- ------------------------------------
+Node-A-1   Failed        MetroCluster check failed. Reason : MCC check showed errors in component aggregates.
+----
+If this error occurs, verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. You can override this error by selecting the `-skip-metrocluster-check` true option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates comes online after switchover. If the remote storage link fails, the aggregates fails to come online.
+====
 
 .	[[prepare_upgrade_step_2]]Manually collect the configuration information by logging in at site B and following the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
 
