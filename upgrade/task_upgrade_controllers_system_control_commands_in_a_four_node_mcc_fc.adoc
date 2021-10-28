@@ -18,7 +18,7 @@ You can use this guided automated MetroCluster switchover operation to perform a
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
 * This procedure applies to controller modules in a four-node MetroCluster FC configuration.
 * The platforms must be running ONTAP 9.10.1 or later.
-* After the automation procedure completes the prechecks, the current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation procedure halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow manual recovery procedure
+* After the automation process completes the prechecks, the current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation process halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow manual recovery procedure.
 * Your original and new platforms must be compatible and supported.
 +
 The following table shows the supported model matrix for the controller upgrade.
@@ -40,7 +40,7 @@ a| FAS8300, FAS8700
 +
 https://hwu.netapp.com[NetApp Hardware Universe^]
 
-* Beginning with ONTAP 9.10.1, both ARL based and NSO based automated controller upgrade procedures are available for a four-node MetroCluster FC configuration. The NSO based procedure is the default. If you want to select the automated ARL upgrade procedure, when you trigger the CLI command, you need to select -`nso` as `false`.
+* Beginning with ONTAP 9.10.1, both ARL based and NSO based automated controller upgrade procedures are available for a four-node MetroCluster FC configuration. The NSO based procedure is the default. If you want to select the automated ARL upgrade procedure, you need to select -`nso` as `false` when you issue the CLI command.
 * If your MetroCluster sites are physically at two different locations, you must perform the automated NSO based controller upgrade at each MetroCluster site.
 * This automated NSO based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster donor site. You can only initiate a controller replacement at one site at a time.
 * To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The process guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
@@ -66,11 +66,11 @@ The following example names are used in this procedure:
 
 To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
 
-At any stage during the upgrade, you can run the `system controller replace show` or `system controller replace show-details` commands from site A to check the status. If the commands return a blank output, wait for a few minutes, and then rerun the command.
+At any stage during the upgrade, you can run the `system controller replace show` or `system controller replace show-details` command from site A to check the status. If the commands return a blank output, wait for a few minutes and rerun the command.
 
 .Steps
 
-.	Start the automated controller replacement process from site A to replace the controllers at site B:
+.	Start the automated controller replacement procedure from site A to replace the controllers at site B:
 +
 `system controller replace start`
 +
@@ -112,44 +112,44 @@ Run the commands listed under the `show` command from the partner cluster.
 
 . Gather the system IDs of the nodes in the MetroCluster configuration:
 +
+--
 `metrocluster node show -fields node-systemid,dr-partner-systemid`
-+
+
 During the replacement procedure you will replace these system IDs with the system IDs of the new controller modules.
-+
+
 In this example for a four-node MetroCluster FC configuration, the following old system IDs are retrieved:
 
- ** node_A_1-old: 4068741258
- ** node_A_2-old: 4068741260
- ** node_B_1-old: 4068741254
- ** node_B_2-old: 4068741256
+** node_A_1-old: 4068741258
+** node_A_2-old: 4068741260
+** node_B_1-old: 4068741254
+** node_B_2-old: 4068741256
 
-+
 ----
 metrocluster-siteA::> metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
-dr-group-id   cluster                       node                   node-systemid          ha-partner-systemid     dr-partner-systemid    dr-auxiliary-systemid
------------        ------------------------- ------------------    -------------                   -------------------                 -------------------              ---------------------
-1                    Cluster_A                  Node_A_1-old   4068741258              4068741260                        4068741256                    4068741256
-1                    Cluster_A                    Node_A_2-old   4068741260              4068741258                        4068741254                    4068741254
-1                    Cluster_B                    Node_B_1-old   4068741254              4068741256                         4068741258                    4068741260
-1                    Cluster_B                    Node_B_2-old   4068741256              4068741254                        4068741260                    4068741258
+dr-group-id        cluster           node            node-systemid     ha-partner-systemid     dr-partner-systemid    dr-auxiliary-systemid
+-----------        ---------------   ----------      -------------     -------------------     -------------------    ---------------------
+1                    Cluster_A       Node_A_1-old    4068741258        4068741260              4068741256             4068741256
+1                    Cluster_A       Node_A_2-old    4068741260        4068741258              4068741254             4068741254
+1                    Cluster_B       Node_B_1-old    4068741254        4068741256              4068741258             4068741260
+1                    Cluster_B       Node_B_2-old    4068741256        4068741254              4068741260             4068741258
 4 entries were displayed.
 ----
-+
+
 In this example for a two-node MetroCluster FC configuration, the following old system IDs are retrieved:
 
- ** node_A_1: 4068741258
- ** node_B_1: 4068741254
+** node_A_1: 4068741258
+** node_B_1: 4068741254
 
-+
 ----
 metrocluster node show -fields node-systemid,dr-partner-systemid
 
-dr-group-id cluster    node      node-systemid dr-partner-systemid
------------ ---------- --------  ------------- ------------
+dr-group-id cluster    node          node-systemid dr-partner-systemid
+----------- ---------- --------      ------------- ------------
 1           Cluster_A  Node_A_1-old  4068741258    4068741254
 1           Cluster_B  node_B_1-old  -             -
 2 entries were displayed.
 ----
+--
 
 . Gather port and LIF information for each node.
 +
@@ -206,7 +206,7 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker conf
 
 . Remove the existing MetroCluster configuration from the Tiebreaker software.
 +
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster configurations]
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster configurations^]
 
 . Remove the existing MetroCluster configuration from any third-party application that can initiate switchover.
 +
@@ -311,17 +311,17 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Install the controller modules in the rack or cabinet.
 +
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
 
 . If the new controller modules did not come with FC-VI cards of their own and if FC-VI cards from old controllers are compatible on new controllers, swap FC-VI cards and install those in correct slots.
 +
-See the link:https://hwu.netapp.com[NetApp Hardware Universe] for slot info for FC-VI cards.
+See the link:https://hwu.netapp.com[NetApp Hardware Universe^] for slot info for FC-VI cards.
 
 . Cable the controllers' power, serial console and management connections as described in the _MetroCluster Installation and Configuration Guides_.
 +
 Do not connect any other cables that were disconnected from old controllers at this time.
 +
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
 
 . Power up the new nodes and press Ctrl-C when prompted to display the LOADER prompt.
 
@@ -403,7 +403,7 @@ a|
 
 === Reassigning root aggregate disks
 
-Reassign the root aggregate disks to the new controller module, using the sysids gathered earlier
+Reassign the root aggregate disks to the new controller module, using the `sysids` gathered earlier
 
 .About this task
 
@@ -500,7 +500,7 @@ rr18:8.126L1  node_B_1-new(1574774970)   Pool0  S0M1PSDW        node_B_1-new(157
 ----
 *> aggr status
            Aggr            State       Status           Options
-aggr0_node_b_1-root    online      raid_dp, aggr    root, nosnap=on,
+aggr0_node_b_1-root        online      raid_dp, aggr    root, nosnap=on,
                            mirrored                     mirror_resync_priority=high(fixed)
                            fast zeroed
                            64-bit
@@ -660,7 +660,7 @@ Verify that the new nodes (Site B) are in *Waiting for switchback state* from si
 
 == Completing the upgrade
 
-The automation procedure runs verification system checks and then pauses so you can verify the network reachability. After verification, the resource regain phase is initiated and the automation procedure executes switchback at site A and pauses at the post upgrade checks. After you resume the automation procedure, it performs the post upgrade checks and if no errors are detected, marks the upgrade process as complete.
+The automation process runs verification system checks and then pauses so you can verify the network reachability. After verification, the resource regain phase is initiated and the automation process executes switchback at site A and pauses at the post upgrade checks. After you resume the automation procedure, it performs the post upgrade checks and if no errors are detected, marks the upgrade process as complete.
 
 .Steps
 
@@ -668,7 +668,7 @@ The automation procedure runs verification system checks and then pauses so you 
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
-.	The automation process performs switchback at site A and post upgrade checks. When the process pauses the post upgrade checks, manually check the SAN LIF status and verify the network configuration by following the *onbox message*.
+.	The automation process performs switchback at site A and the post upgrade checks. When the process pauses, manually check the SAN LIF status and verify the network configuration by following the *onbox message*.
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
