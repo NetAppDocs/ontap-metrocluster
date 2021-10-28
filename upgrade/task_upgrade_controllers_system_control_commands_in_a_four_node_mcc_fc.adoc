@@ -4,8 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, system, commands
 summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster FC configuration.'
 ---
-= Upgrading controllers in a four-node MetroCluster FC configuration using "system controller replace" commands (ONTAP 9.10.1 or later)
-Upgrading controllers in a MetroCluster FC configuration using switchover and switchback
+= Upgrading controllers in a four-node MetroCluster FC configuration using switchover and switchback with "system controller replace" commands (ONTAP 9.10.1 or later)
 :icons: font
 :imagesdir: ../media/
 
@@ -19,7 +18,7 @@ You can use this guided automated MetroCluster switchover operation to perform a
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
 * This procedure applies to controller modules in a four-node MetroCluster FC configuration.
 * The platforms must be running ONTAP 9.10.1 or later.
-* If you replace the source controller with a controller that has a different ONTAP version, it is detected by the automation procedure after the new controller boots up. After precheck, the current source system and all compatible target systems are displayed. To bring the cluster back to a healthy state, you need to use the manual negotiated switchover (NSO) based controller replacement procedure.
+* After the automation procedure completes the prechecks, the current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation procedure halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow manual recovery procedure
 * Your original and new platforms must be compatible and supported.
 +
 https://hwu.netapp.com[NetApp Hardware Universe^]
@@ -62,107 +61,20 @@ The automated process executes the prechecks. If no issues are found, the proces
 +
 [NOTE]
 ====
-If you have unmirrored aggregates, you cannot proceed with the upgrade and the `system controller replace start` command reports the following precheck error:
+The `system controller replace start` command might report the following precheck error:
+
 ----
 Cluster-A::*>system controller replace show
-Node       Status        Error-Action
----------- ------------- ------------------------------------
-Node-A-1   Failed        MetroCluster check failed. Reason : MCC check showed errors in component aggregates.
+Node        Status         Error-Action
+----------- -------------- ------------------------------------
+Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed errors in component aggregates
 ----
-If this error occurs, verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. You can override this error by selecting the `-skip-metrocluster-check` true option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates comes online after switchover. If the remote storage link fails, the aggregates fails to come online.
+
+Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
+
 ====
 
 .	[[prepare_upgrade_step_2]]Manually collect the configuration information by logging in at site B and following the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
-
-.	After you finish collecting the configuration information, resume the operation:
-+
-`system controller replace resume`
-+
-The automation procedure pauses so you can, if necessary, prepare the network configuration of the old controllers at site B by manually removing VLANS and interface groups.
-
-=== Preparing the network configuration of the old controllers
-
-To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
-
-.About this task
-
-* This task must be performed on each of the old nodes.
-* You will use the information gathered in <<prepare_upgrade_step_2,Preparing for the upgrade, Step 2>>.
-
-.Steps
-
-. Boot the old nodes and then log in to the nodes:
-+
-`boot_ontap`
-
-. Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
-
-.. Display the LIFs:
-+
-`network interface show`
-+
-All data LIFS including SAN and NAS will be admin up and operationally down since those are up at switchover site (cluster_A).
-
-.. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
-+
-For example, "e0d" is a physical port on old controllers and is also present on new controllers. "e0d" is not used as a cluster port or otherwise on the new controllers.
-+
-For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
-
-.. Modify all data LIFS to use the common port as the home port:
-+
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
-+
-In the following example, this is "e0d".
-+
-For example:
-+
-----
-network interface modify -vserver vs0 -lif datalif1 -home-port e0d
-----
-. Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
-+
-`broadcast-domain remove-ports -broadcast-domain _broadcast-domain-name_ -ports _node-name:port-id_`
-+
-Repeat this step for all VLAN and physical ports.
-
-. Remove any VLAN ports using cluster ports as member ports and interface groups using cluster ports as member ports.
-.. Delete VLAN ports:
-+
-`network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
-+
-For example:
-+
-----
-network port vlan delete -node node1 -vlan-name e1c-80
-----
-
-.. Remove physical ports from the interface groups:
-+
-`network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
-+
-For example:
-+
-----
-network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
-----
-
-.. Remove VLAN and interface group ports from broadcast domain::
-+
-`network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
-.. Modify interface group ports to use other physical ports as member as needed.:
-+
-`ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
-
-. Halt the nodes:
-+
-`halt -inhibit-takeover true -node _node-name_`
-+
-This step must be performed on both nodes.
-
-. Resume the operation:
-+
-`system controller replace resume`
 
 === Gathering information before the upgrade
 
@@ -265,7 +177,7 @@ You will need the passphrase later in the upgrade procedure.
 +
 `security key-manager key query`
 
-. Resume the operation:
+. After you finish collecting the configuration information, resume the operation:
 +
 `system controller replace resume`
 
@@ -284,9 +196,89 @@ http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/G
 Refer to the documentation for the application.
 
 
-== Configuring the new controllers
+== Replacing the old controllers and booting up the new controllers
 
 The automation process initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the process pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers and reassign the root aggregate disks to the new controller module from flash backup, using the `sysids` gathered earlier.
+
+=== Preparing the network configuration of the old controllers
+
+To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
+
+.About this task
+
+* This task must be performed on each of the old nodes.
+* You will use the information gathered in <<prepare_upgrade_step_2,Preparing for the upgrade, Step 2>>.
+
+.Steps
+
+. Boot the old nodes and then log in to the nodes:
++
+`boot_ontap`
+
+. Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
+
+.. Display the LIFs:
++
+`network interface show`
++
+All data LIFS including SAN and NAS will be admin up and operationally down since those are up at switchover site (cluster_A).
+
+.. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
++
+For example, "e0d" is a physical port on old controllers and is also present on new controllers. "e0d" is not used as a cluster port or otherwise on the new controllers.
++
+For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
+
+.. Modify all data LIFS to use the common port as the home port:
++
+`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
++
+In the following example, this is "e0d".
++
+For example:
++
+----
+network interface modify -vserver vs0 -lif datalif1 -home-port e0d
+----
+. Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
++
+`broadcast-domain remove-ports -broadcast-domain _broadcast-domain-name_ -ports _node-name:port-id_`
++
+Repeat this step for all VLAN and physical ports.
+
+. Remove any VLAN ports using cluster ports as member ports and interface groups using cluster ports as member ports.
+.. Delete VLAN ports:
++
+`network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
++
+For example:
++
+----
+network port vlan delete -node node1 -vlan-name e1c-80
+----
+
+.. Remove physical ports from the interface groups:
++
+`network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
++
+For example:
++
+----
+network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
+----
+
+.. Remove VLAN and interface group ports from broadcast domain::
++
+`network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
+.. Modify interface group ports to use other physical ports as member as needed.:
++
+`ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
+
+. Halt the nodes:
++
+`halt -inhibit-takeover true -node _node-name_`
++
+This step must be performed on both nodes.
 
 === Setting up the new controllers
 
@@ -499,20 +491,10 @@ aggr0_node_b_1-root    online      raid_dp, aggr    root, nosnap=on,
 
 . Repeat the above steps on the partner node (node_B_2-new).
 
-. Before you resume the operation, verify that the MetroClsuter is configured correctly. Check the node status:
-+
-`metrocluster node show`
-+
-Verify that the new nodes (Site B) are in *Waiting for switchback state* from site A.
-
-. Resume the operation to initiate the verification process:
-+
-`system controller replace resume`
-
 === Booting up the new controllers
 You must reboot the controllers from the boot menu to update the controller flash image. Additional steps are required if encryption is configured.
 
-The automation process pauses at the network reachability task status so you can reconfigure VLANs and interface groups. If required, manually modify the ports for the cluster LIFs and broadcast domain details before resuming the operation by using the `system controller replace resume` command.
+You can reconfigure VLANs and interface groups. If required, manually modify the ports for the cluster LIFs and broadcast domain details before resuming the operation by using the `system controller replace resume` command.
 
 .About this task
 
@@ -536,27 +518,27 @@ This task must be performed on all the new controllers.
 . Display the boot menu:
 +
 `boot_ontap menu`
-. If root encryption is used, issue the boot menu command for your key management configuration.
+. If root encryption is used, select the boot menu option for your key management configuration.
 +
 
 |===
 
-h| If you are using... h| Issue this command at the boot menu prompt...
+h| If you are using... h| Select this boot menu option...
 
 a|
 Onboard key management
 a|
-`recover_onboard_keymanager`
+Option `10`
 a|
 External key management
 a|
-`recover_external_keymanager`
+Option `11`
 |===
 
 . If autoboot is enabled, interrupt autoboot by pressing control-C.
-. From the boot menu, run option (6).
+. From the boot menu, run option `6`.
 +
-NOTE: Option 6 will reboot the node twice before completing.
+NOTE: Option `6` will reboot the node twice before completing.
 +
 
 Respond `y` to the system id change prompts. Wait for the second reboot messages:
@@ -575,12 +557,12 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid _partner-sysID_`
 
-. If root encryption is used, issue the boot menu command again for your key management configuration.
+. If root encryption is used, select the boot menu option again for your key management configuration.
 +
 
 |===
 
-h| If you are using... h| Issue this command at the boot menu prompt...
+h| If you are using... h| Select this boot menu option...
 
 a|
 Onboard key management
@@ -592,7 +574,7 @@ a|
 `recover_external_keymanager`
 |===
 +
-You may need to issue the recover_xxxxxxxx_keymanager command and option 6 at the boot menu prompt multiple times until the nodes completely boot.
+You need to perform the recovery procedure by selecting option `10` or option `11` depending on the key manager setting and option `6` at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option `1` (normal boot).
 
 . Boot the nodes:
 +
@@ -661,11 +643,16 @@ Verify that the new nodes (Site B) are in *Waiting for switchback state* from si
 
 == Completing the upgrade
 
-In the resource regain phase, the automated procedure initiates switchback from site A and then executes verifications and post upgrade checks.
+The automation procedure runs verification system checks and then pauses so you can verify the network reachability. After verification, the resource regain phase is initiated and the automation procedure executes switchback at site A and pauses at the post upgrade checks. After you resume the automation procedure, it performs the post upgrade checks and, if no errors are detected, marks the upgrade process as complete.
 
 .Steps
 
-.	After the verification and post upgrade checks complete, resume the operation:
+.	Verify the network reachability by following the *onbox message*.
+.	After you complete the verification, resume the operation:
++
+`system controller replace resume`
+.	The automation process performs switchback at site A and post upgrade checks. When the process pauses the post upgrade checks, manually check the SAN LIF status and verify the network configuration by following the *onbox message*.
+.	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
 
@@ -674,7 +661,9 @@ In the resource regain phase, the automated procedure initiates switchback from 
 `system controller replace show`
 +
 If the post upgrade checks did not report any errors, the upgrade is complete.
+
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
+
 
 === Restoring Tiebreaker monitoring
 
