@@ -18,7 +18,7 @@ You can use this guided automated MetroCluster switchover operation to perform a
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
 * This procedure applies to controller modules in a four-node MetroCluster FC configuration.
 * The platforms must be running ONTAP 9.10.1 or later.
-* After the automation process completes the prechecks, the current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation process halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow manual recovery procedure.
+* After the automation operation completes the prechecks, the current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow manual recovery procedure.
 * Your original and new platforms must be compatible and supported.
 +
 The following table shows the supported model matrix for the controller upgrade.
@@ -43,7 +43,7 @@ https://hwu.netapp.com[NetApp Hardware Universe^]
 * Beginning with ONTAP 9.10.1, both ARL based and NSO based automated controller upgrade procedures are available for a four-node MetroCluster FC configuration. The NSO based procedure is the default. If you want to select the automated ARL upgrade procedure, you need to select -`nso` as `false` when you issue the CLI command.
 * If your MetroCluster sites are physically at two different locations, you must perform the automated NSO based controller upgrade at each MetroCluster site.
 * This automated NSO based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster donor site. You can only initiate a controller replacement at one site at a time.
-* To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The process guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
+* To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The operation guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
 
 The following example names are used in this procedure:
 
@@ -74,7 +74,7 @@ At any stage during the upgrade, you can run the `system controller replace show
 +
 `system controller replace start`
 +
-The automated process executes the prechecks. If no issues are found, the process pauses so you can manually collect the configuration related information.
+The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
 +
 [NOTE]
 ====
@@ -91,7 +91,7 @@ Check if this error occurred because you have unmirrored aggregates or due to an
 
 ====
 
-.	[[prepare_upgrade_step_2]]Manually collect the configuration information by logging in at site B and following the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
+.	Manually collect the configuration information by logging in at site B and following the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
 
 === Gathering information before the upgrade
 
@@ -215,7 +215,13 @@ Refer to the documentation for the application.
 
 == Replacing the old controllers and booting up the new controllers
 
-The automation process initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the process pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers and reassign the root aggregate disks to the new controller module from flash backup, using the `sysids` gathered earlier.
+After you gather information and resume the operation, the automation  proceeds with the switchover operation.
+
+.About this task
+The automation operation initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers and reassign the root aggregate disks to the new controller module from flash backup, using the `sysids` gathered earlier.
+
+.Before you Begin
+Before initiating switchover, the automation operation pauses so you can manually verify that all LIFs are `up` at site B. If necessary, bring any LIFs that are `down` to `up` and resume the automation operation by using the `system controller replace resume` command.
 
 === Preparing the network configuration of the old controllers
 
@@ -224,7 +230,7 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 .About this task
 
 * This task must be performed on each of the old nodes.
-* You will use the information gathered in <<prepare_upgrade_step_2,Preparing for the upgrade, Step 2>>.
+* You will use the information gathered in <<Preparing for the upgrade>>.
 
 .Steps
 
@@ -238,7 +244,7 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 +
 `network interface show`
 +
-All data LIFS including SAN and NAS will be admin up and operationally down since those are up at switchover site (cluster_A).
+All data LIFS including SAN and NAS will be admin `up` and operationally `down` since those are up at switchover site (cluster_A).
 
 .. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
 +
@@ -660,7 +666,7 @@ Verify that the new nodes (Site B) are in *Waiting for switchback state* from si
 
 == Completing the upgrade
 
-The automation process runs verification system checks and then pauses so you can verify the network reachability. After verification, the resource regain phase is initiated and the automation process executes switchback at site A and pauses at the post upgrade checks. After you resume the automation procedure, it performs the post upgrade checks and if no errors are detected, marks the upgrade process as complete.
+The automation operation runs verification system checks and then pauses so you can verify the network reachability. After verification, the resource regain phase is initiated and the automation operation executes switchback at site A and pauses at the post upgrade checks. After you resume the automation operation, it performs the post upgrade checks and if no errors are detected, marks the upgrade as complete.
 
 .Steps
 
@@ -668,7 +674,7 @@ The automation process runs verification system checks and then pauses so you ca
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
-.	The automation process performs switchback at site A and the post upgrade checks. When the process pauses, manually check the SAN LIF status and verify the network configuration by following the *onbox message*.
+.	The automation operation performs switchback at site A and the post upgrade checks. When the operation pauses, manually check the SAN LIF status and verify the network configuration by following the *onbox message*.
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
