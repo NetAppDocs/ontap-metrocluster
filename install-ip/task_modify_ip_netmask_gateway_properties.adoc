@@ -23,7 +23,11 @@ For example, if the gateway is updated, ideally it is changed on both nodes of a
 Use the `metrocluster configuration-settings interface show`, `metrocluster connection` check and `metrocluster connection show` commands to verify that all connectivity is working in all interfaces.
 
 == Modify the IP address, netmask, and gateway
-. Update the IP address, netmask, and gateway for a single node and interface using the following command:
+. Update the IP address, netmask, and gateway for a single node and interface:
+`metrocluster configuration-settings interface modify`
+
+The following command shows how to update the IP address, netmask and gateway:
+
 ----
 cluster_A::* metrocluster configuration-settings interface modify -cluster-name cluster_A -home-node node_A_1 -home-port e0a-10 -address 192.168.12.101 -gateway 192.168.12.1 -netmask 255.255.254.0
 (metrocluster configuration-settings interface modify)
@@ -45,7 +49,10 @@ Do you want to continue?" yes
 [Job 28] Job succeeded: Interface Modify is successful
 ----
 [start=2]
-. [[step2]]Verify that all connectivity is working for all interfaces.
+. [[step2]]Verify that all connectivity is working for all interfaces:
+`metrocluster configuration-settings interface show`
+
+The following command shows how to verify that all connectivity is working for all interfaces:
 ----
 cluster_A::*> metrocluster configuration-settings interface show
 (metrocluster configuration-settings interface show)                                                 DR              Config
@@ -73,6 +80,12 @@ Group Cluster Node    Network Address Netmask         Gateway         State
                       192.168.21.250  255.255.255.0   192.168.21.1    completed
 8 entries were displayed.
 ----
+
+[start=3]
+. [[step3]]Verify that all connections are working:
+`metrocluster configuration-settings connection show`
+
+The following command shows how to verify that all connections are working:
 
 ----
 cluster_A::*> metrocluster configuration-settings connection show
@@ -108,10 +121,10 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
                       192.168.20.100  192.168.21.250  DR Auxiliary completed
 ----
 
-----
-cluster_A::*> metrocluster configuration-settings connection check
-  (metrocluster configuration-settings connection check)
-----
+//----
+//cluster_A::*> metrocluster configuration-settings connection check
+//  (metrocluster configuration-settings connection check)
+//----
 
 //== Move MetroCluster interfaces to another subnet
 //Move the MetroCluster interfaces to another subnet.
