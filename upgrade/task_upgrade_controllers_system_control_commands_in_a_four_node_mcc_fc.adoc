@@ -18,7 +18,6 @@ You can use this guided automated MetroCluster switchover operation to perform a
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
 * This procedure applies to controller modules in a four-node MetroCluster FC configuration.
 * The platforms must be running ONTAP 9.10.1 or later.
-* After the automation operation completes the prechecks, the current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow manual recovery procedure.
 * Your original and new platforms must be compatible and supported.
 +
 The following table shows the supported model matrix for the controller upgrade.
@@ -30,9 +29,6 @@ h| Old platform model  h| Replacement platform model
 a| AFF A300
 a| AFF A400, AFF A700
 
-a| FAS8020, FAS8040, FAS8060, FAS8080
-a| FAS8300, FAS8700
-
 a| FAS8200
 a| FAS8300, FAS8700
 
@@ -40,8 +36,8 @@ a| FAS8300, FAS8700
 +
 https://hwu.netapp.com[NetApp Hardware Universe^]
 
-* Beginning with ONTAP 9.10.1, both ARL based and NSO based automated controller upgrade procedures are available for a four-node MetroCluster FC configuration. The NSO based procedure is the default. If you want to select the automated ARL upgrade procedure, you need to select -`nso` as `false` when you issue the CLI command.
-* If your MetroCluster sites are physically at two different locations, you must perform the automated NSO based controller upgrade at each MetroCluster site.
+* You can use this procedure to upgrade controllers in a four-node MetroCluster FC configuration using NSO based automated switchover and switchback. If you want to perform a controller upgrade using aggregate relocation (ARL), refer to https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade-arl-auto-app/[Use "system controller replace" commands to upgrade controller hardware running ONTAP 9.8 or later]. It is recommended to use the NSO based automated procedure.
+* If your MetroCluster sites are physically at two different locations, you should use the automated NSO controller upgrade procedure to upgrade the controllers at both sites in sequence.
 * This automated NSO based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster donor site. You can only initiate a controller replacement at one site at a time.
 * To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The operation guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
 
@@ -76,6 +72,8 @@ At any stage during the upgrade, you can run the `system controller replace show
 +
 The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
 +
+NOTE: The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
++
 [NOTE]
 ====
 The `system controller replace start` command might report the following precheck error:
@@ -91,7 +89,7 @@ Check if this error occurred because you have unmirrored aggregates or due to an
 
 ====
 
-.	Manually collect the configuration information by logging in at site B and following the commands listed in the *onbox message* under the `system controller replace show` or `system controller replace show-details` command.
+.	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
 
 === Gathering information before the upgrade
 
@@ -670,11 +668,11 @@ The automation operation runs verification system checks and then pauses so you 
 
 .Steps
 
-.	Verify the network reachability by following the *onbox message*.
+.	Verify the network reachability by following the console message.
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
-.	The automation operation performs switchback at site A and the post upgrade checks. When the operation pauses, manually check the SAN LIF status and verify the network configuration by following the *onbox message*.
+.	The automation operation performs switchback at site A and the post upgrade checks. When the operation pauses, manually check the SAN LIF status and verify the network configuration by following the console message.
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
