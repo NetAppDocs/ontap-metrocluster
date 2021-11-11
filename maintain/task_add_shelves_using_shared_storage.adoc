@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, maintain, shelf, shelves, add, ns224,
 summary: 'You might need to add NS224 shelves to a MetroCluster using shared Storage MetroCluster switches.'
 ---
-= Adding shelves to a MetroCluster using shared Storage MetroCluster switches
+= Adding shelves to a MetroCluster IP using shared Storage MetroCluster switches
 :icons: font
 :imagesdir: ../media/
 
@@ -164,10 +164,12 @@ cluster_A::>
 ----
 
 == Applying the new RCF file to the switches
+NOTE: If your switch is already correctly configured, you can skip these next sections and go directly to <<Configuring MACsec encryption on Cisco 9336C switches>>, if applicable or to <<Connecting the new NS224 shelf>>.
+
 * You must change the switch configuration to add shelves.
 
 * You should review the cabling details at link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/port_usage_3232c_9336c.html#cabling-a-aff-a800-to-a-cisco-3232c-or-cisco-9336c-switch[Platform port assignments^].
-* You must use the **RcfFileGenerator** tool to create the RCF file for your configuration. Make sure that you choose the correct number of shelves. There are additional files created along with the RCF file that provide a detailed cabling layout matching your specific options. Follow this outline when cabling the new shelves.
+* You must use the **RcfFileGenerator** tool to create the RCF file for your configuration. The link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator^] also provides a per-port cabling overview for each switch. Make sure that you choose the correct number of shelves. There are additional files created along with the RCF file that provide a detailed cabling layout matching your specific options. Use this cabling overview to verify your cabling when cabling the new shelves.
 
 === Upgrading RCF files on MetroCluster IP switches
 If you are installing new switch firmware, you must install the switch firmware before upgrading the RCF file.
@@ -514,7 +516,7 @@ IP_switch_A_1#
 
 . Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
 
-=== Configuring MACsec encryption on Cisco 9336C switches
+== Configuring MACsec encryption on Cisco 9336C switches
 If desired, you can configure MACsec encryption on the WAN ISL ports that run between the sites. You must configure MACsec after applying the correct RCF file.
 
 NOTE: MACsec encryption can only be applied to the WAN ISL ports.
@@ -547,7 +549,7 @@ IP_switch_A_1(config)# copy running-config startup-config
 ==== Disabling Cisco MACsec Encryption
 You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
 
-NOTE: If you disable encryption, you must also delete your keys, as described in XXX.
+NOTE: If you disable encryption, you must also delete your keys.
 
 . Enter the global configuration mode: `configure terminal`
 +
@@ -600,7 +602,7 @@ For details on configuring a MACsec key chain, see the Cisco documentation for y
 +
 A shelf powers up when connected to a power source; it does not have power switches. When functioning correctly, a power supply's bicolored LED illuminates green.
 . Set the shelf ID to a number that is unique within the HA pair and across the configuration.
-. Connect the shelf ports in the following or
+. Connect the shelf ports in the following order:
 .. Connect NSM-A, e0a to the switch (Switch-A1 or Switch-B1)
 .. Connect NSM-B, e0a to the switch (Switch-A2 or Switch-B2)
 .. Connect NSM-A, e0b to the switch (Switch-A1 or Switch-B1)

@@ -17,7 +17,6 @@ You should be aware of the following guidelines when using the cabling tables:
 * AFF A300 and FAS8200 storage systems can be ordered with one of two options for FC-VI connectivity:
  ** Onboard ports 0e and 0f configured in FC-VI mode.
  ** Ports 1a and 1b on an FC-VI card in slot 1.
-* #AFF A900 storage systems require eight FC-VI ports. If you are using A900, you need to use the eight port configuration. For other storage systems, use the cabling shown in the tables but ignore the cabling for unneeded FC-VI ports.#
 * AFF A700 and FAS9000 storage systems require four FC-VI ports. The following tables show cabling for the FC switches with four FC-VI ports on each controller except for the Cisco 9250i switch.
 +
 For other storage systems, use the cabling shown in the tables but ignore the cabling for FC-VI ports c and d.
@@ -37,7 +36,7 @@ The following tables show port usage on Brocade switches. The tables show the ma
 
 [NOTE]
 ====
-* Port usage for the Brocade 6505 and Brocade G610 switches in an eight-node MetroCluster configuration is #shown for the AFF A900 only#. Due to the limited number of ports, port assignments must be made on a site-by-site basis depending on the controller module model and the number of ISLs and bridge pairs in use.
+* Port usage for the Brocade 6505 and Brocade G610 switches in an eight-node MetroCluster configuration is not shown. Due to the limited number of ports, port assignments must be made on a site-by-site basis depending on the controller module model and the number of ISLs and bridge pairs in use.
 * The Brocade DCX 8510-8 switch can use the same port layout as the 6510 switch *_or_* the 7840 switch.
 ====
 
@@ -1288,255 +1287,11 @@ a|
 
 |===
 
-NOTE: #The following tables show systems with eight FC-VI ports. AFF A900 has eight FC-VI ports (a, b, c, and d for FC-VI-1 and FC-VI-2).#
-
-|===
-8+^h| #Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)#
-8+^h| #MetroCluster 1 or DR Group 1#
-2.2+h| #Component# .2+h| #Port# 5+h| #Brocade switch model#
-h| #Connects to FC_switch...# h| #6510# h| #6505, G610# h| #G620, G620-1# h| #G720#
-
-2.12+|controller_x_1
-
-| FC-VI-1 port a |1 |0 |0 |0 |0
-
-| FC-VI-1 port b |2 |0 |0 |0 |0
-
-| FC-VI-1 port c |1 |1 |1 |1 |1
-
-| FC-VI-1 port d |2 |1 |1 |1 |1
-
-| FC-VI-2 port a |1 |2 |2 |2 |2
-
-| FC-VI-2 port b |2 |2 |2 |2 |2
-
-| FC-VI-2 port c |1 |3 |3 |3 |3
-
-| FC-VI-2 port d |2 |3 |3 |3 |3
-
-| HBA port a |1 |8 |8 |8 |8
-
-| HBA port b |2 |8 |8 |8 |8
-
-| HBA port c |1 |9 |9 |9 |9
-
-| HBA port d |2 |9 |9 |9 |9
-
-2.12+|controller_x_2
-
-| FC-VI-1 port a |1 |4 |4 |4 |4
-
-| FC-VI-1 port b |2 |4 |4 |4 |4
-
-| FC-VI-1 port c |1 |5 |5 |5 |5
-
-| FC-VI-1 port d |2 |5 |5 |5 |5
-
-| FC-VI-2 port a |1 |6 |6 |6 |6
-
-| FC-VI-2 port b |2 |6 |6 |6 |6
-
-| FC-VI-2 port c |1 |7 |7 |7 |7
-
-| FC-VI-2 port d |2 |7 |7 |7 |7
-
-| HBA port a |1 |12 |12 |12 |12
-
-| HBA port b |2 |12 |12 |12 |12
-
-| HBA port c |1 |13 |13 |13 |13
-
-| HBA port d |2 |13 |13 |13 |13
-
-.4+|Stack 1
-
-.2+|bridge_x_1a
-
-| FC1 |1 |10 |10 |10 |10
-
-| FC2 |2 |10 |10 |10 |10
-
-.2+|bridge_x_1b
-
-| FC1 |1 |11 |11 |11 |11
-
-| FC2 |2 |11 |11 |11 |11
-
-.4+|Stack 2
-
-.2+|bridge_x_2a
-
-| FC1 |1 |14 |14 |14 |14
-
-| FC2 |2 |14 |14 |14 |14
-
-.2+|bridge_x_2b
-
-| FC1 |1 |15 |15 |15 |15
-
-| FC2 |2 |15 |15 |15 |15
-
-.4+|Stack 3
-
-.2+|bridge_x_3a
-
-| FC1 |1 |16 |16 |16 |16
-
-| FC2 |2 |16 |16 |16 |16
-
-.2+|bridge_x_3b
-
-| FC1 |1 |17 |17 |17 |17
-
-| FC2 |2 |17 |17 |17 |17
-
-.4+|Stack y
-
-.2+|bridge_x_ya
-
-| FC1 |1 |18 |18 |20 |20
-
-| FC2 |2 |18 |18 |20 |20
-
-.2+|bridge_x_yb
-
-| FC1 |1 |19 |19 |21 |21
-
-| FC2 |2 |19 |19 |21 |21
-
-8+a| NOTE: Additional bridges can be cabled to ports 20 - 23 in 6510, 6505, G610
-switches.
-
-|===
-
-|===
-8+^h| #Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)#
-8+^h| #MetroCluster 2 or DR Group 2#
-2.2+h| #Component# .2+h| #Port# 5+h| #Brocade switch model#
-h| #Connects to FC_switch...# h| #6510# h| #6505, G610# h| #G620, G620-1# h| #G720#
-
-2.12+|controller_x_3
-
-| FC-VI-1 port a |1 |24 |- |18 |18
-
-| FC-VI-1 port b |2 |24 |- |18 |18
-
-| FC-VI-1 port c |1 |25 |- |19 |19
-
-| FC-VI-1 port d |2 |25 |- |19 |19
-
-| FC-VI-2 port a |1 |26 |- |24 |24
-
-| FC-VI-2 port b |2 |26 |- |24 |24
-
-| FC-VI-2 port c |1 |27 |- |25 |25
-
-| FC-VI-2 port d |2 |27 |- |25 |25
-
-| HBA port a |1 |32 |- |26 |26
-
-| HBA port b |2 |32 |- |26 |26
-
-| HBA port c |1 |33 |- |27 |27
-
-| HBA port d |2 |33 |- |27 |27
-
-
-2.12+|controller_x_4
-
-| FC-VI-1 port a |1 |28 |- |22 |22
-
-| FC-VI-1 port b |2 |28 |- |22 |22
-
-| FC-VI-1 port c |1 |29 |- |23 |23
-
-| FC-VI-1 port d |2 |29 |- |23 |23
-
-| FC-VI-2 port a |1 |30 |- |28 |28
-
-| FC-VI-2 port b |2 |30 |- |28 |28
-
-| FC-VI-2 port c |1 |31 |- |29 |29
-
-| FC-VI-2 port d |2 |31 |- |29 |29
-
-| HBA port a |1 |36 |- |30 |30
-
-| HBA port b |2 |36 |- |30 |30
-
-| HBA port c |1 |37 |- |31 |31
-
-| HBA port d |2 |37 |- |31 |31
-
-
-.4+|Stack 1
-
-.2+|bridge_x_51a
-
-| FC1 |1 |34 |- |32 |32
-
-| FC2 |2 |34 |- |32 |32
-
-.2+|bridge_x_51b
-
-| FC1 |1 |35 |- |33 |33
-
-| FC2 |2 |35 |- |33 |33
-
-.4+|Stack 2
-
-.2+|bridge_x_52a
-
-| FC1 |1 |38 |- |34 |34
-
-| FC2 |2 |38 |- |34 |34
-
-.2+|bridge_x_52b
-
-| FC1 |1 |39 |- |35 |35
-
-| FC2 |2 |39 |- |35 |35
-
-.4+|Stack 3
-
-.2+|bridge_x_53a
-
-| FC1 |1 |- |- |36 |36
-
-| FC2 |2 |- |- |36 |36
-
-.2+|bridge_x_53b
-
-| FC1 |1 |- |- |37 |37
-
-| FC2 |2 |- |- |37 |37
-
-.4+|Stack y
-
-.2+|bridge_x_5ya
-
-| FC1 |1 |- |- |38 |38
-
-| FC2 |2 |- |- |38 |38
-
-.2+|bridge_x_5yb
-
-| FC1 |1 |- |- |39 |39
-
-| FC2 |2 |- |- |39 |39
-
-8+a| NOTE: MetroCluster 2 or DR 2 only supports two (2) bridge stacks with 6510
-switches.
-
-8+a| NOTE: MetroCluster 2 or DR 2 is not supported with 6505, G610 switches.
-
-|===
-
 == Brocade port usage for ISLs in a MetroCluster configuration running ONTAP 9.1 or later
 
 The following table shows ISL port usage for the Brocade switches.
 
-NOTE: #AFF A900#, AFF A700 or FAS9000 systems support up to eight ISLs for improved performance. Eight ISLs are supported on the Brocade 6510 and G620 switches.
+NOTE: AFF A700 or FAS9000 systems support up to eight ISLs for improved performance. Eight ISLs are supported on the Brocade 6510 and G620 switches.
 
 
 |===
@@ -3433,18 +3188,4 @@ a|
 ISL 4
 a|
 MDS module 1 port 16
-
-.2+|#Cisco 9132T with 1x LEM#
-| ISL1 | LEM1-15
-| ISL2 | LEM1-16
-
-.8+|#Cisco 9132T with 2x LEM#
-| ISL1 | LEM2-9
-| ISL2 | LEM2-10
-| ISL3 | LEM2-11
-| ISL4 | LEM2-12
-| ISL5 | LEM2-13
-| ISL6 | LEM2-14
-| ISL7 | LEM2-15
-| ISL8 | LEM2-16
 |===
