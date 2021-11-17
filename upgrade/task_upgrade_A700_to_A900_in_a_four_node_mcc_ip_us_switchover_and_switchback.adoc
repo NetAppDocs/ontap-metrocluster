@@ -24,39 +24,19 @@ Platform models with internal shelves are not supported.
 |===
 
 h| Old platform model h| New platform model
-
 a|
-
-** AFF A320
-
+AFF A700
 a|
-
-** AFF A400
-
-a|
-
-** FAS8200
-
-a|
-
-** FAS9000
-** FAS8300
-** FAS8700
-
-+
+AFF A900
 |===
-
-NOTE: AFF A320 platform models are not supported for upgrade when using BES-53248 IP switches.
 
 * All controllers in the configuration should be upgraded during the same maintenance period.
 +
 Operating the MetroCluster configuration with different controller types is not supported outside of this maintenance activity.
 
-* The new platform must be a different model than the original platform.
+
 * The IP switches must be running a supported firmware version.
-* If the new platform has fewer slots than the original system, or if it has fewer or different types of ports, you might need to add an adapter to the new system.
-+
-For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe].
+
 
 * You will reuse the IP addresses, netmasks, and gateways of the original platforms on the new platforms.
 * The following example names are used in this procedure:
@@ -81,22 +61,17 @@ You can use the workflow diagram to help you plan the upgrade tasks.
 
 image::../media/workflow_ip_upgrade.png[]
 
-== Preparing for the upgrade
+== Prepare for the upgrade
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
 === Updating the MetroCluster switch RCF files before upgrading controllers
 
-Depending on the old platform models, or if switch configuration is not on the minimum version, or if you want to change VLAN IDs used by the back-end MetroCluster connections, you must update the switch RCF files before you begin the platform upgrade procedure.
+The MetroCluster configuration on an AFF A900 uses one of each of the ports on the DR cards located in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700, you must move them to other slots for all the nodes of the cluster.
 
-.About this task
+The MetroCluster IP configuration on an AFF A700 does not use VLANs. The MetroCluster configuration on an AFF A900 does use VLANs. As a result, you need to change the RCF file when upgrading from an AFF A700 to an AFF A900.
 
-You must update the RCF file in the following scenarios:
 
-* For certain platform models, the switches must be using a supported VLAN ID for the back-end MetroCluster IP connections. If the old or new platform models are in the following table, *and not* using a supported VLAN ID, you must update the switch RCF files.
-+
-NOTE: The local cluster connections can use any VLAN, they do not need to be in the given range.
-+
 
 |===
 
@@ -115,7 +90,7 @@ a|
 |===
 
 * The switch configuration was not configured with minimum supported RCF version:
-+
+
 
 |===
 
@@ -124,15 +99,15 @@ h| Switch model h| Required RCF file version
 a|
 Cisco 3132Q-V
 a|
-1.7 or later
+REQUIRED from Thomas: RCF version for A900
 a|
 Cisco 3232C
 a|
-1.7 or later
+REQUIRED from Thomas: RCF version for A900
 a|
 Broadcom BES-53248
 a|
-1.3 or later
+REQUIRED from Thomas: RCF version for A900
 |===
 
 * You want to change the VLAN configuration.
@@ -158,7 +133,7 @@ Follow the steps in the link:../install-ip/index.html[MetroCluster IP Installati
  ** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom RCF files]
  ** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
 
-=== Mapping ports from the old nodes to the new nodes
+=== Map ports from the old nodes to the new nodes
 
 You must verify that the physical ports on node_A_1-old map correctly to the physical ports on node_A_1-new, which will allow node_A_1-new to communicate with other nodes in the cluster and with the network after the upgrade.
 
