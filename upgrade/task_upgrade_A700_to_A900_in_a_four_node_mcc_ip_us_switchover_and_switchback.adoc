@@ -23,9 +23,9 @@ Starting with ONTAP 9.10.1, you can use the MetroCluster switchover operation to
 
 h| Old platform model h| New platform model
 a|
-AFF A700
+* AFF A700
 a|
-AFF A900
+* AFF A900
 |===
 
 * All controllers in the configuration should be upgraded during the same maintenance period.
@@ -293,34 +293,34 @@ You should gather the output of the following commands:
  `security key-manager backup show`
 
  . If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
-
- For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually].
+For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually].
 
   .. If Onboard Key Manager is configured:
   `security key-manager onboard show-backup`
-
- You will need the passphrase later in the upgrade procedure.
+  +
+You will need the passphrase later in the upgrade procedure.
 
   .. If enterprise key management (KMIP) is configured, issue the following commands:
 
  security key-manager external show -instance
  security key-manager key query
 
- . Gather the system IDs of the existing nodes: `metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
- +
- The following output shows the reassigned drives.
- +
- ----
- ::> metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
+ . Gather the system IDs of the existing nodes:
+ `metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
++
+The following output shows the reassigned drives.
++
+----
+::> metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
 
- dr-group-id cluster     node     node-systemid ha-partner-systemid dr-partner-systemid dr-auxiliary-systemid
- ----------- ----------- -------- ------------- ------------------- ------------------- ---------------------
- 1           cluster_A node_A_1   537403324     537403323           537403321           537403322
- 1           cluster_A node_A_2   537403323     537403324           537403322           537403321
- 1           cluster_B node_B_1   537403322     537403321           537403323           537403324
- 1           cluster_B node_B_2   537403321     537403322           537403324           537403323
- 4 entries were displayed.
- ----
+dr-group-id cluster     node     node-systemid ha-partner-systemid dr-partner-systemid dr-auxiliary-systemid
+----------- ----------- -------- ------------- ------------------- ------------------- ---------------------
+1           cluster_A node_A_1   537403324     537403323           537403321           537403322
+1           cluster_A node_A_2   537403323     537403324           537403322          537403321
+1           cluster_B node_B_1   537403322     537403321           537403323          537403324
+1           cluster_B node_B_2   537403321     537403322           537403324          537403323
+4 entries were displayed.
+----
 
 === Remove Mediator or Tiebreaker monitoring
 
@@ -1226,12 +1226,3 @@ After completing the upgrade, you should send an AutoSupport message indicating 
  +
 `system node autosupport invoke -node * -type all -message MAINT=end`
  .. Repeat the command on the partner cluster.
-
-
-
-
-
-
-
-
- 
