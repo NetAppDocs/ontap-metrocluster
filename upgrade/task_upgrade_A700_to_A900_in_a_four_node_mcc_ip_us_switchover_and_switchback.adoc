@@ -10,15 +10,13 @@ summary: 'Starting with ONTAP 9.8, you can use the MetroCluster switchover opera
 :imagesdir: ../media/
 
 [.lead]
-Starting with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
+Starting with ONTAP 9.10.1, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
 .About this task
 
-* The platforms must be running ONTAP 9.8 or later.
-* This procedure applies to controller modules in a MetroCluster IP configuration.
-* The supported upgrade path depends on the original platform model.
-+
-Platform models with internal shelves are not supported.
+* The platforms must be running ONTAP 9.10.1 or later.
+* This procedure applies to AFF A700 controller modules upgrading to an AFF A900 in a MetroCluster IP configuration.
+
 +
 
 |===
@@ -42,18 +40,18 @@ Operating the MetroCluster configuration with different controller types is not 
 * The following example names are used in this procedure:
  ** site_A
   *** Before upgrade:
-   **** node_A_1-old
-   **** node_A_2-old
+   **** node_A_1-A700
+   **** node_A_2-A700
   *** After upgrade:
-   **** node_A_1-new
-   **** node_A_2-new
+   **** node_A_1-A900
+   **** node_A_2-A900
  ** site_B
   *** Before upgrade:
-   **** node_B_1-old
-   **** node_B_2-old
+   **** node_B_1-A700
+   **** node_B_2-A700
   *** After upgrade:
-   **** node_B_1-new
-   **** node_B_2-new
+   **** node_B_1-A900
+   **** node_B_2-A900
 
 == Workflow for upgrading controllers in an MetroCluster IP configuration
 
@@ -65,7 +63,7 @@ image::../media/workflow_ip_upgrade.png[]
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
-=== Updating the MetroCluster switch RCF files before upgrading controllers
+=== Update the MetroCluster switch RCF files before upgrading controllers
 
 The MetroCluster configuration on an AFF A900 uses one of each of the ports on the DR cards located in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700, you must move them to other slots for all the nodes of the cluster.
 
@@ -227,64 +225,64 @@ Before upgrading, you must gather information for each of the nodes, and, if nec
   ** `storage disk show`
   ** `metrocluster configuration-settings interface show`
 
-. Gather the UUIDs for the site_B (the site whose platforms are currently being upgraded): `metrocluster node show -fields node-cluster-uuid, node-uuid
-
-
-
-
- These values must be configured accurately on the new site_B controller modules to ensure a successful upgrade. Copy the values to a file so that you can copy them into the proper commands later in the upgrade process.
+. Gather the UUIDs for the site_B (the site whose platforms are currently being upgraded): `metrocluster node show -fields node-cluster-uuid, node-uuid`
++
+These values must be configured accurately on the new site_B controller modules to ensure a successful upgrade. Copy the values to a file so that you can copy them into the proper commands later in the upgrade process.
  +
- The following example shows the command output with the UUIDs:
- +
- ----
- cluster_B::> metrocluster node show -fields node-cluster-uuid, node-uuid
+The following example shows the command output with the UUIDs:
++
+----
+cluster_B::> metrocluster node show -fields node-cluster-uuid, node-uuid
    (metrocluster node show)
- dr-group-id cluster     node   node-uuid                            node-cluster-uuid
- ----------- --------- -------- ------------------------------------ ------------------------------
- 1           cluster_A node_A_1 f03cb63c-9a7e-11e7-b68b-00a098908039 ee7db9d5-9a82-11e7-b68b-00a098908039
- 1           cluster_A node_A_2 aa9a7a7a-9a81-11e7-a4e9-00a098908c35 ee7db9d5-9a82-11e7-b68b-00a098908039
- 1           cluster_B node_B_1 f37b240b-9ac1-11e7-9b42-00a098c9e55d 07958819-9ac6-11e7-9b42-00a098c9e55d
- 1           cluster_B node_B_2 bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f 07958819-9ac6-11e7-9b42-00a098c9e55d
- 4 entries were displayed.
- cluster_B::*
- ----
- +
- It is recommended that you record the UUIDs into a table similar to the following.
- +
+dr-group-id cluster     node   node-uuid                            node-cluster-uuid
+----------- --------- -------- ------------------------------------ ------------------------------
+1           cluster_A node_A_1 f03cb63c-9a7e-11e7-b68b-00a098908039 ee7db9d5-9a82-11e7-b68b-00a098908039
+1           cluster_A node_A_2 aa9a7a7a-9a81-11e7-a4e9-00a098908c35 ee7db9d5-9a82-11e7-b68b-00a098908039
+1           cluster_B node_B_1 f37b240b-9ac1-11e7-9b42-00a098c9e55d 07958819-9ac6-11e7-9b42-00a098c9e55d
+1           cluster_B node_B_2 bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f 07958819-9ac6-11e7-9b42-00a098c9e55d
+4 entries were displayed.
+cluster_B::*
 
- |===
+----
 
- h| Cluster or node h| UUID
 
- a|
- cluster_B
- a|
- 07958819-9ac6-11e7-9b42-00a098c9e55d
- a|
- node_B_1
- a|
- f37b240b-9ac1-11e7-9b42-00a098c9e55d
- a|
- node_B_2
- a|
- bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
- a|
- cluster_A
- a|
- ee7db9d5-9a82-11e7-b68b-00a098908039
- a|
- node_A_1
- a|
- f03cb63c-9a7e-11e7-b68b-00a098908039
- a|
- node_A_2
- a|
- aa9a7a7a-9a81-11e7-a4e9-00a098908c35
- |===
++
+It is recommended that you record the UUIDs into a table similar to the following.
++
 
- . If the MetroCluster nodes are in a SAN configuration, collect the relevant information.
- +
- You should gather the output of the following commands:
+|===
+
+h| Cluster or node h| UUID
+
+a|
+cluster_B
+a|
+07958819-9ac6-11e7-9b42-00a098c9e55d
+a|
+node_B_1
+a|
+f37b240b-9ac1-11e7-9b42-00a098c9e55d
+a|
+node_B_2
+a|
+bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
+a|
+cluster_A
+a|
+ee7db9d5-9a82-11e7-b68b-00a098908039
+a|
+node_A_1
+a|
+f03cb63c-9a7e-11e7-b68b-00a098908039
+a|
+node_A_2
+a|
+aa9a7a7a-9a81-11e7-a4e9-00a098908c35
+|===
+
+. If the MetroCluster nodes are in a SAN configuration, collect the relevant information.
++
+You should gather the output of the following commands:
 
   ** `fcp adapter show -instance`
   ** `fcp interface show -instance`
@@ -292,27 +290,23 @@ Before upgrading, you must gather information for each of the nodes, and, if nec
   ** `ucadmin show`
 
  . If the root volume is encrypted, collect and save the passphrase used for key-manager:
- +
  `security key-manager backup show`
 
  . If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
- +
+
  For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually].
 
   .. If Onboard Key Manager is configured:
-  +
- `security key-manager onboard show-backup`
- +
+  `security key-manager onboard show-backup`
+
  You will need the passphrase later in the upgrade procedure.
 
   .. If enterprise key management (KMIP) is configured, issue the following commands:
- +
- `security key-manager external show -instance`
- `security key-manager key query`
 
- . Gather the system IDs of the existing nodes:
- +
- `metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
+ security key-manager external show -instance
+ security key-manager key query
+
+ . Gather the system IDs of the existing nodes: `metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
  +
  The following output shows the reassigned drives.
  +
@@ -514,6 +508,7 @@ You must netboot the new controllers, if the version of ONTAP installed is not t
 +
 NOTE:	You should use the management port and IP as the netboot connection. Do not use a data LIF IP or a data outage might occur while the upgrade is being performed.
 +
+
 |===
 
 h| If the Dynamic Host Configuration Protocol (DCHP) is... h| Then...
@@ -523,7 +518,9 @@ Running
 a|
 Configure the connection automatically by using the following command at the boot environment prompt:
 `ifconfig e0M -auto`
-a|Not Running
+a|
+Not Running
+a|
 Manually configure the connection by using the following command at the boot environment prompt:
 `ifconfig e0M -addr=<filer_addr> -mask=<netmask> -gw=<gateway> - dns=<dns_addr> domain=<dns_domain>
 <filer_addr>` is the IP address of the storage system. `<netmask> is the network mask of the storage system.
@@ -531,249 +528,57 @@ Manually configure the connection by using the following command at the boot env
 `<dns_addr`` is the IP address of a name server on your network. This parameter is optional.
 `<dns_domain> is the Domain Name Service (DNS) domain name. This parameter is optional.
 NOTE:	Other parameters might be necessary for your interface. Enter help `ifconfig` at the firmware prompt for details.
-
-a|
-
-`tar -zxvf __ontap-version___image.tgz`
-
-NOTE: If you are extracting the contents on Windows, use 7-Zip or WinRAR to extract the netboot image. Your directory listing should contain a netboot folder with a kernel file:netboot/kernel
-
-Your directory listing should contain a netboot folder with a kernel file:
-
-`netboot/kernel`
-
-a|
-All other systems
-a|
-Your directory listing should contain a netboot folder with a kernel file:
-
-`_ontap-version_image.tgz`
-
-You do not need to extract the `_ontap-version_image.tgz` file.
-
 |===
 
-.. At the LOADER prompt, configure the netboot connection for a management LIF:
+.	Perform netboot on node1:
+`netboot` `http://<web_server_ip/path_to_web_accessible_directory>/<ontap_version>_image.tgz`
 +
+The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` *link to Step*.
+NOTE:	Do not interrupt the boot.
 
-|===
-
-h| If IP addressing is... h| Then...
-
-a|
-DHCP
-a|
-Configure the automatic connection:
-
-`ifconfig e0M -auto`
-a|
-Static
-a|
-Configure the manual connection:
-
-`ifconfig e0M -addr=_ip_addr_ -mask=_netmask_ -gw=_gateway_`
-|===
-
-..  Perform the netboot.
-+
-
-|===
-
-h| If the platform model is... h| Then...
-
-a|
-FAS/AFF8000 series systems
-a|
-`netboot http://_web_server_ip/path_to_web-accessible_directory_/netboot/kernel`
-a|
-All other systems
-a|
-`netboot \http://_web_server_ip/path_to_web-accessible_directory/ontap-version_image.tgz`
-|===
-
-.. From the boot menu, select option **(7) Install new software first** to download and install the new software image to the boot device.
-+
-Disregard the following message:
-+
-`"This procedure is not supported for Non-Disruptive Upgrade on an HA pair"`. It applies to nondisruptive upgrades of software, not to upgrades of controllers.
-
-.. If you are prompted to continue the procedure, enter `y`, and when prompted for the package, enter the URL of the image file:
-+
-`http://__web_server_ip/path_to_web-accessible_directory/ontap-version___image.tgz`
-
-.. Enter the user name and password if applicable, or press Enter to continue.
-
-.. Be sure to enter `n` to skip the backup recovery when you see a prompt similar to the following:
+.	Wait for the node1 now running on the AFF A900 controller module to boot and display the boot menu options as shown below:
 +
 ----
-Do you want to restore the backup configuration now? {y|n} **n**
+Please choose one of the following:
+
+(1)  Normal Boot.
+(2)  Boot without /etc/rc.
+(3)  Change password.
+(4)  Clean configuration and initialize all disks.
+(5)  Maintenance mode boot.
+(6)  Update flash from backup config.
+(7)  Install new software first.
+(8)  Reboot node.
+(9)  Configure Advanced Drive Partitioning.
+(10) Set Onboard Key Manager recovery secrets.
+(11) Configure node for external key management.
+Selection (1-11)?
 ----
-
-.. Reboot by entering `*y*` when you see a prompt similar to the following:
+.	From the boot menu, select option ``(7) Install new software first.``
+This menu option downloads and installs the new ONTAP image to the boot device.
+NOTE:	Disregard the following message: `This procedure is not supported for Non-Disruptive Upgrade on an HA pair.` This note applies to nondisruptive ONTAP software upgrades, and not controller upgrades.
 +
-----
-The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n}
-----
+Always use netboot to update the new node to the desired image. If you use another method to install the image on the new controller, the incorrect image might install. This issue applies to all ONTAP releases.
 
-=== Clearing the configuration on a controller module
-
-// include reference
-
-include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
-
-// end include reference
-
-
-
-
-
-
-
-
+.	If you are prompted to continue the procedure, enter `y`, and when prompted for the package, enter the URL:
+`http://<web_server_ip/path_to_web-accessible_directory>/<ontap_version>_image.tgz`
+.	Complete the following substeps to reboot the controller module:
+..	Enter `n` to skip the backup recovery when you see the following prompt:
+`Do you want to restore the backup configuration now? {y|n}`
+..	Enter ``y to reboot when you see the following prompt:
+`The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n}``
+The controller module reboots but stops at the boot menu because the boot device was reformatted, and the configuration data needs to be restored.
+.	At the prompt, run the `wipeconfig` command to clear any previous configuration on the boot media:
+..	When you see the following message, answer `yes`:
+`This will delete critical system configuration, including cluster membership.
+Warning: do not run this option on a HA node that has been taken over.
+Are you sure you want to continue?:``
+..	The node reboots to finish the `wipeconfig` and then stops at the boot menu.
+.	Select option `5` to go to maintenance mode from the boot menu. Answer `yes` to the prompts until the node stops at maintenance mode and the command prompt *>.
 
 
-== Removing interface configurations and uninstalling the old controllers
 
-You must move data LIFs to a common port, remove VLANs and interface groups on the old controllers and then physically uninstall the controllers.
-
-.About this task
-
-* These steps are performed on the old controllers (node_B_1-old, node_B_2-old).
-
-* See the information you gathered in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Mapping ports from the old nodes to the new nodes].
-
-.Steps
-
-. Boot the old nodes and log in to the nodes:
-+
-`boot_ontap`
-
-. Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
-
-.. Display the LIFs:
-+
-`network interface show`
-+
-All data LIFS including SAN and NAS will be admin up and operationally down since those are up at switchover site (cluster_A).
-
- .. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
-+
-For example, e0d is a physical port on old controllers and is also present on new controllers. e0d is not used as a cluster port or otherwise on the new controllers.
-+
-For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe]
-
-.. Modify all data LIFS to use the common port as the home port:
- +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
-+
-In the following example, this is "e0d".
-+
-For example:
-+
-----
-network interface modify -vserver vs0 -lif datalif1 -home-port e0d
-----
-. Remove any VLAN ports using cluster ports as member ports and ifgrps using cluster ports as member ports.
- .. Delete VLAN ports:
- +
-`network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
-+
-For example:
-+
-----
-network port vlan delete -node node1 -vlan-name e1c-80
-----
-
-.. Remove physical ports from the interface groups:
-+
-`network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
-+
-For example:
-+
-----
-network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
-----
-
-.. Remove VLAN and interface group ports from broadcast domain::
-+
-`network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
-
-.. Modify interface group ports to use other physical ports as member as needed.:
-+
-`ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
-
-. Halt the nodes to the LOADER prompt:
-+
-`halt -inhibit-takeover true`
-
-. Connect to the serial console of the old controllers (node_B_1-old and node_B_2-old) at site_B and verify it is displaying the LOADER prompt.
-
-. Gather the bootarg values:
-+
-`printenv`
-
-. Disconnect the storage and network connections on node_B_1-old and node_B_2-old and label the cables so they can be reconnected to the new nodes.
-. Disconnect the power cables from node_B_1-old and node_B_2-old.
-. Remove the node_B_1-old and node_B_2-old controllers from the rack.
-
-== Updating the switch RCFs to accommodate the new platforms
-
-You must update the switches to a configuration that supports the new platform models.
-
-.About this task
-
-You perform this task at the site containing the controllers that are currently being upgraded. In the examples shown in this procedure we are upgrading site_B first.
-
-The switches at site_A will be upgraded when the controllers on site_A are upgraded.
-
-.Steps
-
-. Prepare the IP switches for the application of the new RCF files.
-+
-Follow the steps in the section for your switch vendor from the _MetroCluster IP Installation and Configuration Guide_.
-+
-link:../install-ip/index.html[MetroCluster IP installation and configuration]
-
- ** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-cisco-ip-switch-to-factory-defaults[Resetting the Cisco IP switch to factory defaults]
-
-. Download and install the RCF files.
-+
-Follow the steps in the section for your switch vendor from the link:../install-ip/index.html[MetroCluster IP installation and configuration].
-
-** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom RCF files]
-
-** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
-
-== Configuring the new controllers
-
-You must rack and install the controllers, perform required setup in Maintenance mode, and then boot the controllers, and verify the LIF configuration on the controllers.
-
-=== Setting up the new controllers
-
-You must rack and cable the new controllers.
-
-.Steps
-
-. Plan out the positioning of the new controller modules and storage shelves as needed.
-+
-The rack space depends on the platform model of the controller modules, the switch types, and the number of storage shelves in your configuration.
-
-. Properly ground yourself.
-
-. Install the controller modules in the rack or cabinet.
-+
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
-
-. Cable the controllers to the IP switches as described in the _MetroCluster IP Installation and Configuration Guide_.
-+
-link:../install-ip/index.html[MetroCluster IP installation and configuration]
-
-** link:..[Cabling the IP switches]
-
-. Power up the new nodes and boot them to Maintenance mode.
-
-=== Restoring the HBA configuration
+=== Restore the HBA configuration
 
 Depending on the presence and configuration of HBA cards in the controller module, you need to configure them correctly for your site's usage.
 
@@ -838,7 +643,8 @@ a|
 `fcadmin show`
 |===
 
-=== Setting the HA state on the new controllers and chassis
+
+=== Set the HA state on the new controllers and chassis
 
 You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
 
@@ -848,15 +654,61 @@ You must verify the HA state of the controllers and chassis, and, if necessary, 
 +
 `ha-config show`
 +
-The HA state for all components should be "mccip".
+The HA state for all components should be `mccip`.
 
 . If the displayed system state of the controller or chassis is not correct, set the HA state:
 +
 `ha-config modify controller mccip`
 +
 `ha-config modify chassis mccip`
+.	Halt the node: `halt`
++
+The node should stop at the `LOADER>` prompt.
 
-=== Setting the MetroCluster IP bootarg variables
+.	On each node, check the system date, time, and time zone: `show date`
+.	If necessary, set the date in UTC or GMT: `set date <mm/dd/yyyy>`
+.	Check the time by using the following command at the boot environment prompt: `show time`
+.	If necessary, set the time in UTC or GMT: `set time <hh:mm:ss>`
+
+.	Save the settings: `saveenv`
+.	Gather environment variables: `printenv`
+
+
+== Update the switch RCFs to accommodate the new platforms
+
+You must update the switches to a configuration that supports the new platform models.
+
+.About this task
+
+You perform this task at the site containing the controllers that are currently being upgraded. In the examples shown in this procedure we are upgrading site_B first.
+
+The switches at site_A will be upgraded when the controllers on site_A are upgraded.
+
+.Steps
+
+. Prepare the IP switches for the application of the new RCF files.
++
+Follow the steps in the section for your switch vendor from the _MetroCluster IP Installation and Configuration_ section.
++
+link:../install-ip/index.html[MetroCluster IP installation and configuration]
+
+ ** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-cisco-ip-switch-to-factory-defaults[Resetting the Cisco IP switch to factory defaults]
+
+. Download and install the RCF files.
++
+Follow the steps in the section for your switch vendor from the link:../install-ip/index.html[MetroCluster IP installation and configuration].
+
+** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom RCF files]
+
+** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
+
+
+== Configure the new controllers
+
+New controllers should be ready and cabled at this point.
+
+=== Set the MetroCluster IP bootarg variables
 
 Certain MetroCluster IP bootarg values must be configured on the new controller modules. The values must match those configured on the old controller modules.
 
@@ -866,14 +718,11 @@ In this task, you will use the UUIDs and system IDs identified earlier in the up
 
 .Steps
 
-. If the nodes being upgraded are AFF A400, FAS8300, or FAS8700 models, set the following bootargs at the LOADER prompt:
+.	At the `LOADER>` prompt, set the following bootargs on the site B nodes::
 +
 `setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
 +
 `setenv bootarg.mcc.port_b_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
-+
-NOTE: If the interfaces are using the default VLANs, the vlan-id is not necessary.
-
 +
 The following commands set the values for node_B_1-new using VLAN 120 for the first network and VLAN 130 for the second network:
 +
@@ -888,42 +737,10 @@ The following commands set the values for node_B_2-new using VLAN 120 for the fi
 setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13,120
 setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13,130
 ----
-+
-The following example shows the commands for node_B_1-new when the default VLAN is used:
-+
-----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
-setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
-----
-+
-The following example shows the commands for node_B_2-new when the default VLAN is used:
-+
-----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
-setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
-----
 
-. If the nodes being upgraded are not systems listed in the previous step, at the LOADER prompt for each of the surviving nodes, set the following bootargs with local_IP/mask:
-+
-`setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address_`
-+
-`setenv bootarg.mcc.port_b_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address_`
-+
-The following commands set the values for node_B_1-new:
-+
-----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
-setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
-----
-+
-The following commands set the values for node_B_2-new:
-+
-----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
-setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
-----
 
-. At the new nodes' LOADER prompt, set the UUIDs:
+
+. At the new nodes' `LOADER` prompt, set the UUIDs:
 +
 `setenv bootarg.mgwd.partner_cluster_uuid _partner-cluster-UUID_`
 +
@@ -1000,7 +817,8 @@ setenv bootarg.mcc.dr_partner 537403323
 +
 `setenv bootarg.kmip.kmip.init.interface`
 
-=== Reassigning root aggregate disks
+
+=== Reassign root aggregate disks
 
 Reassign the root aggregate disks to the new controller module, using the sysids gathered earlier.
 
@@ -1099,7 +917,8 @@ aggr0_node_B_1           online          raid_dp, aggr         root, nosnap=on,
                                          64-bit
 ----
 
-=== Booting up the new controllers
+
+=== Boot up the new controllers
 
 You must boot the new controllers, taking care to ensure that the bootarg variables are correct and, if needed, perform the encryption recovery steps.
 
@@ -1232,7 +1051,15 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-58
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups]
 
-=== Verifying and restoring LIF configuration
+
+
+
+
+
+
+
+
+=== Verify and restore LIF configuration
 
 Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the beginning of the upgrade procedure.
 
@@ -1399,3 +1226,12 @@ After completing the upgrade, you should send an AutoSupport message indicating 
  +
 `system node autosupport invoke -node * -type all -message MAINT=end`
  .. Repeat the command on the partner cluster.
+
+
+
+
+
+
+
+
+ 
