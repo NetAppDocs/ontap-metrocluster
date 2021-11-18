@@ -1,47 +1,47 @@
+os: linux
 dist: xenial
-if: branch = main OR repo =~ /-internal/
 language: ruby
 rvm:
 - 2.4.3
 env:
   global:
     - FRAMEWORK_BRANCH=main
-before_install:
-- echo -e "machine github.com\n login $GH_TOKEN" >> ~/.netrc && chmod 600 ~/.netrc
-- git submodule add -b $FRAMEWORK_BRANCH https://github.com/NetAppDocs/jekyll dependencies/jekyll
-- gem update --system && gem install bundler && gem update bundler
-- if [[ -z "$DEPLOY_BRANCH" ]]; then export DEPLOY_BRANCH=gh-pages; fi
-- cp -rl dependencies/jekyll/search.html ./install-fc/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ install-fc\/search\.html/g' ./install-fc/search.html
-- cp -rl dependencies/jekyll/search.html ./install-ip/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ install-ip\/search\.html/g' ./install-ip/search.html
-- cp -rl dependencies/jekyll/search.html ./install-stretch/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ install-stretch\/search\.html/g' ./install-stretch/search.html
-- cp -rl dependencies/jekyll/search.html ./maintain/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ maintain\/search\.html/g' ./maintain/search.html
-- cp -rl dependencies/jekyll/search.html ./manage/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ manage\/search\.html/g' ./manage/search.html
-- cp -rl dependencies/jekyll/search.html ./tiebreaker/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ tiebreaker\/search\.html/g' ./tiebreaker/search.html
-- cp -rl dependencies/jekyll/search.html ./transition/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ transition\/search\.html/g' ./transition/search.html
-- cp -rl dependencies/jekyll/search.html ./upgrade/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ upgrade\/search\.html/g' ./upgrade/search.html
-- cp -rl dependencies/jekyll/search.html ./disaster-recovery/search.html
-- sed -i 's/permalink\:\s*\/search\.html/permalink\:\ disaster-recovery\/search\.html/g' ./disaster-recovery/search.html
-- mv dependencies/jekyll/prod-build.sh ./ && ./prod-build.sh
-- sudo apt-get -y install graphicsmagick graphicsmagick-libmagick-dev-compat libmagickwand-dev
-script:
-- if [[ ! -z "$FEATURE_FLAG" ]]; then bundle exec rake buildAll; fi
-- mkdir -p /tmp/output && bundle exec jekyll build --trace --destination /tmp/output --config _config.yml,project.yml
-- touch /tmp/output/.nojekyll
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GH_TOKEN
-  keep_history: false
-  local_dir: /tmp/output
-  target_branch: $DEPLOY_BRANCH
-  verbose: true
-  on:
-    all_branches: true
+    - DEPLOY_VERSION=v2
+jobs:
+  include:
+    - stage: deploy
+      if: branch = main OR repo =~ /-internal/
+      before_install:
+      - echo -e "machine github.com\n login $GH_TOKEN" > ~/.netrc && chmod 600 ~/.netrc
+      - git submodule add -b $FRAMEWORK_BRANCH https://github.com/NetAppDocs/jekyll dependencies/jekyll
+      - source dependencies/jekyll/.ci/env/configure_travis.bash
+      - source dependencies/jekyll/.ci/deploy/before_install.bash
+      - sudo apt-get -y install graphicsmagick graphicsmagick-libmagick-dev-compat libmagickwand-dev ghostscript
+      install:
+      - source .ci/deploy/install.bash
+      script:
+      - source .ci/deploy/post_install.bash
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GH_TOKEN
+        keep_history: false
+        local_dir: /tmp/output
+        target_branch: $DEPLOY_BRANCH
+        verbose: true
+        on:
+          all_branches: true
+    - stage: i18n
+      if: branch = main AND NOT repo =~ /-internal/
+      before_install:
+      - echo -e "machine github.com\n login $GH_TOKEN" >> ~/.netrc && chmod 600 ~/.netrc
+      - git submodule add -b $FRAMEWORK_BRANCH https://github.com/NetAppDocs/jekyll dependencies/jekyll
+      - git submodule add https://github.com/NetAppDocs/jekyll-harmony dependencies/jekyll-harmony
+      - source dependencies/jekyll/.ci/env/configure_travis.bash
+      - source dependencies/jekyll/.ci/i18n/before_install.bash
+      - cp -r dependencies/jekyll/.ci/ .ci/
+      - rm -Rf dependencies/jekyll/
+      install:
+      - source .ci/i18n/install.bash
+      script:
+      - source .ci/i18n/post_install.bash
