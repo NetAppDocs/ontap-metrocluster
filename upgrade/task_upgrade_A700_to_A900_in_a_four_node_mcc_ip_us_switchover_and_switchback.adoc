@@ -530,18 +530,19 @@ a|
 Not Running
 a|
 Manually configure the connection by using the following command at the boot environment prompt:
-`ifconfig e0M -addr=<filer_addr> -mask=<netmask> -gw=<gateway> - dns=<dns_addr> domain=<dns_domain>
-<filer_addr>` is the IP address of the storage system. `<netmask> is the network mask of the storage system.
-`<gateway> is the gateway for the storage system.
-`<dns_addr`` is the IP address of a name server on your network. This parameter is optional.
-`<dns_domain> is the Domain Name Service (DNS) domain name. This parameter is optional.
-NOTE:	Other parameters might be necessary for your interface. Enter help `ifconfig` at the firmware prompt for details.
+`ifconfig e0M -addr=<filer_addr> -mask=<netmask> -gw=<gateway> - dns=<dns_addr> domain=<dns_domain>`
+
+`<filer_addr>` is the IP address of the storage system. `<netmask>` is the network mask of the storage system.
+`<gateway>` is the gateway for the storage system.
+`<dns_addr` is the IP address of a name server on your network. This parameter is optional.
+`<dns_domain>` is the Domain Name Service (DNS) domain name. This parameter is optional.
+NOTE:	Other parameters might be necessary for your interface. Enter `help ifconfig` at the firmware prompt for details.
 |===
 
 .	Perform netboot on node1:
 `netboot` `http://<web_server_ip/path_to_web_accessible_directory>/<ontap_version>_image.tgz`
 +
-The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` <<step2-download-software, Step 2>>.
+The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` in <<step2-download-software, Step 2>>.
 NOTE:	Do not interrupt the boot.
 
 .	Wait for the node1 now running on the AFF A900 controller module to boot and display the boot menu options as shown below:
@@ -580,7 +581,7 @@ The controller module reboots but stops at the boot menu because the boot device
 ..	When you see the following message, answer `yes`:
 `This will delete critical system configuration, including cluster membership.
 Warning: do not run this option on a HA node that has been taken over.
-Are you sure you want to continue?:``
+Are you sure you want to continue?:`
 ..	The node reboots to finish the `wipeconfig` and then stops at the boot menu.
 .	Select option `5` to go to maintenance mode from the boot menu. Answer `yes` to the prompts until the node stops at maintenance mode and the command prompt *>.
 
@@ -1071,7 +1072,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EA
 
 Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the beginning of the upgrade procedure.
 
-.About this tsak
+.About this task
 
 * This task is performed on site_B.
 * See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Mapping ports from the old nodes to the new nodes].
@@ -1212,11 +1213,11 @@ h| If you are using... h| Use this procedure
 a|
 Tiebreaker
 a|
-link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
 a|
 Mediator
 a|
-link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration Guide_
+link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration_ section.
 a|
 Third-party applications
 a|
