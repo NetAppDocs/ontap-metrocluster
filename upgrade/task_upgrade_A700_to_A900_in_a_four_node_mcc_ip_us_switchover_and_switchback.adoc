@@ -428,7 +428,10 @@ Use the following procedure to remove the AFF A700 controller module
 .Steps
 .	Detach the console cable, if any, and the management cable from the controller module before removing the controller module.
 .	Unlock and remove the controller module from the chassis.
-..	Slide the orange button on the cam handle downward until it unlocks. [*Image to be added here*]
+..	Slide the orange button on the cam handle downward until it unlocks.
++
+image::../media/drw_9500_remove_PCM.png[controller module]
+
 .. 	Rotate the cam handle so that it completely disengages the controller module from the chassis, and then slide the controller module out of the chassis.
 Make sure that you support the bottom of the controller module as you slide it out of the chassis.
 
@@ -443,7 +446,12 @@ Note: The AFF A700 NVS module NVS module is in slot 6 and is double the height c
 The cam button moves away from the chassis.
 ..	Rotate the cam latch down until it is in a horizontal position.
 The NVS disengages from the chassis and moves a few inches.
-..	Remove the NVS from the chassis by pulling on the pull tabs on the sides of the module face. [*Image to be inserted here*]
+..	Remove the NVS from the chassis by pulling on the pull tabs on the sides of the module face.
++
+image::../media/drw_a900_move-remove_NVRAM_module.png[remove module]
+
+
+
 .	If you are using add-on modules used as coredump devices on the AFF A700 NVS, do not transfer them to the AFF A900 NVS.
 Do not transfer any parts from the AFF A700 controller module and NVS to the AFF A900.
 
@@ -501,7 +509,7 @@ You must netboot the new controllers, if the version of ONTAP installed is not t
 
 .Steps
 . Access the https://mysupport.netapp.com/site/[NetApp Support Site^] to download the files used for performing the netboot of the system.
-. Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the `ontap-version_image.tgz` file on a web-accessible directory.
+. [[step2-download-software]]Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the `ontap-version_image.tgz` file on a web-accessible directory.
 . Change to the web-accessible directory and verify that the files you need are available.
 .	Your directory listing should contain <ontap_version>_image.tgz.
 .	Configure the netboot connection by choosing one of the following actions.
@@ -533,7 +541,7 @@ NOTE:	Other parameters might be necessary for your interface. Enter help `ifconf
 .	Perform netboot on node1:
 `netboot` `http://<web_server_ip/path_to_web_accessible_directory>/<ontap_version>_image.tgz`
 +
-The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` *link to Step*.
+The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` <<step2-download-software, Step 2>>.
 NOTE:	Do not interrupt the boot.
 
 .	Wait for the node1 now running on the AFF A900 controller module to boot and display the boot menu options as shown below:
