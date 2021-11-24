@@ -15,84 +15,59 @@ You can use the MetroCluster switchover operation to provide nondisruptive servi
 
 * You can use this procedure only for controller upgrade.
 +
-Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
+You cannot upgrade other components in the configuration, such as storage shelves or switches, at the same time.
 
-* You can use this procedures with certain ONTAP versions:
-** Two-node configurations are supported in ONTAP 9.3 and later.
-** Four and eight node configurations are supported in ONTAP 9.8 and later.
+* You can use this procedures with ONTAP 9.10.1 and later.
+** Four and eight-node configurations are supported in ONTAP 9.10.1 and later.
 +
-Do not use this procedure on four- or eight-node configurations running ONTAP versions prior to 9.8.
-* Your original and new platforms must be compatible and supported.
-+
+NOTE: The AFF A900 system is only supported in ONTAP 9.10.1 or later.
+
 https://hwu.netapp.com[NetApp Hardware Universe]
-+
-NOTE: If the original or new platforms are 8020 systems using ports 1c / 1d in FC-VI mode, contact technical support.
 
-* This procedure applies to controller modules in a MetroCluster FC configuration (a two-node stretch MetroCluster or a two or four-node fabric-attached MetroCluster configuration).
+
 * All controllers in the configuration should be upgraded during the same maintenance period.
-+
-Operating the MetroCluster configuration with different controller types is not supported outside of this maintenance activity.
 
-* The supported upgrade path depends on the original platform model.
 +
-Platform models with internal shelves are not supported.
-+
-
+The following table shows the supported model matrix for the controller upgrade.
 |===
 
 h| Old platform model h| New platform model
 
 a|
 
- ** FAS80xx
- ** FAS8200
-
-a|
-
- ** FAS8300
- ** FAS8700
-
-a|
-
- ** AFF A300
-
-a|
-
- ** AFF A400
  ** AFF A700
 
-+
-|===
+a|
 
-* Mapping of storage, FC and Ethernet connections between original nodes and new nodes in advance is recommended.
-* If the new platform has fewer slots than the original system, or if it has fewer or different types of ports, you might need to add an adapter to the new system.
-+
-For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe]
+ ** AFF A900
+
+|===
+* During the upgrade procedure, you are required to change the MetroCluster fabric, including the RCF and physical changes of cabling. You can perform the RCF and cabling changes before performing the controller upgrade.
+* This upgrade procedure does not require you do not change the storage, FC, and Ethernet connections between the original nodes and the new nodes.
+* During the upgrade procedure, you should not add or remove other cards from the AFF A700 system. For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe]
 
 The following example names are used in this procedure:
 
 * site_A
  ** Before upgrade:
-  *** node_A_1-old
-  *** node_A_2-old
+  *** node_A_1-A700
+  *** node_A_2-A700
  ** After upgrade:
-  *** node_A_1-new
-  *** node_A_2-new
+  *** node_A_1-A900
+  *** node_A_2-A900
 * site_B
  ** Before upgrade:
-  *** node_B_1-old
-  *** node_B_2-old
+  *** node_B_1-A700
+  *** node_B_2-A700
  ** After upgrade:
-  *** node_B_1-new
-  *** node_B_2-new
+  *** node_B_1-A900
+  *** node_B_2-A900
 
-== Preparing for the upgrade
+== Prepare for the upgrade
+Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, change the RCF files and cabling to match to new port connectivity topology required for the AFF A900 fabric MetroCluster configuration, and perform other miscellaneous tasks.
 
-Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
-
-=== Verifying the health of the MetroCluster configuration
-
-You must verify the health and connectivity of the MetroCluster configuration prior to performing the upgrade.
+=== Verify the health of the MetroCluster configuration
+Before you update the RCF files and cabling for the AFF A900 fabric MetroCluster configuration, you must verify the health and connectivity of the configuration.
 
 .Steps
 
@@ -160,229 +135,114 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
-=== Mapping ports from the old nodes to the new nodes
 
-You must plan the mapping of the LIFs on physical ports on the old nodes to the physical ports on the new nodes.
+=== Update the fabric switch RCF files
+The AFF A900 fabric MetroCluster requires two four-port FC-VI adapters per node compared to a single four-port FC-VI adapter required by an AFF A700. Before you start the controller upgrade to the AFF A900 controller, you must modify the AFF A700 RCF files and cabling to support the AFF A900 connection topology.
 
-.About this task
+.	From the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF file download page^], download the correct RCF file for a AFF A900 fabric MetroCluster and the switch model that is in use on the AFF A700 configuration.
+.	Update the RCF on the fabric A switches, switch A1, and switch B1 by following the steps in link:disaster-recovery/task_cfg_switches_mcfc.html[Configuring the FC switches].
+.	Re-cable the existing FC-VI and storage connections on the fabric A switches (switch 1 and 3) as directed by the new RCF, refer to MetroCluster installation and configuration section for the AFF A900 cabling.
+Note: All the connections mentioned in the AFF A900 fabric MetroCluster installation and configuration documentation are not available at this time. Connect the first four ports only that are available on the AFF A700 MetroCluster FC nodes.
+.	After re-cabling the fabric A connections as directed by the new RCF, all storage and FC-VI connections should come online. Check the FC-VI connections:
++
+`metrocluster interconnect mirror show`
++
+.. Verify that the local and remote site disks are listed in the `sysconfig` output.
+*[Do we need to include additional details on checking connections after RCF change+connection move? Also is an example output for this step a good idea?]*
 
-When the new node is first booted during the upgrade process, it will replay the most recent configuration of the old node it is replacing. When you boot node_A_1-new, ONTAP attempts to host LIFs on the same ports that were used on node_A_1-old. Therefore, as part of the upgrade you must adjust the port and LIF configuration so it is compatible with that of the old node. During the upgrade procedure, you will perform steps on both the old and new nodes to ensure correct cluster, management, and data LIF configuration.
 
-The following table shows examples of configuration changes related to the port requirements of the new nodes.
 
-|===
+. You must verify that MetroCluster is in a healthy state after the RCF file update and re-cabling the fabric A connections.
+..	Check metro cluster connections:
+`metrocluster interconnect mirror show`
+..	Run metrocluster check:
+`metrocluster check run`
+..	See the MetroCluster run results when the run completes:
+`metrocluster check show`
+.	Update and re-cable the fabric B connections by repeating *xref steps 2 to 4*.
 
-3+h| Cluster interconnect physical ports
- h| Old controller h| New controller h| Required action
 
-a|
-e0a, e0b
-
-a|
-e3a, e3b
-
-a|
-No matching port. After upgrade, you must recreate cluster ports.
-
-a|
-e0c, e0d
-
-a|
-e0a,e0b,e0c,e0d
-
-a|
-e0c and e0d are matching ports. You do not have to change the configuration, but after upgrade you can spread your cluster LIFs across the available cluster ports.
-
-|===
+=== Verify the health of the MetroCluster configuration after RCF file update and recabling
+You must verify the health and connectivity of the MetroCluster configuration before performing the upgrade.
 
 .Steps
-. Determine what physical ports are available on the new controllers and what LIFs can be hosted on the ports.
+
+. Verify the operation of the MetroCluster configuration in ONTAP:
+ .. Check whether the nodes are multipathed:
+ +
+`node run -node _node-name_ sysconfig -a`
 +
-The controller's port usage depends on the platform module and which switches you will use in the MetroCluster IP configuration. You can gather the port usage of the new platforms from the link:https://hwu.netapp.com[NetApp Hardware Universe].
+You should issue this command for each node in the MetroCluster configuration.
+
+.. Verify that there are no broken disks in the configuration:
 +
-Also identify the FC-VI card slot usage.
-
-. Plan your port usage and, if desired, fill in the following tables for reference for each of the new nodes.
+`storage disk show -broken`
 +
-You will refer to the table as you carry out the upgrade procedure.
+You should issue this command on each node in the MetroCluster configuration.
+
+.. Check for any health alerts:
 +
+`system health alert show`
++
+You should issue this command on each cluster.
 
-|===
+.. Verify the licenses on the clusters:
++
+`system license show`
++
+You should issue this command on each cluster.
 
-h|  3+h| node_A_1-old 3+h| node_A_1-new
-h| LIF h| Ports h| IPspaces h| Broadcast domains h| Ports h| IPspaces h| Broadcast domains
+.. Verify the devices connected to the nodes:
++
+`network device-discovery show`
++
+You should issue this command on each cluster.
 
-a|
-Cluster 1
-a|
+.. Verify that the time zone and time are set correctly on both sites:
++
+`cluster date show`
++
+You should issue this command on each cluster. You can use the `cluster date` commands to configure the time and time zone.
+. Check for any health alerts on the switches (if present):
++
+`storage switch show`
++
+You should issue this command on each cluster.
 
-a|
+. Confirm the operational mode of the MetroCluster configuration and perform a MetroCluster check.
+.. Confirm the MetroCluster configuration and that the operational mode is normal:
++
+`metrocluster show`
 
-a|
+.. Confirm that all expected nodes are shown:
++
+`metrocluster node show`
 
-a|
+.. Issue the following command:
++
+`metrocluster check run`
+.. Display the results of the MetroCluster check:
++
+`metrocluster check show`
+. Check the MetroCluster cabling with the Config Advisor tool.
+.. Download and run Config Advisor.
++
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
 
-a|
+.. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
-a|
 
-a|
-Cluster 2
-a|
 
-a|
 
-a|
+=== Map ports from the AFF A700 nodes to the AFF A900 nodes
 
-a|
 
-a|
+During the controller upgrade process, you must only change the connections that are mentioned in this procedure.
 
-a|
+If the AFF A700 controllers have a card in slot 7, you should move it to another slot before starting the controller upgrade procedure. You must have slot 7 available for the addition of the second FC-VI adapter that is required for the functioning of fabric MetroCluster on the AFF A900.
 
-a|
-Cluster 3
-a|
 
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-Cluster 4
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-Node management
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-Cluster management
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-Data 1
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-Data 2
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-Data 3
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-Data 4
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-SAN
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-Intercluster port
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-a|
-
-|===
-
-=== Gathering information before the upgrade
+=== Gather information before the upgrade
 
 Before upgrading, you must gather information for each of the nodes, and, if necessary, adjust the network broadcast domains, remove any VLANs and interface groups, and gather encryption information.
 
@@ -392,47 +252,33 @@ This task is performed on the existing MetroCluster FC configuration.
 
 .Steps
 
-. Label the cables for the existing controllers, to allow easy identification of cables when setting up the new controllers.
-. Gather the system IDs of the nodes in the MetroCluster configuration:
+.	Gather the MetroCluster configuration node system IDs::
 +
 `metrocluster node show -fields node-systemid,dr-partner-systemid`
 +
 During the replacement procedure you will replace these system IDs with the system IDs of the new controller modules.
 +
 In this example for a four-node MetroCluster FC configuration, the following old system IDs are retrieved:
++
+** node_A_1-A700: 537037649
+** node_A_2-A700: 537407030
+** node_B_1-A700: 0537407114
+** node_B_2-A700: 537035354
 
- ** node_A_1-old: 4068741258
- ** node_A_2-old: 4068741260
- ** node_B_1-old: 4068741254
- ** node_B_2-old: 4068741256
 
 +
 ----
-metrocluster-siteA::> metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
-dr-group-id   cluster                       node                   node-systemid          ha-partner-systemid     dr-partner-systemid    dr-auxiliary-systemid
------------        ------------------------- ------------------    -------------                   -------------------                 -------------------              ---------------------
-1                    Cluster_A                  Node_A_1-old   4068741258              4068741260                        4068741256                    4068741256
-1                    Cluster_A                    Node_A_2-old   4068741260              4068741258                        4068741254                    4068741254
-1                    Cluster_B                    Node_B_1-old   4068741254              4068741256                         4068741258                    4068741260
-1                    Cluster_B                    Node_B_2-old   4068741256              4068741254                        4068741260                    4068741258
+Cluster_A::*> metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
+dr-group-id cluster    node           node-systemid ha-partner-systemid dr-partner-systemid dr-auxiliary-systemid
+----------- ------------------------- ------------- ------------------- ------------------- ---------------------
+1           Cluster_A  nodeA_1-A700   537407114     537035354           537411005           537410611
+1           Cluster_A  nodeA_2-A700   537035354     537407114           537410611           537411005
+1           Cluster_B  nodeB_1-A700   537410611     537411005           537035354           537407114
+1           Cluster_B  nodeB_2-A700   537411005
+
 4 entries were displayed.
 ----
-+
-In this example for a two-node MetroCluster FC configuration, the following old system IDs are retrieved:
 
- ** node_A_1: 4068741258
- ** node_B_1: 4068741254
-
-+
-----
-metrocluster node show -fields node-systemid,dr-partner-systemid
-
-dr-group-id cluster    node      node-systemid dr-partner-systemid
------------ ---------- --------  ------------- ------------
-1           Cluster_A  Node_A_1-old  4068741258    4068741254
-1           Cluster_B  node_B_1-old  -             -
-2 entries were displayed.
-----
 
 . Gather port and LIF information for each node.
 +
@@ -463,7 +309,7 @@ You should gather the output of the following commands:
 `security key-manager backup show`
 . If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
 +
-For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually].
+For additional information, see https://docs.netapp.com/us-en/ontap/encryption-at-rest/backup-key-management-information-manual-task.html[Backing up onboard key management information manually^].
 
 .. If Onboard Key Manager is configured:
 +
@@ -477,7 +323,7 @@ You will need the passphrase later in the upgrade procedure.
 +
 `security key-manager key query`
 
-=== Removing the existing configuration from the Tiebreaker or other monitoring software
+=== Remove the existing configuration from the Tiebreaker or other monitoring software
 
 If the existing configuration is monitored with the MetroCluster Tiebreaker configuration or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the Tiebreaker or other software prior to transition.
 
@@ -485,13 +331,13 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker conf
 
 . Remove the existing MetroCluster configuration from the Tiebreaker software.
 +
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster configurations]
+link:/tiebreaker/concept_configuring_the_tiebreaker_software.html[Remove MetroCluster configurations]
 
 . Remove the existing MetroCluster configuration from any third-party application that can initiate switchover.
 +
 Refer to the documentation for the application.
 
-=== Sending a custom AutoSupport message prior to maintenance
+=== Send a custom AutoSupport message prior to maintenance
 
 Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
 
@@ -512,7 +358,7 @@ This task must be performed on each MetroCluster site.
 
 .. Repeat the command on the partner cluster.
 
-== Switching over the MetroCluster configuration
+== Switch over the MetroCluster configuration
 
 You must switch over the configuration to site_A so that the platforms on site_B can be upgraded.
 
@@ -576,14 +422,14 @@ cluster_A::> metrocluster operation show
      Errors: -
 ----
 
-== Preparing the network configuration of the old controllers
+== Prepare the network configuration of the old controllers
 
 To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
 
 .About this task
 
 * This task must be performed on each of the old nodes.
-* You will use the information gathered in link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Mapping ports from the old nodes to the new nodes].
+* You will use the information gathered in link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Map ports from the old nodes to the new nodes].
 
 .Steps
 
@@ -656,74 +502,211 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 +
 This step must be performed on both nodes.
 
-== Removing the old platforms
+== Remove the AFF A700 controller module and NVS at site B
 
-The old controllers must be removed from the configuration.
+You must remove the old controllers from the configuration.
 
-.About this task
+You perform this task on site B.
 
-This task is performed on site_B.
 
-.Steps
 
-. Connect to the serial console of the old controllers (node_B_1-old and node_B_2-old) at site_B and verify it is displaying the LOADER prompt.
 
-. Disconnect the storage and network connections on node_B_1-old and node_B_2-old and label the cables so they can be reconnected to the new nodes.
-
-. Disconnect the power cables from node_B_1-old and node_B_2-old.
-
-. Remove the node_B_1-old and node_B_2-old controllers from the rack.
-
-== Configuring the new controllers
-
-You must rack and install the controllers, perform required setup in Maintenance mode, and then boot the controllers, and verify the LIF configuration on the controllers.
-
-=== Setting up the new controllers
-
-You must rack and cable the new controllers.
+.Before you begin
+If you are not already grounded, properly ground yourself.
 
 .Steps
 
-. Plan out the positioning of the new controller modules and storage shelves as needed.
+. Connect to the serial console of the old controllers (node_B_1-700 and node_B_2-700) at site B and verify it is displaying the `LOADER` prompt.
+
+.	Gather the bootarg values from both nodes at site B: `printenv`
+
+.	Power off the chassis at site B.
+
+== Remove the controller module and NVS from both nodes at site A
+=== Remove the AFF A700 controller module
+
+Use the following procedure to remove the AFF A700 controller module.
+
+.Steps
+.	Detach the console cable, if any, and the management cable from the controller module before removing the controller module.
+.	Unlock and remove the controller module from the chassis.
+..	Slide the orange button on the cam handle downward until it unlocks.
 +
-The rack space depends on the platform model of the controller modules, the switch types, and the number of storage shelves in your configuration.
-
-. Properly ground yourself.
-
-. Install the controller modules in the rack or cabinet.
+image:drw_9500_remove_PCM.png[controller]
 +
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+|===
+| 1 |Cam handle release button
+| 2 |Cam handle
+|===
 
-. If the new controller modules did not come with FC-VI cards of their own and if FC-VI cards from old controllers are compatible on new controllers, swap FC-VI cards and install those in correct slots.
+
+..	Rotate the cam handle so that it completely disengages the controller module from the chassis, and then slide the controller module out of the chassis.
+Make sure that you support the bottom of the controller module as you slide it out of the chassis.
+
+=== Remove the AFF A700 NVS module
+
+Use the following procedure to remove the AFF A700 NVS module.
+
+NOTE:	The AFF A700 NVS module is in slot 6 and is double the height compared to the other modules in the system.
+
+.	Unlock and remove the NVS from slot 6.
+..	Depress the lettered and numbered cam button.
+The cam button moves away from the chassis.
+..	Rotate the cam latch down until it is in a horizontal position.
+The NVS disengages from the chassis and moves a few inches.
+..	Remove the NVS from the chassis by pulling on the pull tabs on the sides of the module face.
 +
-See the link:https://hwu.netapp.com[NetApp Hardware Universe] for slot info for FC-VI cards.
-
-. Cable the controllers' power, serial console and management connections as described in the _MetroCluster Installation and Configuration Guides_.
+image:drw_a900_move-remove_NVRAM_module.png[NVS module]
 +
-Do not connect any other cables that were disconnected from old controllers at this time.
+|===
+| 1 |Lettered and numbered I/O cam latch
+| 2 |I/O latch completely unlocked
+|===
+
+NOTE: If there are any add-on modules used as coredump devices on the AFF A700 non-volatile storage module, do not transfer those to the AFF A900 NVS. Do not transfer any parts from the AFF A700 controller module and NVS to the AFF A900. *[delete last sentence?]*
+
+== Install the AFF A900 NVS and controller module
+
+You must install the AFF A900 NVS and controller module from the upgrade kit on both nodes at site_A. Do not move coredump device from AFF A700 NVS module to AFF A900 NVS module.
+
+.Before you start
+If you are not already grounded, properly ground yourself.
+
+=== Install the AFF A900 NVS
+
+Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at site B
+
+.Steps
+.	Align the NVS with the edges of the chassis opening in slot 6.
+.	Gently slide the NVS into the slot until the lettered and numbered I/O cam latch begins to engage with the I/O cam pin, and then push the I/O cam latch all the way up to lock the NVS in place.
 +
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
-
-. Power up the new nodes and press Ctrl-C when prompted to display the LOADER prompt.
-
-=== Netbooting the new controllers
-
-After you install the new nodes, you need to netboot to ensure the new nodes are running the same version of ONTAP as the original nodes. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must put a copy of the ONTAP 9 boot image onto a web server that the system can access.
-
-This task is performed on each of the new controller modules.
-
-// include reference
-include::../_include/netboot_steps.adoc[]
-// end include reference
+image:drw_a900_move-remove_NVRAM_module.png[NVS module]
++
+|===
+| 1 |Lettered and numbered I/O cam latch
+| 2 |I/O latch completely unlocked
+|===
 
 
-=== Clearing the configuration on a controller module
+=== Install the AFF A900 controller module
+Use the following procedure to install the AFF A900 controller module.
 
-// include reference
-include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
-// end include reference
+.Steps
 
-=== Restoring the HBA configuration
+.	Align the end of the controller module with the opening in the chassis, and then gently push the controller module halfway into the system.
+.	Firmly push the controller module into the chassis until it meets the midplane and is fully seated.
+The locking latch rises when the controller module is fully seated.
++
+CAUTION: Do not use excessive force when sliding the controller module into the chassis to avoid damaging the connectors.
+
+.	Cable the management and console ports to the controller module.
++
+image:drw_9500_remove_PCM.png[controller]
++
+|===
+| 1 |Cam handle release button
+| 2 |Cam handle
+|===
+
+.	Install the second X91129A card in slot 7 of each node.
+..	Connect FC-VI ports from slot 7 to the switches. Refer to the link:/install-fc/index.html[Fabric-attached installation and configuration] documentation and go to the AFF A900 fabric MetroCluster connection requirements for the type of switch in your environment.
+.	Power ON the chassis and connect to the serial console.
+.	After BIOS initialization, if the node starts to autoboot, interrupt the AUTOBOOT by pressing Control-C.
+.	After you interrupt the autoboot, the nodes stop at the LOADER prompt. If you do not interrupt autoboot on time and node1 starts booting, wait for the prompt to press Control-C to go into the boot menu. After the node stops at the boot menu, use option 8 to reboot the node and interrupt the autoboot during the reboot.
+.	At the `LOADER` prompt, set the default environment variables: `set-defaults`
+.	Save the default environment variables settings: `saveenv`
+
+
+
+
+=== Netboot the nodes at site B
+
+After swapping the AFF A900 controller module and NVS, you need to netboot the AFF A900 nodes and install the same ONTAP version and patch level that is running on the cluster. The term `netboot` means you are booting from an ONTAP image stored on a remote server. When preparing for `netboot`, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
+
+It is not possible to check the ONTAP version installed on the boot media of an AFF A900 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 boot media should must be same as the ONTAP version running on the AFF A700 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a `netboot` followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
+
+.Before you start
+
+•	Verify that you can access a HTTP server with the system.
+•	You need to download the necessary system files for your system and the correct version of ONTAP from the XREF NetApp Support Site.
+About this task
+You must netboot the new controllers if the version of ONTAP installed is not the same as the version installed on the original controllers.if they do not have the same version of ONTAP 9 installed on them that is installed on the original controllers. After you install each new controller, you boot the system from the ONTAP 9 image stored on the web server. You can then download the correct files to the boot media device for subsequent system boots.
+
+.Steps
+.	Access link:https://mysupport.netapp.com/site/[NetApp Support] to download the files required to perform a system netboot used for performing the netboot of the system.
+.	[[step2-download-software]]Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the `<ontap_version>_image.tgz` file on a web-accessible directory.
+.	Change to the web-accessible directory and verify that the files you need are available.
+    Your directory listing should contain `<ontap_version>_image.tgz`.
+.	Configure the netboot connection by choosing one of the following actions.
+Note:	You should use the management port and IP as the netboot connection. Do not use a data LIF IP or a data outage might occur while the upgrade is being performed.
++
+|===
+h|If Dynamic Host Configuration Protocol (DHCP) is...	h|Then...
+|Running	|Configure the connection automatically by using the following command at the boot environment prompt:
+`ifconfig e0M -auto`
+|Not running	|Manually configure the connection by using the following command at the boot environment prompt:
+`ifconfig e0M -addr=<filer_addr> -mask=<netmask> -gw=<gateway> - dns=<dns_addr> domain=<dns_domain>`
+
+`<filer_addr>` is the IP address of the storage system.
+`<netmask>` is the network mask of the storage system.
+`<gateway>` is the gateway for the storage system.
+`<dns_addr>` is the IP address of a name server on your network. This parameter is optional.
+`<dns_domain>` is the Domain Name Service (DNS) domain name. This parameter is optional.
+
+NOTE:	Other parameters might be necessary for your interface. Enter help ifconfig at the firmware prompt for details.
+
+|===
+
+.	Perform `netboot` on node 1:
+`netboot http://<web_server_ip/path_to_web_accessible_directory>/<ontap_version>_image.tgz`
+The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` in  <<step2-download-software, Step 2>>.
++
+NOTE:	Do not interrupt the boot.
+
+.	Wait for node 1 that is running on the AFF A900 controller module to boot and display the boot menu options as shown below:
++
+----
+Please choose one of the following:
+
+(1)  Normal Boot.
+(2)  Boot without /etc/rc.
+(3)  Change password.
+(4)  Clean configuration and initialize all disks.
+(5)  Maintenance mode boot.
+(6)  Update flash from backup config.
+(7)  Install new software first.
+(8)  Reboot node.
+(9)  Configure Advanced Drive Partitioning.
+(10) Set Onboard Key Manager recovery secrets.
+(11) Configure node for external key management.
+Selection (1-11)?
+----
+
+
+.	From the boot menu, select option `(7) Install new software first`.
+This menu option downloads and installs the new ONTAP image to the boot device.
++
+NOTE:	Disregard the following message: `This procedure is not supported for Non-Disruptive Upgrade on an HA pair.` This note applies to nondisruptive ONTAP software upgrades, and not controller upgrades.
+Always use netboot to update the new node to the desired image. If you use another method to install the image on the new controller, the wrong incorrect image might install. This issue applies to all ONTAP releases.
+
+.	If you are prompted to continue the procedure, enter `y`, and when prompted for the package, enter the URL:
+http://<web_server_ip/path_to_web-accessible_directory>/<ontap_version>_image.tgz
+.	Complete the following substeps to reboot the controller module:
+..	Enter `n` to skip the backup recovery when you see the following prompt:
+`Do you want to restore the backup configuration now? {y|n}`
+..	Enter `y` to reboot when you see the following prompt:
+`The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n}`
++
+The controller module reboots but stops at the boot menu because the boot device was reformatted, and the configuration data needs to be restored.
+.	At the prompt, run the `wipeconfig` command to clear any previous configuration on the boot media:
+..	When you see the message below, answer `yes`:
+`This will delete critical system configuration, including cluster membership.
+Warning: do not run this option on a HA node that has been taken over.
+Are you sure you want to continue?:`
+..	The node reboots to finish the `wipeconfig` and then stops at the boot menu.
+.	Select option `5` to go to maintenance mode from the boot menu. Answer `yes` to the prompts until the node stops at maintenance mode and the command prompt `*>`.
+
+=== Restore the HBA configuration
 
 Depending on the presence and configuration of HBA cards in the controller module, you need to configure them correctly for your site's usage.
 
@@ -756,22 +739,37 @@ FC initiator
 a|
 `fcadmin config -t initiator _adapter-name_`
 |===
-. Exit Maintenance mode:
-+
-`halt`
-+
-After you run the command, wait until the node stops at the LOADER prompt.
 
-. Boot the node back into Maintenance mode to enable the configuration changes to take effect:
+=== Set the HA state on the new controllers and chassis
+You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
+
+.Steps
+
+. In Maintenance mode, display the HA state of the controller module and chassis:
 +
+`ha-config show`
++
+The HA state for all components should be mcc.
+
+.	If the displayed system state of the controller or chassis is not correct, set the HA state:
++
+`ha-config modify controller mcc`
++
+`ha-config modify chassis mcc`
+.	Halt the node: `halt`
+The node should stop at the `LOADER>` prompt.
+.	On each node, check the system date, time, and time zone: `Show date`
+.	If necessary, set the date in UTC or Greenwich Mean Time (GMT): `set date <mm/dd/yyyy>`
+.	Check the time by using the following command at the boot environment prompt: `show time`
+.	If necessary, set the time in UTC or GMT: `set time <hh:mm:ss>`
+.	Save the settings: `saveenv`
+.	Gather environment variables: `printenv`
+.	Boot the node back into Maintenance mode to enable the configuration changes to take effect:
 `boot_ontap maint`
-. Verify the changes you made:
+.	Verify the changes you made are effective and ucadmin shows FC initiator ports online.
 +
-
 |===
-
-h| If you have this type of HBA... h| Use this command...
-
+h|If you have this type of HBA…	h| Use this command…
 a|
 CNA
 a|
@@ -782,7 +780,18 @@ a|
 `fcadmin show`
 |===
 
-=== Setting the HA state on the new controllers and chassis
+
+.	Verify the ha-config mode: `ha-config show`
+.. Verify that you have the following output:
++
+----
+*> ha-config show
+Chassis HA configuration: mcc
+Controller HA configuration: mcc
+----
+
+
+=== Set the HA state on the new controllers and chassis
 
 
 You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
@@ -831,7 +840,7 @@ a|
 `ha-config modify chassis mcc`
 |===
 
-=== Reassigning root aggregate disks
+=== Reassign root aggregate disks
 
 
 Reassign the root aggregate disks to the new controller module, using the sysids gathered earlier
@@ -860,11 +869,11 @@ a|
 
 . Cable all other connections to the new controller modules (FC-VI, storage, cluster interconnect, etc.).
 
-. Halt the system and boot to Maintenance mode from the LOADER prompt:
+. Halt the system and boot to Maintenance mode from the `LOADER` prompt:
 +
 `boot_ontap maint`
 
-. Display the disks owned by node_B_1-old:
+. Display the disks owned by node_B_1-A700:
 +
 `disk show -a`
 +
@@ -905,9 +914,7 @@ Disk ownership will be updated on all disks previously belonging to Filer with s
 Do you want to continue (y/n)? y
 ----
 
-. Check that all disks are reassigned as expected:
-+
-`disk show`
+. Check that all disks are reassigned as expected: `disk show`
 +
 ----
 *> disk show
@@ -924,9 +931,7 @@ rr18:8.126L1  node_B_1-new(1574774970)   Pool0  S0M1PSDW        node_B_1-new(157
 *>
 ----
 
-. Display the aggregate status:
-+
-`aggr status`
+. Display the aggregate status: `aggr status`
 +
 ----
 *> aggr status
@@ -939,7 +944,7 @@ aggr0_node_b_1-root    online      raid_dp, aggr    root, nosnap=on,
 
 . Repeat the above steps on the partner node (node_B_2-new).
 
-=== Booting up the new controllers
+=== Boot up the new controllers
 
 You must reboot the controllers from the boot menu to update the controller flash image. Additional steps are required if encryption is configured.
 
@@ -949,9 +954,7 @@ This task must be performed on all the new controllers.
 
 .Steps
 
-. Halt the node:
-+
-`halt`
+. Halt the node: `halt`
 
 . If external key manager is configured, set the related bootargs:
 +
@@ -962,9 +965,7 @@ This task must be performed on all the new controllers.
 `setenv bootarg.kmip.init.gateway _gateway-address_`
 +
 `setenv bootarg.kmip.init.interface _interface-id_`
-. Display the boot menu:
-+
-`boot_ontap menu`
+. Display the boot menu: `boot_ontap menu`
 . If root encryption is used, issue the boot menu command for your key management configuration.
 +
 
@@ -996,13 +997,9 @@ Successfully restored env file from boot media...
 Rebooting to load the restored env file...
 ----
 
-. Double-check that the partner-sysid is correct:
+. Double-check that the partner-sysid is correct: `printenv partner-sysid`
 +
-`printenv partner-sysid`
-+
-If the partner-sysid is not correct, set it:
-+
-`setenv partner-sysid _partner-sysID_`
+If the partner-sysid is not correct, set it: `setenv partner-sysid _partner-sysID_`
 
 . If root encryption is used, issue the boot menu command again for your key management configuration.
 +
@@ -1023,9 +1020,7 @@ a|
 +
 You may need to issue the recover_xxxxxxxx_keymanager command and option 6 at the boot menu prompt multiple times until the nodes completely boot.
 
-. Boot the nodes:
-+
-`boot_ontap`
+. Boot the nodes: `boot_ontap`
 
 . Wait for the replaced nodes to boot up.
 +
@@ -1039,7 +1034,7 @@ If either node is in takeover mode, perform a giveback using the `storage failov
 
 .. Add any ports to a broadcast domain as needed.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Adding or removing ports from a broadcast domain]
+link:https://docs.netapp.com/us-en/ontap/networking/add_or_remove_ports_from_a_broadcast_domain97.html[Add or remove ports from a broadcast domain]
 
 .. Add the physical port that will host the intercluster LIFs to the corresponding Broadcast domain.
 .. Modify intercluster LIFs to use the new physical port as home port.
@@ -1078,7 +1073,7 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 
 |===
 
-=== Verifying LIF configuration
+=== Verif LIF configuration
 
 
 Verify that LIFs are hosted on appropriate node/ports prior to switchback. The following steps need to be performed
@@ -1108,7 +1103,7 @@ When entering the `network interface modify` command within the `vserver config 
 +
 Perform this step on all SVMs as required.
 
-== Switching back the MetroCluster configuration
+== Switch back the MetroCluster configuration
 
 After the new controllers have been configured, you switch back the MetroCluster configuration to return the configuration to normal operation.
 
@@ -1162,7 +1157,7 @@ Remote: cluster_A         Configuration state configured
 +
 If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the `metrocluster config-replication resync-status show` command. This command is at the advanced privilege level.
 
-== Checking the health of the MetroCluster configuration
+== Check the health of the MetroCluster configuration
 
 After upgrading the controller modules you must verify the health of the MetroCluster configuration.
 
@@ -1184,7 +1179,7 @@ This task can be performed on any node in the MetroCluster configuration.
 +
 `metrocluster check show`
 
-== Upgrading the nodes on cluster_A
+== Upgrade the nodes on cluster_A
 
 You must repeat the upgrade tasks on cluster_A.
 
@@ -1204,7 +1199,7 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 `system node autosupport invoke -node * -type all -message MAINT=end`
 .. Repeat the command on the partner cluster.
 
-== Restoring Tiebreaker monitoring
+== Restore Tiebreaker monitoring
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
