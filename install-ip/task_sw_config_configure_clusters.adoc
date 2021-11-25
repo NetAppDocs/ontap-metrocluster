@@ -734,9 +734,10 @@ a| e5a
 a| e5b
 
 .2+a| AFF A400
-a| e3a
+a| e1a
 .2+a|
-a| e3b
+a| e1b
+//ontap-metrocluster/issues/63 2021.11.21
 
 .2+a| AFF A320
 a| e0g
@@ -922,8 +923,8 @@ cluster_A::>
 The following example shows the creation of the interface on port "e5a" on "node_B_1" with IP address "10.1.1.3":
 +
 ----
-cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_B_1 -home-port e5a -address 10.1.1.3 -netmask 255.255.255.0
-[Job 28] Job succeeded: Interface Create is successful.cluster_A::>
+cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_1 -home-port e5a -address 10.1.1.3 -netmask 255.255.255.0
+[Job 28] Job succeeded: Interface Create is successful.cluster_B::>
 ----
 
 .. Configure the interface on port "e5b" on "node_B_1":
@@ -933,10 +934,10 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 The following example shows the creation of the interface on port "e5b" on "node_B_1" with IP address "10.1.2.3":
 +
 ----
-cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_B_1 -home-port e5b -address 10.1.2.3 -netmask 255.255.255.0
-[Job 28] Job succeeded: Interface Create is successful.cluster_A::>
+cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_1 -home-port e5b -address 10.1.2.3 -netmask 255.255.255.0
+[Job 28] Job succeeded: Interface Create is successful.cluster_B::>
 ----
-
+// ontap-metrocluster issue 105 2021.11.21
 . Create the interfaces on "node_B_2".
 +
 --

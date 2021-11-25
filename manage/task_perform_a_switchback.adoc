@@ -39,7 +39,37 @@ Group Cluster Node        State          Mirroring Mode
 ----
 
 . Confirm that resynchronization is complete on all SVMs: `metrocluster vserver show`
-. Verify that any automatic LIF migrations being performed by the healing operations have been successfully completed: metrocluster check lif show
+. Verify that any automatic LIF migrations being performed by the healing operations have been successfully completed: `metrocluster check lif show`
+. Perform a simulated switchback to verify the system is ready: `metrocluster switchback -simulate`
+. Check the configuration:
++
+`metrocluster check run`
++
+The command runs as a background job and might not be completed immediately.
++
+----
+cluster_A::> metrocluster check run
+The operation has been started and is running in the background. Wait for
+it to complete and run "metrocluster check show" to view the results. To
+check the status of the running metrocluster check operation, use the command,
+"metrocluster operation history show -job-id 2245"
+----
++
+----
+cluster_A::> metrocluster check show
+Last Checked On: 9/13/2018 20:41:37
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+clusters            ok
+connections         ok
+6 entries were displayed.
+----
+//ontap-metrocluster/issues/69 2021.11.21
 . Perform the switchback by running the metrocluster switchback command from any node in the surviving cluster: `metrocluster switchback`
 // ontap-metrocluster/issues/69
 . Check the progress of the switchback operation: `metrocluster show`
