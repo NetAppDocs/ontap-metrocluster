@@ -9,7 +9,7 @@ summary: 'You can use the MetroCluster switchover operation to provide nondisrup
 :imagesdir: ../media/
 
 [.lead]
-You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
+You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. You cannot  upgrade other components (such as storage shelves or switches) as part of this procedure.
 
 .About this task
 
@@ -21,7 +21,7 @@ You cannot upgrade other components in the configuration, such as storage shelve
 ** Four and eight-node configurations are supported in ONTAP 9.10.1 and later.
 +
 NOTE: The AFF A900 system is only supported in ONTAP 9.10.1 or later.
-
++
 https://hwu.netapp.com[NetApp Hardware Universe]
 
 
@@ -140,10 +140,12 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 The AFF A900 fabric MetroCluster requires two four-port FC-VI adapters per node compared to a single four-port FC-VI adapter required by an AFF A700. Before you start the controller upgrade to the AFF A900 controller, you must modify the AFF A700 RCF files and cabling to support the AFF A900 connection topology.
 
 .	From the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF file download page^], download the correct RCF file for a AFF A900 fabric MetroCluster and the switch model that is in use on the AFF A700 configuration.
-.	Update the RCF on the fabric A switches, switch A1, and switch B1 by following the steps in link:disaster-recovery/task_cfg_switches_mcfc.html[Configuring the FC switches].
-.	Re-cable the existing FC-VI and storage connections on the fabric A switches (switch 1 and 3) as directed by the new RCF, refer to MetroCluster installation and configuration section for the AFF A900 cabling.
-Note: All the connections mentioned in the AFF A900 fabric MetroCluster installation and configuration documentation are not available at this time. Connect the first four ports only that are available on the AFF A700 MetroCluster FC nodes.
-.	After re-cabling the fabric A connections as directed by the new RCF, all storage and FC-VI connections should come online. Check the FC-VI connections:
+.	[[Update-RCF]]Update the RCF file on the fabric A switches, switch A1, and switch B1 by following the steps in link:disaster-recovery/task_cfg_switches_mcfc.html[Configuring the FC switches].
+.	Re-cable the existing FC-VI and storage connections on the fabric A switches (switch 1 and 3) as directed by the new RCF, refer to MetroCluster installation and configuration section for the AFF A900 cabling *[Is this just a link to the Fabric ICG?]*.
++
+NOTE: All the connections mentioned in the AFF A900 fabric MetroCluster installation and configuration documentation are not available at this time. Connect the first four ports only that are available on the AFF A700 MetroCluster FC nodes.
+
+.	[[check-FC-VI]]After re-cabling the fabric A connections as directed by the new RCF, all storage and FC-VI connections should come online. Check the FC-VI connections:
 +
 `metrocluster interconnect mirror show`
 +
@@ -159,7 +161,7 @@ Note: All the connections mentioned in the AFF A900 fabric MetroCluster installa
 `metrocluster check run`
 ..	See the MetroCluster run results when the run completes:
 `metrocluster check show`
-.	Update and re-cable the fabric B connections by repeating *xref steps 2 to 4*.
+.	Update and re-cable the fabric B connections by repeating <<Update-RCF, Step 2>> to <<check-FC-VI, Step 4>> .
 
 
 === Verify the health of the MetroCluster configuration after RCF file update and recabling
@@ -260,10 +262,10 @@ During the replacement procedure you will replace these system IDs with the syst
 +
 In this example for a four-node MetroCluster FC configuration, the following old system IDs are retrieved:
 +
-** node_A_1-A700: 537037649
-** node_A_2-A700: 537407030
-** node_B_1-A700: 0537407114
-** node_B_2-A700: 537035354
+* node_A_1-A700: 537037649
+* node_A_2-A700: 537407030
+* node_B_1-A700: 0537407114
+* node_B_2-A700: 537035354
 
 
 +
@@ -283,26 +285,26 @@ dr-group-id cluster    node           node-systemid ha-partner-systemid dr-partn
 . Gather port and LIF information for each node.
 +
 You should gather the output of the following commands for each node:
-
- ** `network interface show -role cluster,node-mgmt`
- ** `network port show -node _node-name_ -type physical`
- ** `network port vlan show -node _node-name_`
- ** `network port ifgrp show -node _node_name_ -instance`
- ** `network port broadcast-domain show`
- ** `network port reachability show -detail`
- ** `network ipspace show`
- ** `volume show`
- ** `storage aggregate show`
- ** `system node run -node _node-name_ sysconfig -a`
++
+ * `network interface show -role cluster,node-mgmt`
+ * `network port show -node _node-name_ -type physical`
+ * `network port vlan show -node _node-name_`
+ * `network port ifgrp show -node _node_name_ -instance`
+ * `network port broadcast-domain show`
+ * `network port reachability show -detail`
+ * `network ipspace show`
+ * `volume show`
+ * `storage aggregate show`
+ * `system node run -node _node-name_ sysconfig -a`
 
 . If the MetroCluster nodes are in a SAN configuration, collect the relevant information.
 +
 You should gather the output of the following commands:
 
- ** `fcp adapter show -instance`
- ** `fcp interface show -instance`
- ** `iscsi interface show`
- ** `ucadmin show`
+ * `fcp adapter show -instance`
+ * `fcp interface show -instance`
+ * `iscsi interface show`
+ * `ucadmin show`
 
 . If the root volume is encrypted, collect and save the passphrase used for key-manager:
 +
@@ -532,7 +534,7 @@ Use the following procedure to remove the AFF A700 controller module.
 .	Unlock and remove the controller module from the chassis.
 ..	Slide the orange button on the cam handle downward until it unlocks.
 +
-image:drw_9500_remove_PCM.png[controller]
+image:../media/drw_9500_remove_PCM.png[controller]
 +
 |===
 | 1 |Cam handle release button
@@ -556,7 +558,7 @@ The cam button moves away from the chassis.
 The NVS disengages from the chassis and moves a few inches.
 ..	Remove the NVS from the chassis by pulling on the pull tabs on the sides of the module face.
 +
-image:drw_a900_move-remove_NVRAM_module.png[NVS module]
+image:../media/drw_a900_move-remove_NVRAM_module.png[NVS module]
 +
 |===
 | 1 |Lettered and numbered I/O cam latch
@@ -580,7 +582,7 @@ Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes 
 .	Align the NVS with the edges of the chassis opening in slot 6.
 .	Gently slide the NVS into the slot until the lettered and numbered I/O cam latch begins to engage with the I/O cam pin, and then push the I/O cam latch all the way up to lock the NVS in place.
 +
-image:drw_a900_move-remove_NVRAM_module.png[NVS module]
+image:../media/drw_a900_move-remove_NVRAM_module.png[NVS module]
 +
 |===
 | 1 |Lettered and numbered I/O cam latch
@@ -601,7 +603,7 @@ CAUTION: Do not use excessive force when sliding the controller module into the 
 
 .	Cable the management and console ports to the controller module.
 +
-image:drw_9500_remove_PCM.png[controller]
+image:../media/drw_9500_remove_PCM.png[controller]
 +
 |===
 | 1 |Cam handle release button
@@ -877,7 +879,7 @@ a|
 +
 `disk show -a`
 +
-The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration.
+The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration. *[Rakesh to provide a new sys ID]*
 +
 ----
 *> disk show -a
@@ -1018,7 +1020,7 @@ a|
 `recover_external_keymanager`
 |===
 +
-You may need to issue the recover_xxxxxxxx_keymanager command and option 6 at the boot menu prompt multiple times until the nodes completely boot.
+You might need to issue the `recover_xxxxxxxx_keymanager` command and select option `6` at the boot menu prompt multiple times until the nodes completely boot.
 
 . Boot the nodes: `boot_ontap`
 
@@ -1034,7 +1036,7 @@ If either node is in takeover mode, perform a giveback using the `storage failov
 
 .. Add any ports to a broadcast domain as needed.
 +
-link:https://docs.netapp.com/us-en/ontap/networking/add_or_remove_ports_from_a_broadcast_domain97.html[Add or remove ports from a broadcast domain]
+link:https://docs.netapp.com/us-en/ontap/networking/add_or_remove_ports_from_a_broadcast_domain97.html[Add or remove ports from a broadcast domain^]
 
 .. Add the physical port that will host the intercluster LIFs to the corresponding Broadcast domain.
 .. Modify intercluster LIFs to use the new physical port as home port.
@@ -1042,15 +1044,15 @@ link:https://docs.netapp.com/us-en/ontap/networking/add_or_remove_ports_from_a_b
 +
 You may need to reconfigure cluster peering.
 +
-link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Creating a cluster peer relationship]
+link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Creating a cluster peer relationship]
 
 .. Recreate VLANs and interface groups as needed.
 +
 VLAN and interface group membership might be different than that of the old node.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Creating a VLAN]
+link:https://docs.netapp.com/us-en/ontap/networking/configure_vlans_over_physical_ports.html#create-a-vlan[Creating a VLAN^]
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups]
+link:https://docs.netapp.com/us-en/ontap/networking/combine_physical_ports_to_create_interface_groups.html[Combining physical ports to create interface groups^]
 . If encryption is used, restore the keys using the correct command for your key management configuration.
 +
 
@@ -1063,24 +1065,24 @@ Onboard key management
 a|
 `security key-manager onboard sync`
 
-For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys].
+For more information, see link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/restore-onboard-key-management-encryption-keys-task.html[Restoring onboard key management encryption keys^].
 a|
 External key management
 a|
 `security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag _node-name_`
 
-For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys].
+For more information, see link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/restore-external-encryption-keys-93-later-task.html[Restoring external key management encryption keys^].
 
 |===
 
-=== Verif LIF configuration
+=== Verify LIF configuration
 
 
 Verify that LIFs are hosted on appropriate node/ports prior to switchback. The following steps need to be performed
 
 .About this task
 
-This task is performed on site_B, where the nodes have been booted up with root aggregates.
+This task is performed on site B, where the nodes have been booted up with root aggregates.
 
 .Steps
 
@@ -1111,7 +1113,7 @@ After the new controllers have been configured, you switch back the MetroCluster
 
 In this task, you will perform the switchback operation, returning the MetroCluster configuration to normal operation. The nodes on site_A are still awaiting upgrade.
 
-image::../media/mcc_upgrade_cluster_a_switchback.png[]
+image::../media/mcc_upgrade_cluster_a_switchback.png[four-node metrocluster]
 
 .Steps
 
@@ -1184,7 +1186,7 @@ This task can be performed on any node in the MetroCluster configuration.
 You must repeat the upgrade tasks on cluster_A.
 
 .Step
-. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Preparing for the upgrade].
+. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Prepare for the upgrade].
 +
 As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
 
@@ -1203,4 +1205,4 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
-. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_.
+. Use the steps in link:tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Add MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
