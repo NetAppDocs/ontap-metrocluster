@@ -965,7 +965,9 @@ This task must be performed on all the new controllers.
 . Display the boot menu:
 +
 `boot_ontap menu`
-. If root encryption is used, issue the boot menu command for your key management configuration.
+. If root encryption is used, depending on your OTANP version, issue the boot menu command or select the boot menu option for your key management configuration.
++
+For ONTAP 9.7 or earlier, issue the boot menu command.
 +
 
 |===
@@ -980,6 +982,23 @@ a|
 External key management
 a|
 `recover_external_keymanager`
+|===
++
+For ONTAP 9.8 or later, select the boot menu option.
++
+
+|===
+
+h| If you are using... h| Select this boot menu option...
+
+a|
+Onboard key management
+a|
+Option `10`
+a|
+External key management
+a|
+Option `11`
 |===
 
 . If autoboot is enabled, interrupt autoboot by pressing control-C.
@@ -1004,9 +1023,10 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid _partner-sysID_`
 
-. If root encryption is used, issue the boot menu command again for your key management configuration.
+. If root encryption is used, depending on your ONATP version, issue the boot menu command or select the boot menu option again for your key management configuration.
 +
-
+For ONTAP 9.7 or earlier, issue the boot menu command.
++
 |===
 
 h| If you are using... h| Issue this command at the boot menu prompt...
@@ -1021,7 +1041,27 @@ a|
 `recover_external_keymanager`
 |===
 +
-You may need to issue the recover_xxxxxxxx_keymanager command and option 6 at the boot menu prompt multiple times until the nodes completely boot.
+You might need to issue the recover_xxxxxxxx_keymanager command at the boot menu prompt multiple times until the nodes completely boot.
+
++
+For ONTAP 9.8 or later, select the boot menu option.
++
+
+|===
+
+h| If you are using... h| Select this boot menu option...
+
+a|
+Onboard key management
+a|
+Option `10`
+a|
+External key management
+a|
+Option `11`
+|===
++
+You need to perform the recovery procedure by selecting option `10` or option `11` depending on the key manager setting and option `6` at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option `1` (normal boot).
 
 . Boot the nodes:
 +
