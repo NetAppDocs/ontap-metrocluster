@@ -1263,21 +1263,21 @@ If the partner-sysid is not correct, set it:
 . Display the ONTAP boot menu:
 +
 `boot_ontap menu`
-. If root encryption is used, issue the boot menu command for your key management configuration.
+. If root encryption is used, select the boot menu option for your key management configuration.
 +
 
 |===
 
-h| If you are using... h| Issue this command at the boot menu prompt...
+h| If you are using... h| Select this boot menu option...
 
 a|
 Onboard key management
 a|
-`recover_onboard_keymanager`
+Option `10`
 a|
 External key management
 a|
-`recover_external_keymanager`
+Option `11`
 |===
 
 . From the boot menu, select "`(6) Update flash from backup config`".
@@ -1305,25 +1305,23 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid _partner-sysID_`
 
-. If root encryption is used, again issue the boot menu command for your key management configuration.
+. If root encryption is used, select the boot menu option again for your key management configuration.
 +
-
 |===
 
-h| If you are using... h| Issue this command at the boot menu prompt...
+h| If you are using... h| Select this boot menu option...
 
 a|
 Onboard key management
 a|
-`recover_onboard_keymanager`
+Option `10`
 a|
 External key management
 a|
-`recover_external_keymanager`
+Option `11`
 |===
-
 +
-You may need to issue the `recover_xxxxxxxx_keymanager` command and option 6 at the boot menu prompt multiple times until the nodes fully boot.
+You need to perform the recovery procedure by selecting option `10` or option `11` depending on the key manager setting and option `6` at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option `1` (normal boot).
 
 . Wait for the replaced nodes to boot up.
 +
