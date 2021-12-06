@@ -135,7 +135,11 @@ You must perform this step on each cluster.
 .. Set the advanced privilege level:
 +
 `set -privilege advanced`
- .. Unjoin the node:
+.. Disable the storage failover:
++
+`storage failover modify -node _node-name_ -enable false      <-----Additional step`
+// BURT 1419399, 2021-11-18
+.. Unjoin the node:
  +
 `cluster unjoin -node _node-name_`
 +
