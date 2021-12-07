@@ -2,7 +2,7 @@
 permalink: upgrade/task_upgrade_A700_to_A900_in_a_four_node_mcc_ip_us_switchover_and_switchback.html
 sidebar: sidebar
 keywords: metrocluster, upgrade, controller, ip, configuration, switchover, switchback, workflow, nodes, tiebreaker, verify, bootrage, root, aggregate, disks
-summary: 'Starting with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
+summary: 'Beginning with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
 = Upgrade controllers from AFF A700 to AFF A900 in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.10.1 and later)
 
@@ -10,7 +10,7 @@ summary: 'Starting with ONTAP 9.8, you can use the MetroCluster switchover opera
 :imagesdir: ../media/
 
 [.lead]
-Starting with ONTAP 9.10.1, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
+Beginning with ONTAP 9.10.1, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
 .About this task
 
@@ -102,7 +102,7 @@ The switches at Site_A will be upgraded when the controllers on Site_A are upgra
 
 . Prepare the IP switches for the application of the new RCF files.
 +
-Follow the steps in the section for your switch vendor from the link:../install-ip/index.html[MetroCluster IP Installation and Configuration Guide].
+Follow the steps in the section for your switch vendor from the link:../install-ip/index.html[MetroCluster IP Installation and Configuration] content.
 
 
  ** link:../install-ip/task_install_and_cable_the_mcc_components.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults]
@@ -110,7 +110,7 @@ Follow the steps in the section for your switch vendor from the link:../install-
 
 . Download and install the RCF files.
 +
-Follow the steps in the link:../install-ip/index.html[MetroCluster IP Installation and Configuration Guide].
+Follow the steps in the link:../install-ip/index.html[MetroCluster IP Installation and Configuration] content.
 
  ** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom RCF files]
  ** link:../install-ip/task_install_and_cable_the_mcc_components.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
@@ -275,7 +275,7 @@ You should gather the output of the following commands:
  `security key-manager backup show`
 
  . If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
-For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually].
+For additional information, see https://docs.netapp.com/us-en/ontap/encryption-at-rest/backup-key-management-information-manual-task.html[Backing up onboard key management information manually^].
 
   .. If Onboard Key Manager is configured:
   `security key-manager onboard show-backup`
@@ -324,7 +324,7 @@ h| If you are using... h| Use this procedure...
 a|
 Tiebreaker
 a|
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration content_
+link:install-stretch/concept_considerations_when_removing_mcc_configurations.html[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration content_
 a|
 Mediator
 a|
@@ -486,7 +486,8 @@ image::../media/drw_9500_remove_PCM.png[controller module]
 . Install the second X91146A card in slot 7 of each node.
 ..	Move the e5b connection to e7b.
 ..	Move the e5a connection to e5b.
-Note: Slot 7 on all nodes of the cluster should be empty as mentioned in <<Map ports from the old nodes to the new nodes>> section.
++
+NOTE: Slot 7 on all nodes of the cluster should be empty as mentioned in <<Map ports from the old nodes to the new nodes>> section.
 .	Power ON the chassis and connect to serial console.
 .	After BIOS initialization, if the node starts autoboot, interrupt the AUTOBOOT by pressing Control-C.
 .	After autoboot is interrupted, the nodes stop at the LOADER prompt. If you do not interrupt autoboot on time and node1 starts booting, wait for the prompt to press Ctrl-C to go into the boot menu. After the node stops at the boot menu, use option 8 to reboot the node and interrupt the autoboot during reboot.
@@ -548,6 +549,7 @@ NOTE:	Other parameters might be necessary for your interface. Enter `help ifconf
 `netboot` `http://<web_server_ip/path_to_web_accessible_directory>/<ontap_version>_image.tgz`
 +
 The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` in <<step2-download-software, Step 2>>.
++
 NOTE:	Do not interrupt the boot.
 
 .	Wait for the node1 now running on the AFF A900 controller module to boot and display the boot menu options as shown below:
@@ -728,7 +730,7 @@ Certain MetroCluster IP bootarg values must be configured on the new controller 
 
 .About this task
 
-In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Gathering information before the upgrade].
+In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#gathering-information-before-the-upgrade[Gathering information before the upgrade].
 
 .Steps
 
@@ -1003,7 +1005,7 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid _partner-sysID_`
 
-. If root encryption is used, again issue the boot menu command for your key management configuration.
+. If root encryption is used, select the boot menu option for your key management configuration.
 +
 
 |===
@@ -1020,7 +1022,7 @@ a|
 option 11
 |===
 +
-You may need to issue the `recover_xxxxxxxx_keymanager` command at the boot menu prompt multiple times until the nodes fully boot.
+You need to perform the recovery procedure by selecting option 10 or option 11 depending on the key manager setting and option 6 at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option 1 (normal boot).
 
 . Wait for the replaced nodes to boot up.
 +
@@ -1037,13 +1039,13 @@ Onboard key management
 a|
 `security key-manager onboard sync`
 
-For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys].
+For more information, see https://docs.netapp.com/us-en/ontap/encryption-at-rest/restore-onboard-key-management-encryption-keys-task.html[Restoring onboard key management encryption keys^].
 a|
 External key management
 a|
 `security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag _node-name_`
 
-For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys].
+For more information, see https://docs.netapp.com/us-en/ontap/encryption-at-rest/restore-external-encryption-keys-93-later-task.html[Restoring external key management encryption keys^].
 
 |===
 
@@ -1054,15 +1056,15 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 
 .. Add any ports to a broadcast domain as needed.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Adding or removing ports from a broadcast domain]
+https://docs.netapp.com/us-en/ontap/networking/add_or_remove_ports_from_a_broadcast_domain97.html[Adding or removing ports from a broadcast domain^]
 
 .. Recreate VLANs and interface groups as needed.
 +
 VLAN and interface group membership might be different than that of the old node.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Creating a VLAN]
+https://docs.netapp.com/us-en/ontap/networking/configure_vlans_over_physical_ports.html#create-a-vlan[Creating a VLAN^]
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups]
+https://docs.netapp.com/us-en/ontap/networking/combine_physical_ports_to_create_interface_groups.html[Combining physical ports to create interface groups^]
 
 
 
@@ -1079,7 +1081,7 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 .About this task
 
 * This task is performed on site_B.
-* See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Mapping ports from the old nodes to the new nodes].
+* See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#mapping-ports-from-the-old-nodes-to-the-new-nodes[Mapping ports from the old nodes to the new nodes].
 
 .Steps
 
@@ -1198,7 +1200,7 @@ You must repeat the upgrade tasks on cluster_A.
 
 .Steps
 
-. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Preparing for the upgrade].
+. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#preparing-for-the-upgrade[Prepare for the upgrade].
 +
 As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
 
