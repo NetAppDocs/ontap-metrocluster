@@ -179,6 +179,22 @@ If you will be using in-band management of the bridge rather than IP management,
 
 .Steps
 
+. Configure the serial console port on the ATTO FibreBridge by setting the port speed to 115000 bauds:
++
+----
+get serialportbaudrate
+SerialPortBaudRate = 115200
+
+Ready.
+
+set serialportbaudrate 115200
+
+Ready. *
+saveconfiguration
+Restart is necessary....
+Do you wish to restart (y/n) ? y
+----
+
 . If configuring for in-band management, connect a cable from FibreBridge RS-232 serial port to the serial (COM) port on a personal computer.
 +
 The serial connection will be used for initial configuration, and then in-band management via ONTAP and the FC ports can be used to monitor and manage the bridge.
