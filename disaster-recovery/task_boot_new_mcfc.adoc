@@ -40,6 +40,8 @@ If this occurs, repeat <<step2>> to boot the system to the ONTAP prompt. You wil
 `aggr mirror root-aggr-name`
 .. Assign unowned disks to pool0 on the local node
 
+. If you have a four-node configuration, repeat the previous steps on the other node at the disaster site.
+
 . Refresh the MetroCluster configuration:
 .. Enter advanced privilege mode:
 +
@@ -50,6 +52,32 @@ If this occurs, repeat <<step2>> to boot the system to the ONTAP prompt. You wil
 .. Return to admin privilege mode:
 +
 `set -privilege admin`
-. If you have a four-node configuration, repeat the previous steps on the other node at the disaster site.
+
+. Confirm that the replacement nodes at the disaster site are ready for switchback:
++
+`metrocluster node show`
++
+The replacement nodes should be in "`waiting for switchback recovery`" mode.  If they are in "`normal`" mode instead, you can reboot the replacement nodes.  After that boot, the nodes should be in "`waiting for switchback recovery`" mode.
++
+The following example shows that the replacement nodes are ready for switchback:
++
+....
+
+cluster_B::> metrocluster node show
+DR                    Configuration  DR
+Grp Cluster Node      State          Mirroring Mode
+--- ------- --------- -------------- --------- --------------------
+1   cluster_B
+            node_B_1  configured     enabled   switchover completed
+            node_B_2  configured     enabled   switchover completed
+    cluster_A
+            node_A_1  configured     enabled   waiting for switchback recovery
+            node_A_2  configured     enabled   waiting for switchback recovery
+4 entries were displayed.
+
+cluster_B::>
+....
+
+.What to do next
 
 Proceed to link:../disaster-recovery/task_complete_recovery.html[Complete the disaster recovery process].
