@@ -54,9 +54,9 @@ This command does not erase the banner.
 *`no set clibanner`*
 +
 -----
-
-(IP_switch_A_1) # no set clibanner
-(IP_switch_A_1) #
+(IP_switch_A_1) #configure
+(IP_switch_A_1)(Config) # no set clibanner
+(IP_switch_A_1)(Config) #
 -----
 
 . Reboot the switch:
@@ -245,11 +245,11 @@ This task must be repeated on each switch in the MetroCluster IP configuration.
 =====
 *Note the following:*
 
-* When upgrading from EFOS 3.4.x.x to EFOS 3.7.x.x, the switch must be running EFOS 3.4.4.6 (or later 3.4.x.x release). If you are running a release prior to that, then upgrade the switch to EFOS 3.4.4.6 (or later 3.4.x.x release) first, then upgrade the switch to EFOS 3.7.x.x.
+* When upgrading from EFOS 3.4.x.x to EFOS 3.7.x.x or later, the switch must be running EFOS 3.4.4.6 (or later 3.4.x.x release). If you are running a release prior to that, then upgrade the switch to EFOS 3.4.4.6 (or later 3.4.x.x release) first, then upgrade the switch to EFOS 3.7.x.x or later.
 
-* The configuration for EFOS 3.4.x.x and 3.7.x.x are different. Changing the EFOS version from 3.4.x.x to 3.7.x.x or vice versa requires the switch to be reset to factory defaults and the RCF files for the corresponding EFOS version to be (re)applied. This procedure requires access through the serial console port.
+* The configuration for EFOS 3.4.x.x and 3.7.x.x or later are different. Changing the EFOS version from 3.4.x.x to 3.7.x.x or later, or vice versa, requires the switch to be reset to factory defaults and the RCF files for the corresponding EFOS version to be (re)applied. This procedure requires access through the serial console port.
 
-* Starting with EFOS version 3.7.x.x, a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access through the serial console port.
+* Starting with EFOS version 3.7.x.x or later, a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access through the serial console port.
 =====
 // BURT-1392530
 [options="header"]
@@ -258,12 +258,12 @@ This task must be repeated on each switch in the MetroCluster IP configuration.
 .5+|Steps to upgrade EFOS between two (non) FIPS compliant versions
 | 3.4.x.x | 3.4.x.x | Install the new EFOS image using method 1)
 The configuration and license information is retained
-| 3.4.4.6 (or later 3.4.x.x) | 3.7.x.x non-FIPS compliant |Upgrade EFOS using method 1.
-Reset the switch to factory defaults and apply the RCF file for EFOS 3.7.x.x
-.2+|3.7.x.x non-FIPS compliant |3.4.4.6 (or later 3.4.x.x) |Downgrade EFOS using method 1.
+| 3.4.4.6 (or later 3.4.x.x) | 3.7.x.x or later non-FIPS compliant |Upgrade EFOS using method 1.
+Reset the switch to factory defaults and apply the RCF file for EFOS 3.7.x.x or later
+.2+|3.7.x.x or later non-FIPS compliant |3.4.4.6 (or later 3.4.x.x) |Downgrade EFOS using method 1.
 Reset the switch to factory defaults and apply the RCF file for EFOS 3.4.x.x
-|3.7.x.x non-FIPS compliant |Install the new EFOS image using method 1. The configuration and license information is retained
-|3.7.x.x FIPS compliant |3.7.x.x FIPS compliant |Install the new EFOS image using method 1.
+|3.7.x.x or later non-FIPS compliant |Install the new EFOS image using method 1. The configuration and license information is retained
+|3.7.x.x or later FIPS compliant |3.7.x.x or later FIPS compliant |Install the new EFOS image using method 1.
 The configuration and license information is retained
 .2+|Steps to upgrade to/from a FIPS compliant EFOS version |Non-FIPS compliant |FIPS compliant
 .2+|Installation of the EFOS image using method 2. The switch configuration and license information will be lost.

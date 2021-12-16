@@ -4,22 +4,61 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, upgrade, rcf, files, ip, switches
 summary: 'You might need to upgrade an RCF file on a MetroCluster IP switch. For example, an ONTAP upgrade or a switch firmware upgrade both require a new RCF file.'
 ---
-= Upgrading RCF files on MetroCluster IP switches
+= Upgrade RCF files on MetroCluster IP switches
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 You might need to upgrade an RCF file on a MetroCluster IP switch. For example, an ONTAP upgrade or a switch firmware upgrade both require a new RCF file.
 
+== Ensure that the RCF file is supported
+
+If you are changing the ONTAP version running on the switches, you should ensure that you have an RCF file that is supported for that version.  If you use the RCF generator, the correct RCF file will be generated for you.
+
+.Steps
+
+. Use the following commands from the switches to verify the version of the RCF file:
++
+[cols="30,70"]
+|===
+
+h| From this switch...   h| Issue this command...
+
+a| Brocade switch
+a| `(IP_switch_A_1) # show clibanner`
+
+a| Cisco switch
+a| `IP_switch_A_1# show banner motd`
+
+|===
+
++
+For either switch, find the line in the output that indicates the version of the RCF file. For example, the following output is from a Cisco switch, which indicates the RCF file version is "`v1.80`".
++
+....
+Filename : NX3232_v1.80_Switch-A2.txt
+....
+
+. To check which files are supported for a specific ONTAP version, switch, and platform, use the RcfFileGenerator.  If you can generate the RCF file for the configuration that you have or that you want to upgrade to, then it is supported.
+
+. To verify that the switch firmware is supported, refer to the following:
++
+* https://hwu.netapp.com/NetApp[Hardware Universe]
+* https://mysupport.netapp.com/NOW/products/interoperability[NetApp Interoperability]
+
+== Upgrade RCF files
+
 If you are installing new switch firmware, you must install the switch firmware before upgrading the RCF file.
+
+.About this task
 
 This procedure disrupts traffic on the switch where the RCF file is upgraded. Traffic will resume once the new RCF file is applied.
 
 .Steps
 . Verify the health of the configuration.
- .. Verify that the MetroCluster components are healthy:
+.. Verify that the MetroCluster components are healthy:
 +
-`*metrocluster check run*`
+`metrocluster check run`
 +
 ----
 cluster_A::*> metrocluster check run
@@ -29,7 +68,7 @@ cluster_A::*> metrocluster check run
 +
 The operation runs in the background.
 
- .. After the `metrocluster check run` operation completes, run `metrocluster check show` to view the results.
+.. After the `metrocluster check run` operation completes, run `metrocluster check show` to view the results.
 +
 After approximately five minutes, the following results are displayed:
 +
@@ -51,29 +90,30 @@ volumes             ok
 7 entries were displayed.
 ----
 
- .. To check the status of the running MetroCluster check operation, use the command:
- +
-`*metrocluster operation history show -job-id 38*`
- .. Verify that there are no health alerts:
- +
-`*system health alert show*`
+.. Check the status of the running MetroCluster check operation:
++
+`metrocluster operation history show -job-id 38`
+.. Verify that there are no health alerts:
++
+`system health alert show`
 . Prepare the IP switches for the application of the new RCF files.
 +
-Follow the steps in the section for your switch vendor from the _MetroCluster IP Installation and Configuration guide_.
+Follow the steps for your switch vendor:
 +
-https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
-
- ** _Resetting the Broadcom IP switch to factory defaults_
- ** _Resetting the Cisco IP switch to factory defaults_
-
-. Download and install the IP RCF file depending on your switch vendor.
+* link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
 +
-Follow the steps in the section for your switch vendor from the _MetroCluster IP Installation and Configuration guide_.
+* link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
+
+. Download and install the IP RCF file, depending on your switch vendor:
 +
-https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
+* link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom IP RCF files]
++
+* link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
 
- ** _Downloading and installing the Broadcom IP RCF files_
- ** _Downloading and installing the Cisco IP RCF files_
++
+Update the switches in the following order:
 
-
- .. Update the switches in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2.
+.. Switch_A_1
+.. Switch_B_1
+.. Switch_A_2
+.. Switch_B_2

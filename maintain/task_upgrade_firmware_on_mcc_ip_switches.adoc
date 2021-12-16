@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_upgrade_firmware_on_mcc_ip_switches.html
 sidebar: sidebar
-keywords: metrocluster, maintain, service, upgrade, firmware. ip, switches
+keywords: metrocluster, maintain, service, upgrade, firmware. ip, switches, cisco, broadcom, efos, nxos, nx-os, software, install
 summary: 'Upgrading firmware on MetroCluster IP switches.'
 ---
 = Upgrading firmware on MetroCluster IP switches
@@ -18,7 +18,10 @@ You must repeat this task on each of the switch in succession to ensure that all
 .Steps
 
 . Check the health of the configuration.
- .. Check that the MetroCluster is configured and in normal mode on each cluster: `*metrocluster show*`
+
+.. Check that the MetroCluster is configured and in normal mode on each cluster:
++
+`metrocluster show`
 +
 ----
 cluster_A::> metrocluster show
@@ -32,7 +35,9 @@ Remote: cluster_B         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
- .. Check that mirroring is enabled on each node: `*metrocluster node show*`
+.. Check that mirroring is enabled on each node:
++
+`metrocluster node show`
 +
 ----
 cluster_A::> metrocluster node show
@@ -46,7 +51,9 @@ Group Cluster Node           State          Mirroring Mode
 2 entries were displayed.
 ----
 
- .. Check that the MetroCluster components are healthy: `*metrocluster check run*`
+.. Check that the MetroCluster components are healthy:
++
+`metrocluster check run`
 +
 ----
 cluster_A::> metrocluster check run
@@ -65,14 +72,20 @@ Command completed. Use the "metrocluster check show -instance" command or sub-co
 To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
 ----
 
- .. Check that there are no health alerts: `*system health alert show*`
+.. Check that there are no health alerts:
++
+`system health alert show`
+
 . Install the software on the first switch.
 +
-Follow the steps for installing switch software in the relevant section in the _MetroCluster IP Installation and Configuration Guide_ depending on whether the switch type is Cisco or Broadcom:
-+ 
-link:../install-ip/task_switch_config_broadcom.html[MetroCluster IP Installation and Configuration Guide]
+Follow the steps for installing switch software in the relevant topic of the _MetroCluster IP Installation and Configuration_ information depending on whether the switch type is Broadcom or Cisco:
++
+* link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-switch-efos-software[Downloading and installing the Broadcom switch EFOS software]
++
+* link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-switch-nx-os-software[Downloading and installing the Cisco switch NX-OS software]
+// BURT 1376758, 15 DEC 2021
 
 . Repeat the previous step for each of the switches.
 // BURT 1380522
 
-. Repeat step 1 to check the health of the configuration.
+. Repeat Step 1 to check the health of the configuration.
