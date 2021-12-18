@@ -965,9 +965,31 @@ This task must be performed on all the new controllers.
 . Display the boot menu:
 +
 `boot_ontap menu`
-. If root encryption is used, issue the boot menu command for your key management configuration.
+. If root encryption is used, depending on the ONTAP version you are using, select the boot menu option or issue the boot menu command for your key management configuration.
 +
+* Beginning with ONTAP 9.8, select the boot menu option.
++
+|===
 
+h| If you are using... h| Select this boot menu option...
+
+a|
+Onboard key management
+a|
+Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+a|
+External key management
+
+a|
+Option `11`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+|===
++
+* In ONTAP 9.7 and earlier, issue the boot menu command.
++
 |===
 
 h| If you are using... h| Issue this command at the boot menu prompt...
@@ -981,7 +1003,7 @@ External key management
 a|
 `recover_external_keymanager`
 |===
-
++
 . If autoboot is enabled, interrupt autoboot by pressing control-C.
 . From the boot menu, run option (6).
 +
@@ -1004,9 +1026,33 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid _partner-sysID_`
 
-. If root encryption is used, issue the boot menu command again for your key management configuration.
+. If root encryption is used, depending on the ONTAP version you are using, select the boot menu option or issue the boot menu command again for your key management configuration.
++
+* Beginning with ONTAP 9.8, select the boot menu option.
 +
 
+|===
+
+h| If you are using... h| Select this boot menu option...
+
+a|
+Onboard key management
+a|
+Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+a|
+External key management
+a|
+Option `11`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+|===
++
+Depending on the key manager setting, perform the recovery procedure by selecting option `10` or option `11`, followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option `1` (normal boot).
+
+* In ONTAP 9.7 and earlier, issue the boot menu command.
++
 |===
 
 h| If you are using... h| Issue this command at the boot menu prompt...
@@ -1021,8 +1067,8 @@ a|
 `recover_external_keymanager`
 |===
 +
-You may need to issue the recover_xxxxxxxx_keymanager command and option 6 at the boot menu prompt multiple times until the nodes completely boot.
-
+You might need to issue the recover_xxxxxxxx_keymanager command at the boot menu prompt multiple times until the nodes completely boot.
++
 . Boot the nodes:
 +
 `boot_ontap`
@@ -1078,6 +1124,7 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 
 |===
 
+// BURT 1437371, 2021-11-29
 === Verifying LIF configuration
 
 
