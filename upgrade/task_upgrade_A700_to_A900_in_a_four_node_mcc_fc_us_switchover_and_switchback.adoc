@@ -22,7 +22,7 @@ You cannot upgrade other components in the configuration, such as storage shelve
 +
 NOTE: The AFF A900 system is only supported in ONTAP 9.10.1 or later.
 +
-https://hwu.netapp.com[NetApp Hardware Universe]
+https://hwu.netapp.com/[NetApp Hardware Universe^]
 
 
 * All controllers in the configuration should be upgraded during the same maintenance period.
@@ -44,7 +44,7 @@ a|
 |===
 * During the upgrade procedure, you are required to change the MetroCluster fabric, including the RCF and physical changes of cabling. You can perform the RCF and cabling changes before performing the controller upgrade.
 * This upgrade procedure does not require you do not change the storage, FC, and Ethernet connections between the original nodes and the new nodes.
-* During the upgrade procedure, you should not add or remove other cards from the AFF A700 system. For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe]
+* During the upgrade procedure, you should not add or remove other cards from the AFF A700 system. For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
 
 The following example names are used in this procedure:
 
@@ -131,7 +131,7 @@ You should issue this command on each cluster.
 . Check the MetroCluster cabling with the Config Advisor tool.
 .. Download and run Config Advisor.
 +
-https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor^]
 
 .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
@@ -161,7 +161,7 @@ NOTE: All the connections mentioned in the AFF A900 fabric MetroCluster installa
 `metrocluster check run`
 ..	See the MetroCluster run results when the run completes:
 `metrocluster check show`
-.	Update and re-cable the fabric B connections by repeating <<Update-RCF, Step 2>> to <<check-FC-VI, Step 4>> .
+.	Update and re-cable the fabric B connections by repeating <<Update-RCF, Step 2>> to <<check-FC-VI, Step 4>>.
 
 
 === Verify the health of the MetroCluster configuration after RCF file update and recabling
@@ -229,7 +229,7 @@ You should issue this command on each cluster.
 . Check the MetroCluster cabling with the Config Advisor tool.
 .. Download and run Config Advisor.
 +
-https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor^]
 
 .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
@@ -630,17 +630,17 @@ It is not possible to check the ONTAP version installed on the boot media of an 
 .Before you start
 
 •	Verify that you can access a HTTP server with the system.
-•	You need to download the necessary system files for your system and the correct version of ONTAP from the XREF NetApp Support Site.
+•	You need to download the necessary system files for your system and the correct version of ONTAP from the link:https://mysupport.netapp.com/site/[NetApp Support^] site.
 About this task
-You must netboot the new controllers if the version of ONTAP installed is not the same as the version installed on the original controllers.if they do not have the same version of ONTAP 9 installed on them that is installed on the original controllers. After you install each new controller, you boot the system from the ONTAP 9 image stored on the web server. You can then download the correct files to the boot media device for subsequent system boots.
+You must `netboot` the new controllers if the version of ONTAP installed is not the same as the version installed on the original controllers. After you install each new controller, you boot the system from the ONTAP 9 image stored on the web server. You can then download the correct files to the boot media device for subsequent system boots.
 
 .Steps
-.	Access link:https://mysupport.netapp.com/site/[NetApp Support] to download the files required to perform a system netboot used for performing the netboot of the system.
+.	Access link:https://mysupport.netapp.com/site/[NetApp Support^] to download the files required to perform a system netboot used for performing the netboot of the system.
 .	[[step2-download-software]]Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the `<ontap_version>_image.tgz` file on a web-accessible directory.
 .	Change to the web-accessible directory and verify that the files you need are available.
     Your directory listing should contain `<ontap_version>_image.tgz`.
-.	Configure the netboot connection by choosing one of the following actions.
-Note:	You should use the management port and IP as the netboot connection. Do not use a data LIF IP or a data outage might occur while the upgrade is being performed.
+.	Configure the `netboot` connection by choosing one of the following actions.
+Note:	You should use the management port and IP as the `netboot` connection. Do not use a data LIF IP or a data outage might occur while the upgrade is being performed.
 +
 |===
 h|If Dynamic Host Configuration Protocol (DHCP) is...	h|Then...
