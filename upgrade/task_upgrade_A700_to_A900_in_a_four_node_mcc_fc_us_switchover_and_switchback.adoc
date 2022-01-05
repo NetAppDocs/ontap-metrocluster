@@ -141,7 +141,7 @@ The AFF A900 fabric MetroCluster requires two four-port FC-VI adapters per node 
 
 .	From the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF file download page^], download the correct RCF file for a AFF A900 fabric MetroCluster and the switch model that is in use on the AFF A700 configuration.
 .	[[Update-RCF]]Update the RCF file on the fabric A switches, switch A1, and switch B1 by following the steps in link:disaster-recovery/task_cfg_switches_mcfc.html[Configuring the FC switches].
-.	Re-cable the existing FC-VI and storage connections on the fabric A switches (switch 1 and 3) as directed by the new RCF, refer to MetroCluster installation and configuration section for the AFF A900 cabling *[Is this just a link to the Fabric ICG?]*.
+.	Re-cable the existing FC-VI and storage connections on the fabric A switches (switch 1 and 3) as directed by the new RCF, refer to link:/install-fc/index.html[Fabric-attached installation and configuration] documentation for the AFF A900 cabling
 +
 NOTE: All the connections mentioned in the AFF A900 fabric MetroCluster installation and configuration documentation are not available at this time. Connect the first four ports only that are available on the AFF A700 MetroCluster FC nodes.
 
@@ -150,8 +150,6 @@ NOTE: All the connections mentioned in the AFF A900 fabric MetroCluster installa
 `metrocluster interconnect mirror show`
 +
 .. Verify that the local and remote site disks are listed in the `sysconfig` output.
-*[Do we need to include additional details on checking connections after RCF change+connection move? Also is an example output for this step a good idea?]*
-
 
 
 . You must verify that MetroCluster is in a healthy state after the RCF file update and re-cabling the fabric A connections.
@@ -451,7 +449,7 @@ All data LIFS including SAN and NAS will be admin up and operationally down sinc
 +
 For example, e0d is a physical port on old controllers and is also present on new controllers. e0d is not used as a cluster port or otherwise on the new controllers.
 +
-For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe]
+For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
 
 .. Modify all data LIFS to use the common port as the home port:
 +
@@ -879,7 +877,7 @@ a|
 +
 `disk show -a`
 +
-The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration. *[Rakesh to provide a new sys ID]*
+The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration.
 +
 ----
 *> disk show -a
@@ -1208,3 +1206,4 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
 . Use the steps in link:tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Add MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
+//BURT 1414896 /05/01/22
