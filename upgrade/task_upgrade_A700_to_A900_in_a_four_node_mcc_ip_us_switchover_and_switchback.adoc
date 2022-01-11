@@ -393,16 +393,16 @@ The operation can take several minutes to complete.
 +
 `metrocluster node show`
 +
-Automatic healing of aggregates after negotiated switchover is disabled during controller upgrade. Nodes at Site_A are halted and stopped at the `LOADER` prompt.
+Automatic healing of aggregates after negotiated switchover is disabled during controller upgrade. Nodes at Site_B are halted and stopped at the `LOADER` prompt.
 
 == Remove AFF A700 platform controller module and NVS
 .About this task
 If you are not already grounded, properly ground yourself.
 
 .Steps
-.	Gather the bootarg values from both nodes at Site_A: `printenv`
+.	Gather the bootarg values from both nodes at Site_B: `printenv`
 
-.	Power off the chassis at Site_A.
+.	Power off the chassis at Site_B.
 
 === Remove the AFF A700 controller module
 Use the following procedure to remove the AFF A700 controller module
@@ -446,13 +446,13 @@ image::../media/drw_a900_move-remove_NVRAM_module.png[remove module]
 Do not transfer any parts from the AFF A700 controller module and NVS to the AFF A900.
 
 == Install the AFF A900 NVS and controller modules
-You must install the AFF A900 NVS and controller module that you received in the upgrade kit on both nodes at Site_A. Do not move the coredump device from the AFF A700 NVS module to the AFF A900 NVS module.
+You must install the AFF A900 NVS and controller module that you received in the upgrade kit on both nodes at Site_B. Do not move the coredump device from the AFF A700 NVS module to the AFF A900 NVS module.
 
 .About this task
 If you are not already grounded, properly ground yourself.
 
 === Install the AFF A900 NVS
-Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at Site_A.
+Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at Site_B.
 
 .Steps
 .	Align the NVS with the edges of the chassis opening in slot 6.
@@ -500,10 +500,10 @@ set-defaults
 
 
 
-=== Netboot nodes at Site_A
+=== Netboot nodes at Site_B
 
 After swapping the AFF A900 controller module and NVS, you need to `netboot` the AFF A900 nodes and install the same ONTAP version and patch level that is running on the cluster. The term `netboot` means you are booting from an ONTAP image stored on a remote server. When preparing for `netboot`, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
-It is not possible to check the version of ONTAP installed on the boot media of an AFF A900 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 boot media must be the same as the ONTAP version running on the AFF A700 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a `neboot` followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
+It is not possible to check the version of ONTAP installed on the boot media of an AFF A900 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 boot media must be the same as the ONTAP version running on the AFF A700 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a `netboot` followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
 
 .Before you start
 * Verify that you can access a HTTP server with the system.
@@ -545,14 +545,14 @@ Manually configure the connection by using the following command at the boot env
 NOTE:	Other parameters might be necessary for your interface. Enter `help ifconfig` at the firmware prompt for details.
 |===
 
-.	Perform netboot on node1:
+.	Perform netboot on node_B_1:
 `netboot` `http://<web_server_ip/path_to_web_accessible_directory>/<ontap_version>_image.tgz`
 +
 The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` in <<step2-download-software, Step 2>>.
 +
 NOTE:	Do not interrupt the boot.
 
-.	Wait for the node1 now running on the AFF A900 controller module to boot and display the boot menu options as shown below:
+.	Wait for the node_B_1 now running on the AFF A900 controller module to boot and display the boot menu options as shown below:
 +
 ----
 Please choose one of the following:
@@ -591,6 +591,7 @@ Warning: do not run this option on a HA node that has been taken over.
 Are you sure you want to continue?:`
 ..	The node reboots to finish the `wipeconfig` and then stops at the boot menu.
 .	Select option `5` to go to maintenance mode from the boot menu. Answer `yes` to the prompts until the node stops at maintenance mode and the command prompt *>.
+. Repeat these steps to `netboot` node_B_2.
 
 
 
@@ -734,7 +735,7 @@ In this task, you will use the UUIDs and system IDs identified earlier in the up
 
 .Steps
 
-.	At the `LOADER>` prompt, set the following bootargs on the Site_B nodes::
+.	At the `LOADER>` prompt, set the following bootargs on the new nodes at Site_B:
 +
 `setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
 +
@@ -1024,7 +1025,7 @@ option 11 and follow the prompts to provide the required inputs to recover or re
 +
 You need to perform the recovery procedure by selecting option 10 or option 11 depending on the key manager setting and option 6 at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option 1 (normal boot).
 
-. Wait for the replaced nodes to boot up.
+. Wait for the new nodes, node_B_1 and node_B_2 to boot up.
 +
 If either node is in takeover mode, perform a giveback using the `storage failover giveback` command.
 
@@ -1114,7 +1115,7 @@ image::../media/mcc_upgrade_cluster_a_switchback.png[]
 
 .Steps
 
-. Issue the `metrocluster node show` command on site_B and check the output.
+. Issue the `metrocluster node show` command from site_B and check the output.
  .. Verify that the new nodes are represented correctly.
  .. Verify that the new nodes are in "Waiting for switchback state."
 . Perform the healing and switchback by running the required commands from any node in the active cluster (the cluster that is not undergoing upgrade).
@@ -1194,15 +1195,15 @@ This task can be performed on any node in the MetroCluster configuration.
 +
 `storage failover show`
 
-== Upgrade the nodes on cluster_A
+== Upgrade the nodes on Site_A
 
-You must repeat the upgrade tasks on cluster_A.
+You must repeat the upgrade tasks on Site_A.
 
 .Steps
 
-. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#preparing-for-the-upgrade[Prepare for the upgrade].
+. Repeat the steps to upgrade the nodes on Site_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#preparing-for-the-upgrade[Prepare for the upgrade].
 +
-As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
+As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from Site_A, you will switchover from Site_B.
 
 == Restore Tiebreaker or Mediator monitoring
 
