@@ -30,7 +30,7 @@ a|
 
 * All controllers in the configuration should be upgraded during the same maintenance period.
 +
-Operating the MetroCluster configuration with different controller types is not supported outside of this maintenance activity.
+Operating the MetroCluster configuration with an AFF A700 and an AFF A900 controller is not supported outside of this maintenance activity.
 
 
 * The IP switches must be running a supported firmware version.
@@ -53,7 +53,7 @@ Operating the MetroCluster configuration with different controller types is not 
    **** node_B_1-A900
    **** node_B_2-A900
 
-== Workflow for upgrading controllers in an MetroCluster IP configuration
+== Workflow for upgrading controllers in a MetroCluster IP configuration
 
 You can use the workflow diagram to help you plan the upgrade tasks.
 
@@ -96,7 +96,7 @@ For the correct RCF file version for your switch model, refer to the link:https:
 +
 The VLAN ID range is 101 to 4096 inclusive.
 
-The switches at Site_A will be upgraded when the controllers on Site_A are upgraded.
+The switches at Site_B will be upgraded when the controllers on Site_B are upgraded.
 
 .Steps
 
@@ -546,7 +546,7 @@ NOTE:	Other parameters might be necessary for your interface. Enter `help ifconf
 |===
 
 .	Perform netboot on node_B_1:
-`netboot` `http://<web_server_ip/path_to_web_accessible_directory>/<ontap_version>_image.tgz`
+`netboot` `http://<web_server_ip/path_to_web_accessible_directory>/netboot/kernel`
 +
 The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` in <<step2-download-software, Step 2>>.
 +
@@ -1203,7 +1203,7 @@ You must repeat the upgrade tasks on Site_A.
 
 . Repeat the steps to upgrade the nodes on Site_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#preparing-for-the-upgrade[Prepare for the upgrade].
 +
-As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from Site_A, you will switchover from Site_B.
+As you perform the tasks, all example references to the sites and nodes are reversed. For example, when the example is given to switchover from Site_A, you will switchover from Site_B.
 
 == Restore Tiebreaker or Mediator monitoring
 
