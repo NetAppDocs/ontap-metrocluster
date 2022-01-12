@@ -63,9 +63,11 @@ image::../media/workflow_ip_upgrade.png[]
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
-=== Update the MetroCluster switch RCF files before upgrading controllers
+=== Clear slot 7 on the  AFF A700 controller
 
 The MetroCluster configuration on an AFF A900 uses one of each of the ports on the DR cards located in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700, you must move them to other slots for all the nodes of the cluster.
+
+=== Update the MetroCluster switch RCF files before upgrading controllers
 
 The MetroCluster IP configuration on an AFF A700 does not use VLANs. The MetroCluster configuration on an AFF A900 does use VLANs. As a result, you need to change the RCF file when upgrading from an AFF A700 to an AFF A900.
 
@@ -974,11 +976,11 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-option 10 and follow the prompts to provide the required inputs to recover or restore the key-manager configuration
+Option 10 and follow the prompts to provide the required inputs to recover or restore the key-manager configuration
 a|
 External key management
 a|
-option 11 and follow the prompts to provide the required inputs to recover or restore the key-manager configuration
+Option 11 and follow the prompts to provide the required inputs to recover or restore the key-manager configuration
 |===
 
 . From the boot menu, select `(6) Update flash from backup config`.
@@ -1016,14 +1018,14 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-option 10 and follow the prompts to provide the required inputs to recover or restore the key-manager configuration
+Option 10 and follow the prompts to provide the required inputs to recover or restore the key-manager configuration
 a|
 External key management
 a|
-option 11 and follow the prompts to provide the required inputs to recover or restore the key-manager configuration
+Option 11 and follow the prompts to provide the required inputs to recover or restore the key-manager configuration
 |===
 +
-You need to perform the recovery procedure by selecting option 10 or option 11 depending on the key manager setting and option 6 at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option 1 (normal boot).
+You need to perform the recovery procedure by selecting Option 10 or option 11 depending on the key manager setting and Option 6 at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option 1 (normal boot).
 
 . Wait for the new nodes, node_B_1 and node_B_2 to boot up.
 +
