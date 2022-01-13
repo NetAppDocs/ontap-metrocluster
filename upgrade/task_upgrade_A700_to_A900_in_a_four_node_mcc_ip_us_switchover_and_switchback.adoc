@@ -38,14 +38,14 @@ Operating the MetroCluster configuration with an AFF A700 and an AFF A900 contro
 
 * You will reuse the IP addresses, netmasks, and gateways of the original platforms on the new platforms.
 * The following example names are used in this procedure:
- ** site_A
+ ** Site_A
   *** Before upgrade:
    **** node_A_1-A700
    **** node_A_2-A700
   *** After upgrade:
    **** node_A_1-A900
    **** node_A_2-A900
- ** site_B
+ ** Site_B
   *** Before upgrade:
    **** node_B_1-A700
    **** node_B_2-A700
@@ -98,7 +98,7 @@ For the correct RCF file version for your switch model, refer to the link:https:
 +
 The VLAN ID range is 101 to 4096 inclusive.
 
-The switches at Site_B will be upgraded when the controllers on Site_B are upgraded.
+The switches at site_B will be upgraded when the controllers on site_B are upgraded.
 
 .Steps
 
@@ -209,9 +209,9 @@ Before upgrading, you must gather information for each of the nodes, and, if nec
   ** `storage disk show`
   ** `metrocluster configuration-settings interface show`
 
-. Gather the UUIDs for the Site_B (the site whose platforms are currently being upgraded): `metrocluster node show -fields node-cluster-uuid, node-uuid`
+. Gather the UUIDs for the site_B (the site whose platforms are currently being upgraded): `metrocluster node show -fields node-cluster-uuid, node-uuid`
 +
-These values must be configured accurately on the new Site_B controller modules to ensure a successful upgrade. Copy the values to a file so that you can copy them into the proper commands later in the upgrade process.
+These values must be configured accurately on the new site_B controller modules to ensure a successful upgrade. Copy the values to a file so that you can copy them into the proper commands later in the upgrade process.
  +
 The following example shows the command output with the UUIDs:
 +
@@ -363,21 +363,21 @@ The `maintenance-window-in-hours` parameter specifies the length of the maintena
 
 == Switch over the MetroCluster configuration
 
-You must switch over the configuration to Site_A so that the platforms on Site_B can be upgraded.
+You must switch over the configuration to site_A so that the platforms on site_B can be upgraded.
 
 .About this task
 
 This task must be performed on site_A.
 
-After completing this task, cluster_A is active and serving data for both sites. cluster_B is inactive, and ready to begin the upgrade process.
+After completing this task, site_A is active and serving data for both sites. site_B is inactive, and ready to begin the upgrade process.
 
 image::../media/mcc_upgrade_cluster_a_in_switchover.png[]
 
 .Steps
 
-. Switch over the MetroCluster configuration to Site_A so that Site_B's nodes can be upgraded:
+. Switch over the MetroCluster configuration to site_A so that site_B's nodes can be upgraded:
 
-.. Issue the following command on cluster_A:
+.. Issue the following command on site_A:
 +
 `metrocluster switchover -controller-replacement true`
 +
@@ -395,16 +395,16 @@ The operation can take several minutes to complete.
 +
 `metrocluster node show`
 +
-Automatic healing of aggregates after negotiated switchover is disabled during controller upgrade. Nodes at Site_B are halted and stopped at the `LOADER` prompt.
+Automatic healing of aggregates after negotiated switchover is disabled during controller upgrade. Nodes at site_B are halted and stopped at the `LOADER` prompt.
 
 == Remove AFF A700 platform controller module and NVS
 .About this task
 If you are not already grounded, properly ground yourself.
 
 .Steps
-.	Gather the bootarg values from both nodes at Site_B: `printenv`
+.	Gather the bootarg values from both nodes at site_B: `printenv`
 
-.	Power off the chassis at Site_B.
+.	Power off the chassis at site_B.
 
 === Remove the AFF A700 controller module
 Use the following procedure to remove the AFF A700 controller module
@@ -448,13 +448,13 @@ image::../media/drw_a900_move-remove_NVRAM_module.png[remove module]
 Do not transfer any parts from the AFF A700 controller module and NVS to the AFF A900.
 
 == Install the AFF A900 NVS and controller modules
-You must install the AFF A900 NVS and controller module that you received in the upgrade kit on both nodes at Site_B. Do not move the coredump device from the AFF A700 NVS module to the AFF A900 NVS module.
+You must install the AFF A900 NVS and controller module that you received in the upgrade kit on both nodes at site_B. Do not move the coredump device from the AFF A700 NVS module to the AFF A900 NVS module.
 
 .About this task
 If you are not already grounded, properly ground yourself.
 
 === Install the AFF A900 NVS
-Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at Site_B.
+Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at site_B.
 
 .Steps
 .	Align the NVS with the edges of the chassis opening in slot 6.
@@ -502,10 +502,10 @@ set-defaults
 
 
 
-=== Netboot nodes at Site_B
+=== Netboot nodes at site_B
 
-After swapping the AFF A900 controller module and NVS, you need to `netboot` the AFF A900 nodes and install the same ONTAP version and patch level that is running on the cluster. The term `netboot` means you are booting from an ONTAP image stored on a remote server. When preparing for `netboot`, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
-It is not possible to check the version of ONTAP installed on the boot media of an AFF A900 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 boot media must be the same as the ONTAP version running on the AFF A700 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a `netboot` followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
+After swapping the AFF A900 controller module and NVS, you need to netboot the AFF A900 nodes and install the same ONTAP version and patch level that is running on the cluster. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
+It is not possible to check the version of ONTAP installed on the boot media of an AFF A900 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 boot media must be the same as the ONTAP version running on the AFF A700 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a netboot followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
 
 .Before you start
 * Verify that you can access a HTTP server with the system.
@@ -593,7 +593,7 @@ Warning: do not run this option on a HA node that has been taken over.
 Are you sure you want to continue?:`
 ..	The node reboots to finish the `wipeconfig` and then stops at the boot menu.
 .	Select option `5` to go to maintenance mode from the boot menu. Answer `yes` to the prompts until the node stops at maintenance mode and the command prompt *>.
-. Repeat these steps to `netboot` node_B_2.
+. Repeat these steps to netboot node_B_2.
 
 
 
@@ -699,9 +699,9 @@ You must update the switches to a configuration that supports the new platform m
 
 .About this task
 
-You perform this task at the site containing the controllers that are currently being upgraded. In the examples shown in this procedure we are upgrading site_B first.
+You perform this task at the site containing the controllers that are currently being upgraded. In the examples shown in this procedure we are upgrading Site_B first.
 
-The switches at site_A will be upgraded when the controllers on site_A are upgraded.
+The switches at Site_A will be upgraded when the controllers on Site_A are upgraded.
 
 .Steps
 
@@ -1083,7 +1083,7 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 
 .About this task
 
-* This task is performed on site_B.
+* This task is performed on Site_B.
 * See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#mapping-ports-from-the-old-nodes-to-the-new-nodes[Mapping ports from the old nodes to the new nodes].
 
 .Steps
@@ -1117,7 +1117,7 @@ image::../media/mcc_upgrade_cluster_a_switchback.png[]
 
 .Steps
 
-. Issue the `metrocluster node show` command from site_B and check the output.
+. Issue the `metrocluster node show` command from Site_B and check the output.
  .. Verify that the new nodes are represented correctly.
  .. Verify that the new nodes are in "Waiting for switchback state."
 . Perform the healing and switchback by running the required commands from any node in the active cluster (the cluster that is not undergoing upgrade).
