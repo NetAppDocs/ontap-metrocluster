@@ -63,7 +63,7 @@ image::../media/workflow_ip_upgrade.png[]
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
-=== Clear slot 7 on the  AFF A700 controller
+=== Clear slot 7 on the AFF A700 controller
 
 The MetroCluster configuration on an AFF A900 uses one of each of the ports on the DR cards located in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700, you must move them to other slots for all the nodes of the cluster.
 
@@ -89,7 +89,7 @@ a|
 
 |===
 
-* If the switch configuration is not configured with the minimum supported RCF file version, you must update the RCF file.
+* If the switch is not configured with the minimum supported RCF file version, you must update the RCF file.
 For the correct RCF file version for your switch model, refer to the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator Tool^].
 
 
@@ -98,7 +98,7 @@ For the correct RCF file version for your switch model, refer to the link:https:
 +
 The VLAN ID range is 101 to 4096 inclusive.
 
-The switches at site_B will be upgraded when the controllers on site_B are upgraded.
+The switches at site_B should be upgraded when the controllers on site_B are upgraded.
 
 .Steps
 
@@ -243,11 +243,11 @@ cluster_B
 a|
 07958819-9ac6-11e7-9b42-00a098c9e55d
 a|
-node_B_1
+node_B_1-A700
 a|
 f37b240b-9ac1-11e7-9b42-00a098c9e55d
 a|
-node_B_2
+node_B_2-A700
 a|
 bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
 a|
@@ -255,11 +255,11 @@ cluster_A
 a|
 ee7db9d5-9a82-11e7-b68b-00a098908039
 a|
-node_A_1
+node_A_1-A700
 a|
 f03cb63c-9a7e-11e7-b68b-00a098908039
 a|
-node_A_2
+node_A_2-A700
 a|
 aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 |===
@@ -299,10 +299,10 @@ The following output shows the reassigned drives.
 
 dr-group-id cluster     node     node-systemid ha-partner-systemid dr-partner-systemid dr-auxiliary-systemid
 ----------- ----------- -------- ------------- ------------------- ------------------- ---------------------
-1           cluster_A node_A_1   537403324     537403323           537403321           537403322
-1           cluster_A node_A_2   537403323     537403324           537403322          537403321
-1           cluster_B node_B_1   537403322     537403321           537403323          537403324
-1           cluster_B node_B_2   537403321     537403322           537403324          537403323
+1           cluster_A node_A_1-A700   537403324     537403323           537403321           537403322
+1           cluster_A node_A_2-A700   537403323     537403324           537403322          537403321
+1           cluster_B node_B_1-A700   537403322     537403321           537403323          537403324
+1           cluster_B node_B_2-A700   537403321     537403322           537403324          537403323
 4 entries were displayed.
 ----
 
@@ -517,7 +517,7 @@ You must netboot the new controllers, if the version of ONTAP installed is not t
 
 .Steps
 . Access the https://mysupport.netapp.com/site/[NetApp Support Site^] to download the files used for performing the netboot of the system.
-. [[step2-download-software]]Download the appropriate ONTAP software from the software download section of the NetApp Support Site_And store the `ontap-version_image.tgz` file on a web-accessible directory.
+. [[step2-download-software]]Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the `ontap-version_image.tgz` file on a web-accessible directory.
 . Change to the web-accessible directory and verify that the files you need are available.
 .	Your directory listing should contain <ontap_version>_image.tgz.
 .	Configure the netboot connection by choosing one of the following actions.
@@ -699,9 +699,9 @@ You must update the switches to a configuration that supports the new platform m
 
 .About this task
 
-You perform this task at the site containing the controllers that are currently being upgraded. In the examples shown in this procedure we are upgrading Site_B first.
+You perform this task at the site containing the controllers that are currently being upgraded. In the examples shown in this procedure we are upgrading site_B first.
 
-The switches at Site_A will be upgraded when the controllers on Site_A are upgraded.
+The switches at site_A will be upgraded when the controllers on site_A are upgraded.
 
 .Steps
 
@@ -737,20 +737,20 @@ In this task, you will use the UUIDs and system IDs identified earlier in the up
 
 .Steps
 
-.	At the `LOADER>` prompt, set the following bootargs on the new nodes at Site_B:
+.	At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
 +
 `setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
 +
 `setenv bootarg.mcc.port_b_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
 +
-The following commands set the values for node_B_1-new using VLAN 120 for the first network and VLAN 130 for the second network:
+The following example sets the values for node_B_1-A900 using VLAN 120 for the first network and VLAN 130 for the second network:
 +
 ----
 setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
 setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
 ----
 +
-The following commands set the values for node_B_2-new using VLAN 120 for the first network and VLAN 130 for the second network:
+The following example sets the values for node_B_2-A900 using VLAN 120 for the first network and VLAN 130 for the second network:
 +
 ----
 setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13,120
@@ -772,9 +772,9 @@ setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,
 `setenv bootarg.mcc_iscsi.node_uuid _local-node-UUID_`
 
 
-.. Set the UUIDs on node_B_1-new.
+.. Set the UUIDs on node_B_1-A900.
 +
-The following example shows the commands for setting the UUIDs on node_B_1-new:
+The following example shows the commands for setting the UUIDs on node_B_1-A900:
 +
 ----
 setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
@@ -784,9 +784,9 @@ setenv bootarg.mcc.aux_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
 setenv bootarg.mcc_iscsi.node_uuid f03cb63c-9a7e-11e7-b68b-00a098908039
 ----
 
-.. Set the UUIDs on node_B_2-new:
+.. Set the UUIDs on node_B_2-A900:
 +
-The following example shows the commands for setting the UUIDs on node_B_2-new:
+The following example shows the commands for setting the UUIDs on node_B_2-A900:
 +
 ----
 setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
@@ -808,18 +808,18 @@ setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 +
 NOTE: The `setenv bootarg.mcc.local_config_id` variable must be set to the sys-id of the *original* controller module, node_B_1-old.
 
-.. Set the variables on node_B_1-new.
+.. Set the variables on node_B_1-A900.
 +
-The following example shows the commands for setting the values on node_B_1-new:
+The following example shows the commands for setting the values on node_B_1-A900:
 +
 ----
 setenv bootarg.mcc.local_config_id 537403322
 setenv bootarg.mcc.dr_partner 537403324
 ----
 
-.. Set the variables on node_B_2-new.
+.. Set the variables on node_B_2-A900.
 +
-The following example shows the commands for setting the values on node_B_2-new:
+The following example shows the commands for setting the values on node_B_2-A900:
 +
 ----
 setenv bootarg.mcc.local_config_id 537403321
@@ -851,7 +851,7 @@ These steps are performed in Maintenance mode.
 +
 `boot_ontap maint`
 
-. Display the disks on node_B_1-new from the Maintenance mode prompt:
+. Display the disks on node_B_1-A900 from the Maintenance mode prompt:
 +
 `disk show -a`
 +
@@ -862,7 +862,7 @@ The command output shows the system ID of the new controller module (1574774970)
 Local System ID: 1574774970
 DISK                  OWNER                 POOL   SERIAL NUMBER   HOME                  DR HOME
 ------------          ---------             -----  -------------   -------------         -------------
-prod3-rk18:9.126L44   node_B_1-A700(537403322)  Pool1  PZHYN0MD     node_B_1-A700(537403322)  node_B_1-task_upgrade_A700_to_A900_in_a_four_node_mcc_ip_us_switchover_and_switchback(537403322)
+prod3-rk18:9.126L44   node_B_1-A700(537403322)  Pool1  PZHYN0MD     node_B_1-A700(537403322)  node_B_1-A700(537403322)
 prod4-rk18:9.126L49  node_B_1-A700(537403322)  Pool1  PPG3J5HA     node_B_1-A700(537403322)  node_B_1-700(537403322)
 prod4-rk18:8.126L21   node_B_1-A700(537403322)  Pool1  PZHTDSZD     node_B_1-A700(537403322)  node_B_1-A700(537403322)
 prod2-rk18:8.126L2    node_B_1-A700(537403322)  Pool0  S0M1J2CF     node_B_1-(537403322)  node_B_1-A700(537403322)
@@ -996,9 +996,13 @@ Successfully restored env file from boot media...
 Rebooting to load the restored env file...
 ----
 
-. On LOADER, double-check the bootarg values and update the values as needed.
+. Interrupt the AUTOBOOT to stop the controllers at LOADER.
+
 +
-Use the steps in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Setting the MetroCluster IP bootarg variables].
+NOTE: On each node, check the bootargs set in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Setting the MetroCluster IP bootarg variables] and correct any incorrect values. Only move to the next step after you have checked the bootarg values.
+
+
++
 
 . Double-check that the partner-sysid is the correct:
 +
@@ -1027,7 +1031,7 @@ Option 11 and follow the prompts to provide the required inputs to recover or re
 +
 You need to perform the recovery procedure by selecting Option 10 or option 11 depending on the key manager setting and Option 6 at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option 1 (normal boot).
 
-. Wait for the new nodes, node_B_1 and node_B_2 to boot up.
+. Wait for the new nodes, node_B_1-A900 and node_B_2-A900 to boot up.
 +
 If either node is in takeover mode, perform a giveback using the `storage failover giveback` command.
 
@@ -1083,7 +1087,7 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 
 .About this task
 
-* This task is performed on Site_B.
+* This task is performed on site_B.
 * See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#mapping-ports-from-the-old-nodes-to-the-new-nodes[Mapping ports from the old nodes to the new nodes].
 
 .Steps
@@ -1117,7 +1121,7 @@ image::../media/mcc_upgrade_cluster_a_switchback.png[]
 
 .Steps
 
-. Issue the `metrocluster node show` command from Site_B and check the output.
+. Issue the `metrocluster node show` command from site_B and check the output.
  .. Verify that the new nodes are represented correctly.
  .. Verify that the new nodes are in "Waiting for switchback state."
 . Perform the healing and switchback by running the required commands from any node in the active cluster (the cluster that is not undergoing upgrade).
@@ -1197,15 +1201,15 @@ This task can be performed on any node in the MetroCluster configuration.
 +
 `storage failover show`
 
-== Upgrade the nodes on Site_A
+== Upgrade the nodes on site_A
 
-You must repeat the upgrade tasks on Site_A.
+You must repeat the upgrade tasks on site_A.
 
 .Steps
 
-. Repeat the steps to upgrade the nodes on Site_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#preparing-for-the-upgrade[Prepare for the upgrade].
+. Repeat the steps to upgrade the nodes on site_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#preparing-for-the-upgrade[Prepare for the upgrade].
 +
-As you perform the tasks, all example references to the sites and nodes are reversed. For example, when the example is given to switchover from Site_A, you will switchover from Site_B.
+As you perform the tasks, all example references to the sites and nodes are reversed. For example, when the example is given to switchover from site_A, you will switchover from site_B.
 
 == Restore Tiebreaker or Mediator monitoring
 
