@@ -66,6 +66,9 @@ The following example names are used in this procedure:
 == Prepare for the upgrade
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, change the RCF files and cabling to match to new port connectivity topology required for the AFF A900 fabric MetroCluster configuration, and perform other miscellaneous tasks.
 
+== Clear slot 7 on the AFF A700 controller
+The MetroCluster configuration on an AFF A900 requires 8 FC-VI ports across FC-VI cards in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700, you must move them to other slots for all the nodes of the cluster.
+
 === Verify the health of the MetroCluster configuration
 Before you update the RCF files and cabling for the AFF A900 fabric MetroCluster configuration, you must verify the health and connectivity of the configuration.
 
@@ -137,32 +140,32 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 
 === Update the fabric switch RCF files
-The AFF A900 fabric MetroCluster requires two four-port FC-VI adapters per node compared to a single four-port FC-VI adapter required by an AFF A700. Before you start the controller upgrade to the AFF A900 controller, you must modify the AFF A700 RCF files and cabling to support the AFF A900 connection topology.
+The AFF A900 fabric MetroCluster requires two four-port FC-VI adapters per node compared to a single four-port FC-VI adapter required by an AFF A700. Before you start the controller upgrade to the AFF A900 controller, you must modify the fabric switch RCF files to support the AFF A900 connection topology.
 
 .	From the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF file download page^], download the correct RCF file for a AFF A900 fabric MetroCluster and the switch model that is in use on the AFF A700 configuration.
-.	[[Update-RCF]]Update the RCF file on the fabric A switches, switch A1, and switch B1 by following the steps in link:disaster-recovery/task_cfg_switches_mcfc.html[Configuring the FC switches].
-.	Re-cable the existing FC-VI and storage connections on the fabric A switches (switch 1 and 3) as directed by the new RCF, refer to link:../install-fc/index.html[Fabric-attached installation and configuration] documentation for AFF A900 cabling information.
-+
-NOTE: All the connections mentioned in the AFF A900 fabric MetroCluster installation and configuration documentation are not available at this time. Connect the first four ports only that are available on the AFF A700 MetroCluster FC nodes.
+.	[[Update-RCF]]Update the RCF file on the fabric A switches, switch A1, and switch B1 by following the steps in link:../disaster-recovery/task_cfg_switches_mcfc.html[Configuring the FC switches].
 
-.	[[check-FC-VI]]After re-cabling the fabric A connections as directed by the new RCF, all storage and FC-VI connections should come online. Check the FC-VI connections:
++
+NOTE: The RCF file update to support the AFF A900 fabric MetroCluster configuration does not affect the port and connections used for the AFF A700 fabric MetroCluster configuration.
+
+.	After updating the RCF files on the fabric A switches (switch1 and switch3), all storage and FC-VI connections should come online. Check the FC-VI connections:
 +
 `metrocluster interconnect mirror show`
 +
 .. Verify that the local and remote site disks are listed in the `sysconfig` output.
 
 
-. You must verify that MetroCluster is in a healthy state after the RCF file update and re-cabling the fabric A connections.
+. [[verify-healthy]]You must verify that MetroCluster is in a healthy state after the RCF file update for fabric A switches.
 ..	Check metro cluster connections:
 `metrocluster interconnect mirror show`
 ..	Run metrocluster check:
 `metrocluster check run`
 ..	See the MetroCluster run results when the run completes:
 `metrocluster check show`
-.	Update and re-cable the fabric B connections by repeating <<Update-RCF, Step 2>> to <<check-FC-VI, Step 4>>.
+.	Update the fabric B switches (switches 2 and 4) by repeating <<Update-RCF, Step 2>> to <<verify-healthy, Step 5>>.
 
 
-=== Verify the health of the MetroCluster configuration after RCF file update and recabling
+=== Verify the health of the MetroCluster configuration after the RCF file update
 You must verify the health and connectivity of the MetroCluster configuration before performing the upgrade.
 
 .Steps
@@ -422,85 +425,7 @@ cluster_A::> metrocluster operation show
      Errors: -
 ----
 
-== Prepare the network configuration of the old controllers
 
-To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
-
-.About this task
-
-* This task must be performed on each of the old nodes.
-* You will use the information gathered in link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Map ports from the old nodes to the new nodes].
-
-.Steps
-
-. Boot the old nodes and then log in to the nodes:
-+
-`boot_ontap`
-
-. Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
-
-.. Display the LIFs:
-+
-`network interface show`
-+
-All data LIFS including SAN and NAS will be admin up and operationally down since those are up at switchover site (cluster_A).
-
-.. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
-+
-For example, e0d is a physical port on old controllers and is also present on new controllers. e0d is not used as a cluster port or otherwise on the new controllers.
-+
-For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
-
-.. Modify all data LIFS to use the common port as the home port:
-+
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
-+
-In the following example, this is "e0d".
-+
-For example:
-+
-----
-network interface modify -vserver vs0 -lif datalif1 -home-port e0d
-----
-. Modify broadcast domains to remove vlan and physical ports that need to be deleted:
-+
-`broadcast-domain remove-ports -broadcast-domain _broadcast-domain-name_ -ports _node-name:port-id_`
-+
-Repeat this step for all VLAN and physical ports.
-
-. Remove any VLAN ports using cluster ports as member ports and ifgrps using cluster ports as member ports.
-.. Delete VLAN ports:
-+
-`network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
-+
-For example:
-+
-----
-network port vlan delete -node node1 -vlan-name e1c-80
-----
-
-.. Remove physical ports from the interface groups:
-+
-`network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
-+
-For example:
-+
-----
-network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
-----
-
-.. Remove VLAN and interface group ports from broadcast domain::
-+
-`network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
-.. Modify interface group ports to use other physical ports as member as needed.:
-+
-`ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
-
-. Halt the nodes:
-+
-`halt -inhibit-takeover true -node _node-name_`
-+
-This step must be performed on both nodes.
 
 == Remove the AFF A700 controller module and NVS at site B
 
@@ -877,7 +802,7 @@ a|
 +
 `disk show -a`
 +
-The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration.
+The example output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration.
 +
 ----
 *> disk show -a
@@ -889,7 +814,7 @@ Local System ID: 1574774970
 rr18:9.126L44 node_B_1-A700(4068741254)   Pool1  PZHYN0MD         node_B_1-A700(4068741254)  node_B_1-A700(4068741254)
 rr18:9.126L49 node_B_1-A700(4068741254)   Pool1  PPG3J5HA         node_B_1-A700(4068741254)  node_B_1-A700(4068741254)
 rr18:8.126L21 node_B_1-A700(4068741254)   Pool1  PZHTDSZD         node_B_1-A700(4068741254)  node_B_1-A700(4068741254)
-rr18:8.126L2  node_B_1-A700(4068741254)   Pool0  S0M1J2CF         node_B_1-old(4068741254)  node_B_1-A700(4068741254)
+rr18:8.126L2  node_B_1-A700(4068741254)   Pool0  S0M1J2CF         node_B_1-A700(4068741254)  node_B_1-A700(4068741254)
 rr18:8.126L3  node_B_1-A700(4068741254)   Pool0  S0M0CQM5         node_B_1-A700(4068741254)  node_B_1-A700(4068741254)
 rr18:9.126L27 node_B_1-A700(4068741254)   Pool0  S0M1PSDW         node_B_1-A700(4068741254)  node_B_1-A700(4068741254)
 ...
@@ -942,7 +867,7 @@ aggr0_node_b_1-root    online      raid_dp, aggr    root, nosnap=on,
                            64-bit
 ----
 
-. Repeat the above steps on the partner node (node_B_2-new).
+. Repeat the above steps on the partner node (node_B_2-A900).
 
 === Boot up the new controllers
 
