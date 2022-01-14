@@ -288,7 +288,7 @@ For example:
 network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 ----
 
-.. Remove VLAN and interface group ports from broadcast domain::
+.. Remove VLAN and interface group ports from broadcast domain:
 +
 `network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
 .. Modify interface group ports to use other physical ports as member as needed.:
@@ -550,10 +550,14 @@ a|
 Onboard key management
 a|
 Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
 Option `11`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 
 . If autoboot is enabled, interrupt autoboot by pressing control-C.
@@ -588,14 +592,18 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-`recover_onboard_keymanager`
+Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
-`recover_external_keymanager`
+Option `11`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 +
-You need to perform the recovery procedure by selecting option `10` or option `11` depending on the key manager setting and option `6` at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option `1` (normal boot).
+Depending on the key manager setting, perform the recovery procedure by selecting option `10` or option `11`, followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option `1` (normal boot).
 
 . Boot the nodes:
 +
