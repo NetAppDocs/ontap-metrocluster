@@ -1,7 +1,7 @@
 ---
 permalink: install-ip/concept_considerations_mc_compliant_switches.html
 sidebar: sidebar
-keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements
+keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant
 summary: Beginning with ONTAP 9.7, MetroCluster IP configurations can support switches that are not NetApp-validated provided that they are compliant with NetApp specifications.
 ---
 = Considerations for using MetroCluster-compliant switches
@@ -21,6 +21,8 @@ Connecting local cluster connections to a MetroCluster-compliant switch is not s
 
 * The MetroCluster IP interface can be connected to any switch port that can be configured to meet the requirements.
 * The speed of the switch ports must be 25 Gbps for FAS8200 and AFF A300 platforms, and at least 40 Gbps for all other platforms (40 Gbps or 100 Gbps).
+* Four IP switches are required, two for each switch fabric.
+//ontap-metrocluster/issues/82 2021.11.21
 * The ISLs must be 10 Gbps or higher and must be sized appropriately for the load on the MetroCluster configuration.
 * The MetroCluster configuration must be connected to two networks. Connecting both the MetroCluster interfaces to the same network or switch is not supported. Each MetroCluster node must be connected to two network switches.
 * The network must meet the following requirements:
