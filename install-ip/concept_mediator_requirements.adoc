@@ -9,7 +9,15 @@ summary: Starting with ONTAP 9.7, the ONTAP Mediator service can assist the Metr
 :imagesdir: ../media/
 
 [.lead]
-Your environment must meet the following requirements. You may need to update your Linux version.
+Starting with ONTAP 9.7, the ONTAP Mediator service can assist the MetroCluster IP configuration in performing an automatic unplanned switchover by providing a physically separate repository for status information. Your environment must meet the following requirements. You may need to update your Linux version.
+
+[NOTE]
+====
+* The ONTAP Mediator service and MetroCluster Tiebreaker software should not both be used with the same MetroCluster configuration.
+* The ONTAP Mediator must be installed on a LINUX host at a separate location from the MetroCluster sites.
+* The ONTAP Mediator service can support up to five MetroCluster configurations simultaneously.
+* Automatic unplanned switchover is supported in ONTAP 9.7 and later.
+====
 
 == Network requirements for using Mediator in a MetroCluster configuration
 
@@ -123,7 +131,7 @@ link:task_uninstall_mediator.html[Installing or upgrading the ONTAP Mediator ser
 
 . Add the Mediator service to the ONTAP configuration:
 +
-`metrocluster configuration-settings add -addressmediator-1.1-ip-address`
+`metrocluster configuration-settings add -mediator-address-1.1-ip-address`
 
 |===
 

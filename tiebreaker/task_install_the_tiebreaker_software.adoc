@@ -1,7 +1,7 @@
 ---
 permalink: tiebreaker/task_install_the_tiebreaker_software.html
 sidebar: sidebar
-keywords: install, tiebreaker, software, monitor, capabilities, capability, cluster, storage, environment, snmp, notification, event, node, connectivity, issue, site, disaster, system, install, upgrade, upgrading, software, dependencies, dependency, package, ntp, requirements, requirements for tiebreaker, tiebreaker requirements
+keywords: install, tiebreaker, software, monitor, capabilities, capability, cluster, storage, environment, snmp, notification, event, node, connectivity, issue, site, disaster, system, install, upgrade, upgrading, software, dependencies, dependency, package, ntp, requirements, requirements for tiebreaker, tiebreaker requirements, mysql, mariadb, autostart, database
 summary: The Tiebreaker software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters.
 ---
 = Installing the Tiebreaker software
@@ -55,6 +55,7 @@ You must install a MySQL or MariaDB server depending on the Linux operating syst
 . Install MySQL or MariaDB server:
 +
 
+[cols="30,70"]
 |===
 
 h| If the Linux host is h| Then...
@@ -63,19 +64,18 @@ a|
 Red Hat Enterprise Linux 7/CentOS 7
 a|
 
- .. Install MySQL
-+
+Install MySQL
+
 <<install-mysql-redhat, Installing MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7>>
 
 a|
 Red Hat Enterprise Linux 8
 a|
 
-.. Install MariaDB
-+
+Install MariaDB
+
 <<install-mariadb, Installing MariaDB server on Red Hat Enterprise Linux 8>>
 
-+
 |===
 
 [[install-java-1-8]]
@@ -104,15 +104,15 @@ Loading mirror speeds from cached hostfile
 ... shortened....
 Dependencies Resolved
 
-===============================================================================================
-Package               Arch   Version                     Repository                     Size
-===============================================================================================
+=======================================================================
+Package               Arch   Version                 Repository    Size
+=======================================================================
 Installing:
- java-1.8.0-openjdk  x86_64  1:1.8.0.144-0.b01.el7_4      updates                      238 k
+ java-1.8.0-openjdk  x86_64  1:1.8.0.144-0.b01.el7_4 updates      238 k
  ..
  ..
 Transaction Summary
-================================================================================================
+=======================================================================
 Install  1 Package  (+ 4 Dependent packages)
 
 Total download size: 34 M
@@ -195,7 +195,7 @@ Complete!
 mysql-connectors-community           MySQL Connectors Community            21
 mysql-tools-community                MySQL Tools Community                 35
 mysql56-community                    MySQL 5.6 Community Server           231
-----
+....
 
 . Install the MySQL Community server:
 +
@@ -213,39 +213,40 @@ Resolving Dependencies
 ---> Package mysql-community-libs-compat.x86_64 0:5.6.29-2.el6 will be obsoleting
 --> Finished Dependency Resolution
 Dependencies Resolved
-==================================================================================================
-Package                                     Arch         Version        Repository         Size
-==================================================================================================
+==============================================================================
+Package                          Arch   Version       Repository          Size
+==============================================================================
 Installing:
- mysql-community-client                      x86_64      5.6.29-2.el6   mysql56-community  18  M
+ mysql-community-client         x86_64  5.6.29-2.el6  mysql56-community  18  M
      replacing  mysql.x86_64 5.1.71-1.el6
- mysql-community-libs                        x86_64      5.6.29-2.el6   mysql56-community  1.9 M
+ mysql-community-libs           x86_64  5.6.29-2.el6  mysql56-community  1.9 M
      replacing  mysql-libs.x86_64 5.1.71-1.el6
- mysql-community-libs-compat                 x86_64      5.6.29-2.el6   mysql56-community  1.6 M
+ mysql-community-libs-compat    x86_64  5.6.29-2.el6  mysql56-community  1.6 M
      replacing  mysql-libs.x86_64 5.1.71-1.el6
- mysql-community-server                      x86_64      5.6.29-2.el6   mysql56-community  53  M
+ mysql-community-server         x86_64  5.6.29-2.el6  mysql56-community  53  M
      replacing  mysql-server.x86_64 5.1.71-1.el6
 Installing for dependencies:
-mysql-community-common                      x86_64       5.6.29-2.el6  mysql56-community   308 k
+mysql-community-common          x86_64  5.6.29-2.el6  mysql56-community   308 k
 
 Transaction Summary
-==================================================================================================
+===============================================================================
 Install       5 Package(s)
 Total download size: 74 M
 Is this ok [y/N]: y
 Downloading Packages:
-(1/5): mysql-community-client-5.6.29-2.el6.x86_64.rpm                           |  18 MB     00:28
-(2/5): mysql-community-common-5.6.29-2.el6.x86_64.rpm                           | 308 kB     00:01
-(3/5): mysql-community-libs-5.6.29-2.el6.x86_64.rpm                             | 1.9 MB     00:05
-(4/5): mysql-community-libs-compat-5.6.29-2.el6.x86_64.rpm                      | 1.6 MB     00:05
-(5/5): mysql-community-server-5.6.29-2.el6.x86_64.rpm                           |  53 MB     03:42
---------------------------------------------------------------------------------------------------
-Total                                                                  289 kB/s |  74 MB     04:24
+(1/5): mysql-community-client-5.6.29-2.el6.x86_64.rpm       |  18 MB     00:28
+(2/5): mysql-community-common-5.6.29-2.el6.x86_64.rpm       | 308 kB     00:01
+(3/5): mysql-community-libs-5.6.29-2.el6.x86_64.rpm         | 1.9 MB     00:05
+(4/5): mysql-community-libs-compat-5.6.29-2.el6.x86_64.rpm  | 1.6 MB     00:05
+(5/5): mysql-community-server-5.6.29-2.el6.x86_64.rpm       |  53 MB     03:42
+-------------------------------------------------------------------------------
+Total                                              289 kB/s |  74 MB     04:24
 warning: rpmts_HdrFromFdno: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY
 Retrieving key from file:/etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
 Importing GPG key 0x5072E1F5:
  Userid : MySQL Release Engineering <mysql-build@oss.oracle.com>
-Package: mysql-community-release-el6-5.noarch (@/mysql-community-release-el6-5.noarch)
+Package: mysql-community-release-el6-5.noarch
+         (@/mysql-community-release-el6-5.noarch)
  From   : file:/etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
 Is this ok [y/N]: y
 Running rpm_check_debug
@@ -254,19 +255,22 @@ Transaction Test Succeeded
 Running Transaction
   Installing : mysql-community-common-5.6.29-2.el6.x86_64
 ....Output truncated....
-1.el6.x86_64                                                                                  7/8
-  Verifying  : mysql-5.1.71-1.el6.x86_64                       													                  8/8
+1.el6.x86_64                                                               7/8
+  Verifying  : mysql-5.1.71-1.el6.x86_64                       	           8/8
 Installed:
-  mysql-community-client.x86_64 0:5.6.29-2.el6          mysql-community-libs.x86_64 0:5.6.29-2.el6
-  mysql-community-libs-compat.x86_64 0:5.6.29-2.el6   mysql-community-server.x86_64 0:5.6.29-2.el6
+  mysql-community-client.x86_64 0:5.6.29-2.el6
+  mysql-community-libs.x86_64 0:5.6.29-2.el6
+  mysql-community-libs-compat.x86_64 0:5.6.29-2.el6
+  mysql-community-server.x86_64 0:5.6.29-2.el6
 
 Dependency Installed:
   mysql-community-common.x86_64 0:5.6.29-2.el6
 
 Replaced:
-  mysql.x86_64 0:5.1.71-1.el6 mysql-libs.x86_64 0:5.1.71-1.el6  mysql-server.x86_64 0:5.1.71-1.el6
+  mysql.x86_64 0:5.1.71-1.el6 mysql-libs.x86_64 0:5.1.71-1.el6
+  mysql-server.x86_64 0:5.1.71-1.el6
 Complete!
-....
+----
 
 . Start MySQL server:
 +
@@ -274,14 +278,18 @@ Complete!
 +
 ....
 
-Initializing MySQL database:  2016-04-05 19:44:38 0 [Warning] TIMESTAMP with implicit DEFAULT
-value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation
- for more details).
-2016-04-05 19:44:38 0 [Note] /usr/sbin/mysqld (mysqld 5.6.29) starting as process 2487 ...
-2016-04-05 19:44:38 2487 [Note] InnoDB: Using atomics to ref count buffer pool pages
+Initializing MySQL database:  2016-04-05 19:44:38 0 [Warning] TIMESTAMP
+with implicit DEFAULT value is deprecated. Please use
+--explicit_defaults_for_timestamp server option (see documentation
+for more details).
+2016-04-05 19:44:38 0 [Note] /usr/sbin/mysqld (mysqld 5.6.29)
+        starting as process 2487 ...
+2016-04-05 19:44:38 2487 [Note] InnoDB: Using atomics to ref count
+        buffer pool pages
 2016-04-05 19:44:38 2487 [Note] InnoDB: The InnoDB memory heap is disabled
 ....Output truncated....
-2016-04-05 19:44:42 2509 [Note] InnoDB: Shutdown completed; log sequence number 1625987
+2016-04-05 19:44:42 2509 [Note] InnoDB: Shutdown completed; log sequence
+       number 1625987
 
 PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER!
 To do so, start the server, then issue the following commands:
@@ -328,11 +336,12 @@ NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
  you haven't set the root password yet, the password will be blank,
  so you should just press enter here.
 
- Enter current password for root (enter for none):   <== on default install hit enter here
+ Enter current password for root (enter for none):   <== on default install
+                                                         hit enter here
  OK, successfully used password, moving on...
 
  Setting the root password ensures that nobody can log into the MySQL
- root user without the proper authorisation.
+ root user without the proper authorization.
 
  Set root password? [Y/n] y
  New password:
@@ -362,7 +371,8 @@ NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
 
  Remove test database and access to it? [Y/n] y
   - Dropping test database...
- ERROR 1008 (HY000) at line 1: Can't drop database 'test'; database doesn't exist
+ ERROR 1008 (HY000) at line 1: Can't drop database 'test';
+ database doesn't exist
   ... Failed!  Not critical, keep moving...
   - Removing privileges on test database...
   ... Success!
@@ -385,7 +395,7 @@ NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
 +
 `[root@mcctb ~]# mysql -u root –p`
 +
-----
+....
 
 Enter password: <configured_password>
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -400,7 +410,7 @@ owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql>
-----
+....
 +
 If the MySQL login is working, the output will end at the `mysql>` prompt.
 
@@ -408,7 +418,21 @@ If the MySQL login is working, the output will end at the `mysql>` prompt.
 
 You should ensure that the autostart feature is turned on for the MySQL deamon. Turning on the MySQL daemon automatically restarts MySQL if the system on which the MetroCluster Tiebreaker software resides reboots. If the MySQL daemon is not running, the Tiebreaker software continues running, but it cannot be restarted and configuration changes cannot be made.
 
-See the MySQL documentation to enable the autostart feature for your installation.
+.Step
+
+. Verify that MySQL is enabled to autostart when booted:
++
+`[root@mcctb ~]# systemctl list-unit-files mysqld.service`
++
+....
+UNIT FILE          State
+------------------ ----------
+mysqld.service     enabled
+
+....
+
++
+If MySQL is not enabled to autostart when booted, see the MySQL documentation to enable the autostart feature for your installation.
 
 [[install-mariadb]]
 === Installing MariaDB server on Red Hat Enterprise Linux 8
@@ -439,24 +463,25 @@ Loaded plugins: fastestmirror, langpacks
 ...
 ...
 
-=======================================================================================
- Package                      Arch   Version         Repository               Size
-=======================================================================================
+===========================================================================
+ Package                      Arch   Version         Repository        Size
+===========================================================================
 Installing:
-mariadb-server               x86_64   1:5.5.56-2.el7   base                   11 M
+mariadb-server               x86_64   1:5.5.56-2.el7   base            11 M
 Installing for dependencies:
 
 Transaction Summary
-=======================================================================================
+===========================================================================
 Install  1 Package  (+8 Dependent packages)
 Upgrade             ( 1 Dependent package)
 
 Total download size: 22 M
 Is this ok [y/d/N]: y
 Downloading packages:
-No Presto metadata available for base
-warning: /var/cache/yum/x86_64/7/base/packages/mariadb-libs-5.5.56-2.el7.x86_64.rpm:
-Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY] 1.4 MB/s | 3.3 MB  00:00:13 ETA
+No Presto metadata available for base warning:
+/var/cache/yum/x86_64/7/base/packages/mariadb-libs-5.5.56-2.el7.x86_64.rpm:
+Header V3 RSA/SHA256 Signature,
+key ID f4a80eb5: NOKEY] 1.4 MB/s | 3.3 MB  00:00:13 ETA
 Public key for mariadb-libs-5.5.56-2.el7.x86_64.rpm is not installed
 (1/10): mariadb-libs-5.5.56-2.el7.x86_64.rpm  | 757 kB  00:00:01
 ..
@@ -467,9 +492,14 @@ Installed:
   mariadb-server.x86_64 1:5.5.56-2.el7
 
 Dependency Installed:
-mariadb.x86_64 1:5.5.56-2.el7         perl-Compress-Raw-Bzip2.x86_64 0:2.061-3.el7
-perl-Compress-Raw-Zlib.x86_64 1:2.061-4.el7 perl-DBD-MySQL.x86_64 0:4.023-5.el7
-perl-DBI.x86_64 0:1.627-4.el7  perl-IO-Compress.noarch 0:2.061-2.el7 perl-Net-Daemon.noarch 0:0.48-5.el7          perl-PlRPC.noarch 0:0.2020-14.el7
+mariadb.x86_64 1:5.5.56-2.el7
+perl-Compress-Raw-Bzip2.x86_64 0:2.061-3.el7
+perl-Compress-Raw-Zlib.x86_64 1:2.061-4.el7
+perl-DBD-MySQL.x86_64 0:4.023-5.el7
+perl-DBI.x86_64 0:1.627-4.el7
+perl-IO-Compress.noarch 0:2.061-2.el7
+perl-Net-Daemon.noarch 0:0.48-5.el7
+perl-PlRPC.noarch 0:0.2020-14.el7
 
 Dependency Updated:
   mariadb-libs.x86_64 1:5.5.56-2.el7
@@ -495,7 +525,7 @@ Nov 08 21:28:59 mcctb systemd[1]: Starting MariaDB database server...
 Nov 08 21:29:01 scspr0523972001 systemd[1]: Started MariaDB database server.
 ....
 +
-NOTE: Ensure that the "enable autostart" setting is turned on for MariaDB.
+NOTE: Ensure that the "enable autostart" setting is turned on for MariaDB. See <<mariadb-autostart>>.
 
 . Configure the security and password settings:
 +
@@ -529,6 +559,28 @@ installation should now be secure.
 Thanks for using MariaDB!
 ....
 
+[[mariadb-autostart]]
+==== Enabling the autostart setting for the MariaDB
+
+You should ensure that the autostart feature is turned on for the MariaDB. If you do not enable the autostart feature, and the system on which the MetroCluster Tiebreaker software resides has to reboot, then the Tiebreaker software continues running, but the MariaDB service cannot be restarted and configuration changes cannot be made.
+
+.Steps
+
+. Enable the autostart service:
++
+`[root@mcctb ~]# systemctl enable mariadb.service`
+
+. Verify that MariaDB is enabled to autostart when booted:
++
+`[root@mcctb ~]# systemctl list-unit-files mariadb.service`
++
+....
+UNIT FILE          State
+------------------ ----------
+mariadb.service    enabled
+
+....
+
 [[install-upgrade-sw-pkg]]
 == Installing or upgrading the software package
 
@@ -538,7 +590,7 @@ You must install or upgrade the MetroCluster Tiebreaker software on your local c
 * You must have installed OpenJDK by using the `yum install java-1.8.0-openjdk` command.
 
 .Steps
-. Download the "NetApp-MetroCluster-Tiebreaker-Software-1.3-1.x86_64.rpm" file.
+. Download the latest version of the MetroCluster Tiebreaker software. This example uses version 1.21P3-1.
 +
 https://mysupport.netapp.com/site/[NetApp Support]
 
@@ -546,6 +598,7 @@ https://mysupport.netapp.com/site/[NetApp Support]
 . Install or upgrade the Tiebreaker software:
 +
 
+[cols="20,80"]
 |===
 
 h| If you are... h| Issue this command...
@@ -553,7 +606,7 @@ h| If you are... h| Issue this command...
 a|
 Performing a new installation
 a|
-`rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.3-1x86_64.rpm`
+`rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1x86_64.rpm`
 
 The system displays the following output for a successful installation:
 
@@ -575,19 +628,19 @@ Started NetApp MetroCluster Tiebreaker software services
 Enabled autostart of NetApp MetroCluster Tiebreaker software daemon during boot
 Created symbolic link for NetApp MetroCluster Tiebreaker software CLI
 Post installation end Wed Oct 20 09:59:28 EDT 2021
-Successfully installed NetApp MetroCluster Tiebreaker software version 1.3.
+Successfully installed NetApp MetroCluster Tiebreaker software version 1.21P3.
 ....
 
 a|
 Upgrading an existing installation
 a|
-`rpm -Uvh NetApp-MetroCluster-Tiebreaker-Software-1.3-1.x86_64.rpm`
+`rpm -Uvh NetApp-MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm`
 
 The system displays the following output for a successful upgrade:
 
 ....
 
-MetroCluster-Tiebreaker-Software-1.3-1.x86_64.rpm
+MetroCluster-Tiebreaker-Software-1.21P3-1.x86_64.rpm
 Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
 Upgrading NetApp MetroCluster Tiebreaker software....
@@ -604,13 +657,14 @@ Started NetApp MetroCluster Tiebreaker software services
 Enabled autostart of NetApp MetroCluster Tiebreaker software daemon during boot
 Created symbolic link for NetApp MetroCluster Tiebreaker software CLI
 Post upgrade end Wed Oct 20 09:57:52 EDT 2021
-Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.3.
+Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.21P3.
 Cleaning up / removing...
    2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
 
 ....
 
 |===
+
 +
 NOTE: If you enter the wrong MySQL root password, the Tiebreaker software indicates that it was installed successfully, but displays "Access denied" messages. To resolve the issue, you must uninstall the Tiebreaker software by using the `rpm -e` command, and then reinstall the software by using the correct MySQL root password.
 
@@ -623,10 +677,10 @@ https://mysupport.netapp.com/site/[NetApp Support]
 
 == Upgrading the host where the Tiebreaker monitor is running
 
-You can upgrade the host o which the Tiebreaker monitor is running with minimal disruption if you place the monitors in observer mode before the upgrade.
+You can upgrade the host on which the Tiebreaker monitor is running with minimal disruption if you place the monitors in observer mode before the upgrade.
 
 .Steps
-. Verify the monitors are in observer mode:
+. Verify that the monitors are in observer mode:
 +
 `monitor show –status`
 +
@@ -672,7 +726,7 @@ NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name _monitor_name_ -o
 +
 <<install-upgrade-sw-pkg,Installing or upgrading the software package>>
 
-. Disable observer mode to move all the of the monitors back to online mode.
+. Disable observer mode to move all of the monitors back to online mode.
 +
 ----
 NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name _monitor_name_ -observer-mode false
@@ -683,3 +737,4 @@ NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name _monitor_name_ -o
 You should use a local Network Time Protocol (NTP) source for the Tiebreaker software. It should not use the same source as the MetroCluster sites that the Tiebreaker software monitors.
 
 // 20 OCT 2021, BURT 1288643
+// 17 NOV 2021, BURT 1369211

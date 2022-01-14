@@ -21,17 +21,19 @@ You must disable access to the shelf before you replace the shelf modules.
 Check the overall health of the configuration. If the system does not appear healthy, address the issue first before proceeding.
 
 .Steps
-. Offline the affected plexes on the controller where they are hosted:
+. From both clusters, offline all plexes with disks on the affected shelf stack:
+//ontap-metrocluster/issues/65 2021.11.21
 +
 `*aggr offline _plex_name_*`
 +
-The example shows the commands for offlining plexes for a controller running cMode.
+The example shows the commands for offlining plexes for a controller running clustered OTNAP.
 +
 ----
 
-Cluster_A_1::> storage aggregate plex offline -aggr aggr1 -plex plex2
-Cluster_A_1::> storage aggregate plex offline -aggr aggr2 -plex plex6
-Cluster_A_1::> storage aggregate plex offline -aggr aggr3 -plex plex1
+cluster_A_1::> storage aggregate plex offline -aggr aggrA_1_0 -plex plex0
+cluster_A_1::> storage aggregate plex offline -aggr dataA_1_data -plex plex0
+cluster_A_2::> storage aggregate plex offline -aggr aggrA_2_0 -plex plex0
+cluster_A_2::> storage aggregate plex offline -aggr dataA_2_data -plex plex0
 ----
 
 . Verify that the plexes are offline:
@@ -42,9 +44,10 @@ The example shows the commands for verifying that the aggregates are offline for
 +
 ----
 
-Cluster_A_1::> storage aggregate show -aggr aggr1
-Cluster_A_1::> storage aggregate show -aggr aggr2
-Cluster_A_1::> storage aggregate show -aggr aggr3
+Cluster_A_1::> storage aggregate show -aggr aggrA_1_0
+Cluster_A_1::> storage aggregate show -aggr dataA_1_data
+Cluster_A_2::> storage aggregate show -aggr aggrA_2_0
+Cluster_A_2::> storage aggregate show -aggr dataA_2_data
 ----
 
 . Disable the SAS ports or switch ports depending on whether the bridges connecting the target shelf are connecting a single SAS stack or two or more SAS stacks:

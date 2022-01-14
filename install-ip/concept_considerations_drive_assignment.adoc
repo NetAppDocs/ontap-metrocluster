@@ -24,7 +24,10 @@ NOTE: When upgrading from ONTAP 9.4 to 9.5, the system recognizes the existing d
 
 ADP is performed automatically during initial configuration of the platform.
 
-NOTE: Starting with ONTAP 9.5, `disk auto=assignment` must be enabled for automatic partitioning for ADP to occur.
+NOTE: Starting with ONTAP 9.5, automatic assignment of disks must be enabled with the command `storage disk option modify -autoassign on`.
+
+A maximum of 96 drives can be automatically partitioned during installation. You can add extra drives after the initial installation.
+//BURT 1440058
 
 == How shelf-by-shelf automatic assignment works
 
@@ -53,7 +56,7 @@ The following table shows an example of how to place 24 disks in a 48 drive inte
 h| The 48 drive bays are divided into four quarters: h| Install six drives in the first six bays in each quarter...
 
 a|
-Quarter 1: Bays 0 -11
+Quarter 1: Bays 0-11
 a|
 Bays 0-5
 a|
@@ -71,7 +74,7 @@ Bays 36-41
 |===
 If you are using two shelves at each site, disks are assigned using a half-shelf policy. If the shelves are not fully populated, install the drives equally from either end of the shelf.
 
-For example, if you are installing 12 drives in a 24 drive shelf, install drives in bays 0-5 and 18-23.
+For example, if you are installing 12 drives in a 24-drive shelf, install drives in bays 0-5 and 18-23.
 
 == Manual drive assignment (ONTAP 9.5)
 
@@ -138,12 +141,12 @@ https://hwu.netapp.com[NetApp Hardware Universe]
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-Two shelves
+48 drives
 a|
 The drives on each external shelf are divided into two equal groups (halves). Each half-shelf  is automatically assigned to a separate pool.
 a|
@@ -156,9 +159,9 @@ Partitions on each shelf are used to create the root aggregate. Each of the two 
 * Two spare partitions
 
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
-One shelf
+24 drives
 a|
 The drives are divided into four equal groups. Each quarter-shelf is automatically assigned to a separate pool.
 a|
@@ -175,10 +178,10 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
 Internal drives only
 a|
@@ -196,7 +199,7 @@ The root aggregate includes the following partitions in each plex:
 * One spare partition
 
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
 16 internal drives
 a|
@@ -230,12 +233,12 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-Two shelves
+48 drives
 a|
 The drives on each external shelf are divided into two equal groups (halves). Each half-shelf  is automatically assigned to a separate pool.
 a|
@@ -248,7 +251,7 @@ Partitions on each shelf are used to create the root aggregate. The root aggrega
 * Two spare partitions
 
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
 24 internal drives only
 a|
@@ -267,12 +270,12 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-Two shelves
+48 drives
 a|
 The drives on each external shelf are divided into two equal groups (halves). Each half-shelf  is automatically assigned to a separate pool.
 a|
@@ -285,9 +288,9 @@ Partitions on each shelf are used to create the root aggregate. The root aggrega
 * Two spare partitions
 
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
-One shelf
+24 drives
 a|
 The drives are divided into four equal groups. Each quarter-shelf is automatically assigned to a separate pool.
 a|
@@ -304,12 +307,12 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-Four shelves
+96 drives
 a|
 Drives are automatically assigned on a shelf-by-shelf basis.
 a|
@@ -320,9 +323,9 @@ Each of the two plexes in the root aggregate includes:
 * Two spare partitions
 
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
-One shelf
+24 drives
 a|
 The drives are divided into four equal groups (quarters). Each quarter-shelf is automatically assigned to a separate pool.
 a|
@@ -339,12 +342,12 @@ Each of the two plexes in the root aggregate includes:
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-Four shelves
+96 drives
 a|
 Drives are automatically assigned on a shelf-by-shelf basis.
 a|
@@ -355,9 +358,9 @@ Each of the two plexes in the root aggregate includes:
 * Two spare partitions
 
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
-One shelf
+24 drives
 a|
 The drives are divided into four equal groups (quarters). Each quarter-shelf is automatically assigned to a separate pool.
 a|
@@ -374,14 +377,14 @@ Each of the two plexes in the root aggregate includes:
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root aggregate
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root aggregate
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-Internal drives and four external shelves
+Internal drives and 96 external drives
 a|
-The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool.The drives on the external shelves are automatically assigned on a shelf-by-shelf basis, with all of the drives on each shelf assigned to  one of the four nodes in the MetroCluster configuration.
+The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are automatically assigned on a shelf-by-shelf basis, with all of the drives on each shelf assigned to  one of the four nodes in the MetroCluster configuration.
 
 a|
 The root aggregate is created with 12 root partitions on the internal shelf.
@@ -393,7 +396,7 @@ Each of the two plexes in the root aggregate includes:
 * Two spare partitions
 
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
 24 internal drives only
 a|
@@ -449,18 +452,18 @@ Each of the two plexes in the root aggregate includes:
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-One internal and one external shelf
+24 internal drives and 24 external drives
 a|
 The internal and external shelves are divided into two equal halves. Each half is automatically assigned to different pool
 a|
 Not applicable.
 a|
-Minimum supported shelves (per site) (active/passive HA configuration)
+Minimum supported drives (per site) (active/passive HA configuration)
 a|
 Internal drives only
 a|
@@ -472,19 +475,19 @@ Manual assignment required.
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 a|
-Minimum supported shelves (per site)
+Minimum recommended drives (per site)
 a|
-Two shelves
+48 drives
 a|
 The drives on the external shelves are divided into two equal groups (halves). Each half-shelf  is automatically assigned to a separate pool.
 a|
 Not applicable.
 a|
-Minimum supported shelves (per site) (active/passive HA configuration)
+Minimum supported drives (per site) (active/passive HA configuration)
 a|
-One shelf
+24 drives
 a|
 Manual assignment required.
 |===
@@ -493,20 +496,20 @@ Manual assignment required.
 
 |===
 
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-Four shelves
+96 drives
 a|
 Drives are automatically assigned on a shelf-by-shelf basis.
 a|
 Not applicable.
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
-One shelf
+24 drives
 a|
 The drives are divided into four equal groups. Each quarter-shelf is automatically assigned to a separate pool.
 |===
@@ -516,26 +519,26 @@ The drives are divided into four equal groups. Each quarter-shelf is automatical
 
 |===
 
-h| Guideline h| Shelves per site  h| Drive assignment rules h| ADP layout for root partition
+h| Guideline h| Drives per site  h| Drive assignment rules h| ADP layout for root partition
 
 a|
-Minimum recommended shelves (per site)
+Minimum recommended drives (per site)
 a|
-Four shelves
+96 drives
 a|
 Drives are automatically assigned on a shelf-by-shelf basis.
 a|
 Not applicable.
 a|
-Minimum supported shelves (per site)
+Minimum supported drives (per site)
 a|
-Two shelves
+48 drives
 a|
 The drives on the shelves are divided into two equal groups (halves). Each half-shelf is automatically assigned to a separate pool.
 a|
-Minimum supported shelves (per site) (active/passive HA configuration)
+Minimum supported drives (per site) (active/passive HA configuration)
 a|
-One shelf
+24 drives
 a|
 Manual assignment required.
 |===

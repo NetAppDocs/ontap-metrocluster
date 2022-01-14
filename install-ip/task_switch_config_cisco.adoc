@@ -9,6 +9,13 @@ summary: You must configure the Cisco IP switches for use as the cluster interco
 [.lead]
 You must configure the Cisco IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
 
+.About this task
+
+* You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
+* You must be connected to the switch using the serial console.
+* This task resets the configuration of the management network.
+//ontap-metrocluster/issues/88 2021.11.21
+
 == Resetting the Cisco IP switch to factory defaults
 
 [.lead]
@@ -424,7 +431,7 @@ hardware access-list tcam region qos 256
 .. After setting the TCAM regions, save the configuration and reload the switch:
 +
 -----
-copy running-config startup-config 
+copy running-config startup-config
 reload
 -----
 // BURT-1428715
