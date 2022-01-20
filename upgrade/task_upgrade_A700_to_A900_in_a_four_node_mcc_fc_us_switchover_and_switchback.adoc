@@ -427,12 +427,11 @@ cluster_A::> metrocluster operation show
 
 
 
-== Remove the AFF A700 controller module and NVS at site B
+== Remove the AFF A700 controller module and NVS at site_B
 
 You must remove the old controllers from the configuration.
 
-You perform this task on site B.
-
+You perform this task on site_B.
 
 
 
@@ -441,13 +440,13 @@ If you are not already grounded, properly ground yourself.
 
 .Steps
 
-. Connect to the serial console of the old controllers (node_B_1-700 and node_B_2-700) at site B and verify it is displaying the `LOADER` prompt.
+. Connect to the serial console of the old controllers (node_B_1-700 and node_B_2-700) at site_B and verify it is displaying the `LOADER` prompt.
 
-.	Gather the bootarg values from both nodes at site B: `printenv`
+.	Gather the bootarg values from both nodes at site_B: `printenv`
 
-.	Power off the chassis at site B.
+.	Power off the chassis at site_B.
 
-== Remove the controller module and NVS from both nodes at Site B
+== Remove the controller module and NVS from both nodes at site_B
 === Remove the AFF A700 controller module
 
 Use the following procedure to remove the AFF A700 controller module.
@@ -499,7 +498,7 @@ If you are not already grounded, properly ground yourself.
 
 === Install the AFF A900 NVS
 
-Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at site B
+Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at site_B
 
 .Steps
 .	Align the NVS with the edges of the chassis opening in slot 6.
@@ -544,7 +543,7 @@ image:../media/drw_9500_remove_PCM.png[controller]
 
 
 
-=== Netboot the nodes at site B
+=== Netboot the nodes at site_B
 
 After swapping the AFF A900 controller module and NVS, you need to netboot the AFF A900 nodes and install the same ONTAP version and patch level that is running on the cluster. The term `netboot` means you are booting from an ONTAP image stored on a remote server. When preparing for `netboot`, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
 
@@ -1007,7 +1006,7 @@ Verify that LIFs are hosted on appropriate node/ports prior to switchback. The f
 
 .About this task
 
-This task is performed on site B, where the nodes have been booted up with root aggregates.
+This task is performed on site_B, where the nodes have been booted up with root aggregates.
 
 .Steps
 
@@ -1106,7 +1105,7 @@ This task can be performed on any node in the MetroCluster configuration.
 +
 `metrocluster check show`
 
-== Upgrade the nodes on Site A
+== Upgrade the nodes on site_A
 
 You must repeat the upgrade tasks on site_A.
 
