@@ -17,11 +17,11 @@ If one of the object stores in a FabricPool mirror was co-located with the Metro
 .About this task
 
 * If the object-stores are remote and a MetroCluster site is destroyed, you do not need to rebuild the object store, and the original object store configurations as well as cold data contents are retained.
-* For more information about FabricPool configurations, see the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregates management].
+* For more information about FabricPool configurations, see the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregates management^].
 
 .Step
 
-. Follow the procedure "Replacing a FabricPool mirror on a MetroCluster configuration" in the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregates management].
+. Follow the procedure "Replacing a FabricPool mirror on a MetroCluster configuration" in the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregates management^].
 
 == Verifying licenses on the replaced nodes
 
@@ -246,6 +246,7 @@ Sync-destination aggregates in the MetroCluster configuration have the suffix "-
 |===
 
 h| If the command output shows... h| Then...
+
 a|
 That the switchback operation state is successful.
 a|
@@ -262,7 +263,6 @@ You must repeat the previous sections to perform the switchback in the opposite 
 
 == Mirroring the root aggregates of the replacement nodes
 
-[.lead]
 If disks were replaced, you must mirror the root aggregates of the new nodes on the disaster site.
 
 .Steps
@@ -359,7 +359,6 @@ Any root aggregate that does not have a status of mirrored must be mirrored.
 
 == Reconfiguring the ONTAP Mediator service (MetroCluster IP configurations)
 
-[.lead]
 If you have a MetroCluster IP configuration that was configured with the ONTAP Mediator service, you must remove and reconfigure the association with the mediator.
 
 .Before you begin
@@ -378,7 +377,6 @@ If you have a MetroCluster IP configuration that was configured with the ONTAP M
 
 == Verifying the health of the MetroCluster configuration
 
-[.lead]
 You should check the health of the MetroCluster configuration to verify proper operation.
 
 .Steps
@@ -506,3 +504,5 @@ Node    Type       Label      Target Portal     Target Name                     
 .. Return to the administrative privilege level:
 +
 `set -privilege admin`
+
+// BURT 1448684, 12 JAN 2022
