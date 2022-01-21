@@ -8,10 +8,10 @@ summary: If one of the object stores in a FabricPool mirror was co-located with 
 :icons: font
 :imagesdir: ../media/
 
-[.lead]
+
 == Reestablishing object stores for FabricPool configurations
 
-[.lead]
+
 If one of the object stores in a FabricPool mirror was co-located with the MetroCluster disaster site and was destroyed, you must reestablish the object store and the FabricPool mirror.
 
 .About this task
@@ -25,7 +25,6 @@ If one of the object stores in a FabricPool mirror was co-located with the Metro
 
 == Verifying licenses on the replaced nodes
 
-[.lead]
 You must install new licenses for the replacement nodes if the impaired nodes were using ONTAP features that require a standard (node-locked) license. For features with standard licenses, each node in the cluster should have its own key for the feature.
 
 .About this task
@@ -99,7 +98,6 @@ NOTE: The new license keys that you require are automatically generated and sent
 
 == Performing a switchback
 
-[.lead]
 After you heal the MetroCluster configuration, you can perform the MetroCluster switchback operation. The MetroCluster switchback operation returns the configuration to its normal operating state, with the sync-source storage virtual machines (SVMs) on the disaster site active and serving data from the local disk pools.
 
 .Before you begin
@@ -185,7 +183,6 @@ In ONTAP 8.3, you need to manually reestablish a lost SnapMirror configuration a
 
 == Verifying a successful switchback
 
-[.lead]
 After performing the switchback, you want to confirm that all aggregates and storage virtual machines (SVMs) are switched back and online.
 
 .Steps
@@ -212,9 +209,9 @@ Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
 aggr_b2          -         -     - unknown      - node_A_1
 ----
 +
-If the disaster site included unmirrored aggregates and the unmirrored aggregates are no longer present, the aggregate might show up with a state of "unknown" in the output of the storage aggregate show command. Contact technical support to remove the out-of-date entries for the unmirrored aggregates.
+If the disaster site included unmirrored aggregates and the unmirrored aggregates are no longer present, the aggregate might show up with a state of "`unknown`" in the output of the storage aggregate show command. Contact technical support to remove the out-of-date entries for the unmirrored aggregates.
 
-. Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an Admin State of "stopped") and the sync-source SVMs on the disaster cluster are up and running:
+. Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an Admin State of "`stopped`") and the sync-source SVMs on the disaster cluster are up and running:
 +
 `vserver show -subtype sync-source`
 +
@@ -430,8 +427,8 @@ config-replication  ok
 aggregates          ok
 4 entries were displayed.
 
-Command completed. Use the "metrocluster check show -instance" command or sub-commands in "metrocluster check" directory for detailed results.
-To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
+Command completed. Use the `metrocluster check show -instance` command or sub-commands in `metrocluster check` directory for detailed results.
+To check if the nodes are ready to do a switchover or switchback operation, run `metrocluster switchover -simulate` or `metrocluster switchback -simulate`, respectively.
 ----
 
 . Check that there are no health alerts:
