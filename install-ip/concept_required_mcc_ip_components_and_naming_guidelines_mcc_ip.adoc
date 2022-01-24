@@ -1,7 +1,7 @@
 ---
 permalink: install-ip/concept_required_mcc_ip_components_and_naming_guidelines_mcc_ip.html
 sidebar: sidebar
-keywords: plan, metrocluster, ip, configuration, require, hardware, software, clarity, conventions, component, documentation, naming, name, requirement, support, redundancy, switch, ontap, cluster, controller, module, gigabit, ethernet, adapter, pool, drive, drive, location, consideration, partial, populate, shelves, shelf, aff, a800, internal, iom12, iom, module, stack, four-node, raid-dp, raid4, AFF A800 internal drives
+keywords: plan, metrocluster, ip, configuration, planning, require, hardware, software, clarity, conventions, component, documentation, naming, name, requirement, support, redundancy, switch, ontap, cluster, controller, module, gigabit, ethernet, adapter, pool, drive, drive, location, consideration, partial, populate, shelves, shelf, aff, a800, internal, iom12, iom, module, stack, four-node, raid-dp, raid4, AFF A800 internal drives
 summary: When planning your MetroCluster IP configuration, you must understand the required and supported hardware and software components. For convenience and clarity, you should also understand the naming conventions used for components in examples throughout the documentation.
 ---
 = Required MetroCluster IP components and naming conventions
@@ -103,6 +103,7 @@ MetroCluster IP configurations use a 40/100 Gbps or 10/25 Gbps Ethernet adapter 
 
 h| Platform model h| Required Gigabit Ethernet adapter h| Required slot for adapter h| Ports
 
+| AFF A900 | X91146A | Slot 5, Slot 7 | e5b, e7b
 a|
 AFF A700 and FAS9000
 a|
@@ -211,9 +212,9 @@ An AFF A800 system has 48 drive bays. The bays can be divided into quarters:
 If this system is populated with 16 drives, they must be symmetrically distributed among the four quarters:
 
 * Four drives in the first quarter: 0, 1, 2, 3
-* Four drives in the second quarter: 12, 13, 14, 15
-* Four drives in the third quarter: 24, 25, 26, 27
-* Four drives in the fourth quarter: 36, 37, 38, 39
+* Four drives in the second quarter: 6, 7, 8, 9
+* Four drives in the third quarter: 12, 13, 14, 15
+* Four drives in the fourth quarter: 18, 19, 20, 21
 
 == Mixing IOM12 and IOM 6 modules in a stack
 
@@ -221,3 +222,4 @@ Your version of ONTAP must support shelf mixing. Refer to the https://mysupport.
 
 For further details on shelf mixing, see https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-ds-mix-hotadd/home.html[Hot-adding shelves with IOM12 modules to a stack of shelves with IOM6 modules]
 // 2021-04-21 1374268
+// 2022-01-10, Issue 120

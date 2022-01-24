@@ -1,7 +1,7 @@
 ---
 permalink: install-ip/task_sw_config_verify_haconfig.html
 sidebar: sidebar
-keywords: metrocluster, ha-config, mccip, haconfig, verify
+keywords: metrocluster, ha-config, mccip, haconfig, verify, high-availability
 summary: In a MetroCluster IP configuration that is not preconfigured at the factory, you must verify that the ha-config state of the controller and chassis components is set to mccip so that they boot up properly. For systems received from the factory, this value is preconfigured and you do not need to verify it.
 ---
 = Verifying the ha-config state of components
@@ -1156,6 +1156,11 @@ The physical ports used by the MetroCluster IP interfaces depends on the platfor
 |===
 h| Platform model h| MetroCluster IP port h| Note
 
+.2+a| AFF A900
+a| e5b
+.2+a|
+a| e7b
+
 .2+a| AFF A800
 a| e0b
 .2+a|
@@ -2259,7 +2264,7 @@ NOTE: The unmirrored aggregates must be local to the node owning them.
 
 * Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
-* The _Disks and Aggregates Power Guide_ contains more information about mirroring aggregates.
+* _Disks and aggregates management_ contains more information about mirroring aggregates.
 
 .Steps
 
@@ -2476,7 +2481,7 @@ link:concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.htm
 
 If you must install a new instance of the Tiebreaker software, follow the directions to install and configure the software.
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/home.html[MetroCluster Tiebreaker Software Installation and Configuration Guide]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/home.html[MetroCluster Tiebreaker Software installation and configuration]
 
 .About this task
 
@@ -2493,7 +2498,7 @@ link:concept_prepare_for_the_mcc_installation.html#considerations-for-using-onta
 
  ** If you are using the Tiebreaker software, refer to the Tiebreaker documentation.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/home.html[MetroCluster Tiebreaker Software Installation and Configuration Guide]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/home.html[MetroCluster Tiebreaker Software installation and configuration]
 
 == Protecting configuration backup files
 
@@ -2505,7 +2510,7 @@ You can provide additional protection for the cluster configuration backup files
 +
 `system configuration backup settings modify _URL-of-destination_`
 +
-The System Administration Guide contains additional information under the section _Managing configuration backups_.
+Cluster Management with the CLI contains additional information under the section _Managing configuration backups_.
 
 .Related information
 

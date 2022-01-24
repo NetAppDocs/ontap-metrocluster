@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_fc.html
 sidebar: sidebar
-keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, system, commands
+keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, system, commands, mcc
 summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster FC configuration.'
 ---
 = Upgrading controllers in a four-node MetroCluster FC configuration using switchover and switchback with "system controller replace" commands (ONTAP 9.10.1 and later)
@@ -550,10 +550,14 @@ a|
 Onboard key management
 a|
 Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
 Option `11`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 
 . If autoboot is enabled, interrupt autoboot by pressing control-C.
@@ -588,14 +592,18 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-`recover_onboard_keymanager`
+Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
-`recover_external_keymanager`
+Option `11`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 +
-You need to perform the recovery procedure by selecting option `10` or option `11` depending on the key manager setting and option `6` at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option `1` (normal boot).
+Depending on the key manager setting, perform the recovery procedure by selecting option `10` or option `11`, followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option `1` (normal boot).
 
 . Boot the nodes:
 +
