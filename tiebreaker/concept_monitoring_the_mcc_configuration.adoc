@@ -13,16 +13,20 @@ MetroCluster Tiebreaker software automates the recovery process by enabling you 
 
 == Configuring AutoSupport
 
-[.lead]
 By default, AutoSupport messages are sent to NetApp a week after installation of the Tiebreaker software. Events that trigger AutoSupport notification include Tiebreaker software panics, detection of disaster conditions on MetroCluster configurations, or an unknown MetroCluster configuration status.
+
+.Before you begin
 
 You must have a direct access for setting up AutoSupport messages.
 
+.Steps
+
 . Use the Tiebreaker CLI autosupport command with any of the following options:
 +
-[cols=2*,options="header"]
+[cols="1,2"]
 |===
-| Option| Description
+
+h| Option h| Description
 a|
 -invoke
 a|
@@ -97,12 +101,14 @@ Autosupport configuration deleted successfully.
 
 === SNMP events and traps
 
-[.lead]
+
 NetApp MetroCluster Tiebreaker software uses SNMP traps to notify you of significant events. These traps are part of the NetApp MIB file. Each trap contains the following information: trap name, severity, impact level, timestamp, and message.
 
-[cols=3*,options="header"]
+[cols="2,3,1"]
 |===
-| Event name | Event detail | Trap number
+
+h| Event name h| Event detail h| Trap number
+
 a|
 MetroCluster Tie-Breaker is unable to reach the MetroCluster configuration
 a|
@@ -137,14 +143,18 @@ a|
 
 == Displaying the status of monitoring operations
 
-[.lead]
 You can display the overall status of monitoring operations for a MetroCluster configuration.
+
+.Step
 
 . Use the Tiebreaker CLI monitor show command to display the status of a MetroCluster operation with any of the following options:
 +
-[cols=2*,options="header"]
+[cols="1,2"]
+
 |===
-| Option| Description
+
+h| Option h| Description
+
 a|
 -monitor-name
 a|
@@ -162,6 +172,7 @@ a|
 a|
 Displays the status of the specified cluster    *Note:* The MetroCluster Tiebreaker software might take up to 10 minutes to reflect the completion status of operations such as heal aggregates, heal roots, or switchback.
 |===
++
 The following example shows that the clusters cluster_A and cluster_B are connected and healthy:
 +
 ----
@@ -214,8 +225,9 @@ MetroCluster: cluster_B
 
 == Displaying MetroCluster configuration information
 
-[.lead]
 You can display the monitor name and IP address of all instances of MetroCluster configurations in the Tiebreaker software.
+
+.Step
 
 . Use the Tiebreaker CLI configuration show command to display the MetroCluster configuration information.
 +
@@ -232,8 +244,9 @@ MetroCluster: North America
 
 == Creating dump files
 
-[.lead]
 You save the overall status the Tiebreaker software to a dump file for debugging purposes.
+
+.Step
 
 . Use the Tiebreaker CLI monitor dump -status command to create a dump file of the overall status of all MetroCluster configurations.
 +
@@ -244,3 +257,6 @@ The following example shows the successful creation of the /var/log/netapp/mcctb
 NetApp MetroCluster Tiebreaker :> monitor dump -status
 MetroCluster Tiebreaker status successfully dumped in file /var/log/netapp/mcctb/metrocluster-tiebreaker-status.xml
 ----
+
+
+// BURT 1448684, 21 JAN 2022
