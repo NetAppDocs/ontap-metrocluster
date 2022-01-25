@@ -14,26 +14,35 @@ To prepare the configuration for transition you add the new nodes to the existin
 
 == Sending a custom AutoSupport message prior to maintenance
 
-[.lead]
 Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
+
+.About this task
 
 This task must be performed on each MetroCluster site.
 
-. To prevent automatic support case generation, send an Autosupport message to indicate maintenance is underway.
- .. Issue the following command: `system node autosupport invoke -node * -type all -message MAINT=maintenance-window-in-hours`
-+
-maintenance-window-in-hours specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:``system node autosupport invoke -node * -type all -message MAINT=end``
+.Steps
 
- .. Repeat the command on the partner cluster.
+. To prevent automatic support case generation, send an Autosupport message to indicate maintenance is underway:
++
+`system node autosupport invoke -node * -type all -message MAINT=maintenance-window-in-hours`
++
+"`maintenance-window-in-hours`" specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
++
+`system node autosupport invoke -node * -type all -message MAINT=end`
+
+. Repeat the command on the partner cluster.
 
 == Enabling transition mode and disabling cluster HA
 
-[.lead]
 You must enable the MetroCluster transition mode to allow the old and new nodes to operate together in the MetroCluster configuration, and disable cluster HA.
 
 . Enable transition:
- .. Change to the advanced privilege level: `set -privilege advanced`
- .. Enable transition mode: `metrocluster transition enable -transition-mode non-disruptive`
+.. Change to the advanced privilege level:
++
+`set -privilege advanced`
+.. Enable transition mode:
++
+`metrocluster transition enable -transition-mode non-disruptive`
 +
 NOTE: Run this command on one cluster only.
 +
@@ -54,7 +63,9 @@ cluster_A::*>
 
 ....
 
- .. Return to the admin privilege level: `set -privilege admin`
+.. Return to the admin privilege level:
++
+`set -privilege admin`
 . Verify that transition is enabled on both the clusters.
 +
 ....
@@ -133,13 +144,16 @@ cluster_B::>
 
 == Joining the MetroCluster IP nodes to the clusters
 
-[.lead]
 You must add the four new MetroCluster IP nodes to the existing MetroCluster configuration.
+
+.About this task
 
 You must perform this task on both clusters.
 
+.Steps
+
 . Add the MetroCluster IP nodes to the existing MetroCluster configuration.
- .. Join the first MetroCluster IP node (node_A_1-IP) to the existing MetroCluster FC configuration.
+.. Join the first MetroCluster IP node (node_A_1-IP) to the existing MetroCluster FC configuration.
 +
 ....
 
@@ -192,19 +206,24 @@ Do you want to use this configuration? {yes, no} [yes]: yes
 .
 ....
 
- .. Join the second MetroCluster IP node (node_A_2-IP) to the existing MetroCluster FC configuration.
+.. Join the second MetroCluster IP node (node_A_2-IP) to the existing MetroCluster FC configuration.
 . Repeat these steps to join node_B_1-IP and node_B_2-IP to cluster_B.
 
 == Configuring intercluster LIFs, creating the MetroCluster interfaces, and mirroring root aggregates
 
-[.lead]
 You must create cluster peering LIFs, create the MetroCluster interfaces on the new MetroCluster IP nodes.
+
+.About this task
 
 The home port used in the examples are platform-specific. You should use the appropriate home port specific to MetroCluster IP node platform.
 
+.Steps
+
 . On the new MetroCluster IP nodes, link:../install-ip/task_sw_config_configure_clusters.html#configuring-intercluster-lifs-for-cluster-peering[configure the intercluster LIFs].
 
-. On each site, verify that cluster peering is configured: `cluster peer show`
+. On each site, verify that cluster peering is configured:
++
+`cluster peer show`
 +
 The following example shows the cluster peering configuration on cluster_A:
 +
@@ -224,7 +243,9 @@ Peer Cluster Name         Cluster Serial Number Availability   Authentication
 cluster_A 1-80-000011 Available ok
 ....
 
-. Configure the DR group for the MetroCluster IP nodes: `metrocluster configuration-settings dr-group create -partner-cluster`
+. Configure the DR group for the MetroCluster IP nodes:
++
+`metrocluster configuration-settings dr-group create -partner-cluster`
 +
 ....
 cluster_A::> metrocluster configuration-settings dr-group create -partner-cluster
@@ -233,7 +254,9 @@ cluster_B -local-node node_A_3-IP -remote-node node_B_3-IP
 cluster_A::>
 ....
 
-. Verify that the DR group is created. `metrocluster configuration-settings dr-group show`
+. Verify that the DR group is created.
++
+`metrocluster configuration-settings dr-group show`
 +
 ....
 cluster_A::> metrocluster configuration-settings dr-group show
@@ -292,12 +315,16 @@ Group Cluster Node               State          Mirroring Mode
                                                 -         -
 ....
 
-. Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes: `metrocluster configuration-settings interface create -cluster-name`
+. Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes:
++
+`metrocluster configuration-settings interface create -cluster-name`
 +
 See link:../install-ip/task_sw_config_configure_clusters.html#configuring-and-connecting-the-metrocluster-ip-interfaces[Configuring and connecting the MetroCluster IP interfaces] for considerations when configuring the IP interfaces.
 // BURT 1380267
++
 NOTE: You can configure the MetroCluster IP interfaces from either cluster. Also, starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:../install-ip/concept_considerations_layer_3.html.
 +
+
 ....
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_3-IP -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
 [Job 260] Job succeeded: Interface Create is successful.
@@ -324,7 +351,9 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [Job 267] Job succeeded: Interface Create is successful.
 ....
 
-. Verify the MetroCluster IP interfaces are created: `metrocluster configuration-settings interface show`
+. Verify the MetroCluster IP interfaces are created:
++
+`metrocluster configuration-settings interface show`
 +
 ....
 cluster_A::>metrocluster configuration-settings interface show
@@ -359,7 +388,9 @@ Group Cluster Node    Network Address Netmask         Gateway         State
 cluster_A>
 ....
 
-. Connect the MetroCluster IP interfaces: `metrocluster configuration-settings connection connect`
+. Connect the MetroCluster IP interfaces:
++
+`metrocluster configuration-settings connection connect`
 +
 NOTE: This command might take several minutes to complete.
 +
@@ -370,7 +401,9 @@ cluster_A::> metrocluster configuration-settings connection connect
 cluster_A::>
 ....
 
-. Verify the connections are properly established: `metrocluster configuration-settings connection show`
+. Verify the connections are properly established:
++
+`metrocluster configuration-settings connection show`
 +
 ....
 cluster_A::> metrocluster configuration-settings connection show
@@ -441,7 +474,9 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 cluster_A::>
 ....
 
-. Verify disk autoassignment and partitioning: `disk show -pool Pool1`
+. Verify disk autoassignment and partitioning:
++
+`disk show -pool Pool1`
 +
 ....
 cluster_A::> disk show -pool Pool1
@@ -467,7 +502,9 @@ Disk                   Size Shelf Bay Type    Type        Name      Owner
 cluster_A::>
 ....
 
-. Mirror the root aggregates: `storage aggregate mirror -aggregate aggr0_node_A_3-IP`
+. Mirror the root aggregates:
++
+`storage aggregate mirror -aggregate aggr0_node_A_3-IP`
 +
 NOTE: You must complete this step on each MetroCluster IP node.
 +
@@ -495,7 +532,9 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ....
 
-. Verify that the root aggregates are mirrored: `storage aggregate show`
+. Verify that the root aggregates are mirrored:
++
+`storage aggregate show`
 +
 ....
 cluster_A::> aggr show
@@ -529,10 +568,13 @@ aggr_data_a2
 
 == Finalizing the addition of the MetroCluster IP nodes
 
-[.lead]
 You must incorporate the new DR group into the MetroCluster configuration and create mirrored data aggregates on the new nodes.
 
-. Create mirrored data aggregates on each of the new MetroCluster nodes: `storage aggregate create -aggregate aggregate-name -node node-name -diskcount no-of-disks -mirror true`
+.Steps
+
+. Create mirrored data aggregates on each of the new MetroCluster nodes:
++
+`storage aggregate create -aggregate aggregate-name -node node-name -diskcount no-of-disks -mirror true`
 +
 NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
 +
@@ -576,7 +618,9 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ....
 
-. Configure the MetroCluster to implement the changes: `metrocluster configure`
+. Configure the MetroCluster to implement the changes:
++
+`metrocluster configure`
 +
 ....
 cluster_A::*> metrocluster configure
@@ -586,7 +630,9 @@ cluster_A::*> metrocluster configure
 cluster_A::*>
 ....
 
-. Verify that the nodes are added to their DR group: `metrocluster node show`
+. Verify that the nodes are added to their DR group:
++
+`metrocluster node show`
 +
 ....
 cluster_A::*> metrocluster node show
@@ -612,7 +658,7 @@ cluster_A::*>
 ....
 
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
- .. Display the volumes to identify the MDV volumes:
+.. Display the volumes to identify the MDV volumes:
 +
 NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
@@ -637,8 +683,12 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 11 entries were displayed.mple
 ....
 
- .. Set the advanced privilege level: `set -privilege advanced`
- .. Move the MDV volumes, one at a time: `volume move start -volume mdv-volume -destination-aggregate aggr-on-new-node -vserver vserver-name`
+.. Set the advanced privilege level:
++
+`set -privilege advanced`
+.. Move the MDV volumes, one at a time:
++
+`volume move start -volume mdv-volume -destination-aggregate aggr-on-new-node -vserver vserver-name`
 +
 The following example shows the command and output for moving MDV_CRS_d6b0b313ff5611e9837100a098544e51_A to aggregate data_a3 on node_A_3.
 +
@@ -652,7 +702,9 @@ Warning: You are about to modify the system volume
 [Job 494] Job is queued: Move "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" in Vserver "cluster_A" to aggregate "data_a3". Use the "volume move show -vserver cluster_A -volume MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" command to view the status of this operation.
 ....
 
- .. Use the volume show command to check that the MDV volume has been successfully moved: `volume show mdv-name`
+.. Use the volume show command to check that the MDV volume has been successfully moved:
++
+`volume show mdv-name`
 +
 The following output shows that the MDV volume has been successfully moved.
 +
@@ -664,4 +716,8 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
                        aggr_a2      online     RW         10GB     9.50GB    0%
 ....
 
- .. Return to admin mode: `set -privilege admin`
+.. Return to admin mode:
++
+`set -privilege admin`
+
+// BURT 1448684, 21 JAN 2022

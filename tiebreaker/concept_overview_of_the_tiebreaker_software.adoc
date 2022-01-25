@@ -13,14 +13,12 @@ It is helpful to understand what the NetApp MetroCluster Tiebreaker software is 
 
 == Detecting failures with NetApp MetroCluster Tiebreaker software
 
-[.lead]
 The Tiebreaker software resides on a Linux host. You need the Tiebreaker software only if you want to monitor two clusters and the connectivity status between them from a third site. Doing so enables each partner in a cluster to distinguish between an ISL failure, when inter-site links are down, from a site failure.
 
 After you install the Tiebreaker software on a Linux host, you can configure the clusters in a MetroCluster configuration to monitor for disaster conditions.
 
 == How the Tiebreaker software detects site failures
 
-[.lead]
 The NetApp MetroCluster Tiebreaker software checks the reachability of the nodes in a MetroCluster configuration and the cluster to determine whether a site failure has occurred. The Tiebreaker software also triggers an alert under certain conditions.
 
 === Components monitored by the Tiebreaker software
@@ -50,13 +48,12 @@ The Tiebreaker software triggers an alert, but ONTAP vetoes that alert. In this 
 
 * Any scenario in which the Tiebreaker software can either reach at least one node or the cluster interface at the disaster site, or the surviving site still can reach either node at the disaster site through either FC (NV interconnect and storage) or intercluster peering
 
-*Related information*
+.Related information
 
-xref:concept_risks_and_limitation_of_using_mcc_tiebreaker_in_active_mode.adoc[Risks and limitations of using MetroCluster Tiebreaker in active mode]
+link:concept_risks_and_limitation_of_using_mcc_tiebreaker_in_active_mode.html[Risks and limitations of using MetroCluster Tiebreaker in active mode]
 
 == How the Tiebreaker software detects intersite connectivity failures
 
-[.lead]
 The MetroCluster Tiebreaker software alerts you if all connectivity between the sites is lost.
 
 === Types of network paths
@@ -81,7 +78,6 @@ The Tiebreaker software regularly retrieves the status of intersite connectivity
 
 == How different disaster types affect Tiebreaker software detection time
 
-[.lead]
 For better disaster recovery planning, the MetroCluster Tiebreaker software takes some time in detecting a disaster. This time spent is the "`disaster detection time`". The MetroCluster Tiebreaker software detects the site disaster within 30 seconds from the time of occurrence of the disaster and triggers the disaster recovery operation to notify you about the disaster.
 
 The detection time also depends on the type of disaster and might exceed 30 seconds in some scenarios, mostly known as "`rolling disasters`". The main types of rolling disaster are as follows:
@@ -111,9 +107,10 @@ The Tiebreaker software triggers an alert when a node stops operating. If FC swi
 
 == About the Tiebreaker CLI and man pages
 
-[.lead]
 The Tiebreaker CLI provides commands that enable you to remotely configure the Tiebreaker software and monitor the MetroCluster configurations.
 
 The CLI command prompt is represented as NetApp MetroCluster Tiebreaker::>.
 
 The man pages are available in the CLI by entering the applicable command name at the prompt.
+
+// BURT 1448684, 20 JAN 2022

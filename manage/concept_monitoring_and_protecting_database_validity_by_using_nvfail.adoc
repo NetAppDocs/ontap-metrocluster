@@ -18,14 +18,14 @@ After the NVRAM data loss during failover or boot recovery, NFS clients cannot a
 
 == How NVFAIL impacts access to NFS volumes or LUNs
 
-[.lead]
 The NVFAIL state is set when ONTAP detects NVRAM errors when booting, when a MetroCluster switchover operation occurs, or during an HA takeover operation if the NVFAIL option is set on the volume. If no errors are detected at startup, the file service is started normally. However, if NVRAM errors are detected or NVFAIL processing is enforced on a disaster switchover, ONTAP stops database instances from responding.
 
 When you enable the NVFAIL option, one of the processes described in the following table takes place during bootup:
 
 
 |===
-| If... | Then...
+
+h| If... h| Then...
 
 a|
 ONTAP detects no NVRAM errors
@@ -64,14 +64,15 @@ LUNs in that volume are brought offline. The `in-nvfailed-state` option on the v
 
 == Commands for monitoring data loss events
 
-[.lead]
 If you enable the NVFAIL option, you receive notification when a system crash caused by NVRAM inconsistencies or a MetroCluster switchover occurs.
 
 By default, the NVFAIL parameter is not enabled.
 
-[cols=2*,options="header"]
+[cols="1,2"]
 |===
-| If you want to...| Use this command...
+
+h| If you want to... h| Use this command...
+
 a|
 Create a new volume with NVFAIL enabled
 a|
@@ -98,7 +99,6 @@ See the man page for each command for more information.
 
 == Accessing volumes in NVFAIL state after a switchover
 
-[.lead]
 After a switchover, you must clear the NVFAIL state by resetting the `-in-nvfailed-state` parameter of the `volume modify` command to remove the restriction of clients to access data.
 
 .Before you begin
@@ -125,7 +125,6 @@ link:../manage/concept_monitoring_and_protecting_database_validity_by_using_nvfa
 
 == Recovering LUNs in NVFAIL states after switchover
 
-[.lead]
 After a switchover, the host no longer has access to data on the LUNs that are in NVFAIL states. You must perform a number of actions before the database has access to the LUNs.
 
 .Before you begin
@@ -141,3 +140,5 @@ The database must not be running.
 This might involve host-based recovery or recovery done on the storage controller using SnapRestore.
 
 . Bring the database application online after recovering the LUNs.
+
+// BURT 1448684, 21 JAN 2022
