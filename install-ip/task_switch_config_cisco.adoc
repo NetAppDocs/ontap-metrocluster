@@ -11,12 +11,13 @@ You must configure the Cisco IP switches for use as the cluster interconnect and
 
 .About this task
 
-* Several of the procedures in this section are independent procedures and you only need to execute those you are directed to or are relevant to your task.
+Several of the procedures in this section are independent procedures and you only need to execute those you are directed to or are relevant to your task.
 
 == Resetting the Cisco IP switch to factory defaults
 
 [.lead]
 Before installing any RCF file, you must erase the Cisco switch configuration and perform basic configuration. This procedure is required when you want to reinstall the same RCF file after a previous installation failed, or if you want to install a new version of an RCF file.
+
 .About this task
 
 * You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
@@ -556,9 +557,7 @@ IP_switch_A_1(config)#
 IP_switch_A_1(config)# key-chain macsec-psk no-show
 ----
 +
-NOTE:
-+
-The octet string is also hidden when you save the configuration to a file.
+NOTE: The octet string is also hidden when you save the configuration to a file.
 +
 By default, PSK keys are displayed in encrypted format and can easily be decrypted. This command applies only to MACsec key chains.
 
@@ -676,7 +675,6 @@ Choose from the following options:
 ----
 IP_switch_A_1(config-macsec-policy)# conf-offset CONF-OFFSET-0
 ----
-+
 NOTE: This command might be necessary for intermediate switches to use packet headers (dmac, smac, etype) like MPLS tags.
 
 . Copy the running configuration to the startup configuration: `copy running-config startup-config`
@@ -698,7 +696,6 @@ IP_switch_A_1(config-macsec-policy)# show macsec policy
  .. Run: `show macsec mka summary`
  .. Run: `show macsec mka session`
  .. Run: `show macsec mka statistics`
-
 +
 You can verify the MACsec configuration using the following commands:
 +
@@ -787,7 +784,6 @@ This task must be performed on all four switches in the MetroCluster IP configur
  .. Set fec to off: `fec off`
  .. Repeat the previous steps for each 25-Gbps port on the switch.
  .. Exit configuration mode: `exit`
-
 +
 The following example shows the commands for interface Ethernet1/25/1 on switch IP_switch_A_1:
 +
