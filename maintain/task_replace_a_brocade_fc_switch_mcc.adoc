@@ -15,9 +15,10 @@ You need the admin password and access to an FTP or SCP server.
 
 In the following examples, FC_switch_A_1 is the healthy switch and FC_switch_B_1 is the impaired switch. The switch port usage in the examples is shown in the following table:
 
-[options="header"]
 |===
-| Port connections| Ports
+
+h| Port connections h| Ports
+
 a|
 FC-VI connections
 a|
@@ -35,29 +36,31 @@ ISL connections
 a|
 10, 11
 |===
+
 The examples show two FC-to-SAS bridges. If you have more, you must disable and subsequently enable the additional ports.
 
 NOTE: This procedure is nondisruptive and takes approximately two hours to complete.
 
 Your switch port usage should follow the recommended assignments.
 
-* xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.adoc[Port assignments for FC switches when using ONTAP 9.0]
-* xref:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.adoc[Port assignments for FC switches when using ONTAP 9.1 and later]
+* link:concept_port_assignments_for_fc_switches_when_using_ontap_9_0.html[Port assignments for FC switches when using ONTAP 9.0]
+* link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
 
 .Steps
+
 . Fence off the switch undergoing replacement by disabling the ISL ports on the healthy switch in the fabric and the FC-VI and HBA ports on the impaired switch (if the impaired switch is still operating):
- .. Disable the ISL ports on the healthy switch for each port:
- +
-`*portcfgpersistentdisable _port-number_*`
+.. Disable the ISL ports on the healthy switch for each port:
++
+`portcfgpersistentdisable _port-number_`
 +
 ----
 FC_switch_A_1:admin> portcfgpersistentdisable 10
 FC_switch_A_1:admin> portcfgpersistentdisable 11
 ----
 
- .. If the impaired switch is still operational, disable the FC-VI and HBA ports on that switch for each port:
- +
-`*portcfgpersistentdisable _port-number_*`
+.. If the impaired switch is still operational, disable the FC-VI and HBA ports on that switch for each port:
++
+`portcfgpersistentdisable _port-number_`
 +
 ----
 FC_switch_B_1:admin> portcfgpersistentdisable 0
@@ -67,7 +70,8 @@ FC_switch_B_1:admin> portcfgpersistentdisable 3
 FC_switch_B_1:admin> portcfgpersistentdisable 4
 FC_switch_B_1:admin> portcfgpersistentdisable 5
 ----
-. If the impaired switch is still operational, gather the output from the `*switchshow*` command.
+
+. If the impaired switch is still operational, gather the output from the `switchshow` command.
 +
 ----
 FC_switch_B_1:admin> switchshow
@@ -84,11 +88,11 @@ FC_switch_B_1:admin> switchshow
 ----
 
 . Boot and preconfigure the new switch prior to physically installing it:
- .. Power up the new switch and let it boot up.
- .. Check the firmware version on the switch to confirm that it matches the version of the other FC switches:
- +
-`*firmwareShow*`
- .. Configure the new switch as described in the _MetroCluster Installation and Configuration Guide_, but skipping the "`Configuring zoning on Brocade FC switches`" section.
+.. Power up the new switch and let it boot up.
+.. Check the firmware version on the switch to confirm that it matches the version of the other FC switches:
++
+`firmwareShow`
+.. Configure the new switch as described in _MetroCluster Installation and Configuration, but skipping the "`Configuring zoning on Brocade FC switches`" procedure.
 +
 https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 +
@@ -96,7 +100,7 @@ You configure zoning later in this procedure.
 +
 NOTE: At this point, the new switch is not cabled to the MetroCluster configuration.
 
- .. Disable the FC-VI, HBA, and storage ports on the new switch, and the ports connected to the FC-SAS bridges.
+.. Disable the FC-VI, HBA, and storage ports on the new switch, and the ports connected to the FC-SAS bridges.
 +
 ----
 FC_switch_B_1:admin> portcfgpersistentdisable 0
@@ -110,34 +114,34 @@ FC_switch_B_1:admin> portcfgpersistentdisable 6
 FC_switch_B_1:admin> portcfgpersistentdisable 7
 ----
 . Physically replace the switch:
- .. Power off the impaired FC switch.
- .. Power off the replacement FC switch.
- .. Uncable and remove the impaired switch, carefully noting which cables connected to which ports.
- .. Install the replacement switch in the rack.
- .. Cable the replacement switch exactly as the old switch was cabled.
- .. Power on the new FC switch.
-. If you want to enable ISL encryption, complete the applicable tasks in the link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/index.html[Fabric-attached MetroCluster installation and configuration].
+.. Power off the impaired FC switch.
+.. Power off the replacement FC switch.
+.. Uncable and remove the impaired switch, carefully noting which cables connected to which ports.
+.. Install the replacement switch in the rack.
+.. Cable the replacement switch exactly as the old switch was cabled.
+.. Power on the new FC switch.
+. If you want to enable ISL encryption, complete the applicable tasks in  link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/index.html[Fabric-attached MetroCluster installation and configuration].
 +
 If you are enabling ISL encryption, you need to complete the following tasks:
 
- ** Disabling the virtual fabric
- ** Setting the payload
- ** Setting the authentication policy
- ** Enabling ISL encryption on Brocade switches
+ ** Disable the virtual fabric
+ ** Set the payload
+ ** Set the authentication policy
+ ** Enable ISL encryption on Brocade switches
 
 . Complete the configuration of the new switch:
- .. Enable the ISLs:
- +
-`*portcfgpersistentenable _port-number_*`
+.. Enable the ISLs:
++
+`portcfgpersistentenable _port-number_`
 +
 ----
 FC_switch_B_1:admin> portcfgpersistentenable 10
 FC_switch_B_1:admin> portcfgpersistentenable 11
 ----
 
- .. On the replacement switch (FC_switch_B_1 in the example), verify that the ISLs are online:
- +
-`*switchshow*`
+.. On the replacement switch (FC_switch_B_1 in the example), verify that the ISLs are online:
++
+`switchshow`
 +
 ----
 FC_switch_B_1:admin> switchshow
@@ -160,14 +164,14 @@ Index Port Address Media Speed State  Proto
 ...
 ----
 
- .. Enable the storage ports that connect to the FC bridges.
+.. Enable the storage ports that connect to the FC bridges.
 +
 ----
 FC_switch_B_1:admin> portcfgpersistentenable 6
 FC_switch_B_1:admin> portcfgpersistentenable 7
 ----
 
- .. Enable the storage, HBA, and FC-VI ports.
+.. Enable the storage, HBA, and FC-VI ports.
 +
 The following example shows the commands used to enable the ports connecting HBA adapters:
 +
@@ -186,28 +190,28 @@ FC_switch_B_1:admin> portcfgpersistentenable 3
 ----
 . Verify that the ports are online:
 +
-`*switchshow*`
+`switchshow`
 . Verify the operation of the MetroCluster configuration in ONTAP:
- .. Check whether the system is multipathed:
- +
-`*node run -node _node-name_ sysconfig -a*`
- .. Check for any health alerts on both clusters:
+.. Check whether the system is multipathed:
 +
-`*system health alert show*`
- .. Confirm the MetroCluster configuration and that the operational mode is normal:
+`node run -node _node-name_ sysconfig -a`
+.. Check for any health alerts on both clusters:
 +
-`*metrocluster show*`
- .. Perform a MetroCluster check:
+`system health alert show`
+.. Confirm the MetroCluster configuration and that the operational mode is normal:
 +
-`*metrocluster check run*`
- .. Display the results of the MetroCluster check:
+`metrocluster show`
+.. Perform a MetroCluster check:
 +
-`*metrocluster check show*`
- .. Check for any health alerts on the switches (if present):
+`metrocluster check run`
+.. Display the results of the MetroCluster check:
 +
-`*storage switch show*`
- .. Run Config Advisor.
+`metrocluster check show`
+.. Check for any health alerts on the switches (if present):
 +
-https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+`storage switch show`
+.. Run https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[Config Advisor].
 
- .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+.. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+
+//BURT 1448684, 02 FEB 2022
