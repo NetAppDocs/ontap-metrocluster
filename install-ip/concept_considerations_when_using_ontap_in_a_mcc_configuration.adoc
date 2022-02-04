@@ -319,6 +319,10 @@ image::../media/svm_dr_image_2.gif[]
 +
 However, after the switchover or switchback process completes, the next SVM DR scheduled updates will succeed.
 
+* Only one cluster in a MetroCluster configuration can be the source SVM in a SVM DR relationship.
++
+You cannot have a SVM DR relationships for both sites.
+
 See "`Replicating the SVM configuration`" in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-dap/home.html[Data protection^] for details on configuring an SVM DR relationship.
 
 
@@ -359,3 +363,4 @@ NOTE: In ONTAP versions earlier than 9.0, the NVFAIL flag is used for each switc
 `vol modify -vserver vserver-name -volume volume-name -dr-force-nvfail on`
 
 // UT 1448684, 20 JAN 2022
+// BURT 1419544, 04 FEB 2022
