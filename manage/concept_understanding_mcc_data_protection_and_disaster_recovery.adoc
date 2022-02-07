@@ -82,7 +82,7 @@ The availability of remote plexes after switchover depends on the MetroCluster c
 If the ISLs have failed and the disaster site storage is not available, the sync-destination SVM begins serving data from the surviving site.
 
 * For MetroCluster IP configurations the availability of the remote plexes depends on the ONTAP version:
- ** Starting with ONTAP 9.5, both local and remote plexes remain online if the disaster site nodes remain booted up.
+ ** Beginning with ONTAP 9.5, both local and remote plexes remain online if the disaster site nodes remain booted up.
  ** Prior to ONTAP 9.5, storage is available only from local plex on the surviving site.
 +
 The sync-destination SVM begins serving data from the surviving site.
@@ -666,9 +666,9 @@ link:../manage/task_verifiy_that_your_system_is_ready_for_a_switchover.html[Heal
 
 == Automatic healing of aggregates on MetroCluster IP configurations after switchover
 
-Starting with ONTAP 9.5, healing is automated during negotiated switchover operations on MetroCluster IP configurations. Starting with ONTAP 9.6, automated healing after unscheduled switchover is supported. This removes the requirement to issue the `metrocluster heal` commands.
+Beginning with ONTAP 9.5, healing is automated during negotiated switchover operations on MetroCluster IP configurations. Beginning with ONTAP 9.6, automated healing after unscheduled switchover is supported. This removes the requirement to issue the `metrocluster heal` commands.
 
-=== Automatic healing after negotiated switchover (starting with ONTAP 9.5)
+=== Automatic healing after negotiated switchover (beginning with ONTAP 9.5)
 
 After performing a negotiated switchover (a switchover command issued without the -forced-on-disaster true option), the automatic healing functionality simplifies the steps required to return the system to normal operation. On systems with automatic healing, the following occurs after the switchover:
 
@@ -688,9 +688,9 @@ The manual healing commands are still required on MetroCluster IP configurations
 
 image::../media/mcc_so_sb_with_autoheal.gif[]
 
-=== Automatic healing after unscheduled switchover (starting with ONTAP 9.6)
+=== Automatic healing after unscheduled switchover (beginning with ONTAP 9.6)
 
-Automatic healing after an unscheduled switchover is supported on MetroCluster IP configurations starting with ONTAP 9.6. An unscheduled switchover is one in which in you issue the `switchover` command with the `-forced-on-disaster true` option.
+Automatic healing after an unscheduled switchover is supported on MetroCluster IP configurations beginning with ONTAP 9.6. An unscheduled switchover is one in which in you issue the `switchover` command with the `-forced-on-disaster true` option.
 
 Automatic healing after an unscheduled switchover is not supported on MetroCluster FC configurations, and the manual healing commands are still required after unscheduled switchover on MetroCluster IP configurations running ONTAP 9.5 and earlier.
 
