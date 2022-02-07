@@ -86,17 +86,17 @@ This task must be performed on all switches in the MetroCluster configuration.
 .Steps
 
 . Make a console connection and log in to both switches in the same fabric.
-. Issue the following command to set the switch back to its default settings:
+. Set the switch back to its default settings:
 +
 `write erase`
 +
-You can respond `y` when prompted to confirm the command. This erases all licenses and configuration information on the switch.
+You can respond "`y`" when prompted to confirm the command. This erases all licenses and configuration information on the switch.
 
-. Issue the following command to reboot the switch:
+. Reboot the switch:
 +
 `reload`
 +
-You can respond `y` when prompted to confirm the command.
+You can respond "`y`" when prompted to confirm the command.
 
 . Repeat the `write erase` and `reload` commands on the other switch.
 +
@@ -132,9 +132,9 @@ You must specify the basic settings with the `setup` command or after issuing th
 
 . Accept the default responses to the setup questions until you are prompted for the SNMP community string.
 
-. Set the community string to "public" (all lowercase) to allow access from the ONTAP Health Monitors.
+. Set the community string to "`public`" (all lowercase) to allow access from the ONTAP Health Monitors.
 +
-You can set the community string to a value other than "public", but you must configure the ONTAP Health Monitors using the community string you specify.
+You can set the community string to a value other than "`public`", but you must configure the ONTAP Health Monitors using the community string you specify.
 +
 The following example shows the commands on FC_switch_A_1:
 +
@@ -172,18 +172,18 @@ You should verify the number of licensed ports in the switch configuration and, 
 
 .Steps
 
-. Issue the following command to show license usage for a switch fabric:
+. Display the license usage for a switch fabric:
 +
 `show port-resources module 1`
 +
 Determine which ports require licenses. If some of those ports are unlicensed, determine if you have extra licensed ports and consider removing the licenses from them.
 
-. Issue the following command to enter configuration mode:
+. Enter configuration mode:
 +
 `config t`
 
 . Remove the license from the selected port:
-.. Issue the following command to select the port to be unlicensed:
+.. Select the port to be unlicensed:
 +
 `interface _interface-name_`
 
@@ -196,7 +196,7 @@ Determine which ports require licenses. If some of those ports are unlicensed, d
 `exit`
 
 . Acquire the license for the selected port:
-.. Issue the following command to select the port to be unlicensed:
+.. Select the port to be unlicensed:
 +
 `interface _interface-name_`
 
@@ -271,7 +271,7 @@ In Cisco MDS 9148 or 9148S switches, you must manually enable the ports required
 +
 `show port-resources module _blade_number_`
 
-. License and acquire the required port in a port group by entering the following commands in sequence:
+. License and acquire the required port in a port group:
 +
 `config t`
 +
@@ -319,7 +319,7 @@ This task must be performed on each switch in the MetroCluster configuration.
 
 .Steps
 
-. Issue the following command to enter configuration mode:
+. Enter configuration mode:
 +
 `config t`
 
@@ -331,17 +331,17 @@ This task must be performed on each switch in the MetroCluster configuration.
 +
 `shutdown`
 
-. Set the ports to F mode by issuing the following command:
+. Set the ports to F mode:
 +
 `switchport mode F`
 
-. Set the ports to fixed speed by issuing the following command:
+. Set the ports to fixed speed:
 +
 `switchport speed _speed-value_`
 +
 `_speed-value_` is either `8000` or `16000`
 
-. Set the rate mode of the switch port to dedicated by issuing the following command:
+. Set the rate mode of the switch port to dedicated:
 +
 `switchport rate-mode dedicated`
 
@@ -349,7 +349,7 @@ This task must be performed on each switch in the MetroCluster configuration.
 +
 `no shutdown`
 
-. Issue the following command to exit configuration mode:
+. Exit configuration mode:
 +
 `end`
 
@@ -505,6 +505,7 @@ The VSANs should have a unique number and name. You must do additional configura
 
 The examples of this task use the following naming conventions:
 
+[cols="1,2,1"]
 |===
 
 h| Switch fabric h| VSAN name h| ID number
@@ -1102,10 +1103,9 @@ Two FCIP profiles are created on each switch:
 +
 `no shutdown`
 .. Exit configuration mode:
-
++
 `exit`
 --
-
 +
 The following example shows the configuration of an IPStorage1/1 port:
 +
@@ -1240,7 +1240,7 @@ This interface is used for FC-IV traffic.
 .. Enable the interface:
 +
 `no shutdown`
-.. Configure the control TCP connection to 48 and the data connection to 26to mark all packets on that differentiated services code point (DSCP) value:
+.. Configure the control TCP connection to 48 and the data connection to 26 to mark all packets on that differentiated services code point (DSCP) value:
 +
 `qos control 48 data 26`
  .. Exit the interface configuration mode:
@@ -1286,7 +1286,7 @@ This interface is used for storage traffic.
 .. Enable the interface:
 +
 `no shutdown`
-.. Configure the control TCP connection to 48 and data connection to 26to mark all packets on that differentiated services code point (DSCP) value:
+.. Configure the control TCP connection to 48 and data connection to 26 to mark all packets on that differentiated services code point (DSCP) value:
 +
 `qos control 48 data 26`
 
@@ -1592,7 +1592,8 @@ NOTE: On each switch, the IPStorage interfaces "`IPStorage1/1`" and "`IPStorage1
 .. Enter configuration mode:
 +
 `conf t`
-.. Configure the FCIP profiles with the following profile names: +
+.. Configure the FCIP profiles with the following profile names:
++
 `fcip profile _FCIP-profile-name_`
 +
 The following list provides the values for the `_FCIP-profile-name_` parameter:
@@ -2033,10 +2034,9 @@ FC_switch_B_1# show zoneset active
 `no zoneset activate name _zoneset_name_ vsan _vsan_id_`
 +
 The following example shows two zone sets being disabled:
-
++
   *** ZoneSet_A on FC_switch_A_1 in VSAN 10
   *** ZoneSet_B on FC_switch_B_1 in VSAN 20
-
 +
 ----
 FC_switch_A_1# no zoneset activate name ZoneSet_A vsan 10

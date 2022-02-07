@@ -26,7 +26,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk 
 
 . At the LOADER prompt, configure the IP address of the new controller module based on DHCP availability:
 +
-
+[cols="1,3"]
 |===
 
 h| If DHCP is... h| Then enter the following command...
@@ -57,6 +57,7 @@ NOTE: Other parameters might be necessary for your interface. For details, use t
 . At the LOADER prompt, netboot the new node:
 +
 
+[cols="1,3"]
 |===
 
 h| For... h| Issue this command...
@@ -78,20 +79,20 @@ The `_path_to_the_web-accessible_directory_` is the location of the downloaded `
 +
 This menu option downloads and installs the new ONTAP image to the boot device.
 
- ** You should enter `*y`* when prompted with the message that this procedure is not supported for nondisruptive upgrade on an HA pair.
- ** You should enter `*y*` when warned that this process replaces the existing ONTAP software with new software.
+ ** You should enter "`y`" when prompted with the message that this procedure is not supported for nondisruptive upgrade on an HA pair.
+ ** You should enter "`y`" when warned that this process replaces the existing ONTAP software with new software.
  ** You should enter the path as follows when prompted for the URL of the image.tgz file:
 +
 `http://__path_to_the_web-accessible_directory__/image.tgz`
 
-. Enter `*y*` when prompted regarding nondisruptive upgrade or replacement of the software.
+. Enter "`y`" when prompted regarding nondisruptive upgrade or replacement of the software.
 . Enter the path to the image.tgz file when prompted for the URL of the package.
 +
 ----
 What is the URL for the package? `http://path_to_web-accessible_directory/image.tgz`
 ----
 
-. Enter `*n*` to skip the backup recovery when prompted to restore the backup configuration.
+. Enter "`n`" to skip the backup recovery when prompted to restore the backup configuration.
 +
 ----
 ****************************************************************
@@ -110,7 +111,7 @@ Do you want to restore the backup configuration
 now? {y|n} `n`
 ----
 
-. Enter `*y*` when prompted to reboot now.
+. Enter "`y`" when prompted to reboot now.
 +
 ----
 The node must be rebooted to start using the newly installed software. Do you want to
@@ -119,14 +120,14 @@ reboot now? {y|n} `y`
 
 . If necessary, select the option to *Clean configuration and initialize all disks* after the node has booted.
 +
-Because you are configuring a new controller module and the new controller module's disks are empty, you can respond `*y*` when the system warns you that this will erase all disks.
+Because you are configuring a new controller module and the new controller module's disks are empty, you can respond "`y`" when the system warns you that this will erase all disks.
 +
 NOTE: The amount of time needed to initialize disks depends on the size of your disks and configuration.
 
 . After the disks are initialized and the Cluster Setup wizard starts, set up the node:
 +
 Enter the node management LIF information on the console.
-. Log in to the node, and enter the `cluster setup` and then enter `join` when prompted to join the cluster.
+. Log in to the node, and enter the `cluster setup` and then enter "`join`" when prompted to join the cluster.
 +
 ----
 Do you want to create a new cluster or join an existing cluster? {create, join}: `join`
@@ -134,7 +135,7 @@ Do you want to create a new cluster or join an existing cluster? {create, join}:
 
 . Respond to the remaining prompts as appropriate for your site.
 +
-The link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ssg/home.html[Setup ONTAP] for your version of ONTAP contains additional details.
+The link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ssg/home.html[Setup ONTAP^] for your version of ONTAP contains additional details.
 
 . If the system is in a two-node switchless cluster configuration, create the cluster interfaces on the existing node using the network interface create command to create cluster LIFs on the cluster ports.
 +
@@ -189,3 +190,5 @@ node_A_2
        e0g       Default      Default          up       1500  auto/1000
 14 entries were displayed.
 ----
+
+// BURT 1448684, 01 FEB 2022
