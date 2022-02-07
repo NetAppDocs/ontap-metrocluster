@@ -22,9 +22,10 @@ The following task assumes a controller module using two ports for the cluster c
 
 The following table shows the example ports used in this task.
 
-[options="header"]
 |===
-| Number of cluster connections on the controller module| Group A ports| Group B ports
+
+h| Number of cluster connections on the controller module h| Group A ports h| Group B ports
+
 a|
 Two
 a|
@@ -44,9 +45,10 @@ e0b, e0d
 
 The following table shows which switch ports the FC nodes connect to. For the Broadcom BES-53248 switch, the port usage depends on the model of the MetroCluster IP nodes.
 
-[cols=4*,options="header"]
 |===
-| Switch model| MetroCluster IP node model| Switch port(s)| Connects to
+
+h| Switch model h| MetroCluster IP node model h| Switch port(s) h| Connects to
+
 .2+| Cisco 3132Q-V or 3232C
 .2+| Any
 a|
@@ -86,7 +88,6 @@ node_x_2-FC
 
 === Moving the local cluster connections when using new IP switches
 
-[.lead]
 If you are using new IP switches, you must physically move the existing MetroCluster FC nodes' cluster connections to the new switches.
 
 . Move the MetroCluster FC node group A cluster connections to the new IP switches.
@@ -98,7 +99,9 @@ Use the ports described in link:../transition/task_verify_mcc_health_fc_to_ip.ht
  .. Connect the group A ports of node_A_1-FC to the switch ports for the FC node on switch_A_1-IP
  .. Connect the group A ports of node_A_2-FC to the switch ports for the FC node on switch_A_1-IP
 
-. Verify that all cluster ports are up: `network port show -ipspace Cluster`
+. Verify that all cluster ports are up:
++
+`network port show -ipspace Cluster`
 +
 ....
 cluster_A::*> network port show -ipspace Cluster
@@ -124,7 +127,9 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 cluster_A::*>
 ....
 
-. Verify that all interfaces display true in the Is Home column: `network interface show -vserver cluster`
+. Verify that all interfaces display true in the "`Is Home`" column:
++
+`network interface show -vserver cluster`
 +
 This might take several minutes to complete.
 +
@@ -150,11 +155,10 @@ cluster_A::*>
 ....
 
 . Perform the above steps on both nodes (node_A_1-FC and node_A_2-FC) to move the group B ports of the cluster interfaces.
-. Repeat the above steps on the partner cluster "cluster_B".
+. Repeat the above steps on the partner cluster "`cluster_B`".
 
 === Moving the local cluster connections when reusing existing IP switches
 
-[.lead]
 If you are reusing existing IP switches, you must update firmware, reconfigure the switches with the correct Reference Configure Files (RCFs) and move the connections to the correct ports one switch at a time.
 
 This task is required only if the FC nodes are connected to existing IP switches and you are reusing the switches.
@@ -165,18 +169,18 @@ This task is required only if the FC nodes are connected to existing IP switches
 +
 You can see the Installation and Setup instructions for the platform to see the cluster port usage.
 +
-https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-a320-install-setup/home.html[AFF A320 systems: Installation and setup]
+https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-a320-install-setup/home.html[AFF A320 systems: Installation and setup^]
 +
-https://library.netapp.com/ecm/ecm_download_file/ECMLP2842666[AFF A220/FAS2700 Systems Installation and Setup Instructions]
+https://library.netapp.com/ecm/ecm_download_file/ECMLP2842666[AFF A220/FAS2700 Systems Installation and Setup Instructions^]
 +
-https://library.netapp.com/ecm/ecm_download_file/ECMLP2842668[AFF A800 Systems Installation and Setup Instructions]
+https://library.netapp.com/ecm/ecm_download_file/ECMLP2842668[AFF A800 Systems Installation and Setup Instructions^]
 +
-https://library.netapp.com/ecm/ecm_download_file/ECMLP2469722[AFF A300 Systems Installation and Setup Instructions]
+https://library.netapp.com/ecm/ecm_download_file/ECMLP2469722[AFF A300 Systems Installation and Setup Instructions^]
 +
-https://library.netapp.com/ecm/ecm_download_file/ECMLP2316769[FAS8200 Systems Installation and Setup Instructions]
+https://library.netapp.com/ecm/ecm_download_file/ECMLP2316769[FAS8200 Systems Installation and Setup Instructions^]
 . Reconfigure switch_A_1_IP using RCF files generated for your platform combination and transition.
 +
-Follow the steps in the section for your switch vendor from the _MetroCluster IP Installation and Configuration guide_, as given in the links below.
+Follow the steps in the procedure for your switch vendor from _MetroCluster IP Installation and Configuration_:
 +
 link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
 
@@ -196,9 +200,11 @@ You should use the latest firmware that the MetroCluster IP nodes support.
 
 . Reconnect the group A ports to switch_A_1_IP.
 +
-Use the ports described in xref:task_transition_from_mcc_fc_to_mcc_ip_configurations..adoc[Moving the cluster connections on the MetroCluster FC nodes].
+Use the ports described in link:task_transition_from_mcc_fc_to_mcc_ip_configurations.html[Moving the cluster connections on the MetroCluster FC nodes].
 
-. Verify that all cluster ports are up: `network port show -ipspace cluster`
+. Verify that all cluster ports are up:
++
+`network port show -ipspace cluster`
 +
 ....
 Cluster-A::*> network port show -ipspace cluster
@@ -224,7 +230,9 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 Cluster-A::*>
 ....
 
-. Verify that all interfaces are on their home port: `network interface show -vserver Cluster`
+. Verify that all interfaces are on their home port:
++
+`network interface show -vserver Cluster`
 +
 ....
 Cluster-A::*> network interface show -vserver Cluster
@@ -254,10 +262,11 @@ Cluster-A::*>
 
 == Verifying that the cluster connections are moved and the cluster is healthy
 
-[.lead]
 To ensure that there is proper connectivity and that the configuration is ready to proceed with the transition process, you must verify that the cluster connections are moved correctly, the cluster switches are recognized and the cluster is healthy.
 
-. Verify that all cluster ports are up and running: `network port show -ipspace Cluster`
+. Verify that all cluster ports are up and running:
++
+`network port show -ipspace Cluster`
 +
 ....
 Cluster-A::*> network port show -ipspace Cluster
@@ -283,11 +292,13 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 Cluster-A::*>
 ....
 
-. Verify that all interfaces are on their home port: `network interface show -vserver Cluster`
+. Verify that all interfaces are on their home port:
++
+`network interface show -vserver Cluster`
 +
 This might take several minutes to complete.
 +
-The following example shows that all interfaces show true in the Is Home column.
+The following example shows that all interfaces show true in the "`Is Home`" column.
 +
 ....
 Cluster-A::*> network interface show -vserver Cluster
@@ -310,7 +321,9 @@ Cluster
 Cluster-A::*>
 ....
 
-. Verify that both the local IP switches are discovered by the nodes: `network device-discovery show -protocol cdp`
+. Verify that both the local IP switches are discovered by the nodes:
++
+`network device-discovery show -protocol cdp`
 +
 ....
 Cluster-A::*> network device-discovery show -protocol cdp
@@ -332,7 +345,9 @@ Node-A-2-FC
 Cluster-A::*>
 ....
 
-. On the IP switch, verify that the MetroCluster IP nodes have been discovered by both local IP switches: `show cdp neighbors`
+. On the IP switch, verify that the MetroCluster IP nodes have been discovered by both local IP switches:
++
+`show cdp neighbors`
 +
 You must perform this step on each switch.
 +
@@ -389,3 +404,5 @@ Total entries displayed: 4
 
 (Switch-A-4-IP)#
 ....
+
+// BURT 1448684, 01 FEB 2022
