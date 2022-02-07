@@ -96,6 +96,35 @@ NOTE: The new license keys that you require are automatically generated and sent
 +
 `license clean-up -unused`
 
+== Restore key management
+If data volumes are encrypted, you must restore key management. If the root volume is encrypted, you must recover key management.
+
+.Steps
+
+. If data volumes are encrypted, restore the keys using the correct command for your key management configuration.
++
+[cols="1,2"]
+|===
+
+h| If you are using... h| Use this command...
+
+a|
+*Onboard key management*
+a|
+`security key-manager onboard sync`
+
+For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys^].
+a|
+*External key management*
+a|
+`security key-manager key query -node node-name`
+
+For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys^].
+
+|===
+
+. If the root volume is encrypted, use the procedure in link:../transition/task_connect_the_mcc_ip_controller_modules_2n_mcc_transition_supertask.html#recovering-key-management-if-the-root-volume-is-encrypted[Recovering key management if the root volume is encrypted].
+
 == Performing a switchback
 
 After you heal the MetroCluster configuration, you can perform the MetroCluster switchback operation. The MetroCluster switchback operation returns the configuration to its normal operating state, with the sync-source storage virtual machines (SVMs) on the disaster site active and serving data from the local disk pools.
