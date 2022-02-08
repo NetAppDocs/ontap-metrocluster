@@ -82,45 +82,6 @@ If you are upgrading the ONTAP Mediator you must meet the Linux version requirem
 * The Mediator service can be upgraded from version from an immediately prior version to the current version.
 * All Mediator versions are supported on MetroCluster IP configurations running ONTAP 9.7 or later.
 
-== Upgrade the host operating system and then the Mediator
-
-The following table provides the upgrade guidelines if you are upgrading from RHEL/CentOS 7.6 to a later RHEL/CentOS release in addition upgrading the Mediator version.
-
-[cols="20,20,60"]
-|===
-
-h| Target Linux version h| Target Mediator version h| Upgrade notes
-
-a|
-* Red Hat Enterprise Linux: 7.6, 7.7, 7.8, 8.0, 8.1
-* CentOS: 7.6, 7.7, 7.8
-a|
-1.2
-a|
-
-* The upgrade must be performed in the following order:
- .. Upgrade the operating system from RHEL/CentOS version.
- .. Reboot the host to apply the kernel module changes.
- .. Upgrade the Mediator from the immediately prior version to the current version.
-+
-link:https://docs.netapp.com/us-en/ontap/mediator/task-install-ontap-mediator.html[Install or upgrade the ONTAP Mediator service^]
-
-* The storage iscsi-initiator show command will report that the connection to the Mediator service is down during the upgrade.
-* The ONTAP operating system will generate cf.mccip.med.auso.stDisabled EMS events during the upgrade.
-* The ONTAP operating system will generate a cf.mccip.med.auso.stEnabled EMS event when automatic unplanned switchover is re-enabled.
-
-a|
-* Red Hat Enterprise Linux: 7.6, 7.7, 7.8, 7.9, 8.0, 8.1, 8.2, 8.3
-* CentOS: 7.6, 7.7, 7.8, 7.9
-a|
-1.3
-a|
-.. Upgrade the operating system from RHEL/CentOS version.
-.. Reboot the host to apply the kernel module changes.
-.. Upgrade the Mediator from the immediately prior version to the current version.
-
-|===
-
 == After the upgrade
 
 After the Mediator and operating system upgrade is complete, you should issue the `storage iscsi-initiator show` command to confirm that the Mediator connections are up.
