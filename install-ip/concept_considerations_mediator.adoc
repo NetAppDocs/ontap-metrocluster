@@ -39,7 +39,10 @@ The ONTAP Mediator stores state information about the MetroCluster nodes in mail
 
 When a node detects a site failure requiring a switchover, it takes steps to confirm that the switchover is appropriate and, if so, performs the switchover.
 
-A MAUSO is only initiated if both SyncMirror mirroring and DR mirroring of each node's nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
+A MAUSO is only initiated in the following scenarios:
+
+* Both SyncMirror mirroring and DR mirroring of each node's nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
+* None of the nodes at the surviving site are in takeover state.
 
 IMPORTANT: A MAUSO is only initiated if a site disaster occurs.
 A site disaster is a failure of *all* nodes at the same site; however, there are some exceptions.
@@ -51,4 +54,5 @@ A MAUSO is *not* initiated in the following shutdown scenarios:
  ** reboot the nodes
 
  * A fan or component failure initiates a shutdown (environmental shutdown)
+
 // BURT 1442346 24/01/2022
