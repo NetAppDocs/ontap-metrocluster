@@ -19,7 +19,7 @@ The steps to check configuration of ports is needed only on systems in which FC 
 
 .Steps
 
-. In Maintenance mode, enter the following command to restore the FC port configuration:
+. In Maintenance mode, restore the FC port configuration:
 +
 `ucadmin modify -m fc -t initiatoradapter_name`
 +
@@ -35,26 +35,32 @@ h| If the FC port configuration is... h| Then...
 a|
 The same for both ports
 a|
-Answer `y` when prompted by the system, because modifying one port in a port pair also modifies the other port.
+Answer "`y`" when prompted by the system, because modifying one port in a port pair also modifies the other port.
 a|
 Different
 a|
 
- .. Answer `n` when prompted by the system.
- .. Enter the following command to restore the FC port configuration:
+ .. Answer "`n`" when prompted by the system.
+ .. Restore the FC port configuration:
 
 `ucadmin modify -m fc -t initiator\|targetadapter_name`
 
 |===
 
-. Exit Maintenance mode by entering the following command: `halt`
+. Exit Maintenance mode:
++
+`halt`
 +
 After you issue the command, wait until the system stops at the LOADER prompt.
 
 . Boot the node back into Maintenance mode for the configuration changes to take effect:
 +
 `boot_ontap maint`
-. Verify the values of the variables by entering the following command:
+. Verify the values of the variables:
 +
 `ucadmin show`
-. Exit Maintenance mode and display the LOADER prompt: `halt`
+. Exit Maintenance mode and display the LOADER prompt:
++
+`halt`
+
+// BURT 1448684, 03 FEB 2022

@@ -13,7 +13,6 @@ You can test failure scenarios to confirm the correct operation of the MetroClus
 
 == Verifying negotiated switchover
 
-[.lead]
 You can test a negotiated (planned) switchover operation to confirm uninterrupted data availability.
 
 This test validates that data availability is not affected (except for Microsoft Server Message Block (SMB) and Solaris Fibre Channel protocols) by switching the cluster over to the second data center.
@@ -39,7 +38,7 @@ For MetroCluster IP configurations:
 .Steps
 . Confirm that all nodes are in the configured state and normal mode:
 +
-`*metrocluster node show*`
+`metrocluster node show`
 +
 ----
 cluster_A::>  metrocluster node show
@@ -52,7 +51,7 @@ Remote: cluster_B               configured             normal
 
 . Begin the switchover operation:
 +
-`*metrocluster switchover*`
+`metrocluster switchover`
 +
 ----
 cluster_A::> metrocluster switchover
@@ -62,7 +61,7 @@ automatically re-start them on cluster "cluster_A". It will finally gracefully s
 
 . Confirm that the local cluster is in the configured state and switchover mode:
 +
-`*metrocluster node show*`
+`metrocluster node show`
 +
 ----
 cluster_A::>  metrocluster node show
@@ -76,7 +75,7 @@ Remote: cluster_B               not-reachable          -
 
 . Confirm that the switchover operation was successful:
 +
-`*metrocluster operation show*`
+`metrocluster operation show`
 +
 ----
 cluster_A::>  metrocluster operation show
@@ -93,7 +92,6 @@ cluster_A::> metrocluster operation show
 
 == Verifying healing and manual switchback
 
-[.lead]
 You can test the healing and manual switchback operations to verify that data availability is not affected (except for SMB and Solaris FC configurations) by switching back the cluster to the original data center after a negotiated switchover.
 
 This test should take about 30 minutes.
@@ -103,7 +101,7 @@ The expected result of this procedure is that services should be switched back t
 .Steps
 . Verify that healing is completed:
 +
-`*metrocluster node show*`
+`metrocluster node show`
 +
 The following example shows the successful completion of the command:
 +
@@ -121,7 +119,7 @@ Group Cluster Node               State          Mirroring Mode
 
 . Verify that all aggregates are `mirrored`:
 +
-`*storage aggregate show*`
+`storage aggregate show`
 +
 The following example shows that all aggregates have a RAID Status of mirrored:
 +
@@ -151,7 +149,7 @@ root_cluster_B    -         -     - unknown      - node_A_1   -
 . Boot nodes from the disaster site.
 . Check the status of switchback recovery:
 +
-`*metrocluster node show*`
+`metrocluster node show`
 +
 ----
 cluster_A::> metrocluster node show
@@ -168,7 +166,7 @@ Group Cluster Node               State          Mirroring Mode
 
 . Perform the switchback:
 +
-`*metrocluster switchback*`
+`metrocluster switchback`
 +
 ----
 cluster_A::> metrocluster switchback
@@ -177,7 +175,7 @@ cluster_A::> metrocluster switchback
 
 . Confirm status of the nodes:
 +
-`*metrocluster node show*`
+`metrocluster node show`
 +
 ----
 cluster_A::> metrocluster node show
@@ -192,9 +190,9 @@ Group Cluster Node               State          Mirroring Mode
 2 entries were displayed.
 ----
 
-. Confirm status of the metrocluster operation:
+. Confirm the status:
 +
-`*metrocluster operation show*`
+`metrocluster operation show`
 +
 The output should show a successful state.
 +
@@ -209,7 +207,6 @@ cluster_A::> metrocluster operation show
 
 == Loss of a single FC-to-SAS bridge
 
-[.lead]
 You can test the failure of a single FC-to-SAS bridge to make sure there is no single point of failure.
 
 This test should take about 15 minutes.
@@ -220,13 +217,13 @@ This procedure has the following expected results:
 * No failover or loss of service should occur.
 * Only one path from the controller module to the drives behind the bridge is available.
 
-NOTE: Starting with ONTAP 9.8, the `*storage bridge*` command is replaced with `*system bridge*`. The following steps show the `*storage bridge*` command, but if you are running ONTAP 9.8 or later, the `*system bridge*` command is preferred.
+NOTE: Beginning with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
 
 .Steps
 . Turn off the power supplies of the bridge.
 . Confirm that the bridge monitoring indicates an error:
 +
-`*storage bridge show*`
+`storage bridge show`
 +
 ----
 cluster_A::> storage bridge show
@@ -241,7 +238,7 @@ ATTO_10.65.57.145
 
 . Confirm that drives behind the bridge are available with a single path:
 +
-`*storage disk error show*`
+`storage disk error show`
 +
 ----
 cluster_A::> storage disk error show
@@ -256,7 +253,6 @@ Disk             Error Type        Error Text
 
 == Verifying operation after power line disruption
 
-[.lead]
 You can test the MetroCluster configuration's response to the failure of a PDU.
 
 The best practice is for each power supply unit (PSU) in a component to be connected to a separate power supply. If both PSUs are connected to the same power distribution unit (PDU) and an electrical disruption occurs, the site could down and a complete shelf might become unavailable. Failure of one power line is tested to confirm that there is no cabling mismatch that could cause a service disruption.
@@ -307,7 +303,6 @@ Power               Critical condition is detected in storage shelf power supply
 
 == Verifying operation after loss of a single storage shelf
 
-[.lead]
 You can test the failure of a single storage shelf to verify that there is no single point of failure.
 
 This procedure has the following expected results:
@@ -319,7 +314,7 @@ This procedure has the following expected results:
 .Steps
 . Check the storage failover status:
 +
-`*storage failover show*`
+`storage failover show`
 +
 ----
 cluster_A::> storage failover show
@@ -333,7 +328,7 @@ node_A_2       node_A_1       true     Connected to node_A_1
 
 . Check the aggregate status:
 +
-`*storage aggregate show*`
+`storage aggregate show`
 +
 ----
 cluster_A::> storage aggregate show
@@ -364,11 +359,11 @@ node_A_2_root
 
 . Verify that all data SVMs and data volumes are online and serving data:
 +
-`*vserver show -type data*`
+`vserver show -type data`
 +
-`*network interface show -fields is-home false*`
+`network interface show -fields is-home false`
 +
-`*volume show !vol0,!MDV**`
+`volume show !vol0,!MDV*`
 +
 ----
 cluster_A::> vserver show -type data
@@ -406,7 +401,7 @@ SVM2
 
 . Identify a shelf in Pool 1 for node node_A_2 to power off to simulate a sudden hardware failure:
 +
-`*storage aggregate show -r -node _node-name_ !*root*`
+`storage aggregate show -r -node _node-name_ !*root`
 +
 The shelf you select must contain drives that are part of a mirrored data aggregate.
 +
@@ -455,11 +450,11 @@ Owner Node: node_A_2
 . Physically power off the shelf that you selected.
 . Check the aggregate status again:
 +
-`*storage aggregate *`
+`storage aggregate`
 +
-`*storage aggregate show -r -node node_A_2 !*root*`
+`storage aggregate show -r -node node_A_2 !*root`
 +
-The aggregate with drives on the powered-off shelf should have a `degraded` RAID status, and drives on the affected plex should have a `failed` status, as shown in the following example:
+The aggregate with drives on the powered-off shelf should have a "`degraded`" RAID status, and drives on the affected plex should have a "`failed`" status, as shown in the following example:
 +
 ----
 cluster_A::> storage aggregate show
@@ -525,11 +520,11 @@ Owner Node: node_A_2
 
 . Verify that the data is being served and that all volumes are still online:
 +
-`*vserver show -type data*`
+`vserver show -type data`
 +
-`*network interface show -fields is-home false*`
+`network interface show -fields is-home false`
 +
-`*volume show !vol0,!MDV**`
+`volume show !vol0,!MDV*`
 +
 ----
 cluster_A::> vserver show -type data
@@ -571,9 +566,9 @@ Resynchronization starts automatically.
 
 . Verify that resynchronization has started:
 +
-`*storage aggregate show*`
+`storage aggregate show`
 +
-The affected aggregate should have a `resyncing` RAID status, as shown in the following example:
+The affected aggregate should have a "`resyncing`" RAID status, as shown in the following example:
 +
 ----
 cluster_A::> storage aggregate show
@@ -601,9 +596,9 @@ node_A_2_root
 
 . Monitor the aggregate to confirm that resynchronization is complete:
 +
-`*storage aggregate show*`
+`storage aggregate show`
 +
-The affected aggregate should have a `normal` RAID status, as shown in the following example:
+The affected aggregate should have a "`normal`" RAID status, as shown in the following example:
 +
 ----
 cluster_A::> storage aggregate show
@@ -628,3 +623,5 @@ node_A_2_root
            707.7GB   34.27GB   95% online       1 node_A_2       raid_dp,
                                                                    resyncing
 ----
+
+// BURT 1448684, 20 JAN 2022

@@ -11,9 +11,9 @@ summary: 'Upgrading firmware on MetroCluster IP switches.'
 [.lead]
 You might need to upgrade the firmware on a MetroCluster IP switch.
 
-When you install the switch software on each of the switch, you must first check the health of the configuration.
+//GH issue #132 31/01/2022
 
-You must repeat this task on each of the switch in succession to ensure that all MetroCluster components are healthy.
+You must repeat this task on each of the switch in succession.
 
 .Steps
 
@@ -78,8 +78,12 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 
 . Install the software on the first switch.
 +
-Follow the steps for installing switch software in the relevant topic of the _MetroCluster IP Installation and Configuration_ information depending on whether the switch type is Broadcom or Cisco:
+NOTE: You must install the switch software on the switches in the following order: switch_A_1, switch_B_1, switch_A_2, switch_B_2.
 +
+// BURT 1451283 and GH issue 126 27/01/2022
++
+Follow the steps for installing switch software in the relevant topic of the _MetroCluster IP Installation and Configuration_ information depending on whether the switch type is Broadcom or Cisco:
+
 * link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-switch-efos-software[Downloading and installing the Broadcom switch EFOS software]
 +
 * link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-switch-nx-os-software[Downloading and installing the Cisco switch NX-OS software]

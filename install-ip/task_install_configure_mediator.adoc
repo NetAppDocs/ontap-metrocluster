@@ -57,12 +57,11 @@ See the Red Hat documentation for information about the Red Hat Subscription Man
 +
 You can use the following link for information about setting up a repository.
 +
-If you are using Link Aggregation Control Protocol (LACP) in a Linux environment, you must correctly configure the kernel and make sure the `sysctl net.ipv4.conf.all.arp_ignore` is set to "2".
+If you are using Link Aggregation Control Protocol (LACP) in a Linux environment, you must correctly configure the kernel and make sure the `sysctl net.ipv4.conf.all.arp_ignore` is set to "`2`".
 +
 The following packages are required by the ONTAP Mediator service:
 +
 
-[cols="25,35,40"]
 |===
 
 h| All RHEL/CentOS versions h| Additional packages for RHEL/CentOS 7.x h| Additional packages for RHEL/CentOS 8.x
@@ -172,7 +171,7 @@ Repository 'rhel-7-server-optional-rpms' is enabled for this system.
 ----
 . Run the `yum repolist` command.
 +
-The following example shows the execution of this command. The "rhel-7-server-optional-rpms" repository should appear in the list.
+The following example shows the execution of this command. The "`rhel-7-server-optional-rpms`" repository should appear in the list.
 +
 ----
 [root@localhost ~]# yum repolist
@@ -237,7 +236,7 @@ enabled=1
 
 . Run the `yum repolist` command.
 +
-The following example shows the execution of this command. The CentOS-7.6.1810 - Base repository should appear in the list.
+The following example shows the execution of this command. The "`CentOS-7.6.1810 - Base`" repository should appear in the list.
 +
 ----
 Loaded plugins: fastestmirror
@@ -268,11 +267,10 @@ If your operating system is *CentOS 8.0.1905 or later builds*:
 
 In the http://vault.centos.org[CentOS Vault], locate the kernel-devel package that matches your operating system. Because the latest versions of the 8.0 (CentOS 8.0.1905 and later) core reside in the https://vault.centos.org[CentOS Vault], you must provide access to the matching kernel-devel package to compile the needed kernel module.
 
-// 03 SEP 2021, BURT 1399705
 
 .Steps
 
-. [[step1-rpm]] Issue the following command to directly install the kernel-devel package:
+. [[step1-rpm]] Directly install the kernel-devel package:
 +
 `rpm -i \http://vault.centos.org/8.0.1905/BaseOS/x86_64/os/Packages/kernel-devel-$(uname -r).rpm`
 +
@@ -295,7 +293,7 @@ NOTE: The above command is an example that is specific to CentOS 8.0.1905.  Chan
 
 . Download the Mediator installation package from the ONTAP Mediator page.
 +
-https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-tab[ONTAP Mediator download page]
+https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-tab[ONTAP Mediator download page^]
 
 . Confirm that the Mediator installation package is in the target directory:
 +
@@ -320,7 +318,7 @@ If you are at a location without access to the internet, you must ensure that th
 +
 The installation process proceeds to create the required accounts and install required packages. If you have a previous version of Mediator installed on the host, you will be prompted to confirm that you want to upgrade.
 
-link:../media/console_output_mediator_installation.txt[Example of ONTAP Mediator installation (console output)]
+link:../media/console_output_mediator_installation.txt[Example of ONTAP Mediator installation (console output)^]
 
 == Verify the installation
 
@@ -402,5 +400,7 @@ link:../media/console_output_mediator_installation.txt[Example of ONTAP Mediator
 
 The ONTAP Mediator service is now installed and running. Further configuration must be performed in the ONTAP storage system to use the Mediator features.
 
-// 2021-04-21 ONTAPEX-133437
-// 2021-05-05 review comment in IDR-67
+// 21 APR 2021, ONTAPEX-133437
+// 05 MAY 2021, review comment in IDR-67
+// 03 SEP 2021, BURT 1399705
+// 03 FEB 2022, BURT 1448684
