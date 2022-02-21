@@ -32,6 +32,15 @@ Any configuration or feature that requires that the local cluster connections ar
  ** Transitioning from MetroCluster FC to MetroCluster IP configurations
  ** Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
 
+ . If you connect two MetroCluster configurations or DrGroups and both MetroClusters/DrGroups use the same controller type (FAS2750/A220 or FAS500f/A250), then you must use MetroCluster port group 3 or 4. If the MetroClusters/DrGroups are different  (a combination of FAS2750/A220 AND FAS500f/A250), then you must select either MetroCluster port group 3 and 4 for one type (FAS2750/A220 or FAS500f/A250) and MetroCluster port group 1 and 2 for the other.
+
+ ** For example: If you connect:
+
+* Two MetroCluster configurations consisting of FAS2750/A220 only, or FAS500f/A250 only, you must select MetroCluster 3 and 4
+* Two MetroCluster configurations where one MetroCluster is type FAS2750/A220 and the other is FAS500f/A250, you must select MetroCluster 3 and 4 for one, and MetroCluster port group 1 and 2 for the other.
+In the https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator Tool for MetroCluster IP], drop-down fields 1 and 2 only populate with the supported platform after you select platforms in drop-down fields 3 and 4.
+
+
 == Switch port usage for AFF A220 or FAS2750 systems
 
 image::../media/mcc_ip_cabling_a_aff_a220_or_fas2750_to_a_broadcom_bes_53248_switch.png[]
@@ -42,8 +51,7 @@ image::../media/mcc_ip_cabling_a_aff_a250_or_fas500f_to_a_broadcom_bes_53248_swi
 
 == Switch port usage for combined use of AFF A250 or FAS500f and AFF A220 or FAS2750 systems
 
-image::../media/mcc_ip_cabling_aff_a250_and_a220_to_a_broadcom_bes_53248_switch.png[]
-
+image::../media/mcc_ip_cabling_aff_a250_and_ a220_to_a_broadcom_bes_53248_switch.png[]
 
 
 
