@@ -4,13 +4,45 @@ sidebar: sidebar
 keywords: metrocluster, maintain, maintenance, service, tiebreaker, mediator, ontap mediator
 summary: Configurations using Tiebreaker or Mediator monitoring software must have the software unconfigured before maintenance
 ---
-= Remove ONTAP Mediator or Tiebreaker monitoring when performing maintenance tasks
+= Remove ONTAP Mediator or Tiebreaker monitoring before performing maintenance tasks
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-The ONTAP Mediator software or Tiebreaker software must be unconfigured before performing maintenance tasks.
+Before performing maintenance tasks, you must remove monitoring if the MetroCluster configuration is monitored with the Tiebreaker or Mediator utility.
 
-link:../upgrade/task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#removing-mediator-or-tiebreaker-monitoring.html[Removing Mediator or Tiebreaker monitoring]
+Maintenance tasks include upgrading the controller platform, upgrading ONTAP, and performing a switchover and switchback.
+
+
+
+
+.Steps
+
+. Collect the output for the following command:
++
+`storage iscsi-initiator show`
+
+. Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
++
+
+|===
+
+h| If you are using... h| Use this procedure...
+
+a|
+Tiebreaker
+a|
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+a|
+Mediator
+a|
+Issue the following command from the ONTAP prompt:
+
+`metrocluster configuration-settings mediator remove`
+a|
+Third-party applications
+a|
+Refer to the product documentation.
+|===
 
 //BURT 1452930 23/02/2022
