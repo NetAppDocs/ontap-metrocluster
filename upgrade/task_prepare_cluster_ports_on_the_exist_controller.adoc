@@ -15,13 +15,13 @@ Before installing a new controller module, you must configure cluster ports on t
 
 If you are creating a two-node switchless cluster (with no cluster network switches), you must enable the switchless cluster networking mode.
 
-For detailed information about port, LIF, and network configuration in ONTAP, see the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Network Management Guide].
+For detailed information about port, LIF, and network configuration in ONTAP, see  link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Network Management^].
 
 .Steps
 
 . Determine which ports should be used as the node's cluster ports.
 +
-For a list of the default port roles for your platform, see the https://hwu.netapp.com/[Hardware Universe]
+For a list of the default port roles for your platform, see the https://hwu.netapp.com/[Hardware Universe^]
 +
 The _Installation and Setup Instructions_ for your platform on the NetApp Support Site contains information about the ports for cluster network connections.
 
@@ -29,7 +29,7 @@ The _Installation and Setup Instructions_ for your platform on the NetApp Suppor
 +
 `network port show`
 +
-In the following example, ports "e0a", "e0b", "e0c", and "e0d" must be changed to cluster ports:
+In the following example, ports "`e0a`", "`e0b`", "`e0c`", and "`e0d`" must be changed to cluster ports:
 +
 ----
 cluster_A::> network port show
@@ -68,7 +68,7 @@ cluster1::> network interface modify -lif datalif1 -vserver vs1 -home-port e1b
 +
 `network interface revert`
 +
-The following example reverts the LIF "datalif1" to its new home port "e1b":
+The following example reverts the LIF "`datalif1`" to its new home port "`e1b`":
 +
 ----
 cluster1::> network interface revert -lif datalif1 -vserver vs1
@@ -105,7 +105,7 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 +
 `network port show`
 +
-The following example shows that ports "e0a", "e0b", "e0c", and "e0d" are now cluster ports:
+The following example shows that ports "`e0a`", "`e0b`", "`e0c`", and "`e0d`" are now cluster ports:
 +
 ----
 Node: controller_A_1
@@ -161,5 +161,6 @@ You can respond `y` when prompted whether you want to continue into advanced mod
 +
 `set -privilege admin`
 
-
 IMPORTANT: Cluster interface creation for the existing node in a two-node switchless cluster system is completed after cluster setup is completed through a netboot on the new controller module.
+
+// BURT 1448684, 01 FEB 2022
