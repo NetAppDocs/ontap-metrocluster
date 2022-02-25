@@ -1,0 +1,69 @@
+---
+permalink: maintain/concept_remove_mediator_or_tiebreaker_when_performing_maintenance_tasks.html
+sidebar: sidebar
+keywords: metrocluster, maintain, maintenance, service, tiebreaker, mediator, ontap mediator
+summary: Configurations using Tiebreaker or Mediator monitoring software must have the software unconfigured before maintenance
+---
+= Remove ONTAP Mediator or Tiebreaker monitoring before performing maintenance tasks
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Before performing maintenance tasks, you must remove monitoring if the MetroCluster configuration is monitored with the Tiebreaker or Mediator utility.
+
+Maintenance tasks include upgrading the controller platform, upgrading ONTAP, and performing a negotiated switchover and switchback.
+
+
+
+
+.Steps
+
+. Collect the output for the following command:
++
+`storage iscsi-initiator show`
+
+. Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
++
+
+|===
+
+h| If you are using... h| Use this procedure...
+
+a|
+Tiebreaker
+a|
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+a|
+Mediator
+a|
+Issue the following command from the ONTAP prompt:
+
+`metrocluster configuration-settings mediator remove`
+a|
+Third-party applications
+a|
+Refer to the product documentation.
+|===
++
+. After completing maintenance of the MetroCluster configuration, you can resume monitoring with the Tiebreaker or Mediator utility.
+
++
+
+|===
+h| If you are using... h| Use this procedure
+
+a|
+Tiebreaker
+a|
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
+a|
+Mediator
+a|
+link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration_ section.
+a|
+Third-party applications
+a|
+Refer to the product documentation.
+|===
+
+//BURT 1452930 24/02/2022
