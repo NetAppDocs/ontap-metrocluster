@@ -1,0 +1,40 @@
+---
+permalink: install-ip/task_remove_unconfigure_mediator.html
+sidebar: sidebar
+keywords: ontap, mediator, service, assist, remove, unconfigure, requirements, mediator requirements
+summary: You can remove the ONTAP mediator service from the MetroCluster IP configuration.
+---
+
+= Remove the mediator service from the MetroCluster IP configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+
+You can remove the ONTAP mediator service from the MetroCluster IP configuration.
+
+.Before you begin
+
+You must have successfully installed and configured the ONTAP Mediator on a network location that can be reached by both MetroCluster sites.
+
+.About this task
+
+You must perform this task on the host that the ONTAP Mediator service is installed on.
+
+.Steps
+
+. Remove the ONTAP Mediator service by using the following command:
++
+`metrocluster configuration-settings mediator remove`
+
+.. Check if there are any broken disks by using the following command:
++
+`disk show -broken`
++
+*Example*
++
+....
+There are no entries matching your query.
+....
+
+// BURT 1389268, 25 Feb 2022
