@@ -66,14 +66,16 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 `*storage failover mailbox-disk show*`
 . Remove the shelf according to the steps for the relevant scenario.
 +
-[options="header"]
+
 |===
-| Scenario| Steps
+
+h| Scenario h| Steps
+
 a|
 To remove an aggregate when the shelf contains either unmirrored, mirrored, or both types of aggregate...
 a|
 
- .. Use the `*storage aggregate delete -aggregate _aggregate name_*` command to remove the aggregate.
+ .. Use the `storage aggregate delete -aggregate _aggregate name_` command to remove the aggregate.
  .. Use the standard procedure to remove ownership of all drives in that shelf, and then physically remove the shelf.
 +
 Follow the instructions in the _SAS Disk Shelves Service Guide_ for your shelf model to hot-remove shelves.
@@ -82,9 +84,9 @@ a|
 To remove a plex from a mirrored aggregate, you need to unmirror the aggregate.
 a|
 
- .. Identify the plex that you want to remove by using the `*run -node local sysconfig -r*` command.
+ .. Identify the plex that you want to remove by using the `run -node local sysconfig -r` command.
 +
-In the following example, you can identify the plex from the line `Plex /dpg_mcc_8020_13_a1_aggr1/plex0`. In this case, the plex to specify is plex0.
+In the following example, you can identify the plex from the line `Plex /dpg_mcc_8020_13_a1_aggr1/plex0`. In this case, the plex to specify is "`plex0`".
 +
 ----
 dpgmcc_8020_13_a1a2::storage aggregate> run -node local sysconfig -r
@@ -112,9 +114,9 @@ Aggregate dpg_mcc_8020_13_a1_aggr1 (online, raid_dp, mirrored) (block checksums)
       data      mcc-cisco-8Gb-fab-3:1-1.126L45  0d    34  18  FC:A   1   SAS 15000 272000/557056000  280104/573653840
 ----
 
- .. Use the `*storage aggregate plex delete -aggregate _aggr_name_ -plex _plex_name_*` command to remove the plex.
+ .. Use the `storage aggregate plex delete -aggregate _aggr_name_ -plex _plex_name_` command to remove the plex.
 +
-plex defines the plex name, such as `plex3` or `plex6`.
+plex defines the plex name, such as "`plex3`" or "`plex6`".
 
  .. Use the standard procedure to remove ownership of all drives in that shelf, and then physically remove the shelf.
 +
@@ -122,3 +124,5 @@ Follow the instructions in the _SAS Disk Shelves Service Guide_ for your shelf m
 
 +
 |===
+
+// BURT 1448684, 02 FEB 2022

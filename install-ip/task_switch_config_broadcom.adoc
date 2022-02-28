@@ -4,15 +4,15 @@ sidebar: sidebar
 keywords:  ip, switch, connection, configuring, configure, broadcom, factory defaults
 summary: You must configure the Broadcom IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
 ---
-
 = Configuring Broadcom IP switches
+:icons: font
+:imagesdir: ../media/
 
 [.lead]
 You must configure the Broadcom IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
 
-= Resetting the Broadcom IP switch to factory defaults
+== Resetting the Broadcom IP switch to factory defaults
 
-[.lead]
 Before installing a new switch software version and RCFs, you must erase the Broadcom switch settings and perform basic configuration.
 
 .About this task
@@ -249,25 +249,39 @@ This task must be repeated on each switch in the MetroCluster IP configuration.
 
 * The configuration for EFOS 3.4.x.x and 3.7.x.x or later are different. Changing the EFOS version from 3.4.x.x to 3.7.x.x or later, or vice versa, requires the switch to be reset to factory defaults and the RCF files for the corresponding EFOS version to be (re)applied. This procedure requires access through the serial console port.
 
-* Starting with EFOS version 3.7.x.x or later, a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access through the serial console port.
+* Beginning with EFOS version 3.7.x.x or later, a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access through the serial console port.
 =====
 // BURT-1392530
-[options="header"]
+
 |===
-| *Procedure* | *Current EFOS version* | *New EFOS version* | *High level steps*
-.5+|Steps to upgrade EFOS between two (non) FIPS compliant versions
-| 3.4.x.x | 3.4.x.x | Install the new EFOS image using method 1)
+
+h| *Procedure* h| *Current EFOS version* h| *New EFOS version* h| *High level steps*
+
+.5+a|Steps to upgrade EFOS between two (non) FIPS compliant versions
+a| 3.4.x.x
+a| 3.4.x.x
+a| Install the new EFOS image using method 1)
 The configuration and license information is retained
-| 3.4.4.6 (or later 3.4.x.x) | 3.7.x.x or later non-FIPS compliant |Upgrade EFOS using method 1.
+a| 3.4.4.6 (or later 3.4.x.x)
+a| 3.7.x.x or later non-FIPS compliant
+a|Upgrade EFOS using method 1.
 Reset the switch to factory defaults and apply the RCF file for EFOS 3.7.x.x or later
-.2+|3.7.x.x or later non-FIPS compliant |3.4.4.6 (or later 3.4.x.x) |Downgrade EFOS using method 1.
+.2+|3.7.x.x or later non-FIPS compliant
+a|3.4.4.6 (or later 3.4.x.x)
+a|Downgrade EFOS using method 1.
 Reset the switch to factory defaults and apply the RCF file for EFOS 3.4.x.x
-|3.7.x.x or later non-FIPS compliant |Install the new EFOS image using method 1. The configuration and license information is retained
-|3.7.x.x or later FIPS compliant |3.7.x.x or later FIPS compliant |Install the new EFOS image using method 1.
+a|3.7.x.x or later non-FIPS compliant
+a|Install the new EFOS image using method 1. The configuration and license information is retained
+a|3.7.x.x or later FIPS compliant
+a|3.7.x.x or later FIPS compliant
+a|Install the new EFOS image using method 1.
 The configuration and license information is retained
-.2+|Steps to upgrade to/from a FIPS compliant EFOS version |Non-FIPS compliant |FIPS compliant
-.2+|Installation of the EFOS image using method 2. The switch configuration and license information will be lost.
-|FIPS compliant  |Non-FIPS compliant
+.2+a|Steps to upgrade to/from a FIPS compliant EFOS version
+a|Non-FIPS compliant
+a|FIPS compliant
+.2+a|Installation of the EFOS image using method 2. The switch configuration and license information will be lost.
+a|FIPS compliant
+a|Non-FIPS compliant
 |===
 
 * Method 1: <<Steps to upgrade EFOS with downloading the software image to the backup boot partition>>
@@ -577,9 +591,11 @@ v1.32_Switch-B2.txt
 
 NOTE: The RCF files for EFOS version 3.4.4.6 or later 3.4.x.x. release and EFOS version 3.7.0.4 are different. You need to make sure that you have created the correct RCF files for the EFOS version that the switch is running.
 
-[options="header"]
+
 |===
-|EFOS version	|RCF file version
+
+h| EFOS version	h| RCF file version
+
 |3.4.x.x	|v1.3x, v1.4x
 |3.7.x.x	|v2.x
 |===
@@ -727,5 +743,6 @@ IP_switch_A_1# reload
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
 // 21 APR 2021, BURT 1371395
-//  2021-04-23 1374271
-// 16-09-2021 BURT 1392530
+// 23 APR 2021, BURT 1374271
+// 16 SEP 2021, BURT 1392530
+// 13 JAN 2022, BURT 1448684

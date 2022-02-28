@@ -22,18 +22,17 @@ When using ONTAP in a MetroCluster configuration, you should be aware of certain
 
 == MetroCluster operations in ONTAP System Manager
 
-[.lead]
 Depending on your ONTAP version, some MetroCluster-specific operations can be performed using ONTAP System Manager.
 
-* Switchover and switchback in MetroCluster IP configurations (starting in ONTAP 9.7).
-* Provision and grow of mirrored aggregates in the MetroCluster IP configurations (starting in ONTAP 9.8).
+* Switchover and switchback in MetroCluster IP configurations (beginning with ONTAP 9.7).
+* Provision and grow of mirrored aggregates in the MetroCluster IP configurations (beginning with ONTAP 9.8).
 +
 Unmirrored aggregates are not supported in System Manager.
 
 == FlexCache support in a MetroCluster configuration
 
-[.lead]
-Starting with ONTAP 9.7, FlexCache volumes are supported on MetroCluster configurations. You should be aware of requirements for manual repeering after switchover or switchback operations.
+
+Beginning with ONTAP 9.7, FlexCache volumes are supported on MetroCluster configurations. You should be aware of requirements for manual repeering after switchover or switchback operations.
 
 === SVM repeering after switchover when FlexCache origin and cache are within the same MetroCluster site
 
@@ -58,13 +57,13 @@ When switchback is performed, you must again repeer the SVMs on site_A (the orig
 
 .Related information
 
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-fc-mgmt/home.html[FlexCache volumes management]
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-fc-mgmt/home.html[FlexCache volumes management^]
 
 == FabricPool support in MetroCluster configurations
 
-Starting with ONTAP 9.7, MetroCluster configurations support FabricPool storage tiers.
+Beginning with ONTAP 9.7, MetroCluster configurations support FabricPool storage tiers.
 
-For general information on using FabricPools, see the https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disks and aggregates management]
+For general information on using FabricPools, see the https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disks and aggregates management^]
 
 === Considerations when using FabricPools
 
@@ -98,7 +97,7 @@ This object store is physically further distant to the cluster than the primary 
 
 == FlexGroup support in MetroCluster configurations
 
-Starting with ONTAP 9.6 MetroCluster configurations support FlexGroup volumes.
+Beginning with ONTAP 9.6 MetroCluster configurations support FlexGroup volumes.
 
 == Job schedules in a MetroCluster configuration
 
@@ -140,7 +139,6 @@ You should be aware of how LIFs are created and replicated in a MetroCluster con
 [[ipspace_obj_rep]]
 === IPspace object replication and subnet configuration requirements
 
-[.lead]
 You should be aware of the requirements for replicating IPspace objects to the partner cluster and for configuring subnets and IPv6 in a MetroCluster configuration.
 
 ==== IPspace replication
@@ -195,7 +193,6 @@ If IPv6 is configured on one site, IPv6 must be configured on the other site as 
 [[reqs_lif_create]]
 === Requirements for LIF creation in a MetroCluster configuration
 
-[.lead]
 You should be aware of the requirements for creating LIFs when configuring your network in a MetroCluster configuration.
 
 You must consider the following guidelines when creating LIFs:
@@ -223,7 +220,6 @@ You can confirm the successful creation of a LIF in a MetroCluster configuration
 [[lif_rep_place]]
 === LIF replication and placement requirements and issues
 
-[.lead]
 You should be aware of the LIF replication requirements in a MetroCluster configuration. You should also know how a replicated LIF is placed on a partner cluster, and you should be aware of the issues that occur when LIF replication or LIF placement fails.
 
 ==== Replication of LIFs to the partner cluster
@@ -334,8 +330,7 @@ Because of this restriction, root aggregates cannot be added to an SVM using the
 
 == SVM disaster recovery in a MetroCluster configuration
 
-[.lead]
-Starting with ONTAP 9.5, active storage virtual machines (SVMs) in a MetroCluster configuration can be used as sources with the SnapMirror SVM disaster recovery feature. The destination SVM must be on the third cluster outside of the MetroCluster configuration.
+Beginning with ONTAP 9.5, active storage virtual machines (SVMs) in a MetroCluster configuration can be used as sources with the SnapMirror SVM disaster recovery feature. The destination SVM must be on the third cluster outside of the MetroCluster configuration.
 
 You should be aware of the following requirements and limitations of using SVMs with SnapMirror disaster recovery:
 
@@ -363,7 +358,6 @@ See the section "`Replicating the SVM configuration`" in the link:http://docs.ne
 
 === SVM resynchronization at a disaster recovery site
 
-[.lead]
 During resynchronization, the storage virtual machines (SVMs) disaster recovery (DR) source on the MetroCluster configuration is restored from the destination SVM on the non-MetroCluster site.
 
 During resynchronization, the source SVM (cluster_A) temporarily acts as a destination SVM as shown in the following image:
@@ -388,7 +382,6 @@ When you run the `storage aggregate plex show` command after a MetroCluster swit
 
 == Modifying volumes to set the NVFAIL flag in case of switchover
 
-[.lead]
 You can modify a volume so that the NVFAIL flag is set on the volume in the event of a MetroCluster switchover. The NVFAIL flag causes the volume to be fenced off from any modification. This is required for volumes that need to be handled as if committed writes to the volume were lost after the switchover.
 
 .About this task
@@ -407,3 +400,5 @@ In ONTAP versions earlier than 9.0, the NVFAIL flag is used for each switchover.
 . Enable MetroCluster configuration to trigger NVFAIL on switchover by setting the `vol -dr-force-nvfail` parameter to "on":
 +
 `*vol modify -vserver _vserver-name_ -volume _volume-name_ -dr-force-nvfail on*`
+
+// BURT 1448684, 20 JAN 2022

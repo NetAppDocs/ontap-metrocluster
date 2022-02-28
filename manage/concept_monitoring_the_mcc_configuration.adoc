@@ -13,7 +13,6 @@ You can use ONTAP MetroCluster commands and Active IQ Unified Manager (formerly 
 
 == Checking the MetroCluster configuration
 
-[.lead]
 You can check that the components and relationships in the MetroCluster configuration are working correctly. You should do a check after initial configuration and after making any changes to the MetroCluster configuration. You should also do a check before a negotiated (planned) switchover or a switchback operation.
 
 .About this task
@@ -36,7 +35,7 @@ check the status of the running metrocluster check operation, use the command,
 "metrocluster operation history show -job-id 2245"
 ----
 
-. Display more detailed results from the most recent metrocluster check run command:
+. Display more detailed results from the most recent `metrocluster check run` command:
 +
 `metrocluster check aggregate show`
 +
@@ -113,13 +112,13 @@ mccint-fas9000-0304
 
 == Commands for checking and monitoring the MetroCluster configuration
 
-[.lead]
 There are specific ONTAP commands for monitoring the MetroCluster configuration and checking MetroCluster operations.
 
 === Commands for checking MetroCluster operations
 
 |===
-| If you want to... | Use this command...
+
+h| If you want to...  h| Use this command...
 
 a|
 Perform a check of the MetroCluster operations.
@@ -154,7 +153,8 @@ a|
 === Commands for monitoring the MetroCluster interconnect
 
 |===
-| If you want to... | Use this command...
+
+h| If you want to... h| Use this command...
 
 a|
 Display the HA and DR mirroring status and information for the MetroCluster nodes in the cluster.
@@ -165,7 +165,8 @@ a|
 === Commands for monitoring MetroCluster SVMs
 
 |===
-| If you want to... | Use this command...
+
+h| If you want to...  h| Use this command...
 
 a|
 View all SVMs in both sites in the MetroCluster configuration.
@@ -174,6 +175,7 @@ a|
 |===
 
 == Using the MetroCluster Tiebreaker or ONTAP Mediator to monitor the configuration
+
 See link:../install-ip/concept_considerations_mediator.html[Differences between ONTAP Mediator and MetroCluster Tiebreaker] to understand the differences between these two methods of monitoring your MetroCluster configuration and initiating an automatic switchover.
 
 Use these links to install and configure Tiebreaker or Mediator:
@@ -184,14 +186,12 @@ Use these links to install and configure Tiebreaker or Mediator:
 
 == How the NetApp MetroCluster Tiebreaker software detects failures
 
-[.lead]
 The Tiebreaker software resides on a Linux host. You need the Tiebreaker software only if you want to monitor two clusters and the connectivity status between them from a third site. Doing so enables each partner in a cluster to distinguish between an ISL failure, when inter-site links are down, from a site failure.
 
 After you install the Tiebreaker software on a Linux host, you can configure the clusters in a MetroCluster configuration to monitor for disaster conditions.
 
 === How the Tiebreaker software detects intersite connectivity failures
 
-[.lead]
 The MetroCluster Tiebreaker software alerts you if all connectivity between the sites is lost.
 
 ==== Types of network paths
@@ -216,7 +216,6 @@ The Tiebreaker software regularly retrieves the status of intersite connectivity
 
 === How the Tiebreaker software detects site failures
 
-[.lead]
 The NetApp MetroCluster Tiebreaker software checks the reachability of the nodes in a MetroCluster configuration and the cluster to determine whether a site failure has occurred. The Tiebreaker software also triggers an alert under certain conditions.
 
 ==== Components monitored by the Tiebreaker software
@@ -249,9 +248,12 @@ The Tiebreaker software triggers an alert, but ONTAP vetoes that alert. In this 
 
 === How the ONTAP Mediator supports automatic unplanned switchover
 //ontap-metrocluster/issues/78
-[.lead]
+
 The ONTAP Mediator stores state information about the MetroCluster nodes in mailboxes located on the Mediator host. The MetroCluster nodes can use this information to monitor the state of their DR partners and implement a Mediator-assisted automatic unplanned switchover (MAUSO) in the case of a disaster.
 
 When a node detects a site failure requiring a switchover, it takes steps to confirm that the switchover is appropriate and, if so, performs the switchover.
 
 MAUSO is only initiated if both SyncMirror mirroring and DR mirroring of each node’s nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
+
+// BURT 1448684, 21 JAN 2022
+// error log clean-up, Feb 04 2022

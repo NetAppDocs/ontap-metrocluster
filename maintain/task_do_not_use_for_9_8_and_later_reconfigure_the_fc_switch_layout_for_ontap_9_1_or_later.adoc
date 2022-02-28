@@ -11,17 +11,20 @@ summary: 'If your existing FC switch layout was configured prior to ONTAP 9.1, y
 [.lead]
 If your existing FC switch layout was configured prior to ONTAP 9.1, you must reconfigure the port layout and apply the latest Reference Configuration Files (RCFs). This procedure applies only to MetroCluster FC configurations.
 
+.Before you begin
+
 You must identify the FC switches present in the fabric domain.
 
 You need the admin password and access to an FTP or SCP server.
 
 You must perform this task if your existing FC switch layout was configured prior to ONTAP 9.1. It is _not_ required if you are upgrading from an existing switch layout that was configured for ONTAP 9.1 or later.
 
+.About this task
+
 This procedure is nondisruptive and takes approximately four hours to complete (excluding rack and stack) when disks are zeroed.
 
 == Sending a custom AutoSupport message prior to reconfiguring switches
 
-[.lead]
 Before reconfiguring your switches, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
 
 This task must be performed on each MetroCluster site.
@@ -34,19 +37,18 @@ This task must be performed on each MetroCluster site.
 +
 maintenance-window-in-hours specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
 +
-`*system node autosupport invoke -node * -type all -message MAINT=end*`
+`system node autosupport invoke -node * -type all -message MAINT=end`
 
 . Repeat these steps on the partner site.
 
 == Verifying the health of the MetroCluster configuration
 
-[.lead]
 You should check the health of the MetroCluster configuration to verify proper operation.
 
 .Steps
 . Verify that the MetroCluster components are healthy:
 +
-`*metrocluster check run*`
+`metrocluster check run`
 +
 ----
 cluster_A::*> metrocluster check run
@@ -80,14 +82,13 @@ volumes             ok
 
 . To check the status of the running MetroCluster check operation, use the command:
 +
-`*metrocluster operation history show -job-id 38*`
+`metrocluster operation history show -job-id 38`
 . Verify that there are no health alerts:
 +
-`*system health alert show*`
+`system health alert show`
 
 == Checking for MetroCluster configuration errors
 
-[.lead]
 You can use the Config Advisor tool available from the NetApp Support Site to check for common configuration errors.
 
 Config Advisor is a configuration validation and health check tool. You can deploy it at both secure sites and non-secure sites for data collection and system analysis.
@@ -96,59 +97,49 @@ NOTE: Support for Config Advisor is limited, and available only online.
 
 . Download the Config Advisor tool.
 +
-https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor^]
 
 . Run Config Advisor, reviewing the output and following its recommendations to address any issues.
 
 == Persistently disabling the switches
 
-[.lead]
 You must disable the switches in the fabric persistently so that you can modify its configuration.
 
 You disable the switches by running the commands on the switch command line; the commands used for this are not ONTAP commands.
 
 .Steps
 . Persistently disable the switch:
- ** For Brocade switches, use the `switchCfgPersistentDisable` command.
- ** For Cisco switches, use the `suspend` command.
-The following command disables a Brocade switch persistently:
 +
-----
-FC_switch_A_1:admin> switchCfgPersistentDisable
-----
+* Use the following command to disable a Brocade switch persistently:
 +
-The following command disables a Cisco switch:
+`FC_switch_A_1:admin> switchCfgPersistentDisable`
 +
-----
-vsan [vsna #] suspend
-----
+* Use the following command to disable a Cisco switch persistently:
++
+`vsan [vsna #] suspend`
 
 == Determining the new cabling layout
 
-[.lead]
 You must determine the cabling for the new controller modules and any new disk shelves to the existing FC switches.
 
 This task must be performed at each MetroCluster site.
 
 .Steps
-. Use the _Fabric-attached MetroCluster Installation and Configuration Guide_ to determine the cabling layout for your switch type, using the port usage for an eight-node MetroCluster configuration.
+
+. Use https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/index.html[Fabric-attached MetroCluster installation and configuration^] to determine the cabling layout for your switch type, using the port usage for an eight-node MetroCluster configuration.
 +
 The FC switch port usage must match the usage described in the guide so that the Reference Configuration Files (RCFs) can be used.
-+
-https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 +
 NOTE: If your environment cannot be cabled in a way that RCFs can be used, then contact technical support. Do not use this procedure if the cabling cannot use RCFs.
 
 == Applying RCF files and recabling the switches
 
-[.lead]
 You must apply the appropriate reference configuration (RCF) files to reconfigure your switches to accommodate the new nodes. After you apply the RCF files, you can recable the switches.
 
-The FC switch port usage must match the usage described in the _Fabric-attached MetroCluster Installation and Configuration Guide_ so that the RCFs can be used.
-
-https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
+The FC switch port usage must match the usage described in the https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/index.html[Fabric-attached MetroCluster installation and configuration^] so that the RCFs can be used.
 
 .Steps
+
 . Locate the RCF files for your configuration.
 +
 You must use the RCF files that match your switch model.
@@ -162,13 +153,12 @@ You must use the RCF files that match your switch model.
 . Cable the FC-VI ports from the controllers to the switches.
 . From the existing nodes, verify that the FC-VI ports are online:
 +
-`*metrocluster interconnect adapter show*`
+`metrocluster interconnect adapter show`
 +
-`*metrocluster interconnect mirror show*`
+`metrocluster interconnect mirror show`
 
 == Persistently enable the switches
 
-[.lead]
 You must enable the switches in the fabric persistently.
 
 .Steps
@@ -189,9 +179,6 @@ vsan [vsna #]no suspend
 
 == Verifying switchover, healing, and switchback
 
-[.lead]
 You should verify the switchover, healing, and switchback operations of the MetroCluster configuration.
 
-. Use the procedures for negotiated switchover, healing, and switchback that are mentioned in the _MetroCluster Management and Disaster Recovery Guide_.
-+
-https://docs.netapp.com/us-en/ontap-metrocluster/disaster-recovery/index.html[MetroCluster management and disaster recovery]
+. Use the procedures for negotiated switchover, healing, and switchback that are described in https://docs.netapp.com/us-en/ontap-metrocluster/disaster-recovery/index.html[MetroCluster management and disaster recovery^].

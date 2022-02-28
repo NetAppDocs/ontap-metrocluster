@@ -19,7 +19,7 @@ The existing MetroCluster FC configuration must meet the following requirements:
 +
 It can be a two-node fabric-attached or stretched MetroCluster.
 
-* It must meet all requirements and cabling as described in the _MetroCluster Installation and Configuration Guides_.
+* It must meet all requirements and cabling as described in the _MetroCluster Installation and Configuration_ procedures.
 +
 link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 +
@@ -32,7 +32,6 @@ You must have remote console access for all six nodes from either MetroCluster s
 
 == Drive shelf reuse and drive requirements for disruptive FC-to-IP transition
 
-[.lead]
 You must ensure that adequate spare drives and root aggregate space is available on the storage shelves.
 
 === Reusing the existing storage shelves
@@ -41,13 +40,11 @@ When using this procedure, the existing storage shelves are retained for use by 
 
 * The existing storage shelves (those attached to node_A_1-FC and node_B_1-FC) must be supported by the new platform models.
 +
-If the existing shelves are not supported by the new platform models, see xref:task_disruptively_transition_when_exist_shelves_are_not_supported_on_new_controllers.adoc[Disruptively transitioning when existing shelves are not supported on new controllers (ONTAP 9.8 and later)].
+If the existing shelves are not supported by the new platform models, see link:task_disruptively_transition_when_exist_shelves_are_not_supported_on_new_controllers.html[Disruptively transitioning when existing shelves are not supported on new controllers (ONTAP 9.8 and later)].
 +
-https://hwu.netapp.com[NetApp Hardware Universe]
-
 * You must ensure you don't exceed the platform limits for drives, etc.
 +
-HWU link
+https://hwu.netapp.com[NetApp Hardware Universe^]
 
 === Storage requirements for the additional controllers
 
@@ -70,11 +67,10 @@ You need to have additional 14 - 18 drives each for the third and fourth control
 +
 This information is available for each platform model at _NetApp Hardware Universe_.
 +
-https://hwu.netapp.com[NetApp Hardware Universe]
+https://hwu.netapp.com[NetApp Hardware Universe^]
 
 == Workflow for disruptive transition
 
-[.lead]
 You must follow the specific workflow to ensure a successful transition.
 
 As you prepare for the transition, plan for travel between the sites. Note that after the remote nodes are racked and cabled, you need serial terminal access to the nodes. Service Processor access is not be available until the nodes are configured.
@@ -83,12 +79,15 @@ image::../media/workflow_2n_transition_bsaic.png[]
 
 == Mapping ports from the MetroCluster FC nodes to the MetroCluster IP nodes
 
-[.lead]
 You must adjust the port and LIF configuration of the MetroCluster FC node so it is compatible with that of the MetroCluster IP node that will replace it.
+
+.About this task
 
 When the new nodes are first booted during the upgrade process, each node uses the most recent configuration of the node it is replacing. When you boot node_A_1-IP, ONTAP attempts to host LIFs on the same ports that were used on node_A_1-FC.
 
 During the transition procedure, you will perform steps on both the old and new nodes to ensure correct cluster, management, and data LIF configuration.
+
+.Steps
 
 . Identify any conflicts between the existing MetroCluster FC port usage and the port usage for the MetroCluster IP interfaces on the new nodes.
 +
@@ -98,11 +97,14 @@ These conflicting data LIFs or cluster LIFs on the MetroCluster FC nodes will be
 +
 NOTE: On the AFF A220 and FAS2750 systems, the MetroCluster IP physical ports are also used as cluster interfaces. If the new MetroCluster IP nodes are AFF A220 or FAS2750 systems, existing cluster LIFs do not need to be moved.
 +
+
 The following table shows the MetroCluster IP ports by platform model. You can ignore the VLAN ID column.
 +
-[cols=4*,options="header"]
+
 |===
-| Platform model | MetroCluster IP port | VLAN ID |
+
+h| Platform model h| MetroCluster IP port h| VLAN ID h|
+
 .2+| AFF A800
 a|
 e0b
@@ -164,11 +166,12 @@ a|
 a|
 
 |===
++
 You can fill in the following table and refer to it later in the transition procedure.
 +
-[cols=3*,options="header"]
+
 |===
-| Ports| Corresponding MetroCluster IP interface ports (from table above)| Conflicting LIFs on these ports on the MetroCluster FC nodes
+h| Ports h| Corresponding MetroCluster IP interface ports (from table above) h| Conflicting LIFs on these ports on the MetroCluster FC nodes
 a|
 First MetroCluster IP port on node_A_1-FC
 a|
@@ -195,11 +198,11 @@ a|
 
 |===
 
-. Determine what physical ports are available on the new controllers and what LIFs can be hosted on the ports.
+. Determine which physical ports are available on the new controllers and which LIFs can be hosted on the ports.
 +
 The controller's port usage depends on the platform model and IP switch model you will use in the MetroCluster IP configuration. You can gather the port usage of the new platforms from the _NetApp Hardware Universe_.
 +
-https://hwu.netapp.com[NetApp Hardware Universe]
+https://hwu.netapp.com[NetApp Hardware Universe^]
 
 . If desired, record the port information for node_A_1-FC and node_A_1-IP.
 +
@@ -207,10 +210,12 @@ You will refer to the table as you carry out the transition procedure.
 +
 In the columns for node_A_1-IP, add the physical ports for the new controller module and plan the IPspaces and broadcast domains for the new node.
 +
-[cols=7*,options="header"]
+
 |===
-|  3+| node_A_1-FC 3+| node_A_1-IP
-| *LIF* | *Ports* | *IPspaces* | *Broadcast domains* | *Ports* | *IPspaces* | *Broadcast domains*
+
+h|  3+h| node_A_1-FC 3+h| node_A_1-IP
+h| LIF h| Ports h| IPspaces h| Broadcast domains h| Ports h| IPspaces h| Broadcast domains
+
 a|
 Cluster 1
 a|
@@ -387,10 +392,12 @@ You will refer to the table as you carry out the upgrade procedure.
 +
 In the columns for node_B_1-IP, add the physical ports for the new controller module and plan the LIF port usage, IPspaces and broadcast domains for the new node.
 +
-[cols=7*,options="header"]
+
 |===
-|  3+| node_B_1-FC 3+| node_B_1-IP
-| *LIF* | *Physical ports* | *IPspaces* | *Broadcast domains* | *Physical ports* | *IPspaces* | *Broadcast domains*
+
+h| 3+h| node_B_1-FC 3+h| node_B_1-IP
+h| LIF h| Physical ports h| IPspaces h| Broadcast domains h| Physical ports h| IPspaces h| Broadcast domains
+
 a|
 Cluster 1
 a|
@@ -563,8 +570,9 @@ a|
 
 == Preparing the MetroCluster IP controllers
 
-[.lead]
 You must prepare the four new MetroCluster IP nodes and install the correct ONTAP version.
+
+.About this task
 
 This task must be performed on each of the new nodes:
 
@@ -581,69 +589,113 @@ NOTE: Do not perform these steps with the MetroCluster IP controllers connected 
 
 In these steps, you clear the configuration on the nodes and clear the mailbox region on new drives.
 
-. Connect the controller modules to the new storage shelves.
-. In Maintenance mode, display the HA state of the controller module and chassis: `ha-config show`
-+
-The HA state for all components should be mccip.
+.Steps
 
-. If the displayed system state of the controller or chassis is not correct, set the HA state: `ha-config modify controller mccip``ha-config modify chassis mccip`
-. Exit Maintenance mode: `halt`
+. Connect the controller modules to the new storage shelves.
+. In Maintenance mode, display the HA state of the controller module and chassis:
++
+`ha-config show`
++
+The HA state for all components should be "`mccip`".
+
+. If the displayed system state of the controller or chassis is not correct, set the HA state:
++
+`ha-config modify controller mccip``ha-config modify chassis mccip`
+. Exit Maintenance mode:
++
+`halt`
 +
 After you run the command, wait until the node stops at the LOADER prompt.
 
 . Repeat the following substeps on all four nodes to clear the configuration:
- .. Set the environmental variables to default values: `set-defaults`
- .. Save the environment: `saveenv``bye`
+.. Set the environmental variables to default values:
++
+`set-defaults`
+.. Save the environment:
++
+`saveenv`
++
+`bye`
 . Repeat the following substeps to boot all four nodes using the 9a option on the boot menu.
- .. At the LOADER prompt, launch the boot menu: `boot_ontap menu`
- .. At the boot menu, select option *9a* to reboot the controller.
-. Boot each of the four nodes to Maintenance mode using option *5* on the boot menu.
-. Record the system ID and from each of the four nodes: `sysconfig`
+.. At the LOADER prompt, launch the boot menu:
++
+`boot_ontap menu`
+.. At the boot menu, select option "`9a`" to reboot the controller.
+. Boot each of the four nodes to Maintenance mode using option "`5`" on the boot menu.
+. Record the system ID and from each of the four nodes:
++
+`sysconfig`
 . Repeat the following steps on node_A_1-IP and node_B_1-IP.
- .. Assign ownership of all disks local to each site: `disk assign adapter.xx.*`
- .. Repeat the previous step for each HBA with attached drive shelves on node_A_1-IP and node_B_1-IP.
+.. Assign ownership of all disks local to each site:
++
+`disk assign adapter.xx.*`
+.. Repeat the previous step for each HBA with attached drive shelves on node_A_1-IP and node_B_1-IP.
 . Repeat the following steps on node_A_1-IP and node_B_1-IP to clear the mailbox region on each local disk.
- .. Destroy the mailbox region on each disk: `mailbox destroy local``mailbox destroy partner`
-. Halt all four controllers: `halt`
-. On each controller, display the boot menu: `boot_ontap menu`
-. On each of the four controllers, clear the configuration: `wipeconfig`
+.. Destroy the mailbox region on each disk:
++
+`mailbox destroy local``mailbox destroy partner`
+. Halt all four controllers:
++
+`halt`
+. On each controller, display the boot menu:
++
+`boot_ontap menu`
+. On each of the four controllers, clear the configuration:
++
+`wipeconfig`
 +
 When the wipeconfig operation completes, the node automatically returns to the boot menu.
 
 . Repeat the following substeps to again boot all four nodes using the 9a option on the boot menu.
- .. At the LOADER prompt, launch the boot menu: `boot_ontap menu`
- .. At the boot menu, select option *9a* to reboot the controller.
- .. Let the controller module complete booting before moving to the next controller module.
+.. At the LOADER prompt, launch the boot menu:
++
+`boot_ontap menu`
+.. At the boot menu, select option "`9a`" to reboot the controller.
+.. Let the controller module complete booting before moving to the next controller module.
 
 +
-After 9a completes, the nodes automatically return to the boot menu.
+After "`9a`" completes, the nodes automatically return to the boot menu.
 . Power off the controllers.
 
 == Verifying the health of the MetroCluster FC configuration
 
-[.lead]
 You must verify the health and connectivity of the MetroCluster FC configuration prior to performing the transition
 
 This task is performed on the MetroCluster FC configuration.
 
 . Verify the operation of the MetroCluster configuration in ONTAP:
- .. Check whether the system is multipathed:``node run -node node-name sysconfig -a``
- .. Check for any health alerts on both clusters: `system health alert show`
- .. Confirm the MetroCluster configuration and that the operational mode is normal: `metrocluster show`
- .. Perform a MetroCluster check: `metrocluster check run`
- .. Display the results of the MetroCluster check: `metrocluster check show`
- .. Check for any health alerts on the switches (if present): `storage switch show`
- .. Run Config Advisor.
+.. Check whether the system is multipathed:
 +
-https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+`node run -node node-name sysconfig -a`
+.. Check for any health alerts on both clusters:
++
+`system health alert show`
+.. Confirm the MetroCluster configuration and that the operational mode is normal:
++
+`metrocluster show`
+.. Perform a MetroCluster check:
++
+`metrocluster check run`
+.. Display the results of the MetroCluster check:
++
+`metrocluster check show`
+.. Check for any health alerts on the switches (if present):
++
+`storage switch show`
+.. Run Config Advisor.
++
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor^]
 
- .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
-. Verify that the nodes are in non-HA mode: `storage failover show`
+.. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+. Verify that the nodes are in non-HA mode:
++
+`storage failover show`
 
 == Removing the existing configuration from the Tiebreaker or other monitoring software
 
-[.lead]
 If the existing configuration is monitored with the MetroCluster Tiebreaker configuration or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the Tiebreaker or other software prior to transition.
+
+.Steps
 
 . Remove the existing MetroCluster configuration from the Tiebreaker software.
 +
@@ -652,3 +704,5 @@ link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#removing-met
 . Remove the existing MetroCluster configuration from any third-party application that can initiate switchover.
 +
 Refer to the documentation for the application.
+
+// BURT 1448684, 21 JAN 2021

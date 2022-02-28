@@ -15,12 +15,10 @@ image::../media/workflow_high_level_node_and_cluster_configuration_software.gif[
 
 == Gathering required information
 
-[.lead]
 You need to gather the required IP addresses for the controller modules before you begin the configuration process.
 
 === IP network information worksheet for site A
 
-[.lead]
 You must obtain IP addresses and other network information for the first MetroCluster site (site A) from your network administrator before you configure the system.
 
 ==== Site A switch information (switched clusters)
@@ -78,7 +76,6 @@ a|
 
 When you first create the cluster, you need the following information:
 
-
 |===
 
 h| Type of information h| Your values
@@ -111,7 +108,6 @@ a|
 ==== Site A node information
 
 For each node in the cluster, you need a management IP address, a network mask, and a default gateway.
-
 
 |===
 
@@ -150,7 +146,6 @@ a|
 ==== Site A LIFs and ports for cluster peering
 
 For each node in the cluster, you need the IP addresses of two intercluster LIFs, including a network mask and a default gateway. The intercluster LIFs are used to peer the clusters.
-
 
 |===
 
@@ -592,11 +587,9 @@ a|
 
 == Similarities and differences between standard cluster and MetroCluster configurations
 
-[.lead]
 The configuration of the nodes in each cluster in a MetroCluster configuration is similar to that of nodes in a standard cluster.
 
 The MetroCluster configuration is built on two standard clusters. Physically, the configuration must be symmetrical, with each node having the same hardware configuration, and all of the MetroCluster components must be cabled and configured. However, the basic software configuration for nodes in a MetroCluster configuration is the same as that for nodes in a standard cluster.
-
 
 |===
 
@@ -928,6 +921,7 @@ a|
 a|
 DR partner of the HA partner's pool 1
 |===
+
 This disk assignment pattern ensures that an aggregate is minimally affected in case a drawer goes offline.
 
 .Steps
@@ -1712,7 +1706,8 @@ cluster01
 +
 
 |===
-h|Option h|Description
+
+h| Option h| Description
 
 |*In ONTAP 9.6 and later:*
 |`network interface show -service-policy default-intercluster -failover`
@@ -1742,7 +1737,7 @@ cluster01
 
 .Related information
 
-link:concept_prepare_for_the_mcc_installation.adoc[Considerations when using dedicated ports]
+link:concept_prepare_for_the_mcc_installation.html[Considerations when using dedicated ports]
 
 When determining whether using a dedicated port for intercluster replication is the correct intercluster network solution, you should consider configurations and requirements such as LAN type, available WAN bandwith, replication interval, change rate, and number of ports.
 
@@ -1783,10 +1778,11 @@ cluster01-02
 +
 [cols="1,3"]
 |===
+
 h|Option h|Description
 
-|*In ONTAP 9.6 and later:*
-|`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
+a|*In ONTAP 9.6 and later:*
+a|`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
 a|
 *In ONTAP 9.5 and earlier:*
 a|
@@ -1811,9 +1807,10 @@ policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.
 +
 [cols="1,3"]
 |===
+
 h|Option h|Description
 
-|*In ONTAP 9.6 and later*:
+a|*In ONTAP 9.6 and later*:
 a|
 `network interface show -service-policy default-intercluster`
 a|
@@ -1821,6 +1818,7 @@ a|
 a|
 `network interface show -role intercluster`
 |===
+
 For complete command syntax, see the man page.
 +
 ----
@@ -1839,7 +1837,8 @@ cluster01
 +
 [cols="1,3"]
 |===
-h|Option h|Description
+
+h| Option h| Description
 
 a|
 *In ONTAP 9.6 and later:*
@@ -1850,6 +1849,7 @@ a|
 a|
 `network interface show -role intercluster -failover`
 |===
+
 For complete command syntax, see the man page.
 +
 The following example shows that the intercluster LIFs "cluster01_icl01" and "cluster01_icl02" on the "e0c" port will fail over to the "e0d" port.
@@ -1870,7 +1870,7 @@ cluster01
 
 .Related information
 
-link:concept_prepare_for_the_mcc_installation.adoc[Considerations when sharing data ports]
+link:concept_prepare_for_the_mcc_installation.html[Considerations when sharing data ports]
 
 === Creating a cluster peer relationship
 
@@ -2248,6 +2248,7 @@ The `metrocluster configure` command automatically pairs the two nodes with the 
 . [[step1_aggr]] Configure the MetroCluster in the following format:
 +
 |===
+
 h| If your MetroCluster configuration has... h| Then do this...
 
 a|Multiple data aggregates
@@ -2551,7 +2552,7 @@ These tasks apply only to systems with FC-to-SAS bridges.
 
 In a fabric-attached MetroCluster configuration, you must perform some additional configuration steps to monitor the FC switches.
 
-NOTE: Starting with ONTAP 9.8, the `storage switch` command is replaced with `system switch`. The following steps show the `storage switch` command, but if you are running ONTAP 9.8 or later, the `system switch` command is preferred.
+NOTE: Beginning with ONTAP 9.8, the `storage switch` command is replaced with `system switch`. The following steps show the `storage switch` command, but if you are running ONTAP 9.8 or later, the `system switch` command is preferred.
 
 .Steps
 
@@ -2604,9 +2605,9 @@ In systems running ONTAP versions prior to 9.8, you must perform some special co
 .About this task
 
 * Third-party SNMP monitoring tools are not supported for FibreBridge bridges.
-* Starting with ONTAP 9.8, FC-to-SAS bridges are monitored via in-band connections by default, and additional configuration is not required.
+* Beginning with ONTAP 9.8, FC-to-SAS bridges are monitored via in-band connections by default, and additional configuration is not required.
 
-NOTE: Starting with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
+NOTE: Beginning with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
 
 .Steps
 
@@ -2615,6 +2616,7 @@ NOTE: Starting with ONTAP 9.8, the `storage bridge` command is replaced with `sy
 +
 [cols="1,3"]
 |===
+
 h| ONTAP version h| Command
 
 a|9.5 and later
@@ -2898,3 +2900,5 @@ You can provide additional protection for the cluster configuration backup files
 `system configuration backup settings modify _URL-of-destination_`
 +
 The https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[Cluster Management with the CLI] contains additional information under the section _Managing configuration backups_.
+
+// BURT 1448684, 12 JAN 2022
