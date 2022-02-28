@@ -1,7 +1,7 @@
 ---
 permalink: install-ip/task_sw_config_configure_clusters.html
 sidebar: sidebar
-keywords: metrocluster, ontap, setup, metrocluster configuration-settings interface create, pool 0, drive assignment, peer, peering, intercluster lifs, dr group, metrocluster ip interfaces, mcc-ip, mcc-ip interfaces, vlan, pool 1, pool1, pool0
+keywords: metrocluster, setup, metrocluster configuration-settings interface create, pool 0, drive assignment, peer, peering, intercluster lifs, dr group, metrocluster ip interfaces, mcc-ip, mcc-ip interfaces, vlan, pool 1, pool1, pool0
 summary: You must peer the clusters, mirror the root aggregates, create a mirrored data aggregate, and then issue the command to implement the MetroCluster operations.
 ---
 = Configuring the clusters into a MetroCluster configuration
@@ -723,6 +723,11 @@ The physical ports used by the MetroCluster IP interfaces depends on the platfor
 |===
 h| Platform model h| MetroCluster IP port h| Note
 
+.2+a| AFF A900
+a| e5b
+.2+a|
+a| e7b
+
 .2+a| AFF A800
 a| e0b
 .2+a|
@@ -761,9 +766,9 @@ a| e0c
 a| e0d
 
 .2+a| FAS8300 and FAS8700
-a| e0c
+a| e1a
 .2+a|
-a| e0d
+a| e1b
 
 |===
 
@@ -815,7 +820,7 @@ cluster_B
 ====
 * The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
 
-* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
+* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
 // 22 APR 2021, BURT 1180776
 
 * On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
@@ -856,7 +861,7 @@ NOTE: You can verify that these interfaces are present using the `metrocluster c
 ====
 * The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
 
-* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
+* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
 // 22 APR 2021, BURT 1180776
 * On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
 ====
@@ -910,7 +915,7 @@ cluster_A::>
 ====
 
 * The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
+* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
 // 22 APR 2021, BURT 1180776
 * On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
 ====
@@ -944,7 +949,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [NOTE]
 ====
 * The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-* Starting with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
+* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
 // 22 APR 2021, BURT 1180776
 
 * On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
@@ -1830,7 +1835,7 @@ NOTE: The unmirrored aggregates must be local to the node owning them.
 
 * Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
-* The _Disks and Aggregates Power Guide_ contains more information about mirroring aggregates.
+* _Disks and aggregates management_ contains more information about mirroring aggregates.
 
 .Steps
 
@@ -2030,3 +2035,5 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Networ
 == Completing ONTAP configuration
 
 After configuring, enabling, and checking the MetroCluster configuration, you can proceed to complete the cluster configuration by adding additional SVMs, network interfaces and other ONTAP functionality as needed.
+
+//2022-01-10, Issue 123

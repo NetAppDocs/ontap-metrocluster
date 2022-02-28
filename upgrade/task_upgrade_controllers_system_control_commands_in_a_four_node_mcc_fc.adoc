@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_fc.html
 sidebar: sidebar
-keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, system, commands
+keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, system, commands, mcc
 summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster FC configuration.'
 ---
 = Upgrading controllers in a four-node MetroCluster FC configuration using switchover and switchback with "system controller replace" commands (ONTAP 9.10.1 and later)
@@ -73,21 +73,18 @@ At any stage during the upgrade, you can run the `system controller replace show
 The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
 +
 NOTE: The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
-+
-[NOTE]
-====
-The `system controller replace start` command might report the following precheck error:
 
++
+The `system controller replace start` command might report the following precheck error:
++
 ----
 Cluster-A::*>system controller replace show
 Node        Status         Error-Action
 ----------- -------------- ------------------------------------
 Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed errors in component aggregates
 ----
-
++
 Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
-
-====
 
 .	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
 
@@ -202,9 +199,8 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker conf
 
 .Steps
 
-. Remove the existing MetroCluster configuration from the Tiebreaker software.
+. http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Remove the existing MetroCluster configuration^] from the Tiebreaker software.
 +
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster configurations^]
 
 . Remove the existing MetroCluster configuration from any third-party application that can initiate switchover.
 +
@@ -216,10 +212,12 @@ Refer to the documentation for the application.
 After you gather information and resume the operation, the automation  proceeds with the switchover operation.
 
 .About this task
+
 The automation operation initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers and reassign the root aggregate disks to the new controller module from flash backup, using the `sysids` gathered earlier.
 
 .Before you begin
-Before initiating switchover, the automation operation pauses so you can manually verify that all LIFs are `up` at site B. If necessary, bring any LIFs that are `down` to `up` and resume the automation operation by using the `system controller replace resume` command.
+
+Before initiating switchover, the automation operation pauses so you can manually verify that all LIFs are "`up`" at site B. If necessary, bring any LIFs that are "`down`" to "`up`" and resume the automation operation by using the `system controller replace resume` command.
 
 === Preparing the network configuration of the old controllers
 
@@ -242,11 +240,11 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 +
 `network interface show`
 +
-All data LIFS including SAN and NAS will be admin `up` and operationally `down` since those are up at switchover site (cluster_A).
+All data LIFS including SAN and NAS will be admin "`up`" and operationally "`down`" since those are up at switchover site (cluster_A).
 
 .. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
 +
-For example, "e0d" is a physical port on old controllers and is also present on new controllers. "e0d" is not used as a cluster port or otherwise on the new controllers.
+For example, "`e0d`" is a physical port on old controllers and is also present on new controllers. "`e0d`" is not used as a cluster port or otherwise on the new controllers.
 +
 For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
 
@@ -254,7 +252,7 @@ For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardw
 +
 `network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
 +
-In the following example, this is "e0d".
+In the following example, this is "`e0d`".
 +
 For example:
 +
@@ -288,7 +286,7 @@ For example:
 network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 ----
 
-.. Remove VLAN and interface group ports from broadcast domain::
+.. Remove VLAN and interface group ports from broadcast domain:
 +
 `network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
 .. Modify interface group ports to use other physical ports as member as needed.:
@@ -549,20 +547,24 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-Option `10`
+Option "`10`"
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
-Option `11`
+Option "`11`"
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 
-. If autoboot is enabled, interrupt autoboot by pressing control-C.
-. From the boot menu, run option `6`.
+. If autoboot is enabled, interrupt autoboot by pressing Ctrl-C.
+. From the boot menu, run option "`6`".
 +
-NOTE: Option `6` will reboot the node twice before completing.
+NOTE: Option "`6`" will reboot the node twice before completing.
 +
 
-Respond `y` to the system id change prompts. Wait for the second reboot messages:
+Respond "`y`" to the system id change prompts. Wait for the second reboot messages:
 +
 ----
 Successfully restored env file from boot media...
@@ -588,14 +590,18 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-`recover_onboard_keymanager`
+Option "`10`"
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
-`recover_external_keymanager`
+Option "`11`"
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 +
-You need to perform the recovery procedure by selecting option `10` or option `11` depending on the key manager setting and option `6` at the boot menu prompt. To boot the nodes completely, you might need to perform the recovery procedure continued by option `1` (normal boot).
+Depending on the key manager setting, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option "`6`" at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
 
 . Boot the nodes:
 +
@@ -685,11 +691,11 @@ If the post upgrade checks did not report any errors, the upgrade is complete.
 
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
 
-
 === Restoring Tiebreaker monitoring
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
-. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_.
+. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations].
 
-// BURT 1404898 Oct-19-2021
+// BURT 1404898, 19 OCT 2021
+// BURT 1448684, 02 FEB 2022

@@ -15,7 +15,6 @@ NOTE: This procedure is only for use in a fabric-attached MetroCluster configura
 
 == Disabling access to the shelf
 
-[.lead]
 You must disable access to the shelf before you replace the shelf modules.
 
 Check the overall health of the configuration. If the system does not appear healthy, address the issue first before proceeding.
@@ -24,7 +23,7 @@ Check the overall health of the configuration. If the system does not appear hea
 . From both clusters, offline all plexes with disks on the affected shelf stack:
 //ontap-metrocluster/issues/65 2021.11.21
 +
-`*aggr offline _plex_name_*`
+`aggr offline _plex_name_`
 +
 The example shows the commands for offlining plexes for a controller running clustered OTNAP.
 +
@@ -38,7 +37,7 @@ cluster_A_2::> storage aggregate plex offline -aggr dataA_2_data -plex plex0
 
 . Verify that the plexes are offline:
 +
-`*aggr status _-raggr_name_*`
+`aggr status _-raggr_name_`
 +
 The example shows the commands for verifying that the aggregates are offline for a controller running cMode.
 +
@@ -89,10 +88,11 @@ FC_switch_A_2(config)# end
 
  ** If the bridges are connecting two or more SAS stacks, disable the SAS ports connecting the bridges to the target shelf:
  +
-`*SASportDisable _port number_*`
+`SASportDisable _port number_`
 +
 NOTE: This is not applicable to FibreBridge 6500 bridges.
 +
+
 The following example shows a pair of bridges that connect four SAS stacks. SAS stack 2 contains the target shelf:
 +
 image::../media/mcc_shelf_replacement_bridges_with_four_stacks.gif[]
@@ -101,7 +101,7 @@ SAS port B connects the bridges to the target shelf. By disabling only SAS port 
 +
 In this case, disable the SAS port connecting the bridge to the target shelf:
 +
-`*SASportDisable _port number_*`
+`SASportDisable _port number_`
 +
 The following example shows SAS port B being disabled from the bridge and also verifies that it is disabled. You must repeat the command on both bridges.
 +
@@ -113,7 +113,7 @@ SAS Port B has been disabled.
 ----
 . If you previously disabled the switch ports, verify that they are disabled:
 +
-`*switchShow*`
+`switchShow`
 +
 The example shows that the switch ports are disabled on a Brocade switch.
 +
@@ -136,10 +136,11 @@ FC_switch_A_2# show interface fc1/6
 
 == Replacing the shelf
 
-[.lead]
+
 You must physically remove all of the cables and the shelf before inserting and cabling the new shelf and shelf modules.
 
 .Steps
+
 . Remove all disks and disconnect all cables from the shelf that is being replaced.
 . Remove the shelf modules.
 . Insert the new shelf.
@@ -150,22 +151,25 @@ You must physically remove all of the cables and the shelf before inserting and 
 
 == Reenabling access and verifying the operation
 
-[.lead]
 After the shelf has been replaced, you need to reenable access and verify that the new shelf is operating correctly.
 
 .Steps
 . Verify that the shelf powers properly and the links on the IOM modules are present.
 . Enable the switch ports or SAS port according to the following scenarios:
 +
-[options="header"]
+[cols="1,3"]
 |===
-| Option| Step
+
+h| Option h| Step
+
 a|
 *If you previously disabled switch ports*
 a|
-
- .. Enable the switch ports: `*portEnable _port number_*`
- The example shows the switch port being enabled on a Brocade switch.
+.. Enable the switch ports:
++
+`portEnable _port number_`
++
+The example shows the switch port being enabled on a Brocade switch.
 
 +
 ----
@@ -192,12 +196,12 @@ a|
 *If you previously disabled a SAS port*
 a|
 
- .. Enable the SAS port connecting the stack to the shelf location:
- +
-`*SASportEnable _port number_*`
-
+.. Enable the SAS port connecting the stack to the shelf location:
++
+`SASportEnable _port number_`
++
 The example shows SAS port A being enabled from the bridge and also verifies that it is enabled.
-
++
 ----
 Ready. *
 SASPortEnable A
@@ -211,9 +215,9 @@ NOTE: This is not applicable to ATTO 6500 FibreBridges.
 
 . If you previously disabled the switch ports, verify that they are enabled and online and that and all devices are logged in correctly:
 +
-`*switchShow*`
+`switchShow`
 +
-The example shows the `*switchShow*` command for verifying that a Brocade switch is online.
+The example shows the `switchShow` command for verifying that a Brocade switch is online.
 +
 ----
 
@@ -221,7 +225,7 @@ Switch_A_1:admin> SwitchShow
 Switch_A_2:admin> SwitchShow
 ----
 +
-The example shows the `*switchShow*` command for verifying that a Cisco switch is online.
+The example shows the `switchShow` command for verifying that a Cisco switch is online.
 +
 ----
 
@@ -233,10 +237,10 @@ NOTE: After several minutes, ONTAP detects that new disks have been inserted and
 
 . Verify that the disks have been detected by ONTAP:
 +
-`*sysconfig -a*`
+`sysconfig -a`
 . Online the plexes that were offline earlier:
 +
-`*aggr online__plex_name__*`
+`aggr online__plex_name__`
 +
 The example shows the commands for placing plexes on a controller running cMode back online.
 +
@@ -249,4 +253,4 @@ Cluster_A_1::> storage aggregate plex online -aggr aggr3 -plex plex1
 +
 The plexes begin to resynchronize.
 +
-NOTE: You can monitor the progress of resynchronization using the `*aggr status _-raggr_name_*` command.
+NOTE: You can monitor the progress of resynchronization using the `aggr status _-raggr_name_` command.

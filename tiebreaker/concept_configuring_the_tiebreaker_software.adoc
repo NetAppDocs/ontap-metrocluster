@@ -13,14 +13,14 @@ After installation of the Tiebreaker software, you can add or modify MetroCluste
 
 == Launching the Tiebreaker software CLI
 
-[.lead]
 After installing the Tiebreaker software you must launch its CLI to configure the software.
 
-. Launch the CLI from the prompt of the host on which you installed the software:``netapp-metrocluster-tiebreaker-software-cli``
+. Launch the CLI from the prompt of the host on which you installed the software:
++
+`netapp-metrocluster-tiebreaker-software-cli`
 
 == Adding MetroCluster configurations
 
-[.lead]
 After installing the NetApp MetroCluster Tiebreaker software, you can add more MetroCluster configurations, one at a time.
 
 You must have installed the MetroCluster configuration in an ONTAP environment and enabled the settings in the software.
@@ -44,36 +44,39 @@ Enter Peer Cluster Password:
 Successfully added monitor to NetApp MetroCluster Tiebreaker software.
 ----
 
-. Confirm that the MetroCluster configuration was added properly by using the Tiebreaker CLI monitor show -status command.
+. Confirm that the MetroCluster configuration was added properly by using the Tiebreaker CLI `monitor show -status` command.
 +
 ----
 
 NetApp MetroCluster Tiebreaker :> monitor show -status
 ----
 
-. Disable the observer mode for the Tiebreaker software to automatically initiate a switchover after it detects a site failure: `monitor modify -monitor-name monitor_name -observer-mode false`
+. Disable the observer mode for the Tiebreaker software to automatically initiate a switchover after it detects a site failure:
++
+`monitor modify -monitor-name monitor_name -observer-mode false`
 +
 ----
 NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name 8pack -observer-mode false
 Warning: If you are turning observer-mode to false, make sure to review the 'risks and limitations'
-as described in the MetroCluster Tiebreaker Installation and Configuration Guide.
+as described in the MetroCluster Tiebreaker installation and configuration.
 Are you sure you want to enable automatic switchover capability for monitor "8pack"? [Y/N]: y
 ----
 
-*Related information*
+.Related information
 
-xref:concept_risks_and_limitation_of_using_mcc_tiebreaker_in_active_mode.adoc[Risks and limitations of using MetroCluster Tiebreaker in active mode]
+link:concept_risks_and_limitation_of_using_mcc_tiebreaker_in_active_mode.html[Risks and limitations of using MetroCluster Tiebreaker in active mode]
 
 == Commands for modifying MetroCluster Tiebreaker configurations
 
-[.lead]
 You can modify the MetroCluster configuration whenever you need to change the settings.
 
 The Tiebreaker CLI monitor modify command can be used with any of the following options. You can confirm your changes with the monitor show -status command.
 
-[cols=2*,options="header"]
+[cols="30,70"]
 |===
-| Option| Description
+
+h| Option h| Description
+
 a|
 -monitor-name
 a|
@@ -91,10 +94,11 @@ a|
 a|
 Observer mode (true) provides monitoring only, and does not trigger a switchover if a site disaster occurs. Online mode (false) triggers a switchover if a site disaster occurs.
 
-* xref:concept_overview_of_the_tiebreaker_software.adoc[How the Tiebreaker software detects site failure]
-* xref:concept_risks_and_limitation_of_using_mcc_tiebreaker_in_active_mode.adoc[Risks and limitations of using MetroCluster Tiebreaker in active mode]
+* link:concept_overview_of_the_tiebreaker_software.html[How the Tiebreaker software detects site failure]
+* link:concept_risks_and_limitation_of_using_mcc_tiebreaker_in_active_mode.html[Risks and limitations of using MetroCluster Tiebreaker in active mode]
 
 |===
+
 The following example changes the silent period for the configuration.
 
 ----
@@ -104,11 +108,13 @@ Successfully modified monitor in NetApp MetroCluster Tiebreaker
 software.
 ----
 
-The Tiebreaker CLI debug command can be used to change the logging mode.
+The Tiebreaker CLI `debug` command can be used to change the logging mode.
 
-[cols=2*,options="header"]
+[cols="30,70"]
 |===
-| Command| Description
+
+h| Command h| Description
+
 a|
 debug status
 a|
@@ -122,11 +128,14 @@ debug disable
 a|
 Disables the debug mode for logging
 |===
-The Tiebreaker CLI update-mcctb-password command can be used to update the user password.
 
-[options="header"]
+The Tiebreaker CLI `update-mcctb-password` command can be used to update the user password.
+
+[cols="30,70"]
 |===
-| Command| Description
+
+h| Command h| Description
+
 a|
 update-mcctb-password
 a|
@@ -135,12 +144,11 @@ The user password is successfully updated
 
 == Removing MetroCluster configurations
 
-[.lead]
 You can remove the MetroCluster configuration that is being monitored by the Tiebreaker software when you no longer want to monitor a MetroCluster configuration.
 
-. Use the Tiebreaker CLI monitor remove command to remove the MetroCluster configuration.
+. Use the Tiebreaker CLI `monitor remove` command to remove the MetroCluster configuration.
 +
-In the following example, cluster_A is removed from the software:
+In the following example, "`cluster_A`" is removed from the software:
 +
 ----
 
@@ -149,7 +157,7 @@ Successfully removed monitor from NetApp MetroCluster Tiebreaker
 software.
 ----
 
-. Confirm that the MetroCluster configuration is removed properly by using the Tiebreaker CLI monitor show -status command.
+. Confirm that the MetroCluster configuration is removed properly by using the Tiebreaker CLI `monitor show -status` command.
 +
 ----
 

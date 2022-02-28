@@ -8,24 +8,23 @@ summary: If one of the object stores in a FabricPool mirror was co-located with 
 :icons: font
 :imagesdir: ../media/
 
-[.lead]
+
 == Reestablishing object stores for FabricPool configurations
 
-[.lead]
+
 If one of the object stores in a FabricPool mirror was co-located with the MetroCluster disaster site and was destroyed, you must reestablish the object store and the FabricPool mirror.
 
 .About this task
 
 * If the object-stores are remote and a MetroCluster site is destroyed, you do not need to rebuild the object store, and the original object store configurations as well as cold data contents are retained.
-* For more information about FabricPool configurations, see the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and Aggregates Power Guide].
+* For more information about FabricPool configurations, see the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregates management^].
 
 .Step
 
-. Follow the procedure "Replacing a FabricPool mirror on a MetroCluster configuration" in the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and Aggregates Power Guide].
+. Follow the procedure "Replacing a FabricPool mirror on a MetroCluster configuration" in the link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregates management^].
 
 == Verifying licenses on the replaced nodes
 
-[.lead]
 You must install new licenses for the replacement nodes if the impaired nodes were using ONTAP features that require a standard (node-locked) license. For features with standard licenses, each node in the cluster should have its own key for the feature.
 
 .About this task
@@ -99,7 +98,6 @@ NOTE: The new license keys that you require are automatically generated and sent
 
 == Performing a switchback
 
-[.lead]
 After you heal the MetroCluster configuration, you can perform the MetroCluster switchback operation. The MetroCluster switchback operation returns the configuration to its normal operating state, with the sync-source storage virtual machines (SVMs) on the disaster site active and serving data from the local disk pools.
 
 .Before you begin
@@ -185,7 +183,6 @@ In ONTAP 8.3, you need to manually reestablish a lost SnapMirror configuration a
 
 == Verifying a successful switchback
 
-[.lead]
 After performing the switchback, you want to confirm that all aggregates and storage virtual machines (SVMs) are switched back and online.
 
 .Steps
@@ -212,9 +209,9 @@ Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
 aggr_b2          -         -     - unknown      - node_A_1
 ----
 +
-If the disaster site included unmirrored aggregates and the unmirrored aggregates are no longer present, the aggregate might show up with a state of "unknown" in the output of the storage aggregate show command. Contact technical support to remove the out-of-date entries for the unmirrored aggregates.
+If the disaster site included unmirrored aggregates and the unmirrored aggregates are no longer present, the aggregate might show up with a state of "`unknown`" in the output of the storage aggregate show command. Contact technical support to remove the out-of-date entries for the unmirrored aggregates.
 
-. Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an Admin State of "stopped") and the sync-source SVMs on the disaster cluster are up and running:
+. Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an Admin State of "`stopped`") and the sync-source SVMs on the disaster cluster are up and running:
 +
 `vserver show -subtype sync-source`
 +
@@ -246,6 +243,7 @@ Sync-destination aggregates in the MetroCluster configuration have the suffix "-
 |===
 
 h| If the command output shows... h| Then...
+
 a|
 That the switchback operation state is successful.
 a|
@@ -262,7 +260,6 @@ You must repeat the previous sections to perform the switchback in the opposite 
 
 == Mirroring the root aggregates of the replacement nodes
 
-[.lead]
 If disks were replaced, you must mirror the root aggregates of the new nodes on the disaster site.
 
 .Steps
@@ -359,7 +356,6 @@ Any root aggregate that does not have a status of mirrored must be mirrored.
 
 == Reconfiguring the ONTAP Mediator service (MetroCluster IP configurations)
 
-[.lead]
 If you have a MetroCluster IP configuration that was configured with the ONTAP Mediator service, you must remove and reconfigure the association with the mediator.
 
 .Before you begin
@@ -378,7 +374,6 @@ If you have a MetroCluster IP configuration that was configured with the ONTAP M
 
 == Verifying the health of the MetroCluster configuration
 
-[.lead]
 You should check the health of the MetroCluster configuration to verify proper operation.
 
 .Steps
@@ -432,8 +427,8 @@ config-replication  ok
 aggregates          ok
 4 entries were displayed.
 
-Command completed. Use the "metrocluster check show -instance" command or sub-commands in "metrocluster check" directory for detailed results.
-To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
+Command completed. Use the `metrocluster check show -instance` command or sub-commands in `metrocluster check` directory for detailed results.
+To check if the nodes are ready to do a switchover or switchback operation, run `metrocluster switchover -simulate` or `metrocluster switchback -simulate`, respectively.
 ----
 
 . Check that there are no health alerts:
@@ -506,3 +501,5 @@ Node    Type       Label      Target Portal     Target Name                     
 .. Return to the administrative privilege level:
 +
 `set -privilege admin`
+
+// BURT 1448684, 12 JAN 2022

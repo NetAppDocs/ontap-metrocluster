@@ -1,7 +1,7 @@
 ---
 permalink: maintain/task_power_on_and_power_off_a_data_center.html
 sidebar: sidebar
-keywords: metrocluster, maintain, service, power, off, on, data, center, relocate
+keywords: metrocluster, maintain, service, power, off, on, data, center, relocate, reconfigure, maintenance
 summary: 'You must know how to power off and power on a data center for the purpose of site maintenance or to relocate a site to another location.'
 ---
 = Powering off and powering on a data center
@@ -13,42 +13,62 @@ You must know how to power off and power on a data center for the purpose of sit
 
 If a site needs to be relocated and reconfigured (if you need to expand from a four-node to an eight-node cluster, for example), these tasks cannot be completed at the same time. This procedure only covers the steps that are required to perform site maintenance or to relocate a site without changing its configuration.
 
+The following diagram shows a MetroCluster configuration.  Cluster_A will be powered off for maintenance.
+
 NOTE: This procedure is for use in both MetroCluster IP and FC configurations.
+
+image::power-on-off-data-center.gif[]
+
+
 
 == Powering off a MetroCluster site
 
-[.lead]
 You must power off a site and all of the equipment before site maintenance or relocation can begin.
+//GH issue 83 04/02/2022
+
+.About this task
+
+All the commands in the following steps are issued from the site that you want to power off.
 
 .Steps
+
 . Before you begin, check that any non-mirrored aggregates at the site are offline.
+
 . Verify the operation of the MetroCluster configuration in ONTAP:
- .. Check whether the system is multipathed:
+
+.. Check whether the system is multipathed:
++
+`node run -node _node-name_ sysconfig -a`
+
+.. Check for any health alerts on both clusters:
++
+`system health alert show`
+
+.. Confirm the MetroCluster configuration and that the operational mode is normal:
++
+`metrocluster show`
+
+.. Perform a MetroCluster check:
  +
-`*node run -node _node-name_ sysconfig -a*`
- .. Check for any health alerts on both clusters:
- +
-`*system health alert show*`
- .. Confirm the MetroCluster configuration and that the operational mode is normal:
- +
-`*metrocluster show*`
- .. Perform a MetroCluster check:
- +
-`*metrocluster check run*`
- .. Display the results of the MetroCluster check:
- +
-`*metrocluster check show*`
- .. Check for any health alerts on the switches (if present):
- +
-`*storage switch show*`
- .. Run Config Advisor.
+`metrocluster check run`
+
+.. Display the results of the MetroCluster check:
++
+`metrocluster check show`
+
+.. Check for any health alerts on the switches (if present):
++
+`storage switch show`
+
+.. Run Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
 
- .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+.. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+
 . Enter the following command to implement the switchover:
 +
-`*metrocluster switchover*`
+`metrocluster switchover`
 +
 The operation can take several minutes to complete.
 +
@@ -56,9 +76,10 @@ The operation can take several minutes to complete.
 ====
 In MetroCluster FC configurations, the unmirrored aggregates will only be online after a switchover if the remote disks in the aggregate are accessible. If the ISLs fail, the local node may be unable to access the data in the unmirrored remote disks. The failure of an aggregate can lead to a reboot of the local node.
 ====
+
 . Monitor and verify the completion of the switchover:
 +
-`*metrocluster operation show*`
+`metrocluster operation show`
 +
 ----
 cluster_A::*> metrocluster operation show
@@ -76,36 +97,37 @@ cluster_A::*> metrocluster operation show
      Errors: -
 ----
 
-. If you are in a MetroCluster IP configuration running ONTAP 9.6 or later, wait for the disaster site plexes to come online and the healing operations to automatically complete.
+. If you have a MetroCluster IP configuration running ONTAP 9.6 or later, wait for the disaster site plexes to come online and the healing operations to automatically complete.
 +
-In MetroCluster IP configurations running earlier versions of ONTAP, the disaster site nodes do not automatically boot to ONTAP and the plexes remain offline.
+In MetroCluster IP configurations running earlier versions of ONTAP, the disaster site nodes do not automatically boot to ONTAP and the plexes remain offline. For MetroCluster FC configurations, all plexes remain online and you do not need to online the plexes.
 
-. Depending on your configuration and ONTAP version, identify and move offline affected plexes that are located at the disaster site.
+. Depending on your configuration and ONTAP version, identify and move offline affected plexes that are located at the disaster site (Cluster_B).
 +
 [NOTE]
 ====
 This step is required in the following configurations:.
 
- ** All MetroCluster FC configurations.
- ** MetroCluster IP configurations running ONTAP version 9.6 or later.
+* All MetroCluster FC configurations.
+* MetroCluster IP configurations running ONTAP version 9.6 or later.
 ====
+
 +
 You should move the following plexes offline:
-
- ** Non-mirrored plexes residing on disks located at the disaster site.
++
+--
+* Non-mirrored plexes residing on disks located at the disaster site.
 +
 If you do not move the non-mirrored plexes at the disaster site offline, an outage might result when the disaster site is later powered off.
++
+* Mirrored plexes residing on disks located at the disaster site for aggregate mirroring.
+After they are moved offline, the plexes are inaccessible.
+--
 
- ** Mirrored plexes residing on disks located at the disaster site for aggregate mirroring.
-Once they are moved offline, the plexes are inaccessible.
-
-
- .. Identify the affected plexes.
+.. Identify the affected plexes.
 +
 Plexes that are owned by nodes at the surviving site consist of Pool1 disks. Plexes that are owned by nodes at the disaster site consist of Pool0 disks.
 +
-NOTE: "`Home`" refers to the "`home`" owner, not the "`current`" owner.
-+
+
 ----
 Cluster_A::> storage aggregate plex show -fields aggregate,status,is-online,Plex,pool
 aggregate    plex  status        is-online pool
@@ -140,9 +162,12 @@ Cluster_A::>
 +
 The affected plexes are those that are remote to cluster A. The following table shows whether the disks are local or remote relative to cluster A:
 +
-[options="header"]
+
+[cols="20,25,30,25"]
 |===
-| Node| Disks in pool| Should the disks be set offline?| Example of plexes to be moved offline
+
+h| Node h| Disks in pool h| Should the disks be set offline? h| Example of plexes to be moved offline
+
 .2+a|
 Node _A_1 and Node _A_2
 a|
@@ -185,9 +210,9 @@ a|
 -
 |===
 
- .. Move the affected plexes offline:
- +
-`*storage aggregate plex offline*`
+.. Move the affected plexes offline:
++
+`storage aggregate plex offline`
 +
 ----
 storage aggregate plex offline -aggregate Node_B_1_aggr0 -plex plex0
@@ -198,15 +223,17 @@ NOTE: Perform this for all plexes that have disks that are remote to Cluster_A.
 . Persistently offline the switchports according to the switch type.
 +
 NOTE: This step is only required for MetroCluster FC configurations. Skip this step if your configuration is a MetroCluster IP configuration or a stretched MetroCluster configuration with FC backend switches.
+
 +
-[options="header"]
+[cols="25,75"]
 |===
-| Switch type| Action
+
+h| Switch type h| Action
+
 a|
 If the FC switches are Brocade switches...
 a|
-
- .. Use the `*portcfgpersistentdisable _port_*` command to persistently disable the ports as shown in the following example. This must be done on both switches at the surviving site.
+.. Use the `portcfgpersistentdisable _port_` command to persistently disable the ports as shown in the following example. This must be done on both switches at the surviving site.
 +
 ----
 
@@ -215,7 +242,7 @@ a|
  Switch_A_1:admin>
 ----
 
- .. Verify that the ports are disabled using the `*switchshow*` command shown in the following example:
+.. Verify that the ports are disabled using the `switchshow` command shown in the following example:
 +
 ----
 
@@ -247,7 +274,7 @@ a|
 If the FC switches are Cisco switches...
 a|
 
- .. Use the `*interface*` command to persistently disable the ports. The following example shows ports 14 and 15 being disabled:
+.. Use the `interface` command to persistently disable the ports. The following example shows ports 14 and 15 being disabled:
 +
 ----
 
@@ -259,7 +286,7 @@ a|
  Switch_A_1# copy running-config startup-config
 ----
 
- .. Verify that the switch port is disabled using the `*show interface brief*` command as shown in the following example:
+.. Verify that the switch port is disabled using the `show interface brief` command as shown in the following example:
 +
 ----
 
@@ -268,7 +295,6 @@ a|
 ----
 
 +
-[options="header"]
 |===
 
 . Power off the site.
@@ -276,7 +302,8 @@ a|
 The following equipment needs to be turned off in no specific order:
 +
 |===
-| Configuration type| Equipment to be powered off
+
+h| Configuration type h| Equipment to be powered off
 a|
 In a MetroCluster IP configuration, power off...
 a|
@@ -300,32 +327,39 @@ a|
 == Relocating the powered-off site of the MetroCluster
 
 [.lead]
-Once the site is powered off, you can begin maintenance work. The procedure is the same whether the MetroCluster components are relocated within the same data center or relocated to a different data center.
+After the site is powered off, you can begin maintenance work. The procedure is the same whether the MetroCluster components are relocated within the same data center or relocated to a different data center.
 
 * The hardware should be cabled in the same way as the previous site.
 * If the Inter-Switch Link (ISL) speed, length, or number has changed, they all need to be reconfigured.
 
 .Steps
+
 . Make sure that the cabling for all components is carefully recorded so that it can be correctly reconnected at the new location.
+
 . Physically relocate all the hardware, storage controllers, FC and IP switches, FibreBridges, and storage shelves.
+
 . Configure the ISL ports and verify the intersite connectivity.
- .. Power on the FC and IP switches.
+
+.. Power on the FC and IP switches.
 +
 NOTE: Do *not* power up any other equipment.
-. Enable the ports.
+
+.. Enable the ports.
 +
 NOTE: This step is only required in MetroCluster FC configurations. You can skip this step if your configuration is a MetroCluster IP configuration.
 +
+
 Enable the ports according to the correct switch types in the following table:
 +
-[options="header"]
+
+[cols="35,65"]
 |===
-| Switch type| Command
+
+h| Switch type h| Command
 a|
 If the FC Switches are Brocade switches...
 a|
-
- .. Use the `*portcfgpersistentenable _port number_*` command to persistently enable the port. This must be done on both switches at the surviving site.
+.. Use the `portcfgpersistentenable _port number_` command to persistently enable the port. This must be done on both switches at the surviving site.
 +
 The following example shows ports 14 and 15 being enabled on Switch_A_1.
 +
@@ -335,7 +369,7 @@ switch_A_1:admin> portcfgpersistentenable 15
 switch_A_1:admin>
 ----
 
- .. Verify that the switch port is enabled: `*switchshow*`
+.. Verify that the switch port is enabled: `switchshow`
 +
 The following example shows that ports 14 and 15 are enabled:
 +
@@ -369,7 +403,7 @@ a|
 If the FC Switches are Cisco switches...
 a|
 
- .. Enter the `*interface*` command to enable the port.
+.. Enter the `interface` command to enable the port.
 +
 The following example shows ports 14 and 15 being enabled on Switch_A_1.
 +
@@ -382,7 +416,7 @@ The following example shows ports 14 and 15 being enabled on Switch_A_1.
  switch_A_1# copy running-config startup-config
 ----
 
- .. Verify that the switch port is enabled: `*show interface brief*`
+.. Verify that the switch port is enabled: `show interface brief`
 +
 ----
 
@@ -400,14 +434,16 @@ NOTE: You should only proceed if the links are properly configured and stable.
 +
 Disable the ports based on whether you are using Brocade or Cisco switches as shown in the following table:
 +
-[options="header"]
+
+[cols="35,65"]
 |===
-| Switch type| Command
+
+h| Switch type h| Command
+
 a|
 If the FC Switches are Brocade switches...
 a|
-
- .. Enter the `*portcfgpersistentdisable _port number_*` command to persistently disable the port.
+.. Enter the `portcfgpersistentdisable _port number_` command to persistently disable the port.
 +
 This must be done on both switches at the surviving site. The following example shows ports 14 and 15 being disabled on Switch_A_1:
 +
@@ -418,7 +454,7 @@ This must be done on both switches at the surviving site. The following example 
  switch_A_1:admin>
 ----
 
- .. Verify that the switch port is disabled: `*switchshow*`
+.. Verify that the switch port is disabled: `switchshow`
 +
 The following example shows that ports 14 and 15 are disabled:
 +
@@ -451,7 +487,7 @@ a|
 If the FC Switches are Cisco switches...
 a|
 
- .. Disable the port using the `*interface*` command.
+.. Disable the port using the `interface` command.
 +
 The following example shows ports fc1/14 and fc1/15 being disabled on Switch A_1:
 +
@@ -464,7 +500,7 @@ switch_A_1(config-if)# end
 switch_A_1# copy running-config startup-config
 ----
 
- .. Verify that the switch port is disabled using the `*show interface brief*` command.
+.. Verify that the switch port is disabled using the `show interface brief` command.
 +
 ----
 
@@ -480,56 +516,66 @@ switch_A_1# copy running-config startup-config
 [.lead]
 After maintenance has been completed or the site has been moved, you must power on the site and reestablish the MetroCluster configuration.
 
+.About this task
+
+All the commands in the following steps are issued from the site that you power on.
+
 .Steps
+
 . Power on the switches.
 +
 Switches should be powered on first. They might have been powered on during the previous step if the site was relocated.
 
- .. Reconfigure the Inter-Switch Link (ISL) if required or if this was not completed as part of the relocation.
- .. Enable the ISL if fencing was completed.
- .. Verify the ISL.
+.. Reconfigure the Inter-Switch Link (ISL) if required or if this was not completed as part of the relocation.
+
+.. Enable the ISL if fencing was completed.
+
+.. Verify the ISL.
 
 . Power on the shelves and allow enough time for them to power on completely.
+
 . Power on the FibreBridge bridges.
 +
 NOTE: You can skip this step if your configuration is a MetroCluster IP configuration.
 
- .. On the FC switches, verify that the ports connecting the bridges are coming online.
+.. On the FC switches, verify that the ports connecting the bridges are coming online.
 +
-You can use a command such as `*switchshow*` for Brocade switches, and `*show interface brief*` for Cisco switches.
+You can use a command such as `switchshow` for Brocade switches, and `show interface brief` for Cisco switches.
 
- .. Verify that the shelves and disks on the bridges are clearly visible.
+.. Verify that the shelves and disks on the bridges are clearly visible.
 +
-You can use a command such as `*sastargets*` on the ATTO command-line interface (CLI).
+You can use a command such as `sastargets` on the ATTO command-line interface (CLI).
 
 . Enable the ISLs on the FC switches.
 +
 NOTE: Skip this step if your configuration is a MetroCluster IP configuration.
 +
+
 Enable the ports based on whether you are using Brocade or Cisco switches as shown in the following table:
 +
-[options="header"]
+[cols="25,75"]
 |===
-| Switch type| Command
+
+h| Switch type h| Command
+
 a|
 If the FC Switches are Brocade switches...
 a|
 
- .. Enter the `*portcfgpersistentenable _port_*` command to persistently enable the ports. This must be done on both switches at the surviving site.
+.. Enter the `portcfgpersistentenable _port_` command to persistently enable the ports. This must be done on both switches at the surviving site.
 +
 The following example shows ports 14 and 15 being enabled on Switch_A_1:
 +
 ----
-
 
  Switch_A_1:admin> portcfgpersistentenable 14
  Switch_A_1:admin> portcfgpersistentenable 15
  Switch_A_1:admin>
 ----
 
- .. Verify that the switch port is enabled using the
+.. Verify that the switch port is enabled using the
  +
-`*switchshow*` command:
+`switchshow` command:
 
 +
 ----
@@ -560,7 +606,7 @@ a|
 If the FC Switches are Cisco switches...
 a|
 
- .. Use the `*interface*` command to enable the ports.
+.. Use the `interface` command to enable the ports.
 +
 The following example shows port fc1/14 and fc1/15 being enabled on Switch A_1:
 +
@@ -573,7 +619,7 @@ The following example shows port fc1/14 and fc1/15 being enabled on Switch A_1:
  switch_A_1# copy running-config startup-config
 ----
 
- .. Verify that the switch port is disabled:
+.. Verify that the switch port is disabled:
 
 +
 ----
@@ -587,15 +633,16 @@ switch_A_1#
 +
 Select the appropriate method of determining whether the storage is visible based on whether you have a MetroCluster IP or FC configuration:
 +
-[options="header"]
+[cols="35,65"]
 |===
-| Configuration| Step
+
+h| If your configuration is... h| Then perform this step...
 a|
-If your configuration is a MetroCluster IP...
+MetroCluster IP configuration
 a|
 Verify that the local storage is visible from the node Maintenance mode.
 a|
-If your configuration is a MetroCluster FC...
+MetroCluster FC configuration
 a|
 Verify that the storage is visible from the surviving site. Put the offline plexes back online. This restarts the resync operations and reestablishes the SyncMirror.
 
@@ -603,6 +650,7 @@ Verify that the storage is visible from the surviving site. Put the offline plex
 
 . Reestablish the MetroCluster configuration.
 +
-Follow the instructions in the _MetroCluster Disaster and Recovery Guide_ to perform healing and switchback operations according to your MetroCluster configuration.
+Follow the instructions in link:https://docs.netapp.com/us-en/ontap-metrocluster/disaster-recovery/index.html[MetroCluster management and disaster recovery] to perform healing and switchback operations according to your MetroCluster configuration.
 +
-link:https://docs.netapp.com/us-en/ontap-metrocluster/disaster-recovery/index.html[MetroCluster management and disaster recovery]
+
+// BURT 1382414, 09 DEC 2021

@@ -83,7 +83,7 @@ h| Type of information h| Your values
 a|
 Cluster name
 
-Example used in this guide: site_A
+Example used in this procedure: site_A
 
 a|
 
@@ -115,7 +115,9 @@ For each node in the cluster, you need a management IP address, a network mask, 
 h| Node h| Port h| IP address h| Network mask h| Default gateway
 
 a|
-Node 1 Example used in this guide: controller_A_1
+Node 1
+
+Example used in this procedure: controller_A_1
 
 a|
 
@@ -126,9 +128,11 @@ a|
 a|
 
 a|
-Node 2Not required if using two-node MetroCluster configuration (one node at each site).
+Node 2
 
-Example used in this guide: controller_A_2
+Not required if using two-node MetroCluster configuration (one node at each site).
+
+Example used in this procedure: controller_A_2
 
 a|
 
@@ -170,7 +174,9 @@ a|
 a|
 
 a|
-Node 2 IC LIF 1Not required for two-node MetroCluster configurations (one node at each site).
+Node 2 IC LIF 1
+
+Not required for two-node MetroCluster configurations (one node at each site).
 
 a|
 
@@ -364,7 +370,7 @@ h| Type of information h| Your values
 a|
 Cluster name
 
-Example used in this guide: site_B
+Example used: site_B
 
 a|
 
@@ -398,7 +404,7 @@ h| Node h| Port h| IP address h| Network mask h| Default gateway
 a|
 Node 1
 
-Example used in this guide: controller_B_1
+Example used: controller_B_1
 
 a|
 
@@ -413,7 +419,7 @@ Node 2
 
 Not required for two-node MetroCluster configurations (one node at each site).
 
-Example used in this guide: controller_B_2
+Example used: controller_B_2
 
 a|
 
@@ -581,7 +587,6 @@ a|
 
 == Similarities and differences between standard cluster and MetroCluster configurations
 
-[.lead]
 The configuration of the nodes in each cluster in a MetroCluster configuration is similar to that of nodes in a standard cluster.
 
 The MetroCluster configuration is built on two standard clusters. Physically, the configuration must be symmetrical, with each node having the same hardware configuration, and all of the MetroCluster components must be cabled and configured. However, the basic software configuration for nodes in a MetroCluster configuration is the same as that for nodes in a standard cluster.
@@ -639,7 +644,6 @@ include::../_include/steps_restore_defaults_and_configure_hbas.adoc[]
 
 == Configuring FC-VI ports on a X1132A-R6 quad-port card on FAS8020 systems
 
-[.lead]
 If you are using the X1132A-R6 quad-port card on a FAS8020 system, you can enter Maintenance mode to configure the 1a and 1b ports for FC-VI and initiator usage. This is not required on MetroCluster systems received from the factory, in which the ports are set appropriately for your configuration.
 
 .About this task
@@ -736,7 +740,6 @@ controller_B_1
 
 == Verifying disk assignment in Maintenance mode in an eight-node or a four-node configuration
 
-[.lead]
 Before fully booting the system to ONTAP, you can optionally boot to Maintenance mode and verify the disk assignment on the nodes. The disks should be assigned to create a fully symmetric active-active configuration, where each pool has an equal number of disks assigned to them.
 
 .About this task
@@ -1220,7 +1223,6 @@ If storage controller node_B_1 has four shelves, you issue the following command
 
 == Verifying and configuring the HA state of components in Maintenance mode
 
-[.lead]
 When configuring a storage system in a MetroCluster configuration, you must make sure that the high-availability (HA) state of the controller module and chassis components is mcc or mcc-2n so that these components boot properly.
 
 .Before you begin
@@ -1306,14 +1308,12 @@ ha-config modify chassis mccip
 
 == Setting up ONTAP
 
-[.lead]
 You must set up ONTAP on each controller module.
 
 If you need to netboot the new controllers, see http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mcc-upgrade/GUID-3370EC34-310E-4F09-829F-F632EC8CDD9B.html[Netbooting the new controller modules] in the _MetroCluster Upgrade, Transition, and Expansion Guide_.
 
 === Setting up ONTAP in a two-node MetroCluster configuration
 
-[.lead]
 In a two-node MetroCluster configuration, on each cluster you must boot up the node, exit the Cluster Setup wizard, and use the cluster setup command to configure the node into a single-node cluster.
 
 .Before you begin
@@ -1407,7 +1407,6 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ssg/home.html[Softwa
 
 === Setting up ONTAP in an eight-node or four-node MetroCluster configuration
 
-[.lead]
 After you boot each node, you are prompted to run the System Setup tool to perform basic node and cluster configuration. After configuring the cluster, you return to the ONTAP CLI to create aggregates and create the MetroCluster configuration.
 
 .Before you begin
@@ -1519,7 +1518,6 @@ Return to the ONTAP command-line interface and complete the MetroCluster configu
 
 == Configuring the clusters into a MetroCluster configuration
 
-[.lead]
 You must peer the clusters, mirror the root aggregates, create a mirrored data aggregate, and then issue the command to implement the MetroCluster operations.
 
 === Peering the clusters
@@ -1580,7 +1578,7 @@ cluster01-02
 +
 For complete command syntax, see the man page.
 +
-The following example shows that ports e0e and e0f have not been assigned LIFs:
+The following example shows that ports "`e0e`" and "`e0f`" have not been assigned LIFs:
 +
 ----
 
@@ -1603,7 +1601,7 @@ cluster01
 +
 `network interface failover-groups create -vserver system_SVM -failover-group failover_group -targets physical_or_logical_ports`
 +
-The following example assigns ports e0e and e0f to the failover group intercluster01 on the system SVMcluster01:
+The following example assigns ports "`e0e`" and "`e0f`" to the failover group intercluster01 on the system SVMcluster01:
 +
 ----
 cluster01::> network interface failover-groups create -vserver cluster01 -failover-group
@@ -1639,6 +1637,7 @@ cluster01
 
 . Create intercluster LIFs on the system SVM and assign them to the failover group.
 +
+[cols="1,3"]
 |===
 
 h| ONTAP version h| Command
@@ -1657,7 +1656,7 @@ a|
 +
 For complete command syntax, see the man page.
 +
-The following example creates intercluster LIFs `"cluster01_icl01"`` and `"cluster01_icl02"` in the failover group intercluster01:
+The following example creates intercluster LIFs "`cluster01_icl01`" and "`cluster01_icl02`" in the failover group intercluster01:
 +
 ----
 cluster01::> network interface create -vserver cluster01 -lif cluster01_icl01 -service-
@@ -1673,10 +1672,12 @@ policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.
 +
 |===
 
-a| *In ONTAP 9.6 and later:*
+h| *In ONTAP 9.6 and later:*
+
 a|
 `network interface show -service-policy default-intercluster`
-a|
+
+h|
 *In ONTAP 9.5 and earlier:*
 a|
 `network interface show -role intercluster`
@@ -1699,18 +1700,19 @@ cluster01
 +
 |===
 
-a|
+h|
 *In ONTAP 9.6 and later:*
 a|
 `network interface show -service-policy default-intercluster -failover`
-a|
+h|
 *In ONTAP 9.5 and earlier:*
 a|
 `network interface show -role intercluster -failover`
 |===
+
 For complete command syntax, see the man page.
 +
-The following example shows that the intercluster LIFs `"cluster01_icl01"` and `"cluster01_icl02"` on the SVMe0e port will fail over to the e0f port.
+The following example shows that the intercluster LIFs "`cluster01_icl01`" and "`cluster01_icl02`" on the SVM "`e0e`" port will fail over to the "`e0f`" port.
 +
 ----
 cluster01::> network interface show -service-policy default-intercluster –failover
@@ -1766,18 +1768,18 @@ cluster01-02
 +
 |===
 
-a|
+h|
 *In ONTAP 9.6 and later:*
 a|
 `network interface create -vserver system_SVM -lif LIF_name -service-policy default-intercluster -home-node node -home-port port -address port_IP -netmask netmask`
-a|
+h|
 *In ONTAP 9.5 and earlier:*
 a|
 `network interface create -vserver system_SVM -lif LIF_name -role intercluster -home-node node -home-port port -address port_IP -netmask netmask`
 |===
 For complete command syntax, see the man page.
 +
-The following example creates intercluster LIFs cluster01_icl01 and cluster01_icl02:
+The following example creates intercluster LIFs "`cluster01_icl01`" and "`cluster01_icl02`":
 +
 ----
 
@@ -1794,15 +1796,17 @@ policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.
 +
 |===
 
-a|
+h|
 *In ONTAP 9.6 and later:*
 a|
 `network interface show -service-policy default-intercluster`
 a|
 *In ONTAP 9.5 and earlier:*
-a|
+h|
 `network interface show -role intercluster`
 |===
+
++
 For complete command syntax, see the man page.
 +
 ----
@@ -1821,18 +1825,18 @@ cluster01
 +
 |===
 
-a|
+h|
 *In ONTAP 9.6 and later:*
 a|
 `network interface show –service-policy default-intercluster -failover`
-a|
+h|
 *In ONTAP 9.5 and earlier:*
 a|
 `network interface show -role intercluster -failover`
 |===
 For complete command syntax, see the man page.
 +
-The following example shows that the intercluster LIFs cluster01_icl01 and cluster01_icl02 on the e0c port will fail over to the e0d port.
+The following example shows that the intercluster LIFs "`cluster01_icl01`" and "`cluster01_icl02`" on the "`e0c`" port will fail over to the "`e0d`" port.
 +
 ----
 cluster01::> network interface show -service-policy default-intercluster –failover
@@ -2048,9 +2052,7 @@ You must mirror the root aggregates to provide data protection.
 
 By default, the root aggregate is created as RAID-DP type aggregate. You can change the root aggregate from RAID-DP to RAID4 type aggregate. The following command modifies the root aggregate for RAID4 type aggregate:
 
-----
-storage aggregate modify –aggregate aggr_name -raidtype raid4
-----
+`storage aggregate modify –aggregate aggr_name -raidtype raid4`
 
 NOTE: On non-ADP systems, the RAID type of the aggregate can be modified from the default RAID-DP to RAID4 before or after the aggregate is mirrored.
 
@@ -2072,7 +2074,7 @@ This mirrors the aggregate, so it consists of a local plex and a remote plex loc
 
 .Related information
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-vsmg/home.html[Logical storage management]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-vsmg/home.html[Logical storage management^]
 
 === Creating a mirrored data aggregate on each node
 
@@ -2084,7 +2086,7 @@ You must create a mirrored data aggregate on each node in the DR group.
 * If you have multiple drive types in your system (heterogeneous storage), you should understand how you can ensure that the correct drive type is selected.
 * Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
-See https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management].
+See https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management^].
 
 .Steps
 . Display a list of available spares:
@@ -2149,7 +2151,7 @@ NOTE: The unmirrored aggregates must be local to the node owning them.
 
 * Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
-* The _Disks and Aggregates Power Guide_ contains more information about mirroring aggregates.
+* _Disks and aggregates management_ contains more information about mirroring aggregates.
 
 .Steps
 
@@ -2193,7 +2195,7 @@ controller_A_1::> storage aggregate create aggr1_controller_A_1 -diskcount 10 -n
 
 .Related information
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management^]
 
 === Implementing the MetroCluster configuration
 
@@ -2209,9 +2211,9 @@ Additional data aggregates can be either mirrored or unmirrored.
 
 You can verify this with the storage aggregate show command.
 
-NOTE: If you want to use a single mirrored data aggregate, then see link:concept_configure_the_mcc_software_in_ontap.adocSTEP_429E7F7532ED4B468B67B9B22968D686[Step 1 in "Configure the MetroCluster software in ONTAP"] for instructions.
+NOTE: If you want to use a single mirrored data aggregate, then see Step 1 in link:concept_configure_the_mcc_software_in_ontap.html[Configure the MetroCluster software in ONTAP] for instructions.
 
-The ha-config state of the controllers and chassis must be mcc.
+The ha-config state of the controllers and chassis must be "`mcc`".
 
 You issue the `metrocluster configure` command once, on any of the nodes, to enable the MetroCluster configuration. You do not need to issue the command on each of the sites or nodes, and it does not matter which node or site you choose to issue the command on.
 
@@ -2221,6 +2223,7 @@ The `metrocluster configure` command automatically pairs the two nodes with the 
 
 . Configure the MetroCluster in the following format:
 +
+[cols="1,3"]
 |===
 
 h| If your MetroCluster configuration has... h| Then do this...
@@ -2255,7 +2258,7 @@ You need to respond with `y` when you are prompted to continue into advanced mod
 --
 [NOTE]
 ====
-The best practice is to have multiple data aggregates. If the first DR group has only one aggregate and you want to add a DR group with one aggregate, you must move the metadata volume off the single data aggregate. For more information on this procedure, see http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/GUID-114DAE6E-F105-4908-ABB1-CE1D7B5C7048.html[Moving a metadata volume in MetroCluster configurations].
+The best practice is to have multiple data aggregates. If the first DR group has only one aggregate and you want to add a DR group with one aggregate, you must move the metadata volume off the single data aggregate. For more information on this procedure, see http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-service/GUID-114DAE6E-F105-4908-ABB1-CE1D7B5C7048.html[Moving a metadata volume in MetroCluster configurations^].
 ====
 --
 
@@ -2489,7 +2492,7 @@ node_A_1 SVM 4 snmpv3user     snmp        usm                   10.10.10.13
 +
 `snmpconfig --set snmpv3`
 +
-If you require RO access, after "User (ro):" specify the "snmpv3user" as shown in the example:
+If you require RO access, after "`User (ro):`" specify the "`snmpv3user`" as shown in the example:
 +
 ----
 Switch-A1:admin> snmpconfig --set snmpv3
@@ -2527,7 +2530,7 @@ These tasks apply only to systems with FC-to-SAS bridges.
 
 In a fabric-attached MetroCluster configuration, you must perform some additional configuration steps to monitor the FC switches.
 
-NOTE: Starting with ONTAP 9.8, the `storage switch` command is replaced with `system switch`. The following steps show the `storage switch` command, but if you are running ONTAP 9.8 or later, the `system switch` command is preferred.
+NOTE: Beginning with ONTAP 9.8, the `storage switch` command is replaced with `system switch`. The following steps show the `storage switch` command, but if you are running ONTAP 9.8 or later, the `system switch` command is preferred.
 
 .Steps
 
@@ -2537,7 +2540,7 @@ NOTE: Starting with ONTAP 9.8, the `storage switch` command is replaced with `sy
 +
 This command must be repeated on all four switches in the MetroCluster configuration.
 +
-NOTE: Brocade 7840 FC switches and all alerts are supported in health monitoring, except NoISLPresent_Alert
+NOTE: Brocade 7840 FC switches and all alerts are supported in health monitoring, except NoISLPresent_Alert.
 
 +
 The following example shows the command to add a switch with IP address 10.10.10.10:
@@ -2571,7 +2574,7 @@ If the worldwide name (WWN) of the switch is shown, the ONTAP health monitor can
 
 .Related information
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[System administration]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[System administration^]
 
 ==== Configuring FC-to-SAS bridges for health monitoring
 
@@ -2580,15 +2583,16 @@ In systems running ONTAP versions prior to 9.8, you must perform some special co
 .About this task
 
 * Third-party SNMP monitoring tools are not supported for FibreBridge bridges.
-* Starting with ONTAP 9.8, FC-to-SAS bridges are monitored via in-band connections by default, and additional configuration is not required.
+* Beginning with ONTAP 9.8, FC-to-SAS bridges are monitored via in-band connections by default, and additional configuration is not required.
 
-NOTE: Starting with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
+NOTE: Beginning with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
 
 .Steps
 
 . From the ONTAP cluster prompt, add the bridge to health monitoring:
  .. Add the bridge, using the command for your version of ONTAP:
 +
+[cols="1,3"]
 |===
 
 h| ONTAP version h| Command
@@ -2602,7 +2606,7 @@ a|
 `storage bridge add -address bridge-ip-address -name bridge-name`
 |===
 
- .. Verify that the bridge has been added and is properly configured:
+.. Verify that the bridge has been added and is properly configured:
 +
 `storage bridge show`
 +
@@ -2738,13 +2742,12 @@ mccint-fas9000-0304
 
 .Related information
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management^]
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Network and LIF management]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Network and LIF management^]
 
 == Checking for MetroCluster configuration errors with Config Advisor
 
-[.lead]
 You can go to the NetApp Support Site and download the Config Advisor tool to check for common configuration errors.
 
 .About this task
@@ -2757,13 +2760,12 @@ NOTE: Support for Config Advisor is limited, and available only online.
 
 . Go to the Config Advisor download page and download the tool.
 +
-https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor^]
 
 . Run Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
 == Verifying local HA operation
 
-[.lead]
 If you have a four-node MetroCluster configuration, you should verify the operation of the local HA pairs in the MetroCluster configuration. This is not required for two-node configurations.
 
 .About this task
@@ -2850,22 +2852,18 @@ controller_A_2 controller_A_1 true     Connected to controller_A_1
 
 .Related information
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-hacg/home.html[High-availability configuration]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-hacg/home.html[High-availability configuration^]
 
 == Verifying switchover, healing, and switchback
 
-[.lead]
 You should verify the switchover, healing, and switchback operations of the MetroCluster configuration.
 
 .Step
 
-. Use the procedures for negotiated switchover, healing, and switchback that are mentioned in the _MetroCluster Management and Disaster Recovery Guide_.
-+
-https://docs.netapp.com/us-en/ontap-metrocluster/manage/index.html[MetroCluster management and disaster recovery]
+. Use the procedures for negotiated switchover, healing, and switchback in https://docs.netapp.com/us-en/ontap-metrocluster/manage/index.html[MetroCluster management and disaster recovery]
 
 == Protecting configuration backup files
 
-[.lead]
 You can provide additional protection for the cluster configuration backup files by specifying a remote URL (either HTTP or FTP) where the configuration backup files will be uploaded in addition to the default locations in the local cluster.
 
 .Step
@@ -2874,8 +2872,10 @@ You can provide additional protection for the cluster configuration backup files
 +
 `system configuration backup settings modify URL-of-destination`
 +
-The System Administration Guide contains additional information under the section _Managing configuration backups_.
+https://docs.netapp.com/us-en/ontap/system-admin/config-backup-file-concept.html[Managing configuration backups^] contains additional information.
 
 .Related information
 
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[System administration]
+https://docs.netapp.com/us-en/ontap/cluster-admin/index.html[Cluster administration^]
+
+// BURT 1448684, 01 FEB 2022

@@ -1,7 +1,7 @@
 ---
 permalink: install-ip/concept_considerations_mc_compliant_switches.html
 sidebar: sidebar
-keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements
+keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant
 summary: Beginning with ONTAP 9.7, MetroCluster IP configurations can support switches that are not NetApp-validated provided that they are compliant with NetApp specifications.
 ---
 = Considerations for using MetroCluster-compliant switches
@@ -15,6 +15,8 @@ MetroCluster IP switches provided by NetApp are NetApp-validated. Beginning with
 
 The requirements show how to configure MetroCluster-compliant switches without using reference configuration (RCF) files.
 
+* The switches connecting to the MetroCluster nodes can carry non-MetroCluster traffic.
+//GitHub issue 100 /21/12/2021
 * Only platforms that provide dedicated ports for switchless cluster interconnects are supported. Platforms such as FAS2750 and AFF A220 are not supported because MetroCluster traffic and MetroCluster interconnect traffic share the same network ports.
 +
 Connecting local cluster connections to a MetroCluster-compliant switch is not supported.
@@ -29,7 +31,7 @@ Connecting local cluster connections to a MetroCluster-compliant switch is not s
 ** link:../install-ip/concept_considerations_isls.html#basic-metrocluster-isl-requirements[Basic MetroCluster ISL requirements]
 ** link:../install-ip/concept_considerations_isls.html#isl-requirements-in-shared-layer-2-networks[ISL requirements in shared layer 2 networks]
 ** link:../install-ip/concept_considerations_layer_2.html#required-settings-on-intermediate-switches[Required settings on intermediate switches]
-* In MetroCluster IP configurations using open networks, reverting to ONTAP 9.6 or earlier is not supported.
+* In MetroCluster IP configurations using MetroCluster-compliant switches, reverting to ONTAP 9.6 or earlier is not supported.
 * The MTU of 9216 must be configured on all switches that carry MetroCluster IP traffic.
 
 == Switch and cabling requirements
@@ -58,6 +60,10 @@ NOTE: Missing values indicate that the platform is not supported.
 
 h| Platform h| Network Speed (Gbps)
 
+a|
+AFF A900
+a|
+100
 a|
 AFF A800
 a|

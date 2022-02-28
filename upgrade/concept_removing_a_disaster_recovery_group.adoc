@@ -2,14 +2,14 @@
 permalink: upgrade/concept_removing_a_disaster_recovery_group.html
 sidebar: sidebar
 keywords:
-summary: 'Starting with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.'
+summary: 'Beginning with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.'
 ---
 = Removing a Disaster Recovery group
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Starting with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.
+Beginning with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.
 
 This procedure is supported on ONTAP 9.8 and later. On earlier versions of ONTAP, please contact technical support to remove a DR group.
 
@@ -135,7 +135,11 @@ You must perform this step on each cluster.
 .. Set the advanced privilege level:
 +
 `set -privilege advanced`
- .. Unjoin the node:
+.. Disable the storage failover:
++
+`storage failover modify -node _node-name_ -enable false      <-----Additional step`
+// BURT 1419399, 2021-11-18
+.. Unjoin the node:
  +
 `cluster unjoin -node _node-name_`
 +

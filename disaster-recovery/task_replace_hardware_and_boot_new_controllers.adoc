@@ -46,7 +46,7 @@ a|
  .. Cable the ISL links.
  Do not power on the IP switches at this time.
 
-a| link:../install-ip/index.html[MetroCluster IP installation and configuration]
+a| link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration: Differences among the ONTAP MetroCluster configurations]
 a|
 Disk shelves
 a|
@@ -57,7 +57,7 @@ a|
  .. Cable the disk shelves to adjacent shelves within the stack and to the FC-to-SAS bridge.
  Do not power on the disk shelves at this time.
 
-| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
 a|
 SAS cables
 a|
@@ -65,7 +65,7 @@ a|
  .. Install the new cables.
  Do not power on the disk shelves at this time.
 
-a| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+a| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
 a|
 FC-to-SAS bridges in a MetroCluster FC configuration
 a|
@@ -79,7 +79,7 @@ Cable them to the FC switches or to the controller modules, depending on your Me
 Do not power on the FC-to-SAS bridges at this time.
 a| link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 
-link:../install-stretch/index.html[Stretch MetroCluster installation and configuration]
+link:../install-stretch/concept_considerations_differences.html[Stretch MetroCluster installation and configuration]
 a|
 Controller modules
 a|
@@ -100,11 +100,14 @@ The ports connecting the controller module to the storage (either by connections
 
 +
 Do not power on the controller modules at this time.
-a| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+a| link:http://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
 
 |===
 
-. Verify that all components are cabled correctly according to the _MetroCluster Installation and Configuration Guide_ for your configuration.
+. Verify that all components are cabled correctly for your configuration.
++
+* link:../install-ip/using_rcf_generator.html[MetroCluster IP configuration]
+* link:../install-fc/task_fmc_mcc_transition_cable_the_new_mcc_controllers_to_the_exist_fc_fabrics.html[MetroCluster fabric-attached configuration]
 
 == Determining the system IDs and VLAN IDs of the old controller modules
 
@@ -140,6 +143,7 @@ The controller modules have the following original system IDs:
 |===
 
 h| Number of nodes in MetroCluster configuration h| Node h| Original system ID
+
 .4+a|
 Four
 a|
@@ -178,6 +182,7 @@ a|
 |===
 
 h| Number of nodes in MetroCluster configuration h| Use this command
+
 a|
 Four or eight
 a|
@@ -302,7 +307,6 @@ include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 
 == Netbooting the new controller modules
 
-[.lead]
 If the new controller modules have a different version of ONTAP from the version on the surviving controller modules, you must netboot the new controller modules.
 
 .Before you begin
@@ -310,7 +314,7 @@ If the new controller modules have a different version of ONTAP from the version
 * You must have access to an HTTP server.
 * You must have access to the NetApp Support Site to download the necessary system files for your platform and version of ONTAP software that is running on it.
 +
-https://mysupport.netapp.com/site/global/dashboard[NetApp Support]
+https://mysupport.netapp.com/site/global/dashboard[NetApp Support^]
 
 // include file
 include::../_include/netboot_steps.adoc[]
@@ -321,7 +325,6 @@ include::../_include/netboot_steps.adoc[]
 
 == Determining the system IDs of the replacement controller modules
 
-[.lead]
 After you have replaced all hardware at the disaster site, you must determine the system ID of the newly installed storage controller module or modules.
 
 .About this task
@@ -343,7 +346,6 @@ Present only in four-node MetroCluster configurations.
 Present only in four-node MetroCluster configurations.
 
 The examples in this procedure use controllers with the following system IDs:
-
 
 |===
 
@@ -479,6 +481,7 @@ mccip
 |===
 
 h| Number of controllers in the MetroCluster configuration h| Command
+
 a|
 Eight- or four-node MetroCluster FC configuration
 a|
@@ -499,6 +502,7 @@ a|
 |===
 
 h| Number of controllers in the MetroCluster configuration h| Command
+
 a|
 Eight- or four-node MetroCluster FC configuration
 a|
@@ -514,3 +518,5 @@ a|
 |===
 
 . Repeat these steps on the other replacement node.
+
+// BURT 1448684, 12 JAN 2022
