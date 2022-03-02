@@ -19,7 +19,6 @@ After the equipment at the disaster site has undergone any required maintenance 
 
 == Healing the configuration in a MetroCluster FC configuration
 
-[.lead]
 Following a switchover, you must perform the healing operations in specific order to restore MetroCluster functionality.
 
 .Before you begin
@@ -39,7 +38,6 @@ The healing operation must first be performed on the data aggregates, and then o
 
 === Healing the data aggregates
 
-[.lead]
 You must heal the data aggregates after repairing and replacing any hardware on the disaster site. This process resynchronizes the data aggregates and prepares the (now repaired) disaster site for normal operation. You must heal the data aggregates prior to healing the root aggregates.
 
 .About this task
@@ -101,7 +99,6 @@ aggr_b2   227.1GB  227.1GB   0%    online  0      mcc1-a2      raid_dp, mirrored
 
 === Healing the root aggregates after a disaster
 
-[.lead]
 After the data aggregates have been healed, you must heal the root aggregates in preparation for the switchback operation.
 
 .Before you begin
@@ -144,7 +141,6 @@ If both plexes are present, any resynchronization will start automatically. If o
 
 == Verifying that your system is ready for a switchback
 
-[.lead]
 If your system is already in the switchover state, you can use the `-simulate` option to preview the results of a switchback operation.
 
 .Steps
@@ -197,7 +193,6 @@ Job ID Name                 Vserver    Node           State
 
 == Performing a switchback
 
-[.lead]
 After you heal the MetroCluster configuration, you can perform the MetroCluster switchback operation. The MetroCluster switchback operation returns the configuration to its normal operating state, with the sync-source storage virtual machines (SVMs) on the disaster site active and serving data from the local disk pools.
 
 .Before you begin
@@ -367,7 +362,6 @@ You must repeat the previous sections to perform the switchback in the opposite 
 
 == Deleting stale aggregate listings after switchback
 
-[.lead]
 In some circumstances after switchback, you might notice the presence of _stale_ aggregates. Stale aggregates are aggregates that have been removed from ONTAP, but whose information remains recorded on disk. Stale aggregates are displayed with the `nodeshell aggr status -r` command but not with the `storage aggregate show` command. You can delete these records so that they no longer appear.
 
 .About this task
@@ -423,3 +417,5 @@ You need to respond with `y` when prompted to continue into advanced mode and se
 . Confirm that the stale aggregate record was removed:
 +
 `run local aggr status -r`
+
+// BURT 1448684, 12 JAN 2022

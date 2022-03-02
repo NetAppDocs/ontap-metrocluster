@@ -2,14 +2,14 @@
 permalink: upgrade/task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html
 sidebar: sidebar
 keywords: metrocluster, upgrade, controller, ip, configuration, switchover, switchback, workflow, nodes, tiebreaker, verify, bootrage, root, aggregate, disks
-summary: 'Starting with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
+summary: 'Beginning with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
 = Upgrading controllers in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.8 and later)
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Starting with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
+Beginning with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
 .About this task
 
@@ -144,7 +144,7 @@ The switches at site_A will be upgraded when the controllers on site_A are upgra
 
 . Prepare the IP switches for the application of the new RCF files.
 +
-Follow the steps in the section for your switch vendor from the link:../install-ip/concept_considerations_differences.html[MetroCluster IP Installation and Configuration Guide].
+Follow the steps in the section for your switch vendor from the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
 
 
  ** link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
@@ -152,7 +152,7 @@ Follow the steps in the section for your switch vendor from the link:../install-
 
 . Download and install the RCF files.
 +
-Follow the steps in the link:../install-ip/concept_considerations_differences.html[MetroCluster IP Installation and Configuration Guide].
+Follow the steps in the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
 
  ** link:../install-ip/task_switch_config_broadcom.html[Downloading and installing the Broadcom RCF files]
  ** link:../install-ip/task_switch_config_cisco.html[Downloading and installing the Cisco IP RCF files]
@@ -865,7 +865,7 @@ The switches at site_A will be upgraded when the controllers on site_A are upgra
 
 . Prepare the IP switches for the application of the new RCF files.
 +
-Follow the steps in the section for your switch vendor from the _MetroCluster IP Installation and Configuration Guide_.
+Follow the steps in the procedure for your switch vendor:
 +
 link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
 
@@ -900,9 +900,7 @@ The rack space depends on the platform model of the controller modules, the swit
 +
 https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
 
-. Cable the controllers to the IP switches as described in the _MetroCluster IP Installation and Configuration Guide_.
-+
-link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
+. Cable the controllers to the IP switches as described in link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
 
 ** link:[Cabling the IP switches]
 
@@ -983,7 +981,7 @@ You must verify the HA state of the controllers and chassis, and, if necessary, 
 +
 `ha-config show`
 +
-The HA state for all components should be "mccip".
+The HA state for all components should be "`mccip`".
 
 . If the displayed system state of the controller or chassis is not correct, set the HA state:
 +
@@ -1263,21 +1261,25 @@ If the partner-sysid is not correct, set it:
 . Display the ONTAP boot menu:
 +
 `boot_ontap menu`
-. If root encryption is used, issue the boot menu command for your key management configuration.
+. If root encryption is used, select the boot menu option for your key management configuration.
 +
 
 |===
 
-h| If you are using... h| Issue this command at the boot menu prompt...
+h| If you are using... h| Select this boot menu option...
 
 a|
 Onboard key management
 a|
-`recover_onboard_keymanager`
+Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
-`recover_external_keymanager`
+Option `11`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 
 . From the boot menu, select "`(6) Update flash from backup config`".
@@ -1285,7 +1287,7 @@ a|
 NOTE: Option 6 will reboot the node twice before completing.
 
 +
-Respond `y` to the system id change prompts. Wait for the second reboot messages:
+Respond "`y`" to the system id change prompts. Wait for the second reboot messages:
 +
 ----
 Successfully restored env file from boot media...
@@ -1305,25 +1307,27 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid _partner-sysID_`
 
-. If root encryption is used, again issue the boot menu command for your key management configuration.
+. If root encryption is used, select the boot menu option again for your key management configuration.
 +
-
 |===
 
-h| If you are using... h| Issue this command at the boot menu prompt...
+h| If you are using... h| Select this boot menu option...
 
 a|
 Onboard key management
 a|
-`recover_onboard_keymanager`
+Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
-`recover_external_keymanager`
-|===
+Option "`11`"
 
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+|===
 +
-You may need to issue the `recover_xxxxxxxx_keymanager` command and option 6 at the boot menu prompt multiple times until the nodes fully boot.
+Depending on the key manager setting, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
 
 . Wait for the replaced nodes to boot up.
 +
@@ -1512,11 +1516,11 @@ h| If you are using... h| Use this procedure
 a|
 Tiebreaker
 a|
-link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations].
 a|
 Mediator
 a|
-link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration Guide_
+link:../install-ip/concept_configure_the_ontap_mediator_for_unplanned_automatic_switchover.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration].
 a|
 Third-party applications
 a|
@@ -1534,3 +1538,5 @@ After completing the upgrade, you should send an AutoSupport message indicating 
  +
 `system node autosupport invoke -node * -type all -message MAINT=end`
  .. Repeat the command on the partner cluster.
+
+// BURT 1448684, 02 FEB 2022
