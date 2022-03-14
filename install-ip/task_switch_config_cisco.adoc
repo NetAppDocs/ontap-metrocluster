@@ -521,56 +521,7 @@ IP_switch_A_1(config)# feature macsec
 IP_switch_A_1(config)# copy running-config startup-config
 ----
 
-=== Disabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
 
-You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
-
-.Steps
-
-. Enter the global configuration mode:
-+
-`configure terminal`
-+
-----
-IP_switch_A_1# configure terminal
-IP_switch_A_1(config)#
-----
-
-. Disable the MACsec configuration on the device:
-+
-`macsec shutdown`
-+
-----
-IP_switch_A_1(config)# macsec shutdown
-----
-+
-NOTE: Selecting the "`no`" option restores the MACsec feature.
-
-. Select the interface that you already configured with MACsec.
-+
-You can specify the interface type and identity. For an Ethernet port, use ethernet slot/port.
-+
-----
-IP_switch_A_1(config)# interface ethernet 1/15
-switch(config-if)#
-----
-
-. Remove the keychain, policy and fallback-keychain configured on the interface to remove the MACsec configuration:
-+
-`no macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
-+
-----
-IP_switch_A_1(config-if)# no macsec keychain kc2 policy abc fallback-keychain fb_kc2
-----
-
-. Repeat steps 3 and 4 on all interfaces where MACsec is configured.
-. Copy the running configuration to the startup configuration:
-+
-`copy running-config startup-config`
-+
-----
-IP_switch_A_1(config)# copy running-config startup-config
-----
 
 === Configuring a MACsec key chain and keys
 
@@ -663,6 +614,43 @@ IP_switch_A_1(config)# copy running-config startup-config
 ----
 IP_switch_A_1(config-macseckeychain-macseckey)# show key chain 1
 ----
+
+
+
+=== Verifying the MACsec configuration
+
+.Steps
+
+. Repeat *all* of the previous procedures on the second switch within the configuration to establish a MACsec session.
+. Run the following commands to verify that both switches are successfully encrypted:
+ .. Run: `show macsec mka summary`
+ .. Run: `show macsec mka session`
+ .. Run: `show macsec mka statistics`
++
+You can verify the MACsec configuration using the following commands:
++
+
+|===
+
+h| Command h| Displays information about...
+
+a|
+`show macsec mka session interface typeslot/port number`
+a|
+The MACsec MKA session for a specific interface or for all interfaces
+a|
+`show key chain name`
+a|
+The key chain configuration
+a|
+`show macsec mka summary`
+a|
+The MACsec MKA configuration
+a|
+`show macsec policy policy-name`
+a|
+The configuration for a specific MACsec policy or for all MACsec policies
+|===
 
 === Configuring a MACsec policy
 
@@ -768,41 +756,6 @@ IP_switch_A_1(config)# copy running-config startup-config
 IP_switch_A_1(config-macsec-policy)# show macsec policy
 ----
 
-=== Verifying the MACsec configuration
-
-.Steps
-
-. Repeat *all* of the previous procedures on the second switch within the configuration to establish a MACsec session.
-. Run the following commands to verify that both switches are successfully encrypted:
- .. Run: `show macsec mka summary`
- .. Run: `show macsec mka session`
- .. Run: `show macsec mka statistics`
-+
-You can verify the MACsec configuration using the following commands:
-+
-
-|===
-
-h| Command h| Displays information about...
-
-a|
-`show macsec mka session interface typeslot/port number`
-a|
-The MACsec MKA session for a specific interface or for all interfaces
-a|
-`show key chain name`
-a|
-The key chain configuration
-a|
-`show macsec mka summary`
-a|
-The MACsec MKA configuration
-a|
-`show macsec policy policy-name`
-a|
-The configuration for a specific MACsec policy or for all MACsec policies
-|===
-
 === Configuring a MACsec fallback key on a WAN ISL port
 
 You can configure a fallback key to initiate a backup session if the primary session fails as a result of a key/key name (CKN) mismatch or a finite key duration between the switch and peer.
@@ -840,6 +793,57 @@ IP_switch_A_1(config-if)# macsec keychain kc2 policy abc fallback-keychain fb_kc
 ----
 
 . Repeat the previous steps to configure additional WAN ISL ports with MACsec.
+. Copy the running configuration to the startup configuration:
++
+`copy running-config startup-config`
++
+----
+IP_switch_A_1(config)# copy running-config startup-config
+----
+
+=== Disabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
+
+You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
+
+.Steps
+
+. Enter the global configuration mode:
++
+`configure terminal`
++
+----
+IP_switch_A_1# configure terminal
+IP_switch_A_1(config)#
+----
+
+. Disable the MACsec configuration on the device:
++
+`macsec shutdown`
++
+----
+IP_switch_A_1(config)# macsec shutdown
+----
++
+NOTE: Selecting the "`no`" option restores the MACsec feature.
+
+. Select the interface that you already configured with MACsec.
++
+You can specify the interface type and identity. For an Ethernet port, use ethernet slot/port.
++
+----
+IP_switch_A_1(config)# interface ethernet 1/15
+switch(config-if)#
+----
+
+. Remove the keychain, policy and fallback-keychain configured on the interface to remove the MACsec configuration:
++
+`no macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
++
+----
+IP_switch_A_1(config-if)# no macsec keychain kc2 policy abc fallback-keychain fb_kc2
+----
+
+. Repeat steps 3 and 4 on all interfaces where MACsec is configured.
 . Copy the running configuration to the startup configuration:
 +
 `copy running-config startup-config`
