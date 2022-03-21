@@ -572,6 +572,48 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 
 .Steps
 
+. Configure the MetroCluster to implement the changes:
++
+`metrocluster configure`
++
+NOTE: You must run `metrocluster configure` and *not* `metrocluster configure -refresh true`.
++
+
+....
+cluster_A::*> metrocluster configure
+
+[Job 439] Job succeeded: Configure is successful.
+
+cluster_A::*>
+....
+
+. Verify that the nodes are added to their DR group:
++
+`metrocluster node show`
++
+....
+cluster_A::*> metrocluster node show
+
+DR                               Configuration  DR
+Group Cluster Node               State          Mirroring Mode
+----- ------- ------------------ -------------- --------- --------------------
+1     cluster_A
+              node-A-1-FC        configured     enabled   normal
+              node-A-2-FC        configured     enabled   normal
+      Cluster-B
+              node-B-1-FC        configured     enabled   normal
+              node-B-2-FC        configured     enabled   normal
+2     cluster_A
+              node-A-3-IP        configured     enabled   normal
+              node-A-4-IP        configured     enabled   normal
+      Cluster-B
+              node-B-3-IP        configured     enabled   normal
+              node-B-4-IP        configured     enabled   normal
+8 entries were displayed.
+
+cluster_A::*>
+....
+
 . Create mirrored data aggregates on each of the new MetroCluster nodes:
 +
 `storage aggregate create -aggregate aggregate-name -node node-name -diskcount no-of-disks -mirror true`
@@ -618,44 +660,8 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ....
 
-. Configure the MetroCluster to implement the changes:
-+
-`metrocluster configure`
-+
-....
-cluster_A::*> metrocluster configure
 
-[Job 439] Job succeeded: Configure is successful.
 
-cluster_A::*>
-....
-
-. Verify that the nodes are added to their DR group:
-+
-`metrocluster node show`
-+
-....
-cluster_A::*> metrocluster node show
-
-DR                               Configuration  DR
-Group Cluster Node               State          Mirroring Mode
------ ------- ------------------ -------------- --------- --------------------
-1     cluster_A
-              node-A-1-FC        configured     enabled   normal
-              node-A-2-FC        configured     enabled   normal
-      Cluster-B
-              node-B-1-FC        configured     enabled   normal
-              node-B-2-FC        configured     enabled   normal
-2     cluster_A
-              node-A-3-IP        configured     enabled   normal
-              node-A-4-IP        configured     enabled   normal
-      Cluster-B
-              node-B-3-IP        configured     enabled   normal
-              node-B-4-IP        configured     enabled   normal
-8 entries were displayed.
-
-cluster_A::*>
-....
 
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
 .. Display the volumes to identify the MDV volumes:
