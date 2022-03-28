@@ -1,0 +1,258 @@
+---
+permalink: maintain/task_upgrade_rcf_files_on_mcc_ip_switches_with_cleanupfiles.html
+sidebar: sidebar
+keywords: metrocluster, maintain, service, upgrade, rcf, files, ip, switches, cleanupfiles
+summary: 'You might need to upgrade an RCF file on a MetroCluster IP switch. For example, an ONTAP upgrade or a switch firmware upgrade both require a new RCF file.'
+---
+= Upgrade RCF files on MetroCluster IP switches using CleanUpFiles
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You might need to upgrade an RCF file on a MetroCluster IP switch. For example, an ONTAP upgrade or a switch firmware upgrade both require a new RCF file.
+
+.About this task
+Starting with RcfFileGenerator version 1.4a, there is a new option to change (upgrade, downgrade or replace) the switch configuration on Cisco IP switches without the need to perform a 'write erase'.
+Update the switches in the following order:
+
+.. Switch_A_1
+.. Switch_B_1
+.. Switch_A_2
+.. Switch_B_2
+
+
+.Before you begin
+
+
+Not all configurations can use this method. You can use this method when you configuration is meeting the following requirements:
+
+the standard RCF configuration must be applied
+the RcfFileGenerator must be able to create the same RCF file that is applied, with the same version and configuration (platforms, vlans etc)
+the RCF file that is applied has not been provided by NetApp for a special config
+the RCF file has not been altered on or before it was applied
+the steps to reset the switch to default and apply the RCF file have been followed
+no changes were made to the switch(port) configuration after the RCF was applied
+If you do not meet these requirements, then you cannot use the CleanUpFiles that are created when generating the RCF files. You still can leverage the function of "Create generic CleanUpFiles" - the cleanup using this method is derived from the output of 'show running-config' and is best-effort.
+
+.Steps
+
+. Determine the current RCF version, which ports and vlans are used
+Show the banner motd on the switch: `IP_switch_A_1# show banner motd`
++
+Note: you need to get this information from all 4 switches and complete the information table below.
+
+----
+* NetApp Reference Configuration File (RCF)
+*
+* Switch : NX9336C (SAS storage, L2 Networks, direct ISL)
+* Filename : NX9336_v1.81_Switch-A1.txt
+* Date : Generator version: v1.3c_2022-02-24_001, file creation time: 2021-05-11, 18:20:50
+*
+* Platforms : MetroCluster 1 : FAS8300, AFF-A400, FAS8700
+*              MetroCluster 2 : AFF-A320, FAS9000, AFF-A700, AFF-A800
+* Port Usage:
+* Ports 1- 2: Intra-Cluster Node Ports, Cluster: MetroCluster 1, VLAN 111
+* Ports 3- 4: Intra-Cluster Node Ports, Cluster: MetroCluster 2, VLAN 151
+* Ports 5- 6: Ports not used
+* Ports 7- 8: Intra-Cluster ISL Ports, local cluster, VLAN 111, 151
+* Ports 9-10: MetroCluster 1, Node Ports, VLAN 119
+* Ports 11-12: MetroCluster 2, Node Ports, VLAN 159
+* Ports 13-14: Ports not used
+* Ports 15-20: MetroCluster-IP ISL Ports, VLAN 119, 159, Port Channel 10
+* Ports 21-24: MetroCluster-IP ISL Ports, VLAN 119, 159, Port Channel 11, breakout mode 10gx4
+* Ports 25-30: Ports not used
+* Ports 31-36: Ports not used
+*
+----
+#
+IP_switch_A_1#
+
+From this you need to retrieve the following information:
+
+Generic information
+Metro
+
+Cluster
+
+
+RcfFileVersion
+1.81
+Switch type
+NX9336
+Network topology
+L2 Networks, direct ISL
+Storage type
+SAS storage
+Platforms	1	AFF A400
+2	FAS9000
+VLAN information
+Metro
+
+Cluster
+
+Switch
+
+ports
+
+Site-A	Site-B
+VLAN local cluster	network 1	1	1, 2	111	222
+2	3, 4	151	251
+network 2	1	1, 2	111	222
+2	3, 4	151	251
+VLAN MetroCluster network 1	network 1	1	9, 10	119	119
+2	11, 12	159	159
+network 2	1	9, 10	219	219
+2	11, 12	259	259
+
+
+
+
+. Create the RCF files or generic CleanUpFiles for the current configuration
+If you meet all requirements as outlined in the prerequisites, then you can create the RCF files for the current configuration. This will create the CleanUpFiles for this configuration.
+
+If you do not meet all the requirements, then you can leverage the functionality to "Create generic CleanUpFiles". You will require the output of "show running-config" from all 4 switches.
+
+
+
+Option 1: your configuration is meeting all requirements
+
+Step1: Use the RcfFileGenerator 1.4a (or later) to create the RCF files with the information that you retrieved in step 1. The new version of the RcfFileGenerator will create an additional set of CleanUpFiles that can be used to revert some configuration and prepare the switch to apply a new RCF configuration.
+
+Step 2: Once you created the RCF file compare the banner motd with the RCF files that are currently applied. The platform types, switch type, port and vlan usage should be the same.
+
+Note: You must use the CleanUpFiles from the same version as the RCF file and for the exact same configuration. Using any CleanUpFile will not work and may require a full reset of the switch.
+
+Note: the storage type may be different - SAS storage or direct storage.
+
+Note: the ONTAP version the RCF file is created for is not relevant. Only the RCF file version is important.
+
+Note: the RCF file - even it is the same version - may list more or less platforms. Make sure your platform is listed.
+
+
+
+Option 2: you are using the "Create generic CleanUpFiles" function
+
+Step 1: retrieve the output of "show running-config" from each switch
+
+Step 2: Open the RcfFileGenerator tool and click on the button "Create generic CleanUpFiles" option at the bottom of the window
+
+Step 3: copy the output that you retrieved in step 1 from 'one' switch into the upper window. You may remove or leave the default output.
+
+Step 4: press the button "Create CUF files"
+
+Step 5: copy the output from the lower window into a text file. This file will be the CleanUpFile
+
+Repeat step 3 to 5 for all 4 switches.
+
+Once finished, you should have 4 text files, one for each switch. You can use these files the same way as the CleanUpFiles that create using Option 1.
+
+
+
+
+
+. Create the RCF files for the new configuration
+In this steps you will create the "new" RCF files. Create these files the same as you would create the the files in the previous step, except you now chose the respective ONTAP and RCF version.
+
+After completing this step you would have 2 sets of RCF files, each set consisting out of 12 files.
+
+
+
+
+
+. Download the CleanUpFiles and the RCF files to the bootflash
+Identify the files that you need to download to the bootflash:
+
+The CleanUpFiles that you created in step 2
+Note: this CleanUpFile is for the current RCF file that is applies and 'not' for the new RCF that you want to upgrade to
+Example for the CleanUpFile for Switch-A1: Cleanup_NX9336_v1.81_Switch-A1.txt
+
+The RCF configuration files that you created in step 3
+Example for the RCF file for Switch-A1: NX9336_v1.90_Switch-A1.txt
+
+Optional: the CleanUpFiles you created in step 3. This file can be used in the future if the switch configuration should be updated. It matches the currently applied configuration.
+Example for the CleanUpFile for Switch-A1: Cleanup_NX9336_v1.90_Switch-A1.txt
+NOTE: It is very important to use the CleanUpFile for the correct (matching) RCF version. If you use a CleanUpFile for a different RCF version, or a different configuration then the cleanup of the configuration may not work properly.
+
+The following example copies the three files to the bootflash:
+
+IP_switch_A_1# copy sftp://user@50.50.50.50/RcfFiles/NX9336-direct-SAS_v1.81_MetroCluster-IP_L2Direct_A400FAS8700_xxx_xxx_xxx_xxx/Cleanup_NX9336_v1.81_Switch-A1.txt bootflash:
+IP_switch_A_1# copy sftp://user@50.50.50.50/RcfFiles/NX9336-direct-SAS_v1.90_MetroCluster-IP_L2Direct_A400FAS8700A900FAS9500_xxx_xxx_xxx_xxxNX9336_v1.90//NX9336_v1.90_Switch-A1.txt bootflash:
+IP_switch_A_1# copy sftp://user@50.50.50.50/RcfFiles/NX9336-direct-SAS_v1.90_MetroCluster-IP_L2Direct_A400FAS8700A900FAS9500_xxx_xxx_xxx_xxxNX9336_v1.90//Cleanup_NX9336_v1.90_Switch-A1.txt bootflash:
+
+
+
+
+
+. Apply the CleanUpFile
+In this step you apply the CleanUpFile. This will revert some of the configuration. Switchports will go into 'offline state'.
+
+Before you need to ensure that there are no pending changes to the startup-configuration. To verify that no changes are pending do the following:
+
+IP_switch_A_1# show running-config diff
+
+IP_switch_A_1#
+
+No changes are pending to be saved to the startup configuration. If there is any output, then the startup-configuration and running-configuration are not the same. In this case perfom a "copy running-config startup-config" prior to proceding with the following step.
+
+Note: If you have pending changes, and you do not save them to the startup configuration, you will not be able roll back using a reload of the switch!
+
+
+
+Use the following command to apply the CleanUpFile:
+
+IP_switch_A_1# copy bootflash:Cleanup_NX9336_v1.81_Switch-A1.txt running-config
+
+IP_switch_A_1#
+
+The script may take a while to return to the switch prompt. No output is expected.
+
+
+
+
+
+Verify that the configuration is cleared as needed
+In this step you verify that the needed has been reverted. Use the "show running-config" command to show the current configuration.
+
+The current configuration should show:
+
+no class maps and ip access lists are configured
+no policy maps are configured
+no service policies should be configured
+no port-profiles should be configured
+all ethernet interfaces - except mgmt0 - should not show any configuration
+only vlan 1 should be configured
+If you still find any of the above to be configured, then you may not be able to apply a new RCF configuration. You still can revert to the previous configuration with a reload of the switch - WITHOUT saving the current configuration to startup. The switch will come up with the previous configuration.
+
+
+
+
+
+Apply the RCF file
+In this step you apply the new RCF file.
+
+IP_switch_A_1# copy bootflash:NX9336_v1.90-X2_Switch-A1.txt running-config
+
+
+
+Some warnings will appear while applying the configuration. Errors are not expected.
+
+Once the configuration is applied, verify that the Cluster and MetroCluster ports are coming online.
+
+You can use commands such a 'show interface brief;, 'show cdp neighbors' and 'show lldp neighbors'.
+
+Note: if you changed the VLAN for the local cluster and you upgraded the first switch at the site, then the cluster health monitoring may not report 'healthy' state because the VLAN of the old and new configuration is not matching. Once the second switch is updated it should return to healthy state.
+
+
+
+If the configuration is not applied correctly, or you don't want to keep the configuration, then you still can revert to the previous configuration with a reload of the switch - WITHOUT saving the current configuration to startup. The switch will come up with the previous configuration.
+
+
+
+. Save the configuration and reload the switch
+If you are here - then all went well. You have reverted the configuration, applied the new RCF file and found the configuration to work.
+
+You now should save the configuration and reload the switch:
+
+IP_switch_A_1# copy running-config startup-config
+
+IP_switch_A_1# reload
