@@ -532,7 +532,7 @@ You can create a MACsec key chain or keys on your configuration.
 A MACsec keychain can have multiple pre-shared keys (PSKs), each configured with a key ID and an optional lifetime. A key lifetime specifies at which time the key activates and expires. In the absence of a lifetime configuration, the default lifetime is unlimited. When a lifetime is configured, MKA rolls over to the next configured pre-shared key in the keychain after the lifetime is expired. The time zone of the key can be local or UTC. The default time zone is UTC. A key can roll over to a second key within the same keychain if you configure the second key (in the keychain) and configure a lifetime for the first key. When the lifetime of the first key expires, it automatically rolls over to the next key in the list. If the same key is configured on both sides of the link at the same time, then the key rollover is hitless (that is, the key rolls over without traffic interruption).
 
 *Fallback Key*
-
+//remove section above on fallback key
 A MACsec session can fail due to a key/key name (CKN) mismatch or a finite key duration between the switch and a peer. If a MACsec session does fail, a fallback session can take over if a fallback key is configured. A fallback session prevents downtime due to primary session failure and allows a user time to fix the key issue causing the failure. A fallback key also provides a backup session if the primary session fails to start. This feature is optional.
 
 .Steps
@@ -552,10 +552,7 @@ IP_switch_A_1(config)#
 IP_switch_A_1(config)# key-chain macsec-psk no-show
 ----
 +
-NOTE:
-+
-The octet string is also hidden when you save the configuration to a file.
-+
+NOTE: The octet string is also hidden when you save the configuration to a file.
 By default, PSK keys are displayed in encrypted format and can easily be decrypted. This command applies only to MACsec key chains.
 
 . Create a MACsec key chain to hold a set of MACsec keys and enter MACsec key chain configuration mode:
@@ -617,40 +614,7 @@ IP_switch_A_1(config-macseckeychain-macseckey)# show key chain 1
 
 
 
-=== Verifying the MACsec configuration
 
-.Steps
-
-. Repeat *all* of the previous procedures on the second switch within the configuration to establish a MACsec session.
-. Run the following commands to verify that both switches are successfully encrypted:
- .. Run: `show macsec mka summary`
- .. Run: `show macsec mka session`
- .. Run: `show macsec mka statistics`
-+
-You can verify the MACsec configuration using the following commands:
-+
-
-|===
-
-h| Command h| Displays information about...
-
-a|
-`show macsec mka session interface typeslot/port number`
-a|
-The MACsec MKA session for a specific interface or for all interfaces
-a|
-`show key chain name`
-a|
-The key chain configuration
-a|
-`show macsec mka summary`
-a|
-The MACsec MKA configuration
-a|
-`show macsec policy policy-name`
-a|
-The configuration for a specific MACsec policy or for all MACsec policies
-|===
 
 === Configuring a MACsec policy
 
@@ -756,50 +720,7 @@ IP_switch_A_1(config)# copy running-config startup-config
 IP_switch_A_1(config-macsec-policy)# show macsec policy
 ----
 
-=== Configuring a MACsec fallback key on a WAN ISL port
 
-You can configure a fallback key to initiate a backup session if the primary session fails as a result of a key/key name (CKN) mismatch or a finite key duration between the switch and peer.
-
-.Steps
-
-. Enter the global configuration mode:
-+
-`configure terminal`
-+
-----
-IP_switch_A_1# configure terminal
-IP_switch_A_1(config)#
-----
-
-. Specify the interface that you are configuring.
-+
-You can specify the interface type and identity. For an Ethernet port, use:
-+
-`ethernet slot/port`
-+
-----
-IP_switch_A_1(config)# interface ethernet 1/15
-switch(config-if)#
-----
-
-. Specify the fallback key chain for use after a MACsec session failure due to a key/key ID mismatch or a key expiration:
-+
-`macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
-+
-NOTE: You should configure the fallback-keychain using the steps in _Configuring a MACsec key chain and keys_ before proceeding with this step.
-+
-----
-IP_switch_A_1(config-if)# macsec keychain kc2 policy abc fallback-keychain fb_kc2
-----
-
-. Repeat the previous steps to configure additional WAN ISL ports with MACsec.
-. Copy the running configuration to the startup configuration:
-+
-`copy running-config startup-config`
-+
-----
-IP_switch_A_1(config)# copy running-config startup-config
-----
 
 === Disabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
 
@@ -851,6 +772,40 @@ IP_switch_A_1(config-if)# no macsec keychain kc2 policy abc fallback-keychain fb
 ----
 IP_switch_A_1(config)# copy running-config startup-config
 ----
+=== Verifying the MACsec configuration
+
+.Steps
+
+. Repeat *all* of the previous procedures on the second switch within the configuration to establish a MACsec session.
+. Run the following commands to verify that both switches are successfully encrypted:
+ .. Run: `show macsec mka summary`
+ .. Run: `show macsec mka session`
+ .. Run: `show macsec mka statistics`
++
+You can verify the MACsec configuration using the following commands:
++
+
+|===
+
+h| Command h| Displays information about...
+
+a|
+`show macsec mka session interface typeslot/port number`
+a|
+The MACsec MKA session for a specific interface or for all interfaces
+a|
+`show key chain name`
+a|
+The key chain configuration
+a|
+`show macsec mka summary`
+a|
+The MACsec MKA configuration
+a|
+`show macsec policy policy-name`
+a|
+The configuration for a specific MACsec policy or for all MACsec policies
+|===
 
 == Setting Forward Error Correction for systems using 25-Gbps connectivity
 // BURT 1369575 //redoing this
