@@ -524,56 +524,7 @@ IP_switch_A_1(config)# feature macsec
 IP_switch_A_1(config)# copy running-config startup-config
 ----
 
-=== Disabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
 
-You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
-
-.Steps
-
-. Enter the global configuration mode:
-+
-`configure terminal`
-+
-----
-IP_switch_A_1# configure terminal
-IP_switch_A_1(config)#
-----
-
-. Disable the MACsec configuration on the device:
-+
-`macsec shutdown`
-+
-----
-IP_switch_A_1(config)# macsec shutdown
-----
-+
-NOTE: Selecting the "`no`" option restores the MACsec feature.
-
-. Select the interface that you already configured with MACsec.
-+
-You can specify the interface type and identity. For an Ethernet port, use ethernet slot/port.
-+
-----
-IP_switch_A_1(config)# interface ethernet 1/15
-switch(config-if)#
-----
-
-. Remove the keychain, policy and fallback-keychain configured on the interface to remove the MACsec configuration:
-+
-`no macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
-+
-----
-IP_switch_A_1(config-if)# no macsec keychain kc2 policy abc fallback-keychain fb_kc2
-----
-
-. Repeat steps 3 and 4 on all interfaces where MACsec is configured.
-. Copy the running configuration to the startup configuration:
-+
-`copy running-config startup-config`
-+
-----
-IP_switch_A_1(config)# copy running-config startup-config
-----
 
 === Configuring a MACsec key chain and keys
 
@@ -583,9 +534,6 @@ You can create a MACsec key chain or keys on your configuration.
 
 A MACsec keychain can have multiple pre-shared keys (PSKs), each configured with a key ID and an optional lifetime. A key lifetime specifies at which time the key activates and expires. In the absence of a lifetime configuration, the default lifetime is unlimited. When a lifetime is configured, MKA rolls over to the next configured pre-shared key in the keychain after the lifetime is expired. The time zone of the key can be local or UTC. The default time zone is UTC. A key can roll over to a second key within the same keychain if you configure the second key (in the keychain) and configure a lifetime for the first key. When the lifetime of the first key expires, it automatically rolls over to the next key in the list. If the same key is configured on both sides of the link at the same time, then the key rollover is hitless (that is, the key rolls over without traffic interruption).
 
-*Fallback Key*
-
-A MACsec session can fail due to a key/key name (CKN) mismatch or a finite key duration between the switch and a peer. If a MACsec session does fail, a fallback session can take over if a fallback key is configured. A fallback session prevents downtime due to primary session failure and allows a user time to fix the key issue causing the failure. A fallback key also provides a backup session if the primary session fails to start. This feature is optional.
 
 .Steps
 
@@ -659,11 +607,15 @@ IP_switch_A_1(config)# copy running-config startup-config
 
 . Displays the keychain configuration:
 +
-`show keychain name`
+`show key chain name`
 +
 ----
 IP_switch_A_1(config-macseckeychain-macseckey)# show key chain 1
 ----
+
+
+
+
 
 === Configuring a MACsec policy
 
@@ -768,7 +720,63 @@ IP_switch_A_1(config)# copy running-config startup-config
 IP_switch_A_1(config-macsec-policy)# show macsec policy
 ----
 
+
+
+=== Disabling Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
+
+You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
+
+.Steps
+
+. Enter the global configuration mode:
++
+`configure terminal`
++
+----
+IP_switch_A_1# configure terminal
+IP_switch_A_1(config)#
+----
+
+. Disable the MACsec configuration on the device:
++
+`macsec shutdown`
++
+----
+IP_switch_A_1(config)# macsec shutdown
+----
++
+NOTE: Selecting the "`no`" option restores the MACsec feature.
+
+. Select the interface that you already configured with MACsec.
++
+You can specify the interface type and identity. For an Ethernet port, use ethernet slot/port.
++
+----
+IP_switch_A_1(config)# interface ethernet 1/15
+switch(config-if)#
+----
+
+. Remove the keychain, policy and fallback-keychain configured on the interface to remove the MACsec configuration:
++
+`no macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
++
+----
+IP_switch_A_1(config-if)# no macsec keychain kc2 policy abc fallback-keychain fb_kc2
+----
+
+. Repeat steps 3 and 4 on all interfaces where MACsec is configured.
+. Copy the running configuration to the startup configuration:
++
+`copy running-config startup-config`
++
+----
+IP_switch_A_1(config)# copy running-config startup-config
+----
+
+
+
 === Verifying the MACsec configuration
+
 
 .Steps
 
@@ -803,51 +811,6 @@ a|
 The configuration for a specific MACsec policy or for all MACsec policies
 |===
 
-=== Configuring a MACsec fallback key on a WAN ISL port
-
-You can configure a fallback key to initiate a backup session if the primary session fails as a result of a key/key name (CKN) mismatch or a finite key duration between the switch and peer.
-
-.Steps
-
-. Enter the global configuration mode:
-+
-`configure terminal`
-+
-----
-IP_switch_A_1# configure terminal
-IP_switch_A_1(config)#
-----
-
-. Specify the interface that you are configuring.
-+
-You can specify the interface type and identity. For an Ethernet port, use:
-+
-`ethernet slot/port`
-+
-----
-IP_switch_A_1(config)# interface ethernet 1/15
-switch(config-if)#
-----
-
-. Specify the fallback key chain for use after a MACsec session failure due to a key/key ID mismatch or a key expiration:
-+
-`macsec keychain keychain-name policy policy-name fallback-keychain keychain-name`
-+
-NOTE: You should configure the fallback-keychain using the steps in _Configuring a MACsec key chain and keys_ before proceeding with this step.
-+
-----
-IP_switch_A_1(config-if)# macsec keychain kc2 policy abc fallback-keychain fb_kc2
-----
-
-. Repeat the previous steps to configure additional WAN ISL ports with MACsec.
-. Copy the running configuration to the startup configuration:
-+
-`copy running-config startup-config`
-+
-----
-IP_switch_A_1(config)# copy running-config startup-config
-----
-
 == Setting Forward Error Correction for systems using 25-Gbps connectivity
 // BURT 1369575 //redoing this
 
@@ -864,10 +827,10 @@ link:port_usage_3232c_9336c.html[Platform port assignments for Cisco 3232C or Ci
 //This task only applies to AFF A300 and FAS8200 platforms using 25-Gbps connectivity.
 This task only applies to platforms using 25-Gbps connectivity:
 
-** AFF A300
-** FAS 8200
-** FAS 500f
-** AFF A250
+* AFF A300
+*	FAS 8200
+*	FAS 500f
+*	AFF A250
 //BURT 1369575
 
 This task must be performed on all four switches in the MetroCluster IP configuration.
@@ -896,4 +859,5 @@ IP_switch_A_1# copy running-config startup-config
 
 // 21 APR 2021, BURT 1371395
 // 23 APR 2021, BURT 1374271
-// 20 JAN 2022 BURT 1448684
+// 20 JAN 2022, BURT 1448684
+// 29 MAR 2022, BURT 1354395
