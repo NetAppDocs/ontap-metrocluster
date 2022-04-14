@@ -2,7 +2,7 @@
 permalink: upgrade/task_upgrade_A700_to_A900_in_a_four_node_mcc_ip_us_switchover_and_switchback.html
 sidebar: sidebar
 keywords: metrocluster, upgrade, controller, ip, configuration, switchover, switchback, workflow, nodes, tiebreaker, verify, bootrage, root, aggregate, disks
-summary: 'Beginning with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
+summary: 'BYou can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
 = Upgrade controllers from AFF A700 to AFF A900 in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.10.1 and later)
 
@@ -101,19 +101,15 @@ For the correct RCF file version for your switch model, refer to the link:https:
 Follow the steps in the section for your switch vendor from the link:../install-ip/index.html[MetroCluster IP Installation and Configuration] content.
 
 
- ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults
-#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults
-#resetting-the-cisco-ip-switch-to-factory-defaults[Resetting the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-cisco-ip-switch-to-factory-defaults[Resetting the Cisco IP switch to factory defaults]
 
 . Download and install the RCF files.
 +
 Follow the steps in the link:../install-ip/index.html[MetroCluster IP Installation and Configuration] content.
 
- ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults
-#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom RCF files]
- ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults
-#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
+ ** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom RCF files]
+ ** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
 
 === Map ports from the old nodes to the new nodes
 
@@ -324,7 +320,7 @@ h| If you are using... h| Use this procedure...
 a|
 Tiebreaker
 a|
-link:install-stretch/concept_considerations_when_removing_mcc_configurations.html[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration content_
+link:tiebreaker/concept_configuring_the_tiebreaker_software.html#commands-for-modifying-metrocluster-tiebreaker-configurations[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration content_
 a|
 Mediator
 a|
@@ -496,10 +492,6 @@ set-defaults
 .	Save the default environment variables settings:
 `saveenv`
 
-
-
-
-
 === Netboot nodes at site_B
 
 After swapping the AFF A900 controller module and NVS, you need to netboot the AFF A900 nodes and install the same ONTAP version and patch level that is running on the cluster. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
@@ -517,7 +509,7 @@ You must netboot the new controllers, if the version of ONTAP installed is not t
 . Access the https://mysupport.netapp.com/site/[NetApp Support Site^] to download the files used for performing the netboot of the system.
 . [[step2-download-software]]Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the `ontap-version_image.tgz` file on a web-accessible directory.
 . Change to the web-accessible directory and verify that the files you need are available.
-.	Your directory listing should contain <ontap_version>_image.tgz.
+.	Your directory listing should contain <ontap_version>\_image.tgz.
 .	Configure the netboot connection by choosing one of the following actions.
 +
 NOTE:	You should use the management port and IP as the netboot connection. Do not use a data LIF IP or a data outage might occur while the upgrade is being performed.
@@ -540,7 +532,7 @@ Manually configure the connection by using the following command at the boot env
 
 `<filer_addr>` is the IP address of the storage system. `<netmask>` is the network mask of the storage system.
 `<gateway>` is the gateway for the storage system.
-`<dns_addr` is the IP address of a name server on your network. This parameter is optional.
+`<dns_addr>` is the IP address of a name server on your network. This parameter is optional.
 `<dns_domain>` is the Domain Name Service (DNS) domain name. This parameter is optional.
 NOTE:	Other parameters might be necessary for your interface. Enter `help ifconfig` at the firmware prompt for details.
 |===
@@ -548,7 +540,7 @@ NOTE:	Other parameters might be necessary for your interface. Enter `help ifconf
 .	Perform netboot on node_B_1:
 `netboot` `http://<web_server_ip/path_to_web_accessible_directory>/netboot/kernel`
 +
-The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>_image.tgz` in <<step2-download-software, Step 2>>.
+The `<path_to_the_web-accessible_directory>` should lead to where you downloaded the `<ontap_version>\_image.tgz` in <<step2-download-software, Step 2>>.
 +
 NOTE:	Do not interrupt the boot.
 
@@ -577,7 +569,7 @@ NOTE:	Disregard the following message: `This procedure is not supported for Non-
 Always use netboot to update the new node to the desired image. If you use another method to install the image on the new controller, the incorrect image might install. This issue applies to all ONTAP releases.
 
 .	If you are prompted to continue the procedure, enter `y`, and when prompted for the package, enter the URL:
-`http://<web_server_ip/path_to_web-accessible_directory>/<ontap_version>_image.tgz`
+`http://<web_server_ip/path_to_web-accessible_directory>/<ontap_version>\_image.tgz`
 .	Complete the following substeps to reboot the controller module:
 ..	Enter `n` to skip the backup recovery when you see the following prompt:
 `Do you want to restore the backup configuration now? {y|n}`
@@ -590,10 +582,8 @@ The controller module reboots but stops at the boot menu because the boot device
 Warning: do not run this option on a HA node that has been taken over.
 Are you sure you want to continue?:`
 ..	The node reboots to finish the `wipeconfig` and then stops at the boot menu.
-.	Select option `5` to go to maintenance mode from the boot menu. Answer `yes` to the prompts until the node stops at maintenance mode and the command prompt *>.
+.	Select option `5` to go to maintenance mode from the boot menu. Answer `yes` to the prompts until the node stops at maintenance mode and the command prompt \*>.
 . Repeat these steps to netboot node_B_2.
-
-
 
 === Restore the HBA configuration
 
@@ -660,7 +650,6 @@ a|
 `fcadmin show`
 |===
 
-
 === Set the HA state on the new controllers and chassis
 
 You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
@@ -690,7 +679,6 @@ The node should stop at the `LOADER>` prompt.
 .	Save the settings: `saveenv`
 .	Gather environment variables: `printenv`
 
-
 == Update the switch RCF files to accommodate the new platforms
 
 You must update the switches to a configuration that supports the new platform models.
@@ -709,21 +697,16 @@ Follow the steps in the section for your switch vendor from the _MetroCluster IP
 +
 link:../install-ip/index.html[MetroCluster IP installation and configuration]
 
- ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults
-#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults
-#resetting-the-cisco-ip-switch-to-factory-defaults[Resetting the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Resetting the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-cisco-ip-switch-to-factory-defaults[Resetting the Cisco IP switch to factory defaults]
 
 . Download and install the RCF files.
 +
 Follow the steps in the section for your switch vendor from the link:../install-ip/index.html[MetroCluster IP installation and configuration].
 
-** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults
-#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom RCF files]
+** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom RCF files]
 
-** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults
-#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
-
+** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
 
 == Configure the new controllers
 
@@ -837,7 +820,6 @@ setenv bootarg.mcc.dr_partner 537403323
 `setenv bootarg.kmip.kmip.init.gateway`
 +
 `setenv bootarg.kmip.kmip.init.interface`
-
 
 === Reassign root aggregate disks
 
@@ -1074,14 +1056,6 @@ VLAN and interface group membership might be different than that of the old node
 https://docs.netapp.com/us-en/ontap/networking/configure_vlans_over_physical_ports.html#create-a-vlan[Creating a VLAN^]
 +
 https://docs.netapp.com/us-en/ontap/networking/combine_physical_ports_to_create_interface_groups.html[Combining physical ports to create interface groups^]
-
-
-
-
-
-
-
-
 
 === Verify and restore LIF configuration
 
