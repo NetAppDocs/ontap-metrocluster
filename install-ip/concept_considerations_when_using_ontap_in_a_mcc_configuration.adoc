@@ -297,15 +297,14 @@ Because of this restriction, root aggregates cannot be added to an SVM using the
 
 Beginning with ONTAP 9.5, active storage virtual machines (SVMs) in a MetroCluster configuration can be used as sources with the SnapMirror SVM disaster recovery feature. The destination SVM must be on the third cluster outside of the MetroCluster configuration.
 
+Beginning in ONTAP 9.11.1, both clusters can have a source SVM in an SVM DR relationship in a MetroCluster configuration as shown in the following image.
+image:../media/svmdr_new_topology.png[SVM DR Topology]
+
 You should be aware of the following requirements and limitations of using SVMs with SnapMirror disaster recovery:
 
 * Only an active SVM within a MetroCluster configuration can be the source of an SVM disaster recovery relationship.
 +
 A source can be a sync-source SVM before switchover or a sync-destination SVM after switchover.
-
-* Beginning in ONTAP 9.11.1, you can have an SVM DR relationship for both clusters in a MetroCluster configuration.
-+
-image:../media/svmdr_new_topology.png[SVM DR Topology]
 
 * When a MetroCluster configuration is in a steady state, the MetroCluster sync-destination SVM cannot be the source of an SVM disaster recovery relationship, since the volumes are not online.
 +
@@ -363,4 +362,3 @@ NOTE: In ONTAP versions earlier than 9.0, the NVFAIL flag is used for each switc
 `vol modify -vserver vserver-name -volume volume-name -dr-force-nvfail on`
 
 // UT 1448684, 20 JAN 2022
-// BURT 1419544, May 03 2022
