@@ -303,6 +303,10 @@ You should be aware of the following requirements and limitations of using SVMs 
 +
 A source can be a sync-source SVM before switchover or a sync-destination SVM after switchover.
 
+* Beginning in ONTAP 9.11.1, you can have an SVM DR relationship for both clusters in a MetroCluster configuration.
++
+image:../media/svmdr_new_topology.png[SVM DR Topology]
+
 * When a MetroCluster configuration is in a steady state, the MetroCluster sync-destination SVM cannot be the source of an SVM disaster recovery relationship, since the volumes are not online.
 +
 The following image shows the SVM disaster recovery behavior in a steady state:
@@ -359,3 +363,4 @@ NOTE: In ONTAP versions earlier than 9.0, the NVFAIL flag is used for each switc
 `vol modify -vserver vserver-name -volume volume-name -dr-force-nvfail on`
 
 // UT 1448684, 20 JAN 2022
+// BURT 1419544, May 03 2022
