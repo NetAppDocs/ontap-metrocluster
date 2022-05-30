@@ -61,10 +61,8 @@ cluster_A_site_A::*>metrocluster modify -auto-switchover-failure-domain auso-dis
 ----
 
 . Halt the nodes by using the following command:
-+
 `*halt*`
- ** For a four-node or eight-node MetroCluster configuration, use the parameter
- +
+ ** For a four-node or eight-node MetroCluster configuration, use the parameter:
 `*inhibit-takeover*`
 +
 ----
@@ -78,10 +76,17 @@ system node halt -node node1_SiteA -ignore-quorum-warnings true
 ----
 . Power off the following equipment at the site:
  ** Storage controllers
- ** MetroCluster FC switches
+ ** MetroCluster FC switches (if in use and the configuration is not a a two-node stretch configuration)
  ** ATTO FibreBridges
  ** Storage shelves
-. Wait for thirty minutes and then power on all the controllers.
+. Wait for thirty minutes and then power on the following equipment at the site:
+** Storage shelves
+** ATTO FibreBridges
+** MetroCluster FC switches
+** Storage controllers
+
+
+
 . After the controllers are powered on, verify the MetroCluster configuration from both sites.
 +
 To verify the configuration, repeat step 1.
