@@ -72,10 +72,10 @@ Use the following procedure to disable the VSANs:
 The following example displays the output of this procedure.
 +
 ----
-RTP-FC06-410K35# config t
+FC_switch_A_1# config t
 Enter configuration commands, one per line.  End with CNTL/Z.
-RTP-FC06-410K35(config)# vsan database
-RTP-FC06-410K35(config-vsan-db)# show vsan
+FC_switch_A_1(config)# vsan database
+FC_switch_A_1(config-vsan-db)# show vsan
 vsan 1 information
          name:VSAN0001  state:active
          interoperability mode:default
@@ -110,14 +110,14 @@ vsan 4079:evfp_isolated_vsan
 
 vsan 4094:isolated_vsan
 
-RTP-FC06-410K35(config-vsan-db)# vsan 1 suspend
-RTP-FC06-410K35(config-vsan-db)# vsan 30 suspend
-RTP-FC06-410K35(config-vsan-db)# vsan 40 suspend
-RTP-FC06-410K35(config-vsan-db)# vsan 70 suspend
-RTP-FC06-410K35(config-vsan-db)# vsan 80 suspend
-RTP-FC06-410K35(config-vsan-db)# end
-RTP-FC06-410K35#
-RTP-FC06-410K35# show vsan
+FC_switch_A_1(config-vsan-db)# vsan 1 suspend
+FC_switch_A_1(config-vsan-db)# vsan 30 suspend
+FC_switch_A_1(config-vsan-db)# vsan 40 suspend
+FC_switch_A_1(config-vsan-db)# vsan 70 suspend
+FC_switch_A_15(config-vsan-db)# vsan 80 suspend
+FC_switch_A_1(config-vsan-db)# end
+FC_switch_A_15#
+FC_switch_A_1# show vsan
 vsan 1 information
          name:VSAN0001  state:suspended
          interoperability mode:default
@@ -177,9 +177,9 @@ Use the following procedure to enable the VSANs:
 +
 .. Enter the `show vsan` command to check the state of the VSANs. All VSANs must be active.
 +
-.. Use the `vsan vsan-num suspend` command to suspend the VSANs.
+.. Enter the `no vsan _vsan-num_ suspend` command to activate the VSANs
 +
-*Example:* `vsan 10 suspend`
+*Example:* `no vsan 10 suspend`
 +
 .. Use the `show vsan` command to check the state of the VSANs again. All VSANs must be suspended.
 +
@@ -188,10 +188,10 @@ Use the following procedure to enable the VSANs:
 The following example displays the output of this procedure.
 +
 ----
-RTP-FC06-410K35# config t
+xyz# config t
 Enter configuration commands, one per line.  End with CNTL/Z.
-RTP-FC06-410K35(config)# vsan database
-RTP-FC06-410K35(config-vsan-db)# show vsan
+FC_switch_A_1(config)# vsan database
+FC_switch_A_1(config-vsan-db)# show vsan
 vsan 1 information
          name:VSAN0001  state:suspended
          interoperability mode:default
@@ -226,13 +226,13 @@ vsan 4079:evfp_isolated_vsan
 
 vsan 4094:isolated_vsan
 
-RTP-FC06-410K35(config-vsan-db)# no vsan 1 suspend
-RTP-FC06-410K35(config-vsan-db)# no vsan 30 suspend
-RTP-FC06-410K35(config-vsan-db)# no vsan 40 suspend
-RTP-FC06-410K35(config-vsan-db)# no vsan 70 suspend
-RTP-FC06-410K35(config-vsan-db)# no vsan 80 suspend
-RTP-FC06-410K35(config-vsan-db)#
-RTP-FC06-410K35(config-vsan-db)# show vsan
+FC_switch_A_1(config-vsan-db)# no vsan 1 suspend
+FC_switch_A_1(config-vsan-db)# no vsan 30 suspend
+FC_switch_A_1(config-vsan-db)# no vsan 40 suspend
+FC_switch_A_1(config-vsan-db)# no vsan 70 suspend
+FC_switch_A_1(config-vsan-db)# no vsan 80 suspend
+FC_switch_A_1(config-vsan-db)#
+RFC_switch_A_1(config-vsan-db)# show vsan
 vsan 1 information
          name:VSAN0001  state:active
          interoperability mode:default
@@ -267,8 +267,8 @@ vsan 4079:evfp_isolated_vsan
 
 vsan 4094:isolated_vsan
 
-RTP-FC06-410K35(config-vsan-db)# end
-RTP-FC06-410K35#
+FC_switch_A_1(config-vsan-db)# end
+FC_switch_A_1#
 ----
 . Verify the operation of the MetroCluster configuration in ONTAP:
  .. Check whether the system is multipathed:
