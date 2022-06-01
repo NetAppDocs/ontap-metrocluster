@@ -26,14 +26,6 @@ NOTE: The unmirrored aggregates must be local to the node owning them.
 
 .Steps
 
-. Enable unmirrored aggregate deployment:
-+
-`metrocluster modify -enable-unmirrored-aggr-deployment true`
-
-. Verify that disk auto-assignment is disabled:
-+
-`disk option show`
-
 . Install and cable the disk shelves that will contain the unmirrored aggregates.
 +
 You can use the procedures in the _Installation and Setup_ documentation for your platform and disk shelves.
@@ -80,14 +72,7 @@ controller_A_1::> storage aggregate create aggr1_controller_A_1 -diskcount 10 -n
 +
 `storage aggregate show-status -aggregate _aggregate-name_`
 
-. Disable unmirrored aggregate deployment:
-+
-`metrocluster modify -enable-unmirrored-aggr-deployment false`
-
-. Verify that disk auto-assignment is enabled:
-+
-`disk option show`
-
+// BURT 1471048 May 16th 2022
 .Related information
 
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
