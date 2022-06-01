@@ -11,7 +11,7 @@ summary: 'Beginning with ONTAP 9.5, ONTAP supports layer 3 connectivity using vi
 [.lead]
 Beginning with ONTAP 9.5, ONTAP supports layer 3 connectivity using virtual IP (VIP) and Border Gateway Protocol (BGP). The combination VIP and BGP for redundancy in the front-end networking with the back-end MetroCluster redundancy provides a layer 3 disaster recovery solution.
 
-Review the following guidelines and illustration when planning your layer 3 solution. For details on implementing VIP and BGP in ONTAP, refer to link:../networking/configure_virtual_ip_@vip@_lifs.html[Configure virtual IP LIFs].
+Review the following guidelines and illustration when planning your layer 3 solution. For details on implementing VIP and BGP in ONTAP, refer to link:https://docs.netapp.com/us-en/ontap/networking/configure_virtual_ip_@vip@_lifs.html[Configure virtual IP LIFs^].
 
 image::../media/vip_and_bgp_in_metrocluster_2.png[]
 
@@ -31,13 +31,13 @@ Simpler deployment scenarios are preferred over more complex architectures (for 
 
 VIP LIFs only cover the frontend/data network.
 
-Depending on your version of ONTAP, you must configure BGP peering LIFs in the node SVM, not the system or data SVM. In 9.8, the BGP LIFs are visible in the cluster (system) SVM and the node SVMs are no longer present.
+Depending on your version of ONTAP, you must configure BGP peering LIFs in the node SVM, not the system or data SVM. In ONTAP 9.8, the BGP LIFs are visible in the cluster (system) SVM and the node SVMs are no longer present.
 
 Each data SVM requires the configuration of all potential first hop gateway addresses (typically, the BGP router peering IP address), so that the return data path is available if a LIF migration or MetroCluster failover occurs.
 
 BGP LIFs are node specific, similar to intercluster LIFs -- each node has a unique configuration, which does not need to be replicated to DR site nodes.
 
-configured, the existence of the v0a (v0b and so on.) continuously validates the connectivity, guaranteeing that a LIF migrate or failover succeeds (unlike L2, where a broken configuration is only visible after the outage).
+Once configured, the existence of the v0a (v0b and so on) continuously validates the connectivity, guaranteeing that a LIF migrate or failover succeeds (unlike L2, where a broken configuration is only visible after the outage).
 
 A major architectural difference is that clients should no longer share the same IP subnet as the VIP of data SVMs. An L3 router with appropriate enterprise grade resiliency and redundancy features enabled (for example, VRRP/HSRP) should be on the path between storage and clients for the VIP to operate correctly.
 

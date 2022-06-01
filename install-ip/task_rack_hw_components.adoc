@@ -22,15 +22,18 @@ This task must be performed on both MetroCluster sites.
 The rack space depends on the platform model of the controller modules, the switch types, and the number of disk shelf stacks in your configuration.
 
 . Properly ground yourself.
-
++
 [start=3]
-// include reference
 include::../_include/step_rack_controllers_mcip.adoc[]
-// end include reference
+
 
 . Install the IP switches in the rack or cabinet.
 . Install the disk shelves, power them on, and then set the shelf IDs.
 * You must power-cycle each disk shelf.
-* Shelf IDs must be unique for each SAS disk shelf within each MetroCluster DR group (including both sites).
+* Unique shelf IDs are highly recommended for each SAS disk shelf within each MetroCluster DR group to aid troubleshooting.
+
 +
 IMPORTANT: Do not cable disk shelves intended to contain unmirrored aggregates at this time. You must wait to deploy shelves intended for unmirrored aggregates until after the MetroCluster configuration is complete and only deploy them after using the `metrocluster modify -enable-unmirrored-aggr-deployment true` command.
+
+
+//BURT 1438463 Mar 28 2022

@@ -1,22 +1,24 @@
 ---
 permalink: transition/task_move_cluster_connections.html
 sidebar: sidebar
-keywords: Transitioning from MetroCluster FC to MetroCluster IP configurations, review, requirement, preparing, prepare, transition, perform, procedure, order, completing, complete, step, task, moving, move, controller, storage, shelves, shelf, exist, configuration, direct, metrocluster, fc, ip, verify, health, removing, remove, tiebreaker, monitor, software, generating, generate, apply, rcf, switch, controller, configure, prepare, preparing
+keywords: transition, cluster connections
 summary: After reviewing all requirements and preparing for the transition, you perform the transition procedure. You must perform each task in order, completing all steps in each task before moving to the next. You should not connect the new controllers or storage shelves to the existing configuration until directed.
 ---
-= Moving the local cluster connections
+= Move the local cluster connections
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 You must move the MetroCluster FC configuration's cluster interfaces to the IP switches.
 
-== Moving the cluster connections on the MetroCluster FC nodes
+== Move the cluster connections on the MetroCluster FC nodes
 
 [.lead]
 You must move the cluster connections on the MetroCluster FC nodes to the IP switches. The steps depend on whether you are using the existing IP switches or you are using new IP switches.
 
 You must perform this task on both MetroCluster sites.
+
+=== Which connections to move
 
 The following task assumes a controller module using two ports for the cluster connections. Some controller module models use four or more ports for the cluster connection. In that case, for the purposes of this example, the ports are divided into two groups, alternating ports between the two groups
 
@@ -49,41 +51,38 @@ The following table shows which switch ports the FC nodes connect to. For the Br
 
 h| Switch model h| MetroCluster IP node model h| Switch port(s) h| Connects to
 
-.2+| Cisco 3132Q-V or 3232C
+.2+| Cisco 3132Q-V, 3232C, or 9336C-FX2
 .2+| Any
 a|
 5
 a|
-node_x_1-FC
+Local cluster interface on FC node
 a|
 6
 a|
-node_x_2-FC
-.4+| Broadcom BES-53248
+Local cluster interface on FC node
+.6+| Broadcom BES-53248
 a|
-FAS2750/A220
+FAS500f/A250
 a|
-1, 2, 3
+1 - 6
 a|
-node_x_1-FC
+Local cluster interface on FC node
 a|
-FAS8200 / A300
+FAS8200/A300
 a|
-1, 2, 3, 7, 8, 9
+3, 4, 9, 10, 11, 12
 a|
-node_x_1-FC
+Local cluster interface on FC node
+
 a|
-FAS2750/A220
+FAS8300/A400/FAS8700
 a|
-4, 5, 6
+1 - 6
 a|
-node_x_2-FC
+Local cluster interface on FC node
 a|
-FAS8200 / A300
-a|
-4, 5, 6, 10, 11, 12
-a|
-node_x_2-FC
+
 |===
 
 === Moving the local cluster connections when using new IP switches
@@ -92,7 +91,7 @@ If you are using new IP switches, you must physically move the existing MetroClu
 
 . Move the MetroCluster FC node group A cluster connections to the new IP switches.
 +
-Use the ports described in link:../transition/task_verify_mcc_health_fc_to_ip.html#moving-the-cluster-connections-on-the-metrocluster-fc-nodes[Moving the cluster connections on the MetroCluster FC nodes].
+Use the ports described in <<Which connections to move>>.
 
  .. Disconnect all the group A ports from the switch, or, if the MetroCluster FC configuration was a switchless cluster, disconnect them from the partner node.
  .. Disconnect the group A ports from node_A_1-FC and node_A_2-FC.
@@ -200,7 +199,7 @@ You should use the latest firmware that the MetroCluster IP nodes support.
 
 . Reconnect the group A ports to switch_A_1_IP.
 +
-Use the ports described in link:task_transition_from_mcc_fc_to_mcc_ip_configurations.html[Moving the cluster connections on the MetroCluster FC nodes].
+Use the ports described in <<Which connections to move>>.
 
 . Verify that all cluster ports are up:
 +

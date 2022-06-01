@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html
 sidebar: sidebar
-keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, mcc
+keywords: metrocluster, upgrade, nondisruptive, controller, switchover, switchback, fc, configuration, net, boot, root, aggregate, mcc
 summary: 'You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
 = Upgrading controllers in a MetroCluster FC configuration using switchover and switchback
@@ -26,7 +26,7 @@ Do not use this procedure on four- or eight-node configurations running ONTAP ve
 +
 https://hwu.netapp.com[NetApp Hardware Universe]
 +
-NOTE: If the original or new platforms are 8020 systems using ports 1c / 1d in FC-VI mode, contact technical support.
+NOTE: If the original or new platforms are FAS8020 or AFF8020 systems using ports 1c and 1d in FC-VI mode, contact technical support.
 
 * This procedure applies to controller modules in a MetroCluster FC configuration (a two-node stretch MetroCluster or a two or four-node fabric-attached MetroCluster configuration).
 * All controllers in the configuration should be upgraded during the same maintenance period.
@@ -44,17 +44,18 @@ h| Old platform model h| New platform model
 
 a|
 
- ** FAS80xx
+ ** FAS80x0
  ** FAS8200
 
 a|
 
  ** FAS8300
- ** FAS8700
+
 
 a|
 
  ** AFF A300
+ ** AFF80x0
 
 a|
 
@@ -64,10 +65,12 @@ a|
 +
 |===
 
+NOTE: Upgrading a FAS8020 or AFF8020 is not supported when using 1c and 1d ports in FC-VI mode.
+
 * Mapping of storage, FC and Ethernet connections between original nodes and new nodes in advance is recommended.
 * If the new platform has fewer slots than the original system, or if it has fewer or different types of ports, you might need to add an adapter to the new system.
 +
-For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe]
+For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
 
 The following example names are used in this procedure:
 
@@ -85,6 +88,8 @@ The following example names are used in this procedure:
  ** After upgrade:
   *** node_B_1-new
   *** node_B_2-new
+
+// BURT 1391601, 23 FEB 2022
 
 == Preparing for the upgrade
 
@@ -170,10 +175,11 @@ When the new node is first booted during the upgrade process, it will replay the
 
 The following table shows examples of configuration changes related to the port requirements of the new nodes.
 
+[cols="1,1,3"]
 |===
 
 3+h| Cluster interconnect physical ports
- h| Old controller h| New controller h| Required action
+h| Old controller h| New controller h| Required action
 
 a|
 e0a, e0b
@@ -196,9 +202,10 @@ e0c and e0d are matching ports. You do not have to change the configuration, but
 |===
 
 .Steps
+
 . Determine what physical ports are available on the new controllers and what LIFs can be hosted on the ports.
 +
-The controller's port usage depends on the platform module and which switches you will use in the MetroCluster IP configuration. You can gather the port usage of the new platforms from the link:https://hwu.netapp.com[NetApp Hardware Universe].
+The controller's port usage depends on the platform module and which switches you will use in the MetroCluster IP configuration. You can gather the port usage of the new platforms from the link:https://hwu.netapp.com[NetApp Hardware Universe^].
 +
 Also identify the FC-VI card slot usage.
 
@@ -692,17 +699,17 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Install the controller modules in the rack or cabinet.
 +
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
 
 . If the new controller modules did not come with FC-VI cards of their own and if FC-VI cards from old controllers are compatible on new controllers, swap FC-VI cards and install those in correct slots.
 +
-See the link:https://hwu.netapp.com[NetApp Hardware Universe] for slot info for FC-VI cards.
+See the link:https://hwu.netapp.com[NetApp Hardware Universe^] for slot info for FC-VI cards.
 
 . Cable the controllers' power, serial console and management connections as described in the _MetroCluster Installation and Configuration Guides_.
 +
 Do not connect any other cables that were disconnected from old controllers at this time.
 +
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center]
+https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
 
 . Power up the new nodes and press Ctrl-C when prompted to display the LOADER prompt.
 
@@ -734,7 +741,7 @@ Depending on the presence and configuration of HBA cards in the controller modul
 .. Update the port settings as needed.
 
 +
-
+[cols="1,3"]
 |===
 
 h| If you have this type of HBA and desired mode... h| Use this command...
@@ -976,14 +983,14 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-Option `10`
+Option "`10`"
 
 Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 
 a|
-Option `11`
+Option "`11`"
 
 Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
@@ -1004,13 +1011,13 @@ a|
 `recover_external_keymanager`
 |===
 +
-. If autoboot is enabled, interrupt autoboot by pressing control-C.
-. From the boot menu, run option (6).
+. If autoboot is enabled, interrupt autoboot by pressing CTRL-C.
+. From the boot menu, run option "`6`".
 +
-NOTE: Option 6 will reboot the node twice before completing.
+NOTE: Option "`6`" will reboot the node twice before completing.
 +
 
-Respond `y` to the system id change prompts. Wait for the second reboot messages:
+Respond "`y`" to the system id change prompts. Wait for the second reboot messages:
 +
 ----
 Successfully restored env file from boot media...
@@ -1038,18 +1045,18 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-Option `10`
+Option "`10`"
 
 Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 a|
 External key management
 a|
-Option `11`
+Option "`11`"
 
 Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 +
-Depending on the key manager setting, perform the recovery procedure by selecting option `10` or option `11`, followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option `1` (normal boot).
+Depending on the key manager setting, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option "`6`" at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
 
 * In ONTAP 9.7 and earlier, issue the boot menu command.
 +
@@ -1067,7 +1074,7 @@ a|
 `recover_external_keymanager`
 |===
 +
-You might need to issue the recover_xxxxxxxx_keymanager command at the boot menu prompt multiple times until the nodes completely boot.
+You might need to issue the `recover_xxxxxxxx_keymanager` command at the boot menu prompt multiple times until the nodes completely boot.
 +
 . Boot the nodes:
 +
@@ -1075,7 +1082,9 @@ You might need to issue the recover_xxxxxxxx_keymanager command at the boot menu
 
 . Wait for the replaced nodes to boot up.
 +
-If either node is in takeover mode, perform a giveback using the `storage failover giveback` command.
+If either node is in takeover mode, perform a giveback:
++
+`storage failover giveback`
 
 . Verify that all ports are in a broadcast domain:
 
@@ -1091,7 +1100,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58
 .. Modify intercluster LIFs to use the new physical port as home port.
 .. After the intercluster LIFs are up, check the cluster peer status and re-establish cluster peering as needed.
 +
-You may need to reconfigure cluster peering.
+You might need to reconfigure cluster peering.
 +
 link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Creating a cluster peer relationship]
 
@@ -1099,9 +1108,9 @@ link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#peering-the-
 +
 VLAN and interface group membership might be different than that of the old node.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Creating a VLAN]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Creating a VLAN^]
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups^]
 . If encryption is used, restore the keys using the correct command for your key management configuration.
 +
 
@@ -1114,17 +1123,17 @@ Onboard key management
 a|
 `security key-manager onboard sync`
 
-For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys].
+For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restoring onboard key management encryption keys^].
 a|
 External key management
 a|
 `security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag _node-name_`
 
-For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys].
+For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys^].
 
 |===
 
-// BURT 1437371, 2021-11-29
+// BURT 1437371, 29 NOV 2021
 === Verifying LIF configuration
 
 
@@ -1245,7 +1254,7 @@ As you perform the tasks, all example references to the clusters and nodes are r
 After completing the upgrade, you should send an AutoSupport message indicating the end of maintenance, so automatic case creation can resume.
 
 .Step
-. To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
+. To resume automatic support case generation, send an AutoSupport message to indicate that the maintenance is complete.
 .. Issue the following command:
 +
 `system node autosupport invoke -node * -type all -message MAINT=end`
@@ -1255,4 +1264,6 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
-. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_.
+. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations^] in _MetroCluster Tiebreaker Installation and Configuration_.
+
+// BURT 1391601, 23 FEB 2022
