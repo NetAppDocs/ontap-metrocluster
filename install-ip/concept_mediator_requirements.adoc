@@ -14,9 +14,11 @@ Your environment must meet the following requirements.
 
 [NOTE]
 ====
+* One MetroCluster or disaster recovery group (DR group) is defined as 4 nodes, 2 per site. An 8 node MetroCluster configuration is equal to two DR groups.
 * If you plan on updating your Linux version, do so before you install the most current ONTAP Mediator service.
 * The ONTAP Mediator service and MetroCluster Tiebreaker software should not both be used with the same MetroCluster configuration.
 * The ONTAP Mediator must be installed on a LINUX host at a separate location from the MetroCluster sites.
+* The connectivity between Site A and the Mediator, and Site B and the Mediator must be two separate failure domains.
 * The ONTAP Mediator service can support up to five MetroCluster configurations simultaneously.
 * Automatic unplanned switchover is supported in ONTAP 9.7 and later.
 ====
@@ -27,9 +29,9 @@ To install the ONTAP Mediator service in a MetroCluster configuration, you must 
 
 * Latency
 +
-Round trip latency must be no more than 75 ms.
+Maximum latency of less than 75ms (RTT).
 +
-Jitter must be no more than 25 ms.
+Jitter must be no more than 5-ms.
 
 * MTU
 +
@@ -37,11 +39,29 @@ The MTU size must be at least 1400.
 
 * Packet loss
 +
-Packet loss must be less than or equal to 0.01%.
+For both ICMP and TCP traffic, packet loss must be less than less than 0.01%.
 
 * Bandwidth
 +
-The link between the Mediator service and the MetroCluster configuration must have at least 20 Mbps of bandwidth.
+The link between the Mediator service and one MetroCluster or disaster DR group must have at least 10Mbps of bandwidth.
+
+* Independent connectivity
++
+Independent connectivity between each site and the ONTAP Mediator or MetroCluster Tiebreaker is required. A failure in one site must not impact the IP connectivity between the other two unaffected sites for more than one second of reconvergence time.
+
+== Host requirements for the ONTAP Mediator in a MetroCluster configuration
+
+You must ensure that the configuration meets several host requirements.
+
+* ONTAP Mediator must be installed at an external site that is physically separated from the two ONTAP clusters.
+
+* ONTAP Mediator supports a maximum number of five MetroCluster configurations.
+
+* ONTAP Mediator does not require more than the host operating system's minimum requirements for CPU and memory (RAM).
+  +
+In addition to the host operating system's minimum requirement, at least 30GB of additional usable space must be available.
+
+* Each MetroCluster or DR group requires up to 200MB of disk space.
 
 == Firewall requirements for ONTAP Mediator
 
