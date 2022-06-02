@@ -14,7 +14,7 @@ Your environment must meet the following requirements.
 
 [NOTE]
 ====
-* One MetroCluster or disaster recovery group (DR group) is defined as 4 nodes, 2 per site. An 8 node MetroCluster configuration is equal to two DR groups.
+* One MetroCluster or disaster recovery group (DR group) is equal to a  4 node MetroCluster configuration with 2 nodes per site. An 8 node MetroCluster configuration is equal to two DR groups.
 * If you plan on updating your Linux version, do so before you install the most current ONTAP Mediator service.
 * The ONTAP Mediator service and MetroCluster Tiebreaker software should not both be used with the same MetroCluster configuration.
 * The ONTAP Mediator must be installed on a LINUX host at a separate location from the MetroCluster sites.
@@ -39,11 +39,11 @@ The MTU size must be at least 1400.
 
 * Packet loss
 +
-For both ICMP and TCP traffic, packet loss must be less than less than 0.01%.
+For both ICMP and TCP traffic, packet loss must be less than 0.01%.
 
 * Bandwidth
 +
-The link between the Mediator service and one MetroCluster or disaster DR group must have at least 10Mbps of bandwidth.
+The link between the Mediator service and one MetroCluster or DR group must have at least 10Mbps of bandwidth.
 
 * Independent connectivity
 +
@@ -59,7 +59,7 @@ You must ensure that the configuration meets several host requirements.
 
 * ONTAP Mediator does not require more than the host operating system's minimum requirements for CPU and memory (RAM).
   +
-In addition to the host operating system's minimum requirement, at least 30GB of additional usable space must be available.
+In addition to the host operating system's minimum requirements, at least 30GB of additional usable space must be available.
 
 * Each MetroCluster or DR group requires up to 200MB of disk space.
 
@@ -111,3 +111,6 @@ link:https://docs.netapp.com/us-en/ontap/mediator/index.html[Install or upgrade 
 == After the upgrade
 
 After the Mediator and operating system upgrade is complete, you should issue the `storage iscsi-initiator show` command to confirm that the Mediator connections are up.
+
+
+// 2022-06-02, BURT 1439085
