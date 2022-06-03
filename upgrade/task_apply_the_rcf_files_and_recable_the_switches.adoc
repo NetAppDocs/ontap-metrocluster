@@ -1,0 +1,72 @@
+---
+permalink: upgrade/task_apply_the_rcf_files_and_recable_the_switches.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, apply, rcf, files, recable, switches
+summary: 'You must apply the RCF files to reconfigure your zoning to accommodate the new nodes.'
+---
+= 
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must apply the RCF files to reconfigure your zoning to accommodate the new nodes.
+
+If you cannot use the RCF files to configure the switches, you must configure the switches manually. See:
+
+* link:../install-fc/task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Configure the Brocade FC switches manually]
+* link:../install-fc/task_fcsw_cisco_configure_a_cisco_switch_supertask.html[Configure the Cisco FC switches manually]
+
+.Steps
+
+. Locate the RCF files for your configuration.
++
+You must use the RCF files for an eight-node configuration and that match your switch model.
+
+. Apply the RCF files, following the directions on the download page, adjusting the ISL settings as needed.
+. Ensure that the switch configuration is saved.
+. Reboot the FC switches.
+. Cable both the pre-existing and the new FC-to-SAS bridges to the FC switches, using the cabling layout you created previously.
++
+The FC switch port usage must match the MetroCluster eight-node usage described in link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration] so that the Reference Configuration Files (RCFs) can be used.
+
+
+. Verify that the ports are online by using the correct command for your switch.
++
+
+|===
+
+h| Switch vendor h| Command
+
+a|
+Brocade
+a|
+switchshow
+a|
+Cisco
+a|
+show interface brief
+|===
+
+. Use the procedure in link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration] to cable the FC-VI ports from the existing and new controllers, using the cabling layout you created previously.
++
+The FC switch port usage must match the MetroCluster eight-node usage described in link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration] so that the Reference Configuration Files (RCFs) can be used.
+
+. From the existing nodes, verify that the FC-VI ports are online:
++
+`metrocluster interconnect adapter show`
++
+`metrocluster interconnect mirror show`
+. Cable the HBA ports from the current and the new controllers.
+. On the existing controller modules, e-enable the ports connected to the switch fabric undergoing maintenance:
++
+`storage port enable -node _node-name_ -port _port-ID_`
+. Start the new controllers and boot them into Maintenance mode:
++
+`boot_ontap maint`
+. Verify that only storage that will be used by the new DR group is visible to the new controller modules.
++
+None of the storage that is used by the other DR group should be visible.
+
+. Return to the beginning of this process to re-cable the second switch fabric.
+
+// BURT 1448684, 01 FEB 2022
