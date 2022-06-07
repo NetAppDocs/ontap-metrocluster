@@ -1,36 +1,19 @@
 ---
-permalink: manage/task_confirm_that_dr_partners_have_come_online.html
+permalink: manage/task_verify_SVMs are_running_and_aggregates_are_online.html
 sidebar: sidebar
 keywords: switchover, dr, partner, ownership, disk, svm, online, confirm
 summary: After the switchover is complete, you should verify that the DR partners have taken ownership of the disks and the partner SVMs have come online.
 ---
-= Confirming that the DR partners have come online
+= Verify that the SVMs are running and the aggregates are online
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 After the switchover is complete, you should verify that the DR partners have taken ownership of the disks and the partner SVMs have come online.
 
-.Steps
+When you run the storage aggregate plex show command after a MetroCluster switchover, the status of plex0 of the switched over root aggregate is indeterminate and is displayed as failed. During this time, the switched over root is not updated. The actual status of this plex can only be determined after the MetroCluster healing phase.
 
-. Confirm that the aggregate disks have switched over to the disaster site: `storage disk show -fields owner,dr-home`
-+
-In this example, the output shows that the switched over disks have the dr-home field set:
-+
-----
-cluster_A::> storage disk show -fields owner,dr-home
-disk                 owner           dr-home
--------------------- --------------- -------
-1.11.0               node_A_1        node_B_1
-1.11.1               node_A_1        node_B_1
-1.11.2               node_A_1        node_B_1
-1.11.3               node_A_1        node_B_1
-1.11.4               node_A_1        node_B_1
-1.11.5               node_A_1        node_B_1
-1.11.6               node_A_1        node_B_1
-1.11.7               node_A_1        node_B_1
-1.11.8               node_A_1        node_B_1
-----
+.Steps
 
 . Check that the aggregates were switched over by using the storage aggregate show command.
 +
