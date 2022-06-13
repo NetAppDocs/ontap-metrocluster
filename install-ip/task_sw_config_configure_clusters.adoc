@@ -1662,7 +1662,6 @@ NOTE: In the minimum supported configuration, in which a limited number of drive
  ** Maximum number of drives that can be included in a RAID group
  ** Whether drives with different RPM are allowed
 For more information about these options, see the storage aggregate create man page.
-
 +
 The following command creates a mirrored aggregate with 10 disks:
 +
@@ -1690,6 +1689,8 @@ You can verify this with the `storage aggregate show` command.
 NOTE: If you want to use a single mirrored data aggregate, then see <<step1_single_mirror,Step 1>> for instructions.
 
 * The ha-config state of the controllers and chassis must be "mccip".
++
+NOTE: You must *not* configure Onboard Key Manager (OKM) until after the MetroCluster configuration is configured.
 
 You issue the `metrocluster configure` command once on any of the nodes to enable the MetroCluster configuration. You do not need to issue the command on each of the sites or nodes, and it does not matter which node or site you choose to issue the command on.
 
