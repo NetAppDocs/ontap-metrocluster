@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controller, ip, configuration, switchover, switchback, workflow, nodes, tiebreaker, verify, bootrage, root, aggregate, disks
 summary: 'BYou can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
-= Upgrade controllers from AFF A700 to AFF A900 in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.10.1 and later)
+= Upgrade controllers from AFF A700 to AFF A900 or FAS9000 to FAS9500 in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.10.1 and later)
 
 :icons: font
 :imagesdir: ../media/
@@ -14,8 +14,8 @@ You can use the MetroCluster switchover operation to provide nondisruptive servi
 
 .About this task
 
-* The controllers must be running ONTAP 9.10.1 or later.
-* This procedure applies to AFF A700 controller modules upgrading to an AFF A900 in a MetroCluster IP configuration.
+* To upgrade AFF A700 controller modules to AFF A900, the controllers must be running ONTAP 9.10.1 or later.
+* To upgrade FAS9000 controller modules to FAS9500, the controllers must be running ONTAP 9.10.1P3 or later.
 
 +
 
@@ -26,11 +26,16 @@ a|
 * AFF A700
 a|
 * AFF A900
+a|
+* FAS9000
+a|
+* FAS9500
+a|
 |===
 
 * All controllers in the configuration should be upgraded during the same maintenance period.
 +
-Operating the MetroCluster configuration with an AFF A700 and an AFF A900 controller is not supported outside of this maintenance activity.
+Operating the MetroCluster configuration with an AFF A700 and an AFF A900, or a FAS9000 or FAS9500 controller is not supported outside of this maintenance activity.
 
 
 * The IP switches must be running a supported firmware version.
@@ -63,13 +68,13 @@ image::../media/workflow_ip_upgrade.png[]
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
-=== Clear slot 7 on the AFF A700 controller
+=== Clear slot 7 on the AFF A700 or FAS9000 controller
 
-The MetroCluster configuration on an AFF A900 uses one of each of the ports on the DR cards located in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700, you must move them to other slots for all the nodes of the cluster.
+The MetroCluster configuration on an AFF A900 or FAS9500 uses one of each of the ports on the DR cards located in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700 or FAS9000, you must move them to other slots for all the nodes of the cluster.
 
 === Update the MetroCluster switch RCF files before upgrading controllers
 
-The MetroCluster IP configuration on an AFF A700 does not use VLANs. The MetroCluster configuration on an AFF A900 does use VLANs. As a result, you need to change the RCF file when upgrading from an AFF A700 to an AFF A900.
+The MetroCluster IP configuration on an AFF A700 does not use VLANs. The MetroCluster configuration on an AFF A900 or FAS9500 does use VLANs. As a result, you need to change the RCF file when upgrading from an AFF A700 or FAS9000 to an AFF A900 or FAS9500.
 
 
 
@@ -79,7 +84,7 @@ h| Platform model h| Supported VLAN IDs
 
 a|
 
- ** AFF A900
+ ** AFF A900 or FAS9500
 
 a|
 
@@ -113,7 +118,7 @@ Follow the steps in the link:../install-ip/index.html[MetroCluster IP Installati
 
 === Map ports from the old nodes to the new nodes
 
-When upgrading from an AFF A700 to an AFF A900, you do not change the data network ports, FCP SAN adapter ports, and SAS and NVMe storage ports. Data LIFs stay where they are during and after the upgrade. Therefore, you are not required to map the network ports from the old nodes to the new nodes.
+When upgrading from an AFF A700 to an AFF A900, or FAS9000 to FAS9500, you do not change the data network ports, FCP SAN adapter ports, and SAS and NVMe storage ports. Data LIFs stay where they are during and after the upgrade. Therefore, you are not required to map the network ports from the old nodes to the new nodes.
 
 === Verify MetroCluster health before site upgrade
 
@@ -401,7 +406,7 @@ If you are not already grounded, properly ground yourself.
 
 .	Power off the chassis at site_B.
 
-=== Remove the AFF A700 controller module
+=== Remove the AFF A700 or FAS9000 controller module
 Use the following procedure to remove the AFF A700 controller module
 
 .Steps
@@ -419,10 +424,10 @@ image::../media/drw_9500_remove_PCM.png[controller module]
 .. 	Rotate the cam handle so that it completely disengages the controller module from the chassis, and then slide the controller module out of the chassis.
 Make sure that you support the bottom of the controller module as you slide it out of the chassis.
 
-=== Remove the AFF A700 NVS module
-Use the following procedure to remove the AFF A700 NVS module.
+=== Remove the AFF A700 or FAS9000 NVS module
+Use the following procedure to remove the AFF A700 or FAS9000 NVS module.
 
-Note: The AFF A700 NVS module NVS module is in slot 6 and is double the height compared to other modules in the system.
+Note: The NVS module is in slot 6 and is double the height compared to other modules in the system.
 
 .Steps
 .	Unlock and remove the NVS from slot 6.
@@ -439,17 +444,17 @@ image::../media/drw_a900_move-remove_NVRAM_module.png[remove module]
 |image:../media/number2.png[number 2] |I/O latch completely unlocked
 |===
 
-.	If you are using add-on modules used as coredump devices on the AFF A700 NVS, do not transfer them to the AFF A900 NVS.
-Do not transfer any parts from the AFF A700 controller module and NVS to the AFF A900.
+.	If you are using add-on modules used as coredump devices on the AFF A700 or FAS9000 NVS, do not transfer them to the AFF A900 or FAS9500 NVS.
+Do not transfer any parts from the AFF A700 or FAS9000 controller module and NVS to the AFF A900 or FAS9500 module.
 
-== Install the AFF A900 NVS and controller modules
-You must install the AFF A900 NVS and controller module that you received in the upgrade kit on both nodes at site_B. Do not move the coredump device from the AFF A700 NVS module to the AFF A900 NVS module.
+== Install the AFF A900 or FAS9500 NVS and controller modules
+You must install the AFF A900 or FAS9500 NVS and controller module that you received in the upgrade kit on both nodes at site_B. Do not move the coredump device from the AFF A700 or FAS9000 NVS module to the AFF A900 or FAS9500 NVS module.
 
 .About this task
 If you are not already grounded, properly ground yourself.
 
-=== Install the AFF A900 NVS
-Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at site_B.
+=== Install the AFF A900 or FAS9500 NVS
+Use the following procedure to install the AFF A900 or FAS9500 NVS in slot 6 of both nodes at site_B.
 
 .Steps
 .	Align the NVS with the edges of the chassis opening in slot 6.
@@ -462,8 +467,8 @@ image::../media/drw_a900_move-remove_NVRAM_module.png[remove module]
 |image:../media/number2.png[number 2] |I/O latch completely unlocked
 |===
 
-=== Install the AFF A900 controller module.
-Use the following procedure to install the AFF A900 controller module.
+=== Install the AFF A900 or FAS9500 controller module.
+Use the following procedure to install the AFF A900 or FAS9500 controller module.
 
 .Steps
 .	Align the end of the controller module with the opening in the chassis, and then gently push the controller module halfway into the system.
@@ -495,8 +500,8 @@ set-defaults
 
 === Netboot nodes at site_B
 
-After swapping the AFF A900 controller module and NVS, you need to netboot the AFF A900 nodes and install the same ONTAP version and patch level that is running on the cluster. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
-It is not possible to check the version of ONTAP installed on the boot media of an AFF A900 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 boot media must be the same as the ONTAP version running on the AFF A700 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a netboot followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
+After swapping the AFF A900 or FAS9500 controller module and NVS, you need to netboot the AFF A900 or FAS9500 nodes and install the same ONTAP version and patch level that is running on the cluster. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
+It is not possible to check the version of ONTAP installed on the boot media of an AFF A900 or FAS9500 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 or FAS9500 boot media must be the same as the ONTAP version running on the AFF A700 or FAS9000 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a netboot followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
 
 .Before you start
 * Verify that you can access a HTTP server with the system.
