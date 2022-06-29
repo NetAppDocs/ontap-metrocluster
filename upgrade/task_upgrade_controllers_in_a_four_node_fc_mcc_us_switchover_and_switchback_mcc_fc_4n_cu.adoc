@@ -19,14 +19,16 @@ Other components in the configuration, such as storage shelves or switches, cann
 
 * You can use this procedures with certain ONTAP versions:
 ** Two-node configurations are supported in ONTAP 9.3 and later.
-** Four and eight node configurations are supported in ONTAP 9.8 and later.
+** Four- and eight-node configurations are supported in ONTAP 9.8 and later.
 +
 Do not use this procedure on four- or eight-node configurations running ONTAP versions prior to 9.8.
 * Your original and new platforms must be compatible and supported.
 +
 https://hwu.netapp.com[NetApp Hardware Universe]
 +
-NOTE: If the original or new platforms are FAS8020 or AFF8020 systems using ports 1c and 1d in FC-VI mode, contact technical support.
+NOTE: If the original or new platforms are FAS8020 or AFF8020 systems using ports 1c and 1d in FC-VI mode, review link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/Upgrading_controllers_when_FCVI_connections_on_existing_FAS8020_or_AFF8020_nodes_use_ports_1c_and_1d[NetApp Knowledge Base: Upgrading controllers when FCVI connections on existing FAS8020 or AFF8020 nodes use ports 1c and 1d. ^]
+
+* The licenses at both sites must match. You can obtain new licenses from the link:https://mysupport.netapp.com/site/[NetApp Support Site^].
 
 * This procedure applies to controller modules in a MetroCluster FC configuration (a two-node stretch MetroCluster or a two or four-node fabric-attached MetroCluster configuration).
 * All controllers in the configuration should be upgraded during the same maintenance period.
@@ -1164,6 +1166,13 @@ When entering the `network interface modify` command within the `vserver config 
 +
 Perform this step on all SVMs as required.
 
+=== Install the new licenses
+
+Before the switchback operation, you must install licenses for the new controllers.
+
+.Steps
+. link:task_install_licenses_on_the_new_controller_module_cluster_mode.html[Installing licenses for the new controller module]
+
 == Switching back the MetroCluster configuration
 
 After the new controllers have been configured, you switch back the MetroCluster configuration to return the configuration to normal operation.
@@ -1267,3 +1276,4 @@ If the MetroCluster configuration was previously configured for monitoring by th
 . Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations^] in _MetroCluster Tiebreaker Installation and Configuration_.
 
 // BURT 1391601, 23 FEB 2022
+// BURT 1485050, 2022-06-21
