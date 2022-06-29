@@ -25,15 +25,7 @@ Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
 aggr_b2    227.1GB   227.1GB    0% online       0 node_B_2   raid_dp,
                                                                    mirrored,
                                                                    normal
-
-node_A_1::> aggr show
-Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
---------- -------- --------- ----- ------- ------ ---------------- ------------
-...
-aggr_b2          -         -     - unknown      - node_A_1
 ----
-+
-If the disaster site included unmirrored aggregates and the unmirrored aggregates are no longer present, the aggregate might show up with a state of "`unknown`" in the output of the `storage aggregate show` command. Contact technical support to remove the out-of-date entries for the unmirrored aggregates.
 
 . Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an admin state of "`stopped`") and the sync-source SVMs on the disaster cluster are up and running:
 +
@@ -81,3 +73,4 @@ Perform the suggested fix provided in the output of the `metrocluster operation 
 You must repeat the previous sections to perform the switchback in the opposite direction. If site_A did a switchover of site_B, have site_B do a switchover of site_A.
 
 // BURT 1448684, 03 FEB 2022
+// BURT 1485050, 2022-06-29
