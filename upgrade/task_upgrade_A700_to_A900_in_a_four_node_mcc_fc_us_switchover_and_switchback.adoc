@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, mcc
 summary: 'You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
-= Upgrade controllers from AFF A700 to AFF A900 in a MetroCluster FC configuration using switchover and switchback (ONTAP 9.10.1 and later)
+= Upgrade controllers from AFF A700/A900 to FAS9x00 in a MetroCluster FC configuration using switchover and switchback (ONTAP 9.10.1 or later)
 :icons: font
 :imagesdir: ../media/
 
@@ -17,7 +17,8 @@ You can use the MetroCluster switchover operation to provide nondisruptive servi
 +
 You cannot upgrade other components in the configuration, such as storage shelves or switches, at the same time.
 
-* You can use this procedure with ONTAP 9.10.1 and later.
+* You can use this procedure to upgrade an AFF A700 to AFF A900 with ONTAP 9.10.1 and later.
+* You can use this procedure to upgrade a FAS9000 to FAS9500 with ONTAP 9.10.1P3 and later.
 ** Four and eight-node configurations are supported in ONTAP 9.10.1 and later.
 +
 NOTE: The AFF A900 system is only supported in ONTAP 9.10.1 or later.
@@ -40,13 +41,22 @@ a|
 a|
 
  ** AFF A900
+a|
+
+  ** FAS9000
+
+a|
+
+ ** FAS9500
+
+a|
 
 |===
 * During the upgrade procedure, you are required to change the MetroCluster fabric, including the RCF and physical changes of cabling. You can perform the RCF and cabling changes before performing the controller upgrade.
 * This upgrade procedure does not require you do not change the storage, FC, and Ethernet connections between the original nodes and the new nodes.
-* During the upgrade procedure, you should not add or remove other cards from the AFF A700 system. For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
+* During the upgrade procedure, you should not add or remove other cards from the AFF A700 or FAS9000 system. For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe^]
 
-The following example names are used in this procedure:
+The following example names are used in examples and graphics in this procedure:
 
 * site_A
  ** Before upgrade:
@@ -64,13 +74,13 @@ The following example names are used in this procedure:
   *** node_B_2-A900
 
 == Prepare for the upgrade
-Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, change the RCF files and cabling to match to new port connectivity topology required for the AFF A900 fabric MetroCluster configuration, and perform other miscellaneous tasks.
+Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, change the RCF files and cabling to match to new port connectivity topology required for the AFF A900 or FAS9000 fabric MetroCluster configuration, and perform other miscellaneous tasks.
 
 == Clear slot 7 on the AFF A700 controller
-The MetroCluster configuration on an AFF A900 requires 8 FC-VI ports across FC-VI cards in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700, you must move them to other slots for all the nodes of the cluster.
+The MetroCluster configuration on an AFF A900 or FAS9500 requires 8 FC-VI ports across FC-VI cards in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700 or FAS9000, you must move them to other slots for all the nodes of the cluster.
 
 === Verify the health of the MetroCluster configuration
-Before you update the RCF files and cabling for the AFF A900 fabric MetroCluster configuration, you must verify the health and connectivity of the configuration.
+Before you update the RCF files and cabling for the AFF A900 or FAS9500 fabric MetroCluster configuration, you must verify the health and connectivity of the configuration.
 
 .Steps
 
@@ -140,13 +150,13 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 
 === Update the fabric switch RCF files
-The AFF A900 fabric MetroCluster requires two four-port FC-VI adapters per node compared to a single four-port FC-VI adapter required by an AFF A700. Before you start the controller upgrade to the AFF A900 controller, you must modify the fabric switch RCF files to support the AFF A900 connection topology.
+The AFF A900 or FAS9500 fabric MetroCluster requires two four-port FC-VI adapters per node compared to a single four-port FC-VI adapter required by an AFF A700. Before you start the controller upgrade to the AFF A900 or FAS9500 controller, you must modify the fabric switch RCF files to support the AFF A900 or FAS9500 connection topology.
 
-.	From the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF file download page^], download the correct RCF file for a AFF A900 fabric MetroCluster and the switch model that is in use on the AFF A700 configuration.
+.	From the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF file download page^], download the correct RCF file for an AFF A900 or FAS9500 fabric MetroCluster and the switch model that is in use on the AFF A700 or FAS9000 configuration.
 .	[[Update-RCF]]Update the RCF file on the fabric A switches, switch A1, and switch B1 by following the steps in link:../disaster-recovery/task_cfg_switches_mcfc.html[Configuring the FC switches].
 
 +
-NOTE: The RCF file update to support the AFF A900 fabric MetroCluster configuration does not affect the port and connections used for the AFF A700 fabric MetroCluster configuration.
+NOTE: The RCF file update to support the AFF A900 or FAS9500 fabric MetroCluster configuration does not affect the port and connections used for the AFF A700 or FAS9000 fabric MetroCluster configuration.
 
 .	After updating the RCF files on the fabric A switches, all storage and FC-VI connections should come online. Check the FC-VI connections:
 +
@@ -237,12 +247,12 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 
 
-=== Map ports from the AFF A700 nodes to the AFF A900 nodes
+=== Map ports from the AFF A700 or FAS9000 nodes to the AFF A900 or FAS9500 nodes
 
 
 During the controller upgrade process, you must only change the connections that are mentioned in this procedure.
 
-If the AFF A700 controllers have a card in slot 7, you should move it to another slot before starting the controller upgrade procedure. You must have slot 7 available for the addition of the second FC-VI adapter that is required for the functioning of fabric MetroCluster on the AFF A900.
+If the AFF A700 or FAS9000 controllers have a card in slot 7, you should move it to another slot before starting the controller upgrade procedure. You must have slot 7 available for the addition of the second FC-VI adapter that is required for the functioning of fabric MetroCluster on the AFF A900 or FAS9500 controllers.
 
 
 === Gather information before the upgrade
@@ -488,18 +498,18 @@ image:../media/drw_a900_move-remove_NVRAM_module.png[NVS module]
 | image:../media/number2.png[number 2] |I/O latch completely unlocked
 |===
 
-NOTE: If there are any add-on modules used as coredump devices on the AFF A700 non-volatile storage module, do not transfer those to the AFF A900 NVS. Do not transfer any parts from the AFF A700 controller module and NVS to the AFF A900.
+NOTE: If there are any add-on modules used as coredump devices on the AFF A700 or FAS9000 non-volatile storage module, do not transfer those to the AFF A900 or FAS9500 NVS. Do not transfer any parts from the AFF A700 or A900 controller module and NVS to the AFF A900 or FAS9500 controller module.
 
-== Install the AFF A900 NVS and controller module
+== Install the AFF A900 or FAS9500 NVS and controller module
 
-You must install the AFF A900 NVS and controller module from the upgrade kit on both nodes at Site_B. Do not move coredump device from AFF A700 NVS module to AFF A900 NVS module.
+You must install the AFF A900 or FAS9500 NVS and controller module from the upgrade kit on both nodes at Site_B. Do not move the coredump device from the AFF A700 or FAS9000 NVS module to the AFF A900 or FAS9500 NVS module.
 
 .Before you start
 If you are not already grounded, properly ground yourself.
 
-=== Install the AFF A900 NVS
+=== Install the AFF A900 or FAS9500 NVS
 
-Use the following procedure to install the AFF A900 NVS in slot 6 of both nodes at site_B
+Use the following procedure to install the AFF A900 or FAS9500 NVS in slot 6 of both nodes at site_B
 
 .Steps
 .	Align the NVS with the edges of the chassis opening in slot 6.
@@ -513,8 +523,8 @@ image:../media/drw_a900_move-remove_NVRAM_module.png[NVS module]
 |===
 
 
-=== Install the AFF A900 controller module
-Use the following procedure to install the AFF A900 controller module.
+=== Install the AFF A900 or FAS9500 controller module
+Use the following procedure to install the AFF A900 or FAS9500 controller module.
 
 .Steps
 
@@ -534,7 +544,7 @@ image:../media/drw_9500_remove_PCM.png[controller]
 |===
 
 .	Install the second X91129A card in slot 7 of each node.
-..	Connect FC-VI ports from slot 7 to the switches. Refer to the link:../install-fc/index.html[Fabric-attached installation and configuration] documentation and go to the AFF A900 fabric MetroCluster connection requirements for the type of switch in your environment.
+..	Connect FC-VI ports from slot 7 to the switches. Refer to the link:../install-fc/index.html[Fabric-attached installation and configuration] documentation and go to the AFF A900 or FAS9500 fabric MetroCluster connection requirements for the type of switch in your environment.
 .	Power ON the chassis and connect to the serial console.
 .	After BIOS initialization, if the node starts to autoboot, interrupt the AUTOBOOT by pressing Control-C.
 .	After you interrupt the autoboot, the nodes stop at the LOADER prompt. If you do not interrupt autoboot on time and node1 starts booting, wait for the prompt to press Control-C to go into the boot menu. After the node stops at the boot menu, use option 8 to reboot the node and interrupt the autoboot during the reboot.
@@ -546,9 +556,9 @@ image:../media/drw_9500_remove_PCM.png[controller]
 
 === Netboot the nodes at site_B
 
-After swapping the AFF A900 controller module and NVS, you need to netboot the AFF A900 nodes and install the same ONTAP version and patch level that is running on the cluster. The term `netboot` means you are booting from an ONTAP image stored on a remote server. When preparing for `netboot`, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
+After swapping the AFF A900 or FAS9500 controller module and NVS, you need to netboot the AFF A900 or FAS9500 nodes and install the same ONTAP version and patch level that is running on the cluster. The term `netboot` means you are booting from an ONTAP image stored on a remote server. When preparing for `netboot`, you must add a copy of the ONTAP 9 boot image onto a web server that the system can access.
 
-It is not possible to check the ONTAP version installed on the boot media of an AFF A900 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 boot media must be same as the ONTAP version running on the AFF A700 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a `netboot` followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
+It is not possible to check the ONTAP version installed on the boot media of an AFF A900 or FAS9500 controller module unless it is installed in a chassis and powered ON. The ONTAP version on the AFF A900 or FAS9500 boot media must be same as the ONTAP version running on the AFF A700 or FAS9000 system that is being upgraded and both the primary and backup boot images should match. You can configure the images by performing a `netboot` followed by the `wipeconfig` command from the boot menu. If the controller module was previously used in another cluster, the `wipeconfig` command clears any residual configuration on the boot media.
 
 .Before you start
 
@@ -588,7 +598,7 @@ The `<path_to_the_web-accessible_directory>` should lead to where you downloaded
 +
 NOTE:	Do not interrupt the boot.
 
-.	Wait for node 1 that is running on the AFF A900 controller module to boot and display the boot menu options as shown below:
+.	Wait for node 1 that is running on the AFF A900 or FAS9500 controller module to boot and display the boot menu options as shown below:
 +
 ----
 Please choose one of the following:
