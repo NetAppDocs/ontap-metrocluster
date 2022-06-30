@@ -13,29 +13,13 @@ Before upgrading to an HA pair, you must verify that your system meets all requi
 
 .Steps
 
-. You need to identify unassigned disks or spare disks that you can assign to the new controller module.
-+
-https://library.netapp.com/ecm/ecm_download_file/ECMLP2427462[Physical Storage Management^]
-+
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management^]
+. Identify unassigned disks or spare disks that you can assign to the new controller module using the following commands:
 
-. Based on the results of the previous step, perform either of the following:
-+
-[cols="1,3"]
-|===
+* `storage disk show -container-type spare`
+* `storage disk show -container-type unassigned`
 
-h| If the result showed... h| Then...
 
-a|
-Not enough spare disks available for the new controller module on a system without root-data partitioning
-a|
-Contact technical support for more information.
-
-a|
-Other results
-
-a|
-Complete the following substeps:
+. Complete the following substeps:
 
 .. Determine where the aggregates for the existing node are located:
 +
@@ -47,8 +31,6 @@ Complete the following substeps:
 +
 `storage disk removeowner _disk_name_`
 .. Repeat the previous step for as many disks as you need for the new node.
-
-|===
 
 . Verify that you have cables ready for the following connections:
 ** Cluster connections
@@ -64,3 +46,4 @@ https://hwu.netapp.com[NetApp Hardware Universe^]
 . Gather all of the IP addresses and other network parameters for the new controller module.
 
 // BURT 1448684, 01 FEB 2022
+// BURT 1485050, June 27th 2022
