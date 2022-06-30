@@ -1,0 +1,31 @@
+
+// === Reset the boot_recovery and rdb_corrupt bootargs
+
+[.lead]
+If required, you can reset the boot_recovery and rdb_corrupt_bootargs
+
+.Steps
+
+. Halt the node back to the LOADER prompt:
++
+----
+node_A_1::*> halt -node _node-name_
+----
+
+. Check if the following bootargs have been set:
++
+----
+LOADER> printenv bootarg.init.boot_recovery
+LOADER> printenv bootarg.rdb_corrupt
+----
+
+. If either bootarg has been set to a value, unset it and boot ONTAP:
++
+----
+LOADER> unsetenv bootarg.init.boot_recovery
+LOADER> unsetenv bootarg.rdb_corrupt
+LOADER> saveenv
+LOADER> bye
+----
+
+// BURT 1471046 June 27th 2022
