@@ -55,21 +55,36 @@ FC_switch_A_1# copy ftp://10.10.10.55/firmware/m9200-s2ek9-mz.5.2.1.bin bootflas
 +
 Use the following procedure to disable the VSANs:
 +
-.. Enter the `config t` command to open the config terminal.
+.. Open the config terminal:
 +
-.. Enter the `vsan database` command.
+`config t`
 +
-.. Enter the `show vsan` command to check the state of the VSANs. All VSANs must be active.
+.. Enter: `vsan database`
 +
-.. Use the `vsan _vsan-num_ suspend` command to suspend the VSANs.
+.. Check the state of the VSANs:
++
+`show vsan`
++
+All VSANs must be active.
++
+.. Suspend the VSANs:
++
+`vsan _vsan-num_ suspend`
 +
 *Example:* `vsan 10 suspend`
 +
-.. Use the `show vsan` command to check the state of the VSANs again. All VSANs must be suspended.
+.. Check the state of the VSANs again:
+ `show vsan`
+ +
+All VSANs must be suspended.
 +
-.. Enter the `end` command to exit the config terminal.
+.. Exit the config terminal:
 +
-.. Use the `copy running-config startup-config` to save the configuration.
+`end`
++
+.. Save the configuration.
++
+`copy running-config startup-config`
 +
 The following example displays the output of this procedure.
 +
@@ -169,25 +184,42 @@ Enter Yes to confirm the installation.
 . Check the version of the firmware on each switch to make sure the correct version was installed:
 +
 `*show version*`
+
 . Enable all of the VSANs on both of the switches in this fabric.
 +
 Use the following procedure to enable the VSANs:
 +
-.. Use the `config t` command to open the config terminal.
+.. Open the config terminal:
 +
-.. Enter the `vsan database` command.
+`config t`
 +
-.. Use the `show vsan` command to check the state of the VSANs. The VSANs must be suspended.
+.. Enter: `vsan database`
 +
-.. Enter the `no vsan _vsan-num_ suspend` command to activate the VSANs.
+.. Check the state of the VSANs:
++
+`show vsan` command.
++
+The VSANs must be suspended.
++
+.. Activate the VSANs:
++
+`no vsan _vsan-num_ suspend`
 +
 *Example:* `no vsan 10 suspend`
 +
-.. Use the `show vsan` command to check the state of the VSANs again. All VSANs must be active.
+.. Check the state of the VSANs again.
 +
-.. Enter the `end` command to exit the config terminal.
+`show vsan`
 +
-.. Use the `copy running-config startup-config` to save the configuration.
+All VSANs must be active.
++
+.. Exit the config terminal:
++
+`end`
++
+.. Save the configuration:
++
+`copy running-config startup-config`
 +
 The following example displays the output of this procedure.
 +
@@ -275,29 +307,33 @@ FC_switch_A_1(config-vsan-db)# end
 FC_switch_A_1#
 ----
 . Verify the operation of the MetroCluster configuration in ONTAP:
- .. Check whether the system is multipathed:
- +
- `*node run -node _node-name_ sysconfig -a*`
- .. Check for any health alerts on both clusters:
- +
- `*system health alert show*`
- .. Confirm the MetroCluster configuration and that the operational mode is normal:
- +
- `*metrocluster show*`
- .. Perform a MetroCluster check:
- +
- `*metrocluster check run*`
- .. Display the results of the MetroCluster check:
- +
- `*metrocluster check show*`
- .. Check for any health alerts on the switches (if present):
- +
- `*storage switch show*`
- .. Run Config Advisor.
++
+.. Check whether the system is multipathed:
++
+`*node run -node _node-name_ sysconfig -a*`
++
+.. Check for any health alerts on both clusters:
++
+`*system health alert show*`
+.. Confirm the MetroCluster configuration and that the operational mode is normal:
++
+`*metrocluster show*`
+.. Perform a MetroCluster check:
++
+`*metrocluster check run*`
+.. Display the results of the MetroCluster check:
++
+`*metrocluster check show*`
+.. Check for any health alerts on the switches (if present):
++
+`*storage switch show*`
++
+.. Run Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
++
+.. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
- .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 . Repeat this procedure for the second switch fabric.
 
 // 1444678, 2022-05-19
