@@ -9,27 +9,31 @@ summary: Beginning with ONTAP 9.7, the ONTAP Mediator service can assist the Met
 :imagesdir: ../media/
 
 [.lead]
-Your environment must meet the following requirements.
+Your environment must meet certain requirements. 
 
+The following requirements apply to one disaster recovery group (DR group). Learn more about link:concept_parts_of_an_ip_mcc_configuration_mcc_ip.html#disaster-recovery-dr-groups[DR groups].
 
-[NOTE]
-====
 * If you plan on updating your Linux version, do so before you install the most current ONTAP Mediator service.
+
 * The ONTAP Mediator service and MetroCluster Tiebreaker software should not both be used with the same MetroCluster configuration.
+
 * The ONTAP Mediator must be installed on a LINUX host at a separate location from the MetroCluster sites.
++
+The connectivity between the ONTAP Mediator and each site must be two separate failure domains.
+
 * The ONTAP Mediator service can support up to five MetroCluster configurations simultaneously.
+
 * Automatic unplanned switchover is supported in ONTAP 9.7 and later.
-====
 
 == Network requirements for using Mediator in a MetroCluster configuration
 
-To install the ONTAP Mediator service in a MetroCluster configuration, you must ensure that the configuration meets several network requirements.
+To install the ONTAP Mediator service in a MetroCluster configuration, you must make sure that the configuration meets several network requirements.
 
 * Latency
 +
-Round trip latency must be no more than 75 ms.
+Maximum latency of less than 75ms (RTT).
 +
-Jitter must be no more than 25 ms.
+Jitter must be no more than 5ms.
 
 * MTU
 +
@@ -37,11 +41,30 @@ The MTU size must be at least 1400.
 
 * Packet loss
 +
-Packet loss must be less than or equal to 0.01%.
+For both Internet Control Message Protocol (ICMP) and TCP traffic, packet loss must be less than 0.01%.
 
 * Bandwidth
 +
-The link between the Mediator service and the MetroCluster configuration must have at least 20 Mbps of bandwidth.
+The link between the Mediator service and one DR group must have at least 20Mbps of bandwidth.
+
+* Independent connectivity
++
+Independent connectivity between each site and the ONTAP Mediator is required. A failure in one site must not interrupt the IP connectivity between the other two unaffected sites.
+
+== Host requirements for the ONTAP Mediator in a MetroCluster configuration
+
+You must ensure that the configuration meets several host requirements.
+
+* ONTAP Mediator must be installed at an external site that is physically separated from the two ONTAP clusters.
+
+* ONTAP Mediator supports a maximum number of five MetroCluster configurations.
+
+* ONTAP Mediator does not require more than the host operating system's minimum requirements for CPU and memory (RAM).
+
+* In addition to the host operating system's minimum requirements, at least 30GB of additional usable disk space must be available.
++
+**  Each DR group requires up to 200MB of disk space.
+
 
 == Firewall requirements for ONTAP Mediator
 
@@ -91,3 +114,6 @@ link:https://docs.netapp.com/us-en/ontap/mediator/index.html[Install or upgrade 
 == After the upgrade
 
 After the Mediator and operating system upgrade is complete, you should issue the `storage iscsi-initiator show` command to confirm that the Mediator connections are up.
+
+
+// 2022-06-02, BURT 1439085
