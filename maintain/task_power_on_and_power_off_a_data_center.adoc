@@ -28,7 +28,7 @@ You must power off a site and all of the equipment before site maintenance or re
 
 .About this task
 
-All the commands in the following steps are issued from the site that you want to power off.
+All the commands in the following steps are issued from the site to remain powered on.
 
 .Steps
 
@@ -66,9 +66,13 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
-. Enter the following command to implement the switchover:
+. From the site you want to remain up implement the switchover:
 +
 `metrocluster switchover`
++
+----
+cluster_A::*> metrocluster switchover
+----
 +
 The operation can take several minutes to complete.
 +
@@ -100,6 +104,23 @@ cluster_A::*> metrocluster operation show
 . If you have a MetroCluster IP configuration running ONTAP 9.6 or later, wait for the disaster site plexes to come online and the healing operations to automatically complete.
 +
 In MetroCluster IP configurations running earlier versions of ONTAP, the disaster site nodes do not automatically boot to ONTAP and the plexes remain offline. For MetroCluster FC configurations, all plexes remain online and you do not need to online the plexes.
+. Move any volumes and LUNs that belong to unmirrored aggregates offline.
+.. Move the volumes offline.
++
+----
+cluster_A::* volume offline <volume name>
+----
+.. Move the LUNs offline.
++
+----
+cluster_A::* lun offline lun_path <lun_path>
+----
+
+. Move unmirrored aggregates offline: `storage aggregate offline`
++
+----
+cluster_A*::> storage aggregate offline -aggregate <aggregate-name>
+----
 
 . Depending on your configuration and ONTAP version, identify and move offline affected plexes that are located at the disaster site (Cluster_B).
 +
@@ -656,3 +677,5 @@ Follow the instructions in link:https://docs.netapp.com/us-en/ontap-metrocluster
 +
 
 // BURT 1382414, 09 DEC 2021
+// GH issue 184, July 11th 2022
+// GH issue #60, July 11th 2022

@@ -194,7 +194,15 @@ If not, you must configure HA mode on each node, and then reboot the nodes:
 +
 `storage failover modify -mode ha -node localhost`
 +
-This command configures high-availability mode but does not enable storage failover. Storage failover is automatically enabled when you configure the MetroCluster configuration later in the process.
+====
+
+NOTE: The expected configuration state of HA and storage failover is as follows:
+
+** HA mode is configured but storage failover is not enabled.
+** HA takeover capability is disabled.
+** HA  interfaces are offline.
+** HA mode, storage failover, and interfaces are configured later in the process.
+====
 
 . Confirm that you have four ports configured as cluster interconnects:
 +
@@ -247,3 +255,5 @@ e4e       Cluster      Cluster          up   9000  auto/40000 healthy  false
 .What to do next
 
 Return to the ONTAP command-line interface and complete the MetroCluster configuration by performing the tasks that follow.
+
+// GitHub issue 138, July 4th 2022

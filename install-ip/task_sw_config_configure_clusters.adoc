@@ -649,13 +649,12 @@ NOTE: You must choose the MetroCluster IP addresses carefully because you cannot
 * You must create two interfaces for each node. The interfaces must be associated with the VLANs defined in the MetroCluster RCF file.
 
 * You must create all MetroCluster IP interface "A" ports in the same VLAN and all MetroCluster IP interface "B" ports in the other VLAN.  Refer to link:concept_considerations_mcip.html[Considerations for MetroCluster IP configuration].
-
 // include reference
 include::../_include/models_supporting_vlan-id.adoc[]
 // end include reference
-
++
 The following IP addresses and subnets are used in the examples:
-
++
 |===
 
 h| Node h| Interface h| IP address h| Subnet
@@ -717,13 +716,13 @@ a|
 a|
 10.1.2/24
 |===
-
++
 The physical ports used by the MetroCluster IP interfaces depends on the platform model, as shown in the following table.
-
++
 |===
 h| Platform model h| MetroCluster IP port h| Note
 
-.2+a| AFF A900
+.2+a| AFF A900 and FAS9500
 a| e5b
 .2+a|
 a| e7b
@@ -733,7 +732,7 @@ a| e0b
 .2+a|
 a| e1b
 
-.2+a| AFF A700 and FAS900
+.2+a| AFF A700 and FAS9000
 a| e5a
 .2+a|
 a| e5b
@@ -1662,7 +1661,6 @@ NOTE: In the minimum supported configuration, in which a limited number of drive
  ** Maximum number of drives that can be included in a RAID group
  ** Whether drives with different RPM are allowed
 For more information about these options, see the storage aggregate create man page.
-
 +
 The following command creates a mirrored aggregate with 10 disks:
 +
@@ -1691,9 +1689,12 @@ NOTE: If you want to use a single mirrored data aggregate, then see <<step1_sing
 
 * The ha-config state of the controllers and chassis must be "mccip".
 
+
 You issue the `metrocluster configure` command once on any of the nodes to enable the MetroCluster configuration. You do not need to issue the command on each of the sites or nodes, and it does not matter which node or site you choose to issue the command on.
 
 The `metrocluster configure` command automatically pairs the two nodes with the lowest system IDs in each of the two clusters as disaster recovery (DR) partners. In a four-node MetroCluster configuration, there are two DR partner pairs. The second DR pair is created from the two nodes with higher system IDs.
+
+NOTE: You must *not* configure Onboard Key Manager (OKM) or external key management before you run the command `metrocluster configure`.
 
 .Steps
 
@@ -2037,3 +2038,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/home.html[Networ
 After configuring, enabling, and checking the MetroCluster configuration, you can proceed to complete the cluster configuration by adding additional SVMs, network interfaces and other ONTAP functionality as needed.
 
 //2022-01-10, Issue 123
+// BURT 1180776, 22 APR 2021
+// BURT 1380267
+// BURT 1381553
+// BURT 1448684, 01 FEB 2022
