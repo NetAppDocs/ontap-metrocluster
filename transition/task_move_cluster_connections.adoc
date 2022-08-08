@@ -125,9 +125,14 @@ e0b       Cluster      Cluster          up   9000  auto/10000 healthy
 
 cluster_A::*>
 ....
+
+. Verify that your inter-site Inter-Switch Links (ISLs) are up and the port-channels are operational:
++
+`network port show interface brief`
 +
 In the following example, ISL ports “Eth1/15” to “Eth1/20” are configured as “Po10” for the remote site link and “Eth1/7” to “Eth1/8” are configured as “Po1” for the local cluster ISL. The state of “Eth1/15” to “Eth1/20”, “Eth1/7” to “Eth1/8”, “Po10”, and “Po1” should be 'up'.
 +
+
 ----
 _switch_A_1# show interface brief
 
@@ -136,8 +141,8 @@ Port   VRF          Status   IP Address        Speed      MTU
 --------------------------------------------------------------
 mgmt0  --            up        100.10.200.20    1000      1500
 ------------------------------------------------------------------------------------
-Ethernet     VLAN        Type Mode    Status    Reason               Speed     Port
-Interface                                       Ch #
+Ethernet     VLAN        Type Mode    Status      Reason              Speed     Port
+Interface                                         Ch #
 ------------------------------------------------------------------------------------
 Eth1/1         101        eth  access   up        none                100G(D)    --
 Eth1/2         101        eth  access   up        none                100G(D)    --
