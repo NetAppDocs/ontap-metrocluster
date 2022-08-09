@@ -71,15 +71,15 @@ cluster_B::>
 +
 You must delete the MDV_aud volumes as they cannot be moved.
 
-. Take each of the aggregates offline, and then delete them:
+. Take each of the data aggregates offline, and then delete them:
  .. Take the aggregate offline: `storage aggregate offline -aggregate aggregate-name`
 +
-The following example shows the aggregate node_B_1_aggr0 being taken offline:
+The following example shows the aggregate node_B_1_aggr_data_a4 being taken offline:
 +
 ....
-cluster_B::> storage aggregate offline -aggregate node_B_1_aggr0
+cluster_B::> storage aggregate offline -aggregate node_B_1_aggr_data_a4
 
-Aggregate offline successful on aggregate: node_B_1_aggr0
+Aggregate offline successful on aggregate: node_B_1_aggr_data_a4
 ....
 
  .. Delete the aggregate: `storage aggregate delete -aggregate aggregate-name`
@@ -89,8 +89,8 @@ You can destroy the plex when prompted.
 The following example shows the aggregate node_B_1_aggr0 being deleted.
 +
 ....
-cluster_B::> storage aggregate delete -aggregate node_B_1_aggr0
-Warning: Are you sure you want to destroy aggregate "node_B_1_aggr0"? {y|n}: y
+cluster_B::> storage aggregate delete -aggregate node_B_1_aggr_data_a4
+Warning: Are you sure you want to destroy aggregate "node_B_1_aggr_data_a4"? {y|n}: y
 [Job 123] Job succeeded: DONE
 
 cluster_B::>
@@ -252,3 +252,5 @@ cluster_B::>
 
 . Power down the MetroCluster FC controller modules and storage shelves.
 . Disconnect and remove the MetroCluster FC controller modules and storage shelves.
+
+// BURT 1401090, 2022-08-09
