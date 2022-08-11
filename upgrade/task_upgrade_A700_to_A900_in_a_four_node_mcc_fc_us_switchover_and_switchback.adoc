@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, mcc
 summary: 'You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
-= Upgrade controllers from AFF A700/A900 to FAS9x00 in a MetroCluster FC configuration using switchover and switchback (ONTAP 9.10.1 or later)
+= Upgrade controllers from AFF A700/FAS9000 to AFF A900/FAS9500 in a MetroCluster FC configuration using switchover and switchback (ONTAP 9.10.1 or later)
 :icons: font
 :imagesdir: ../media/
 
@@ -380,7 +380,7 @@ You must switch over the configuration to site_A so that the platforms on site_B
 
 This task must be performed on site_A.
 
-After completing this task, site_A is active and serving data for both sites. Site_B is inactive, and ready to begin the upgrade process, as shown in the following illustration.
+After completing this task, site_A is active and serving data for both sites. Site_B is inactive, and ready to begin the upgrade process, as shown in the following illustration. (This illustration also applies to upgrading a FAS9000 to a FAS9500 controller.)
 
 image::../media/mcc_upgrade_cluster_a_in_switchover_A900.png[]
 
@@ -438,7 +438,7 @@ cluster_A::> metrocluster operation show
 
 
 
-== Remove the AFF A700 controller module and NVS at site_B
+== Remove the AFF A700 or FAS9000 controller module and NVS at site_B
 
 You must remove the old controllers from the configuration.
 
@@ -458,9 +458,9 @@ If you are not already grounded, properly ground yourself.
 .	Power off the chassis at site_B.
 
 == Remove the controller module and NVS from both nodes at site_B
-=== Remove the AFF A700 controller module
+=== Remove the AFF A700 or FAS9000 controller module
 
-Use the following procedure to remove the AFF A700 controller module.
+Use the following procedure to remove the AFF A700 or FAS9000 controller module.
 
 .Steps
 .	Detach the console cable, if any, and the management cable from the controller module before removing the controller module.
@@ -478,11 +478,11 @@ image:../media/drw_9500_remove_PCM.png[controller]
 ..	Rotate the cam handle so that it completely disengages the controller module from the chassis, and then slide the controller module out of the chassis.
 Make sure that you support the bottom of the controller module as you slide it out of the chassis.
 
-=== Remove the AFF A700 NVS module
+=== Remove the AFF A700 or FAS9000 NVS module
 
-Use the following procedure to remove the AFF A700 NVS module.
+Use the following procedure to remove the AFF A700 or FAS9000 NVS module.
 
-NOTE:	The AFF A700 NVS module is in slot 6 and is double the height compared to the other modules in the system.
+NOTE:	The AFF A700 or FAS9000 NVS module is in slot 6 and is double the height compared to the other modules in the system.
 
 .	Unlock and remove the NVS from slot 6.
 ..	Depress the lettered and numbered cam button.
@@ -1046,7 +1046,7 @@ After the new controllers have been configured, you switch back the MetroCluster
 
 .About this task
 
-In this task, you will perform the switchback operation, returning the MetroCluster configuration to normal operation. The nodes on site_A are still awaiting upgrade.
+In this task, you will perform the switchback operation, returning the MetroCluster configuration to normal operation. The nodes on site_A are still awaiting upgrade as shown in the  following illustration. (This illustration also applies to upgrading a FAS9000 to a FAS9500 controller).
 
 image::../media/mcc_upgrade_cluster_a_switchback_A900.png[four-node metrocluster]
 

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controller, ip, configuration, switchover, switchback, workflow, nodes, tiebreaker, verify, bootrage, root, aggregate, disks
 summary: 'BYou can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
-= Upgrade controllers from AFF A700/A900 to FAS9x00 in a MetroCluster IP configuration using switchover and switchback  (ONTAP 9.10.1 or later)
+= Upgrade controllers from AFF A700/FAS9000 to AFF A900/FAS9500 in a MetroCluster IP configuration using switchover and switchback  (ONTAP 9.10.1 or later)
 
 :icons: font
 :imagesdir: ../media/
@@ -74,7 +74,7 @@ The MetroCluster configuration on an AFF A900 or FAS9500 uses one of each of the
 
 === Update the MetroCluster switch RCF files before upgrading controllers
 
-The MetroCluster IP configuration on an AFF A700 or FAS9000 does not use VLANs. The MetroCluster configuration on an AFF A900 or FAS9500 does use VLANs. As a result, you need to change the RCF file when upgrading from an AFF A700 or FAS9000 to an AFF A900 or FAS9500.
+You must update the RCF files on MetroCluster switches when performing this upgrade. The following table provides the VLAN ranges supported for AFF A900/FAS9500 MetroCluster IP configurations.
 
 
 
@@ -1212,8 +1212,7 @@ link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metro
 a|
 Mediator
 a|
-link:../install-ip/concept_mediator_requirements.html
-[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration_ section.
+link:../install-ip/concept_mediator_requirements.html[Configuring the ONTAP Mediator service from a MetroCluster IP configuration] in the _MetroCluster IP Installation and Configuration_ section.
 a|
 Third-party applications
 a|
@@ -1231,3 +1230,5 @@ After completing the upgrade, you should send an AutoSupport message indicating 
  +
 `system node autosupport invoke -node * -type all -message MAINT=end`
  .. Repeat the command on the partner cluster.
+
+// GH issue 191 29/07/2022
