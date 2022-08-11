@@ -1249,6 +1249,16 @@ This task can be performed on any node in the MetroCluster configuration.
 .. Display the results of the MetroCluster check:
 +
 `metrocluster check show`
++
+NOTE: After you run `metrocluster check run` and `metrocluster check show`, you see an error message similar to the following:
++
+.Example
+----
+Failed to validate the node and cluster components before the switchover operation.
+                  Cluster_A:: node_A_1 (non-overridable veto): DR partner NVLog mirroring is not online. Make sure that the links between the two sites are healthy and properly configured.
+----
++
+This is expected behavior due to a controller mismatch during the upgrade process and the error message can be safely ignored.
 
 == Upgrading the nodes on cluster_A
 
