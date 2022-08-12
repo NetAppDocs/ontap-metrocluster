@@ -240,8 +240,6 @@ You must download the switch operating system file and RCF file to each switch i
 
 This task must be repeated on each switch in the MetroCluster IP configuration.
 
-
-
 =====
 *Note the following:*
 
@@ -251,8 +249,33 @@ This task must be repeated on each switch in the MetroCluster IP configuration.
 
 * Beginning with EFOS version 3.7.x.x or later, a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access through the serial console port.
 =====
-// BURT-1392530
 
+.Steps
+
+. Check if your version of EFOs is FIPS compliant or non-FIPS compliant by using the `show fips status` command. In the following examples, `IP_switch_A_1` is using FIPS compliant EFOS and `IP_switch_A_2` is using  non-FIPS compliant EFOS.
++
+*Example 1*
++
+----
+IP_switch_A_1 #show fips status
+
+System running in FIPS mode
+
+IP_switch_A_1 #
+----
++
+*Example 2*
++
+----
+IP_switch_A_2 #show fips status
+       ^
+% Invalid input detected at `^` marker. %
+
+IP_switch_A_2 #
+----
+// BURT-1392530
+. Use the following table to determine which method you must follow:
++
 |===
 
 h| *Procedure* h| *Current EFOS version* h| *New EFOS version* h| *High level steps*
@@ -751,3 +774,4 @@ IP_switch_A_1# reload
 // 16 SEP 2021, BURT 1392530
 // 13 JAN 2022, BURT 1448684
 // GH issue 166, June 29 2022
+// GH issue 152, August 12 2022
