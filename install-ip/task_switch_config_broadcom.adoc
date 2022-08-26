@@ -11,6 +11,13 @@ summary: You must configure the Broadcom IP switches for use as the cluster inte
 [.lead]
 You must configure the Broadcom IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
 
+NOTE: Your configuration requires additional licenses (6 x 100-Gb port license) in the following scenarios:
+
+* You use ports 53 and 54 as a 40-Gbps or 100-Gbps MetroCluster ISL.
+
+* You use a platform that connects the local cluster and MetroCluster interfaces to ports 49 - 52.
+
+
 == Resetting the Broadcom IP switch to factory defaults
 
 Before installing a new switch software version and RCFs, you must erase the Broadcom switch settings and perform basic configuration.
@@ -269,7 +276,7 @@ IP_switch_A_1 #
 ----
 IP_switch_A_2 #show fips status
                      ^
-% Invalid input detected at `^` marker. 
+% Invalid input detected at `^` marker.
 
 IP_switch_A_2 #
 ----
@@ -637,7 +644,7 @@ NOTE: Modifications to the RCF files after download are not supported.
 
 . Copy the RCF files to the switches:
 .. Copy the RCF files to the first switch:
-`copy sftp://user@FTP-server-IP-address/RcfFiles/switch-specific-RCF nvram:script BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr`
+`copy sftp://user@FTP-server-IP-address/RcfFiles/switch-specific-RCF/BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr`
 +
 In this example, the "BES-53248_v1.32_Switch-A1.txt" RCF file is copied from the SFTP server at "50.50.50.50" to the local bootflash. You need to use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
 +
@@ -775,3 +782,4 @@ IP_switch_A_1# reload
 // 13 JAN 2022, BURT 1448684
 // GH issue 166, June 29 2022
 // GH issue 152, August 12 2022
+// BURT 1493345, August 23 2022
