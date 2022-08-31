@@ -11,6 +11,13 @@ summary: You must configure the Broadcom IP switches for use as the cluster inte
 [.lead]
 You must configure the Broadcom IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
 
+NOTE: Your configuration requires additional licenses (6 x 100-Gb port license) in the following scenarios:
+
+* You use ports 53 and 54 as a 40-Gbps or 100-Gbps MetroCluster ISL.
+
+* You use a platform that connects the local cluster and MetroCluster interfaces to ports 49 - 52.
+
+
 == Resetting the Broadcom IP switch to factory defaults
 
 Before installing a new switch software version and RCFs, you must erase the Broadcom switch settings and perform basic configuration.
@@ -240,8 +247,6 @@ You must download the switch operating system file and RCF file to each switch i
 
 This task must be repeated on each switch in the MetroCluster IP configuration.
 
-
-
 =====
 *Note the following:*
 
@@ -251,8 +256,33 @@ This task must be repeated on each switch in the MetroCluster IP configuration.
 
 * Beginning with EFOS version 3.7.x.x or later, a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access through the serial console port.
 =====
-// BURT-1392530
 
+.Steps
+
+. Check if your version of EFOS is FIPS compliant or non-FIPS compliant by using the `show fips status` command. In the following examples, `IP_switch_A_1` is using FIPS compliant EFOS and `IP_switch_A_2` is using  non-FIPS compliant EFOS.
++
+*Example 1*
++
+----
+IP_switch_A_1 #show fips status
+
+System running in FIPS mode
+
+IP_switch_A_1 #
+----
++
+*Example 2*
++
+----
+IP_switch_A_2 #show fips status
+                     ^
+% Invalid input detected at `^` marker.
+
+IP_switch_A_2 #
+----
+// BURT-1392530
+. Use the following table to determine which method you must follow:
++
 |===
 
 h| *Procedure* h| *Current EFOS version* h| *New EFOS version* h| *High level steps*
@@ -614,7 +644,7 @@ NOTE: Modifications to the RCF files after download are not supported.
 
 . Copy the RCF files to the switches:
 .. Copy the RCF files to the first switch:
-`copy sftp://user@FTP-server-IP-address/RcfFiles/switch-specific-RCF nvram:script BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr`
+`copy sftp://user@FTP-server-IP-address/RcfFiles/switch-specific-RCF/BES-53248_v1.32_Switch-A1.txt nvram:script BES-53248_v1.32_Switch-A1.scr`
 +
 In this example, the "BES-53248_v1.32_Switch-A1.txt" RCF file is copied from the SFTP server at "50.50.50.50" to the local bootflash. You need to use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
 +
@@ -751,3 +781,5 @@ IP_switch_A_1# reload
 // 16 SEP 2021, BURT 1392530
 // 13 JAN 2022, BURT 1448684
 // GH issue 166, June 29 2022
+// GH issue 152, August 12 2022
+// BURT 1493345, August 23 2022
