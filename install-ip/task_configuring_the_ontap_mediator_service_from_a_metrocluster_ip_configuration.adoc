@@ -22,6 +22,8 @@ link:https://docs.netapp.com/us-en/ontap/mediator/index.html[Install or upgrade 
 * You must have the username and password for the ONTAP Mediator service.
 * All nodes of the MetroCluster IP configuration must be online.
 
+CAUTION: Beginning with ONTAP 9.12.1, you can enable the MetroCluster automatic forced switchover feature in a MetroCluster IP configuration. This feature is an extension of the Mediator-assisted unplanned switchover. Before you enable this feature, review link:install-ip/concept-risks-limitations-automatic-switchover.html[Risks and limitations of using MetroCluster automatic forced switchover].
+
 .About this task
 
 * This task enables automatic unplanned switchover by default.
@@ -80,6 +82,13 @@ NOTE: You will be prompted for the username and password for the Mediator admin 
  node_A_2
       mailbox
            mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
+....
+
+. If you want to configure MetroCluster automatic forced switchover, run the following command: `metrocluster modify -allow-automatic-forced-switchover true`
+
++
+....
+cluster_A::*> metrocluster modify -allow-automatic-forced-switchover true
 ....
 
 // BURT 1448684, 03 FEB 2022
