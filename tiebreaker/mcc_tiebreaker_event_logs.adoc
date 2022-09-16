@@ -1,0 +1,31 @@
+---
+permalink: tiebreaker/mcc-tiebreaker-event-logs.html
+sidebar: sidebar
+keywords: metrocluster, tiebreaker, port, communicate, specific, service, firewall, requirement
+summary: MetroCluster Tiebreaker uses a number of ports to communicate with specific services.
+---
+= MetroCluster Tiebreaker event log file
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+The event log file contains a log of all the actions performed by a MetroCluster Tiebreaker monitor.
+
+The Tiebreaker monitor performs the following actions:
+
+* Detects site disasters
+* Discovers MetroCluster configurations
+* Detects any configuration changes related to the database, other Tiebreaker monitors, or the MetroCluster Tiebreaker monitor itself
+* Detects ssh connections and disconnections
+
+These actions are logged in the event log file in the following format:
+
+<timestamp> <severity/loglevel> <thread-id> <module>
+
+.Example
+
+....
+2022-09-07 06:14:30,797 INFO  [MCCTBCommandServer-16] [SslSupport] Successfully initiated SSL context. Protocol used is TLSv1.3.
+2022-09-07 06:14:34,137 INFO  [MCCTBCommandServer-16] [DataBase] Successfully read MCCTB database.
+2022-09-07 06:14:34,137 INFO  [MCCTBCommandServer-16] [ConfigurationMonitor] Debug mode disabled.
+....
