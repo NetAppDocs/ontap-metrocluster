@@ -17,6 +17,8 @@ The MetroCluster software must be installed and configured.
 
 The Tiebreaker software is installed on a third site, which allows the software to distinguish between an inter-switch link (ISL) failure (when inter-site links are down) and a site failure. Your host system must meet certain requirements before you can install or upgrade the Tiebreaker software on your local computer to monitor the MetroCluster configuration.
 
+NOTE: You must have 'root' privileges to install MetroCluster Tiebreaker software and the dependant packages.
+
 The MetroCluster Tiebreaker software has the following monitoring capabilities and requirements:
 
 * No requirement for a special configuration for the different MetroCluster configurations.
@@ -45,11 +47,13 @@ NOTE: You should have only one MetroCluster Tiebreaker monitor per MetroCluster 
 // ** 2 GB RAM
 // ** Open Java Runtime Environment 8
 * Disk capacity: 8 GB
-* User: Root access
 * Firewall:
  ** Direct access for setting up AutoSupport messages
  ** SSH (port 22/TCP), HTTPS (port 443/TCP), and ping (ICMP)
-* Installation on FIPS-enabled hosts is not supported.
+* Installation on FIPS-enabled hosts is not supported. 
+//FIPS might be supported with TB 1.5 -- check
+
+// add a bullet here 'ONTAP users must have the following privileges...'
 
 == Installing MetroCluster Tiebreaker dependencies
 
@@ -92,7 +96,7 @@ Install MariaDB
 You must install Java Runtime Environment 1.8 on your host system before installing or upgrading the Tiebreaker software.
 
 .Steps
-. Log in as `root` to the host system.
+. Log in as `root` user or a user that can sudo to advanced privilege mode.
 +
 ----
 
@@ -137,7 +141,7 @@ Complete!
 You must install MySQL Server 5.5.30 or later and 5.6.x version on your host system before installing or upgrading the Tiebreaker software.
 
 .Steps
-. Log in as `root` to the host system.
+. Log in as `root` user or a user that can sudo to advanced privilege mode.
 +
 ----
 
@@ -452,7 +456,7 @@ You must install MariaDB server on your host system before installing or upgradi
 Your host system must be running on Red Hat Enterprise Linux (RHEL) 8.
 
 .Steps
-. Log in as `root` to the host system.
+. Log in as `root` user or a user that can sudo to advanced privilege mode.
 +
 ....
 
@@ -589,6 +593,29 @@ mariadb.service    enabled
 
 ....
 
+==== NEW section placeholder: ** Secure your host and database installation** (BURT 1496659 -- we need 'hardening' guidelines) 
+
+==== NEW section placeholder: install Tiebreaker as a non-root user, a non-root user that is able to 'sudo' on the host (BURT 1500383)
+- optional: a non-root user in the database that has sufficient privileges to perform the Tiebreaker install (create tables, users, set user password etc)
+
+  
+
+ we need to document how to install and run MCCTB as non-root user
+
+ NOTE: Only one user can run it etc?
+
+. create non-root user
+
+. install MCCTB (install requires sudo)
+
+. run MCCTB cli as non root user
+
+We may also want to provide information about ONTAP:
+- can be in FIPS compliant mode
+- user requirements
+- etc
+
+
 [[install-upgrade-sw-pkg]]
 == Installing or upgrading the software package
 
@@ -605,7 +632,7 @@ https://mysupport.netapp.com/site/[NetApp Support]
 . Log in to the host as the root user.
 . Install or upgrade the Tiebreaker software:
 +
-
+NOTE: If you are upgrading to MetroCluster Tiebreaker version 1.5 or later, you must uninstall and purge the existing software version, and then install the new version. You also need to reconfigure all the Tiebreaker monitors.
 [cols="20,80"]
 |===
 
@@ -686,6 +713,8 @@ https://mysupport.netapp.com/site/[NetApp Support]
 == Upgrading the host where the Tiebreaker monitor is running
 
 You can upgrade the host on which the Tiebreaker monitor is running with minimal disruption if you place the monitors in observer mode before the upgrade.
+
+NOTE: If you are upgrading to MetroCluster Tiebreaker version 1.5 or later, you must uninstall and purge the existing software version, and then install the new version. You also need to reconfigure all the Tiebreaker monitors.
 
 .Steps
 . Verify that the monitors are in observer mode:
