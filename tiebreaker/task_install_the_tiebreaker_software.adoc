@@ -593,28 +593,22 @@ mariadb.service    enabled
 
 ....
 
-==== NEW section placeholder: ** Secure your host and database installation** (BURT 1496659 -- we need 'hardening' guidelines) 
+==== NEW -- Secure your host and database installation (BURT 1496659) 
 
-==== NEW section placeholder: install Tiebreaker as a non-root user, a non-root user that is able to 'sudo' on the host (BURT 1500383)
-- optional: a non-root user in the database that has sufficient privileges to perform the Tiebreaker install (create tables, users, set user password etc)
+==== NEW -- Install Tiebreaker as a non-root user (BURT 1500383)
 
-  
+You can install MetroCluster Tiebreaker as a non-root user. A non-root user can have sufficient privileges to perform the Tiebreaker installation, create tables, users, and set the user password etc.
 
- we need to document how to install and run MCCTB as non-root user
+ NOTE: Only one user can run metroCluster Tiebreaker as a non-root user.
+ NOTE: ONTAP can be in FIPS-compliant mode.
+ NOTE: System requirements
 
- NOTE: Only one user can run it etc?
+. Create a non-root user that can sudo to the host.
+. Log in to the host as the non-root user.
 
-. create non-root user
+. <<install-tiebreaker, Install the MetroCluster Tiebreaker software>>  (installation requires the ability to sudo to the host).
 
-. install MCCTB (install requires sudo)
-
-. run MCCTB cli as non root user
-
-We may also want to provide information about ONTAP:
-- can be in FIPS compliant mode
-- user requirements
-- etc
-
+. Run the MetroCluster Tiebreaker CLI as the non-root user.
 
 [[install-upgrade-sw-pkg]]
 == Installing or upgrading the software package
@@ -630,7 +624,7 @@ You must install or upgrade the MetroCluster Tiebreaker software on your local c
 https://mysupport.netapp.com/site/[NetApp Support]
 
 . Log in to the host as the root user.
-. Install or upgrade the Tiebreaker software:
+. [[install-tiebreaker]]Install or upgrade the Tiebreaker software: 
 +
 NOTE: If you are upgrading to MetroCluster Tiebreaker version 1.5 or later, you must uninstall and purge the existing software version, and then install the new version. You also need to reconfigure all the Tiebreaker monitors.
 [cols="20,80"]
