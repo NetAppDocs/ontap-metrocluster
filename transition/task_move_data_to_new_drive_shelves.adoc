@@ -10,6 +10,10 @@ summary: During the transition, you move data from the drive shelves in the Metr
 [.lead]
 During the transition, you move data from the drive shelves in the MetroCluster FC configuration to the new MetroCluster IP configuration.
 
+.Before you begin
+
+You should create new SAN LIFs on the destination or IP nodes and connect hosts prior to moving volumes to new the new aggregates.
+
 . To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
  .. Issue the following command: `system node autosupport invoke -node * -type all -message MAINT=end`
  .. Repeat the command on the partner cluster.
@@ -28,5 +32,12 @@ Use the following procedure in http://docs.netapp.com/ontap-9/topic/com.netapp.d
 . Migrate the data LIFs.
 +
 Use the procedure in  http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-95CA9262-327D-431D-81AA-C73DEFF3DEE2.html[Moving non-SAN data LIFs and cluster management LIFs to the new nodes^] but do *not* perform the last two steps to migrate cluster management LIFs.
+
+[NOTE]
+====
+* You cannot migrate a LIF that is used for copy-offload operations with VMware vStorage APIs for Array Integration (VAAI).
+
+* After you complete the transition of your MetroCluster nodes from FC to IP, you might need to move your iSCSI host connections to the new nodes, see  link:task_move_linux_iscsi_hosts_from_mcc_fc_to_mcc_ip_nodes.html[Moving Linux iSCSI hosts from MetroCluster FC to MetroCluster IP nodes.]
+====
 
 // BURT 1448684, 01 FEB 2022
