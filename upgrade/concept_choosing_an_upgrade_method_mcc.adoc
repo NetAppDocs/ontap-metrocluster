@@ -4,16 +4,14 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, choose, upgrade, refresh, method
 summary: 'The upgrade or refresh procedure you use depends on the platform model, scope of the upgrade, and type of MetroCluster configuration.'
 ---
-= Choosing an upgrade or refresh method
+= Choose between controller upgrade or system refresh
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-The upgrade or refresh procedure you use depends on the platform model, scope of the upgrade, and type of MetroCluster configuration.
+Depending on the scope of the equipment upgrade, you chose either a controller upgrade procedure or a refresh procedure.
 
-There are different types of upgrade and refresh procedures.
-
-* Upgrade procedures apply only to the controller modules. The controllers are replaced with a new controller model.
+* Controller upgrade procedures apply only to the controller modules. The controllers are replaced with a new controller model.
 +
 The storage shelf models are not upgraded.
 
@@ -26,134 +24,26 @@ In the refresh procedures, new controllers and shelves are added to the MetroClu
 +
 The original controllers are then retired.
 
-== Supported platform combinations for controller upgrade using switchover and switchback in a MetroCluster FC configuration
-
-You can upgrade certain platforms using the switchover and switchback operation in a MetroCluster FC configuration.
-The following table shows which controller upgrade combinations are supported:
-
-image::supported_controller_upgrades_fc_configurations.png[supported controller upgrade combinations in FC configurations]
-** You can upgrade from AFF A700/FAS9000 controllers to AFF A900/FAS9500 controllers using the following procedure: link:task_upgrade_A700_to_A900_in_a_four_node_mcc_fc_us_switchover_and_switchback.html[Upgrade controllers from AFF A700/FAS9000 to AFF A900/FAS9500 in a MetroCluster FC configuration using switchover and switchback (ONTAP 9.10.1 or later)]
-
-
-== Choosing a procedure that does not use aggregate relocation
-
+[cols="1,3"]
 |===
 
-h| Type of upgrade or refresh h| MetroCluster type h| First ONTAP version support h| Procedure
+h| Upgrade type h| Go to...
 
 a|
-* Scope: Platform (controller modules) only
-* Method: Automated switchover/switchback
-a|
-FC
-a|
-9.10.1
-a|
-link:task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_fc.html[Upgrading controllers in a four-node MetroCluster FC configuration using switchover and switchback with "system controller replace" commands (ONTAP 9.10.1 and later)]
-a|
-* Scope: Platform (controller modules) only
-* Method: Automated switchover/switchback
-a|
-IP
-a|
-9.10.1
-a|
-link:task_upgrade_A700_to_A900_in_a_four_node_mcc_ip_us_switchover_and_switchback.html[Upgrade controllers from AFF A700 to AFF A900 in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.10.1 and later)]
+
+Controller upgrade
 
 a|
-* Scope: Platform (controller modules) only
-* Method: Switchover/switchback
+
+link:../upgrade/concept_choosing_controller_upgrade_mcc.html[Choose a controller upgrade procedure]
 a|
-FC
-a|
-9.8
-a|
-link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Upgrading controllers in a MetroCluster FC configuration using switchover and switchback]
+
+System refresh
 
 a|
-* Scope: Platform (controller modules) only
-* Method: Switchover/switchback
-a|
-IP
-a|
-9.8
-a|
-link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Upgrading controllers in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.8 and later)]
+
+link:../upgrade/concept_choosing_tech_refresh_mcc.html[Choose a system refresh procedure]
 
 a|
-* Scope: Platform (controller modules) and storage shelves
-* Method: Expand the MetroCluster configuration and then remove the old nodes
-a|
-FC
-a|
-9.6 and later
-a|
-link:task_refresh_4n_mcc_fc.html[Refreshing a four-node MetroCluster FC configuration]
-
-a|
-* Scope: Platform (controller modules) and storage shelves
-* Method: Expand the MetroCluster configuration and then remove the old nodes
-a|
-IP
-a|
-9.8
-a|
-link:task_refresh_4n_mcc_ip.html[Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)]
 
 |===
-
-== Choosing a procedure using aggregate relocation
-
-|===
-h| Aggregate relocation procedure h|  MetroCluster type h| First ONTAP version support h| Procedure
-
-a|
-Using `system controller replace` commands and swapping the controller module and NVM
-a|
-FC
-a|
-9.10.1 and later
-a|
-https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade-arl-auto-affa900/index.html[Use "system controller replace" commands to upgrade AFF A700 to AFF A900 running ONTAP 9.10.1 RC2 or later^]
-
-a|
-Using `system controller replace` commands
-a|
-FC
-a|
-9.8 and later
-a|
-https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade-arl-auto-app/index.html[Using "`system controller replace`" commands to upgrade controller hardware running ONTAP 9.8 and later^]
-
-
-a|
-Using `system controller replace` commands
-a|
-FC
-a|
-9.5 through 9.7
-a|
-https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade-arl-auto/index.html[Using "`system controller replace`" commands to upgrade controller hardware running ONTAP 9.5 to ONTAP 9.7^]
-
-a|
-Using manual ARL commands
-a|
-FC
-a|
-9.8
-a|
-https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade-arl-manual-app/index.html[Manually upgrade controller hardware running ONTAP 9.8 and later^]
-
-a|
-Using manual ARL commands
-a|
-FC
-a|
-9.7 and earlier
-a|
-https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade-arl-manual/index.html[Manually upgrade controller hardware running ONTAP 9.7 and earlier^]
-
-|===
-
-
-// BURT 1491888  August 8th, 2022
