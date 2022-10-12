@@ -11,22 +11,33 @@ summary: 'Beginning with ONTAP 9.8, you can use the MetroCluster switchover oper
 [.lead]
 Beginning with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
-.About this task
+== Platforms supported by this procedure
 
 * The platforms must be running ONTAP 9.8 or later.
-* This procedure applies to controller modules in a MetroCluster IP configuration.
-* The supported upgrade path depends on the original platform model.
+* The target (new) platform must be a different model than the original platform.
+
+* Platform models with internal shelves are not supported.
+* You can only upgrade specific platform models using this procedure in a MetroCluster IP configuration. 
+** The following table shows the supported platform model combinations. 
+** If the intersection of the *Current platform* row and *Target platform* column is not green, this procedure cannot be used. 
 +
-Platform models with internal shelves are not supported.
+Refer to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosing_an_upgrade_method_mcc.html[Choosing an upgrade or refresh method] for additional procedures.
 
+[NOTE] 
+====
+* AFF A320 platform models are not supported for upgrade when using BES-53248 IP switches.
+* Upgrades from AFF A700/FAS9000 controllers to AFF A900/FAS9500 controllers are not shown in this table. That combination is supported using the link:task_upgrade_A700_to_A900_in_a_four_node_mcc_fc_us_switchover_and_switchback.html[AFF A700 / FAS9500 switchover/switchback procedure].
+====
 
-NOTE: AFF A320 platform models are not supported for upgrade when using BES-53248 IP switches.
+image::../media/supported_controller_upgrades_mccip_sosb.png[]
 
+== About this task
+
+* This procedure applies to controller modules in a MetroCluster IP configuration.
 * All controllers in the configuration should be upgraded during the same maintenance period.
 +
 Operating the MetroCluster configuration with different controller types is not supported outside of this maintenance activity.
 
-* The new platform must be a different model than the original platform.
 * The IP switches must be running a supported firmware version.
 * If the new platform has fewer slots than the original system, or if it has fewer or different types of ports, you might need to add an adapter to the new system.
 +
@@ -364,12 +375,13 @@ After you install the new nodes, you need to netboot to ensure the new nodes are
  .. Change to the web-accessible directory and verify that the files you need are available.
 +
 
+[cols="1,3"]
 |===
 
 h| If the platform model is... h| Then...
 
 a|
-FAS/AFF8000 series systems
+8000 series systems
 a|
 Extract the contents of the `__ontap-version___image.tgz` file to the target directory:
 
