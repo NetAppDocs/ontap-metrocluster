@@ -11,7 +11,25 @@ summary: 'You can use the MetroCluster switchover operation to provide nondisrup
 [.lead]
 You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
-.About this task
+== Supported platform combinations
+
+You can upgrade certain platforms using the switchover and switchback operation in a MetroCluster FC configuration.
+The following table shows which controller upgrade combinations are supported.
+
+If the intersection of the *Current platform* row and *Target platform* column is not green, this procedure cannot be used. 
+
+Refer to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosing_an_upgrade_method_mcc.html[Choosing an upgrade or refresh method] for additional procedures.
+
+[NOTE] 
+====
+
+* Upgrades from AFF A700/FAS9000 controllers to AFF A900/FAS9500 controllers are not shown in this table. That combination is supported using the link:task_upgrade_A700_to_A900_in_a_four_node_mcc_fc_us_switchover_and_switchback.html[AFF A700 / FAS9500 switchover/switchback procedure].
+* Upgrades from AFF A300 or FAS8200 platforms using onboard ports 0e and 0f as FC-VI connections are supported only on systems running ONTAP versions prior to 9.10.1.
+====
+
+image::supported_controller_upgrades_mccfc_sosb.png[supported controller upgrade combinations in FC configurations]
+
+== About this task
 
 * You can use this procedure only for controller upgrade.
 +
@@ -34,40 +52,6 @@ NOTE: If the original or new platforms are FAS8020 or AFF8020 systems using port
 * All controllers in the same DR group should be upgraded during the same maintenance period.
 +
 Operating the MetroCluster configuration with different controller types in the same DR group is not supported outside of this maintenance activity. For eight-node MetroCluster configurations, the controllers within a DR Group must be the same, but both DR groups can use different controller types.
-
-* The supported upgrade path depends on the original platform model.
-+
-Platform models with internal shelves are not supported.
-+
-
-|===
-
-h| Old platform model h| New platform model
-
-a|
-
- ** FAS80x0
- ** FAS8200
-
-a|
-
- ** FAS8300
-
-
-a|
-
- ** AFF A300
- ** AFF80x0
-
-a|
-
- ** AFF A400
- ** AFF A700
-
-+
-|===
-
-NOTE: Upgrading a FAS8020 or AFF8020 is not supported when using 1c and 1d ports in FC-VI mode.
 
 * Mapping of storage, FC and Ethernet connections between original nodes and new nodes in advance is recommended.
 * If the new platform has fewer slots than the original system, or if it has fewer or different types of ports, you might need to add an adapter to the new system.
