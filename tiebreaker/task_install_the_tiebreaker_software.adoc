@@ -598,10 +598,10 @@ The following provides some guidelines on how to secure and harden the host OS a
 The following gives some guidelines to make the host on which MetroCluster Tiebreaker is installed on.
 
 ** Limit access of the ‘root’ user
-*  You can use users that are able to elevate to root access.
+*  You can use users that are able to elevate to root access to install and administer the MetroCluster Tiebreaker.
 * You can use users that are not able to elevate to root access to administer MetroCluster Tiebreaker.
 ** Use disk encryption
-* You can enable disk encryption. This can be FullDiskEncryption (hardware) or encryption provided by the HostOS (software)
+* You can enable disk encryption. This can be FullDiskEncryption (hardware) or encryption provided by the HostOS (software) or by the SVM host.
 ** Disable unused services that allow incoming connections. Any service that isn’t in use can be disabled. MetroCluster Tiebreaker does not require any service for incoming connections. All connections from MetroCluster Tiebreaker are outgoing.
 Services that might be enabled by default and can be disabled are:
 * HTTP/HTTPS server
@@ -610,14 +610,12 @@ Services that might be enabled by default and can be disabled are:
 * NFS, CIFS, and other protocol access
 * RDP (RemoteDesktopProtocol), X11 Server, VNC or other remote ‘desktop’ service providers.
 +
-NOTE: To update MetroCluster Tiebreaker you need to copy the installation file to host. You can copy this using SCP or HTTP(S) to the host.
-+
-NOTE: you must leave either the serial console access (if supported) or at least one protocol enabled to administer the host on distance. If you disable all protocols, then you require physical access to the host for administration.
+NOTE: You must leave either serial console access (if supported) or at least one protocol enabled to administer the host on distance. If you disable all protocols, then you require physical access to the host for administration.
 ** Secure the host using FIPS
 * You can install the host OS in FIPS compliant mode and then install MetroCluster Tiebreaker.
 +
 NOTE: OpenJDK 8 checks on startup whether the host is installed in FIPS mode. No manual changes should be required.
-
+* You can use multifactor authentication (MFA) to access the host where the MetroCluster Tiebreaker software is installed.
 
 ==== Related information
 .User Management
