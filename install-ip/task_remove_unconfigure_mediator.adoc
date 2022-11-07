@@ -17,10 +17,6 @@ You can unconfigure the ONTAP Mediator service from the MetroCluster IP configur
 
 You must have successfully installed and configured the ONTAP Mediator on a network location that can be reached by both MetroCluster sites.
 
-.About this task
-
-You must perform this task on both clusters in the MetroCluster IP configuration.
-
 .Steps
 
 . Unconfigure the ONTAP Mediator service by using the following command:
@@ -36,5 +32,20 @@ You must perform this task on both clusters in the MetroCluster IP configuration
 ....
 There are no entries matching your query.
 ....
+. Confirm that the ONTAP Mediator service has been removed from the MetroCluster configuration by running the following commands on both clusters:
++
+`metrocluster configuration-settings mediator show`
++
+----
+This table is currently empty.
+----
++
+`storage iscsi-initiator show -label mediator`
++
+----
+There are no entries matching your query.
+----
+
 
 // BURT 1389268, 25 Feb 2022
+// GH issue 183, 07 Nov 2022
