@@ -36,6 +36,9 @@ NOTE: You can only one MetroCluster Tiebreaker monitor per MetroCluster configur
   ** MariaDB 10.x (use the default version that is installed using "yum install mariadb-server.x86_64")
   ** 4 GB RAM
   ** Open Java Runtime Environment 8
+  
+  For systems running Tiebreaker 1.4 and earlier, run Java Runtime Environment 8. For systems running 
+  For systems running Tiebreaker 1.5 and later, run Java Runtime Environment 9. 
 
 
 
@@ -52,6 +55,105 @@ NOTE: You can only one MetroCluster Tiebreaker monitor per MetroCluster configur
 
 // add a bullet here 'ONTAP users must have the following privileges...'
 
+==  Secure the host and database installation 
+For configurations running MetroCluster Tiebreaker 1.5 and later, you can secure and harden the host OS and the database. 
+
+=== Secure the host
+
+The following guidelines show you how to secure the host where the MetroCluster Tiebreaker software is installed.
+
+** Limit access of the ‘root’ user
+*  You can use users that are able to elevate to root access to install and administer the MetroCluster Tiebreaker.
+* You can use users that are not able to elevate to root access to administer MetroCluster Tiebreaker.
++
+NOTE: During installation, a group named 'mcctbgrp' is created. The host root user and the user created during the installation are both members. Only members of this group can fully administer MetroCluster Tiebreaker software.
+* Users who are not members of this group cannot access the MetroClusterTiebreaker software or CLI.
+You can create additional users on the host and make them members of the group. These additional members cannot fully administer MetroCluster Tiebreaker software -- they have ReadOnly access and cannot add, change, or delete monitors.
+
+
+
+
+
+** Use disk encryption
+* You can enable disk encryption. This can be FullDiskEncryption (hardware) or encryption provided by the HostOS (software) or by the SVM host.
+** Disable unused services that allow incoming connections. Any service that isn’t in use can be disabled. MetroCluster Tiebreaker does not require any service for incoming connections. All connections from MetroCluster Tiebreaker are outgoing.
+Services that might be enabled by default and can be disabled are:
+* HTTP/HTTPS server
+* FTP server
+* Telnet and RSH
+* NFS, CIFS, and other protocol access
+* RDP (RemoteDesktopProtocol), X11 Server, VNC or other remote ‘desktop’ service providers.
++
+NOTE: You must leave either serial console access (if supported) or at least one protocol enabled to administer the host on distance. If you disable all protocols, then you require physical access to the host for administration.
+** Secure the host using FIPS
+* You can install the host OS in FIPS compliant mode and then install MetroCluster Tiebreaker.
++
+NOTE: OpenJDK 8 checks on startup whether the host is installed in FIPS mode. No manual changes should be required.
+* You can use multifactor authentication (MFA) to access the host where the MetroCluster Tiebreaker software is installed.
+
+==== Related information
+.User Management
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/assembly_getting-started-with-managing-user-accounts_configuring-basic-system-settings[Getting started with managing user accounts]
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/introduction-to-managing-user-and-group-accounts_configuring-basic-system-settings[Introduction to managing user and group accounts]
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-user-accounts-in-the-web-console-new_configuring-basic-system-settings[Managing user accounts in the web console]
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-users-from-the-command-line_configuring-basic-system-settings[Managing users from the command line]
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/editing-user-groups-using-the-command-line_configuring-basic-system-settings[Editing user groups using the command line]
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-sudo-access_configuring-basic-system-settings[Managing sudo access]
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/changing-and-resetting-the-root-password-from-the-command-line_configuring-basic-system-settings[Managing and resetting the root password]
+
+.Securing the installation
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/security_hardening/index[Security hardening]
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/securing_networks/index[Securing networks]
+
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-system-services-with-systemctl_configuring-basic-system-settings[Managing system services with systemctl]
+
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8[Landing page for RHEL 8 documentation]
+
+.OpenJDK 8
+
+link:https://access.redhat.com/documentation/ru-ru/openjdk/8/html/configuring_openjdk_8_on_rhel_with_fips/config-fips-in-openjdk[Configuring OpenJDK 8 in FIPS mode]
+
+link:https://access.redhat.com/documentation/ru-ru/openjdk/8/html/configuring_openjdk_8_on_rhel_with_fips/openjdk-default-fips-configuration[Default FIPS configuration in OpenJDK 8]
+
+NOTE: If you secure the host, then you must ensure that the host is able to boot without user intervention. If user intervention is required, then MetroCluster Tiebreaker functionality may not be available in case the host unexpectedly reboots. In such case MetroCluster Tiebreaker functionality will only be available after the manual intervention and the host is fully booted.
+
+=== Secure the database installation
+
+The following guidelines show how to secure and harden the MariaDB 10.x database installation.
+
+** Limit the access of the ‘root’ user
+* MetroCluster Tiebreaker uses a dedicated account. The account and tables for storing (configuration) data is created during the installation of MetroCluster Tiebreaker. The only time elevated access to the database is required is during installation.
+** During installation the following access and privileges are required:
++
+* The ability to create a database and tables
+* The ability to create global options. The following global option is required: ** insert option** HERE**
+* The ability to create a database user and set the password
+* The ability to associate the database user with the database and tables and assign access rights.
++
+NOTE: The user account that you specify during MetroCluster Tiebreaker installation must have all these privileges. Using multiple user accounts for the different tasks is not supported.
+** Use encryption of the database
+* We support data-at-rest encryption
+* Data in flight is not encrypted. Data in flight uses a local ‘socks’ file connection.
+* FIPS compliancy for MariaDB -- you do not need to enable FIPS compliancy on the database. Installation the host in FIPS-compliant mode is suffice.
+  
++
+NOTE: If you require encryption, the encryption settings must be enabled before installation the MetroCluster Tiebreaker software.
+
+
+==== Related information
+link:https://mariadb.com/docs/security/data-at-rest-encryption/es/[Data-at-rest encryption for MariaDB server]
+
+
 == Installing MetroCluster Tiebreaker dependencies
 
 You must install a MySQL or MariaDB server depending on the Linux operating system that is your host before installing or upgrading the Tiebreaker software.
@@ -60,6 +162,7 @@ You must install a MySQL or MariaDB server depending on the Linux operating syst
 . Install Java Runtime Environment.
 +
 <<install-java-1-8,Installing Java Runtime Environment 1.8>>
+. Install VAULT.
 
 . Install MySQL or MariaDB server:
 +
@@ -88,9 +191,10 @@ Install MariaDB
 |===
 
 [[install-java-1-8]]
-=== Installing Java Runtime Environment 1.8
+=== Installing Java Runtime Environment
 
-You must install Java Runtime Environment 1.8 on your host system before installing or upgrading the Tiebreaker software.
+You must install Java Runtime Environment (JRE) on your host system before installing or upgrading the Tiebreaker software.For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run JRE 9.
+The example shows JRE 1.8.0
 
 .Steps
 . Log in as `root` user or a user that can sudo to advanced privilege mode.
@@ -102,7 +206,7 @@ root@mcctb's password:
 Last login: Fri Jan  8 21:33:00 2017 from host.domain.com
 ----
 
-. Install Java Runtime Environment 1.8:
+. Install Java Runtime Environment:
 +
 `[root@mcctb ~]# yum install java-1.8.0-openjdk.x86_64`
 +
@@ -131,6 +235,27 @@ Installed:
 java-1.8.0-openjdk.x86_64 1:1.8.0.144-0.b01.el7_4
 Complete!
 ....
+
+=== Install and configure VAULT
+
+NOTE: If you have a VAULT server in your network, you can configure the MetroCluster Tiebreaker host to use that VAULT installation. In this case you do not need to install VAULT on the host.
+
+ 
+
+If you do not have or want to use the local VAULT server, you must install VAULT.
+
+ . Install VAULT steps... (ROHIT to provide)
+ . Install VAULT steps...
+
+. After the VAULT installation perform the following checks:
+
+.. Check that VAULT starts as service on boot.
+.. Check that VAULT automatically unseals on boot
+  OR configure Tiebreaker to unseal VAULT. 
++
+NOTE: You are prompted to use this feature during the installation of MetroCluster Tiebreaker. 
+If you want to change the method to unseal VAULT, then you need to uninstall and reinstall the MetroCluster Tiebreaker software.
+
 
 [[install-mysql-redhat]]
 === Installing MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7
@@ -590,90 +715,6 @@ mariadb.service    enabled
 
 ....
 
-==  Secure the host and database installation 
-The following provides some guidelines on how to secure and harden the host OS and the database.
-
-=== Secure the host
-
-The following gives some guidelines to make the host on which MetroCluster Tiebreaker is installed on.
-
-** Limit access of the ‘root’ user
-*  You can use users that are able to elevate to root access to install and administer the MetroCluster Tiebreaker.
-* You can use users that are not able to elevate to root access to administer MetroCluster Tiebreaker.
-** Use disk encryption
-* You can enable disk encryption. This can be FullDiskEncryption (hardware) or encryption provided by the HostOS (software) or by the SVM host.
-** Disable unused services that allow incoming connections. Any service that isn’t in use can be disabled. MetroCluster Tiebreaker does not require any service for incoming connections. All connections from MetroCluster Tiebreaker are outgoing.
-Services that might be enabled by default and can be disabled are:
-* HTTP/HTTPS server
-* FTP server
-* Telnet and RSH
-* NFS, CIFS, and other protocol access
-* RDP (RemoteDesktopProtocol), X11 Server, VNC or other remote ‘desktop’ service providers.
-+
-NOTE: You must leave either serial console access (if supported) or at least one protocol enabled to administer the host on distance. If you disable all protocols, then you require physical access to the host for administration.
-** Secure the host using FIPS
-* You can install the host OS in FIPS compliant mode and then install MetroCluster Tiebreaker.
-+
-NOTE: OpenJDK 8 checks on startup whether the host is installed in FIPS mode. No manual changes should be required.
-* You can use multifactor authentication (MFA) to access the host where the MetroCluster Tiebreaker software is installed.
-
-==== Related information
-.User Management
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/assembly_getting-started-with-managing-user-accounts_configuring-basic-system-settings[Getting started with managing user accounts]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/introduction-to-managing-user-and-group-accounts_configuring-basic-system-settings[Introduction to managing user and group accounts]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-user-accounts-in-the-web-console-new_configuring-basic-system-settings[Managing user accounts in the web console]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-users-from-the-command-line_configuring-basic-system-settings[Managing users from the command line]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/editing-user-groups-using-the-command-line_configuring-basic-system-settings[Editing user groups using the command line]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-sudo-access_configuring-basic-system-settings[Managing sudo access]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/changing-and-resetting-the-root-password-from-the-command-line_configuring-basic-system-settings[Managing and resetting the root password]
-
-.Securing the installation
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/security_hardening/index[Security hardening]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/securing_networks/index[Securing networks]
-
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-system-services-with-systemctl_configuring-basic-system-settings[Managing system services with systemctl]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8[Landing page for RHEL 8 documentation]
-
-.OpenJDK 8
-
-link:https://access.redhat.com/documentation/ru-ru/openjdk/8/html/configuring_openjdk_8_on_rhel_with_fips/config-fips-in-openjdk[Configuring OpenJDK 8 in FIPS mode]
-
-link:https://access.redhat.com/documentation/ru-ru/openjdk/8/html/configuring_openjdk_8_on_rhel_with_fips/openjdk-default-fips-configuration[Default FIPS configuration in OpenJDK 8]
-
-NOTE: If you secure the host, then you must ensure that the host is able to boot without user intervention. If user intervention is required, then MetroCluster Tiebreaker functionality may not be available in case the host unexpectedly reboots. In such case MetroCluster Tiebreaker functionality will only be available after the manual intervention and the host is fully booted.
-
-=== Secure the database installation
-
-The following guidelines show how to secure and harden the MariaDB 10.x database installation.
-
-** Limit the access of the ‘root’ user
-* MetroCluster Tiebreaker uses a dedicated account. The account and tables for storing (configuration) data is created during the installation of MetroCluster Tiebreaker. The only time elevated access to the database is required is during installation.
-** During installation the following access and privileges are required:
-+
-* The ability to create a database and tables
-* The ability to create a database user and set the password
-* The ability to associate the database user with the database and tables and assign access rights.
-+
-NOTE: The user account that you specify during MetroCluster Tiebreaker installation must have all these privileges. Using multiple user accounts for the different tasks is not supported.
-** Use encryption of the database
-* We support data-at-rest encryption
-* Data in flight is not encrypted. Data in flight uses a local ‘socks’ file connection.
-* Enable FIPS compliancy for MariaDB
-** MetroCluster Tiebreaker can connect to a database that is in FIPS mode [**Tom --- we must check this**]
-
-==== Related information
-link:https://mariadb.com/docs/security/data-at-rest-encryption/es/[Data-at-rest encryption for MariaDB server]
 
 
 [[install-upgrade-sw-pkg]]
@@ -682,9 +723,8 @@ link:https://mariadb.com/docs/security/data-at-rest-encryption/es/[Data-at-rest 
 You must install or upgrade the MetroCluster Tiebreaker software on your local computer to monitor MetroCluster configurations.
 
 * Your storage system must be running ONTAP 8.3.x or later.
-* You must have installed OpenJDK by using the `yum install java-1.8.0-openjdk` command.
+* You must have installed OpenJDK by using the `yum install java-x.x.x-openjdk` command. For MetroCluster Tiebreaker version 1.4 or earlier, run JRE 1.8.0. For MetroCluster Tiebreaker version 1.5 or later, run JRE 1.9.0.
 * You can install MetroCluster Tiebreaker as a non-root user with sufficient administrative privileges to perform the Tiebreaker installation, create tables, users, and set the user password etc.
-* Only one user can run metroCluster Tiebreaker as a non-root user (**Tom -- Confirm**).
 
 .Steps
 . Download the latest version of the MetroCluster Tiebreaker software. This example uses version 1.21P3-1.
