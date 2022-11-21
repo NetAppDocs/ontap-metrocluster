@@ -49,12 +49,12 @@ NOTE: Root aggregates are not deleted.
  +
 `network interface show -home-node _old_node_`
 +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
+`network interface modify -vserver svm-name -lif data-lif -home-node new_node -home-port port-id`
  .. Migrate the cluster management LIF to a home node in another DR group.
 +
 `network interface show -role cluster-mgmt`
 +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
+`network interface modify -vserver svm-name -lif cluster_mgmt -home-node new_node -home-port port-id`
 +
 Node management and inter-cluster LIFs are not migrated.
 
@@ -160,3 +160,4 @@ You must perform this step on each cluster.
 . Halt, power down, and remove the old controller modules and storage shelves.
 
 // 2022 SEPT 26 BURT 1501656
+// 2022-NOV-15 GitHub issue 234 
