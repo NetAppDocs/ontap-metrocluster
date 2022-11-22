@@ -1643,21 +1643,17 @@ cluster01
 . Create intercluster LIFs on the system SVM and assign them to the failover group.
 +
 
-|===
-
-h| ONTAP version h| Command
-
-a|
-9.6 and later
-a|
+[role="tabbed-block"]
+====
+.ONTAP 9.6 and later
+--
 `network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_`
-
-a|
-9.5 and earlier
-a|
+--
+.ONTAP 9.5 and earlier
+--
 `network interface create -vserver _system_SVM_ -lif _LIF_name_ -role intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_`
-
-|===
+--
+====
 +
 For complete command syntax, see the man page.
 +
@@ -1675,17 +1671,17 @@ policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.
 
 . Verify that the intercluster LIFs were created:
 +
-
-|===
-
-h|Option h|Description
-
-a|*In ONTAP 9.6 and later:*
-a|`network interface show -service-policy default-intercluster`
-
-a|*In ONTAP 9.5 and earlier:*
-a|`network interface show -role intercluster`
-|===
+[role="tabbed-block"]
+====
+.In ONTAP 9.6 and later
+--
+Run the command: `network interface show -service-policy default-intercluster`
+--
+.In ONTAP 9.5 and earlier
+--
+Run the command: `network interface show -role intercluster`
+--
+====
 
 +
 For complete command syntax, see the man page.
@@ -1704,23 +1700,23 @@ cluster01
 
 . Verify that the intercluster LIFs are redundant:
 +
-
-|===
-
-h| Option h| Description
-
-|*In ONTAP 9.6 and later:*
-|`network interface show -service-policy default-intercluster -failover`
-
-|*In ONTAP 9.5 and earlier:*
-|`network interface show -role intercluster -failover`
-|===
+[role="tabbed-block"]
+====
+.In ONTAP 9.6 and later
+--
+Ron the command: `network interface show -service-policy default-intercluster -failover`
+--
+.In ONTAP 9.5 and earlier
+--
+Run the command: `network interface show -role intercluster -failover`
+--
+====
 
 +
 For complete command syntax, see the man page.
-
-The following example shows that the intercluster LIFs "cluster01_icl01" and "cluster01_icl02" on the SVM "e0e" port will fail over to the "e0f" port.
 +
+The following example shows that the intercluster LIFs "cluster01_icl01" and "cluster01_icl02" on the SVM "e0e" port will fail over to the "e0f" port.
+
 ----
 cluster01::> network interface show -service-policy default-intercluster –failover
          Logical         Home                  Failover        Failover
@@ -1776,22 +1772,24 @@ cluster01-02
 
 . Create intercluster LIFs on the system SVM:
 +
-[cols="1,3"]
-|===
-
-h|Option h|Description
-
-a|*In ONTAP 9.6 and later:*
-a|`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
-a|
-*In ONTAP 9.5 and earlier:*
-a|
+[role="tabbed-block"]
+====
+.In ONTAP 9.6 and later
+--
+Run the command: `network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
+--
+.In ONTAP 9.5 and earlier
+--
+Run the command:
 `network interface create -vserver system_SVM -lif LIF_name -role intercluster -home-node node -home-port port -address port_IP -netmask netmask`
-|===
-For complete command syntax, see the man page.
+--
+====
+
 +
+For complete command syntax, see the man page.
 The following example creates intercluster LIFs cluster01_icl01 and cluster01_icl02:
 +
+
 ----
 
 cluster01::> network interface create -vserver cluster01 -lif cluster01_icl01 -service-
@@ -1805,20 +1803,18 @@ policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.
 
 . Verify that the intercluster LIFs were created:
 +
-[cols="1,3"]
-|===
-
-h|Option h|Description
-
-a|*In ONTAP 9.6 and later*:
-a|
-`network interface show -service-policy default-intercluster`
-a|
-*In ONTAP 9.5 and earlier:*
-a|
-`network interface show -role intercluster`
-|===
-
+[role="tabbed-block"]
+====
+.In ONTAP 9.6 and later
+--
+Run the command: `network interface show -service-policy default-intercluster`
+--
+.In ONTAP 9.5 and earlier
+--
+Run the command: `network interface show -role intercluster`
+--
+====
++
 For complete command syntax, see the man page.
 +
 ----
@@ -1835,23 +1831,21 @@ cluster01
 
 . Verify that the intercluster LIFs are redundant:
 +
-[cols="1,3"]
-|===
-
-h| Option h| Description
-
-a|
-*In ONTAP 9.6 and later:*
-a|
-`network interface show –service-policy default-intercluster -failover`
-a|
-*In ONTAP 9.5 and earlier:*
-a|
+[role="tabbed-block"]
+====
+.In ONTAP 9.6 and later
+--
+Run the command: `network interface show –service-policy default-intercluster -failover`
+--
+.In ONTAP 9.5 and earlier
+--
+Run the command: 
 `network interface show -role intercluster -failover`
-|===
-
+--
+====
++
 For complete command syntax, see the man page.
-
++
 The following example shows that the intercluster LIFs "cluster01_icl01" and "cluster01_icl02" on the "e0c" port will fail over to the "e0d" port.
 +
 ----
