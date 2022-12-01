@@ -30,7 +30,7 @@ You can use this method if your configuration meets the following requirements:
 
 If you do not meet these requirements, then you cannot use the CleanUpFiles that are created when generating the RCF files. However, you can leverage the function to create generic CleanUpFiles -- the cleanup using this method is derived from the output of `show running-config` and is best practice.
 +
-NOTE: You must update the switches in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2. Or, you can update the switches Switch_A_1 and Switch_A_2 at the same time followed by switches Switch_B_1 and Switch_B_2.
+NOTE: You must update the switches in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2. Or, you can update the switches Switch_A_1 and Switch_B_1 at the same time followed by switches Switch_A_2 and Switch_B_2.
 
 .Steps
 
@@ -227,6 +227,8 @@ IP_switch_A_1# copy sftp://user@50.50.50.50/RcfFiles/NX9336-direct-SAS_v1.81_Met
 IP_switch_A_1# copy sftp://user@50.50.50.50/RcfFiles/NX9336-direct-SAS_v1.90_MetroCluster-IP_L2Direct_A400FAS8700A900FAS9500_xxx_xxx_xxx_xxxNX9336_v1.90//NX9336_v1.90_Switch-A1.txt bootflash:
 IP_switch_A_1# copy sftp://user@50.50.50.50/RcfFiles/NX9336-direct-SAS_v1.90_MetroCluster-IP_L2Direct_A400FAS8700A900FAS9500_xxx_xxx_xxx_xxxNX9336_v1.90//Cleanup_NX9336_v1.90_Switch-A1.txt bootflash:
 ----
++
+NOTE: You are prompted to specify Virtual Routing and Forwarding (VRF).
 
 . Apply the CleanUpFile or generic CleanUpFile.
 +
@@ -299,3 +301,4 @@ IP_switch_A_1# reload
 
 // BURT 1464507 Mar 2022
 // Issue 199, 22 Aug 2022
+// 2022-NOV-21, GH issue 223
