@@ -193,7 +193,7 @@ Install MariaDB
 [[install-java-1-8]]
 === Installing Java Runtime Environment
 
-You must install JRE on your host system before installing or upgrading the Tiebreaker software.For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run JRE 9.
+You must install JRE on your host system before installing or upgrading the Tiebreaker software.For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run jdk 19.
 The outputs in the example show JRE 1.8.0. (JRE 8).
 
 .Steps
@@ -244,14 +244,227 @@ NOTE: If you have a VAULT server in your network, you can configure the MetroClu
 
 If you do not have or want to use the local VAULT server, you must install VAULT.
 
- . Install VAULT steps... (ROHIT to provide)
- . Install VAULT steps...
+.Steps
 
-. After the VAULT installation perform the following checks:
+. Create a directory and move into the directory.
++
+--
+[root@mcctb ~]#  mkdir -p /usr/src/vault
+[root@mcctb ~]# cd /usr/src/vault/
+--
+ 
+. Download the Vault zip file.
++
+--
+[root@mcctb vault]#  curl -sO https://releases.hashicorp.com/vault/1.12.2/vault_1.12.2_linux_amd64.zip
+--
+ 
+. Unzip the Vault file.
++
+--
+[root@mcctb vault]# unzip vault_1.12.2_linux_amd64.zip
+Archive:  vault_1.12.2_linux_amd64.zip
+  inflating: vault
+--  
+. Move the folder to the correct file path.
++
+--
+   
+[root@mcctb vault]# mv vault /usr/local/bin/
+--
+ 
+. Verify the installation
++
+--
+[root@mcctb vault]# vault -version
+Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53:46Z
+--
+ 
+. Create a vault configuration file.
++
+--
+[root@mcctb ~]# cat > config.hcl << EOF
+ storage "file" {
+  address = "127.0.0.1:8500"
+  path    = "/mcctb_vdata/data"
+ }
+ listener "tcp" {
+   address     = "127.0.0.1:8200"
+   tls_disable = 1
+ }
+EOF
+--
 
-.. Check that VAULT starts as service on boot.
-.. Check that VAULT automatically unseals on boot
-  OR configure Tiebreaker to unseal VAULT. 
+. Start the Vault server.
++
+--
+vault server -config config.hcl &
+-- 
+. Export the Vault address.
++
+--
+[root@mcctb ~]# export VAULT_ADDR="http://127.0.0.1:8200"
+--
+. Initialize Vault.
++
+--
+[root@mcctb ~]# vault operator init
+2022-12-15T14:57:22.113+0530 [INFO]  core: security barrier not initialized
+2022-12-15T14:57:22.113+0530 [INFO]  core: seal configuration missing, not initialized
+2022-12-15T14:57:22.114+0530 [INFO]  core: security barrier not initialized
+2022-12-15T14:57:22.116+0530 [INFO]  core: security barrier initialized: stored=1 shares=5 threshold=3
+2022-12-15T14:57:22.118+0530 [INFO]  core: post-unseal setup starting
+2022-12-15T14:57:22.137+0530 [INFO]  core: loaded wrapping token key
+2022-12-15T14:57:22.137+0530 [INFO]  core: Recorded vault version: vault version=1.12.2 upgrade time="2022-12-15 09:27:22.137200412 +0000 UTC" build date=2022-11-23T12:53:46Z
+2022-12-15T14:57:22.137+0530 [INFO]  core: successfully setup plugin catalog: plugin-directory=""
+2022-12-15T14:57:22.137+0530 [INFO]  core: no mounts; adding default mount table
+2022-12-15T14:57:22.143+0530 [INFO]  core: successfully mounted backend: type=cubbyhole version="" path=cubbyhole/
+2022-12-15T14:57:22.144+0530 [INFO]  core: successfully mounted backend: type=system version="" path=sys/
+2022-12-15T14:57:22.144+0530 [INFO]  core: successfully mounted backend: type=identity version="" path=identity/
+2022-12-15T14:57:22.148+0530 [INFO]  core: successfully enabled credential backend: type=token version="" path=token/ namespace="ID: root. Path: "
+2022-12-15T14:57:22.149+0530 [INFO]  rollback: starting rollback manager
+2022-12-15T14:57:22.149+0530 [INFO]  core: restoring leases
+2022-12-15T14:57:22.150+0530 [INFO]  expiration: lease restore complete
+2022-12-15T14:57:22.150+0530 [INFO]  identity: entities restored
+2022-12-15T14:57:22.150+0530 [INFO]  identity: groups restored
+2022-12-15T14:57:22.151+0530 [INFO]  core: usage gauge collection is disabled
+2022-12-15T14:57:23.385+0530 [INFO]  core: post-unseal setup complete
+2022-12-15T14:57:23.387+0530 [INFO]  core: root token generated
+2022-12-15T14:57:23.387+0530 [INFO]  core: pre-seal teardown starting
+2022-12-15T14:57:23.387+0530 [INFO]  rollback: stopping rollback manager
+2022-12-15T14:57:23.387+0530 [INFO]  core: pre-seal teardown complete
+Unseal Key 1: Ay/dLJt0WkpN1U61wPKsm6A9Bo4eHj0D0bnepg7s7ofG
+Unseal Key 2: QRp2tFJnTZVvauP5s634xpIdN/4osFkau27zYBWon46I
+Unseal Key 3: yBwDjn4dQE/7QjmujIR3vg/qfRDhE+a9ovsqPZrbxsNp
+Unseal Key 4: wgEfK7Zj5RcIQSFGOFwHuMeF+4MN9bhda9VYw0+qPmhh
+Unseal Key 5: p1guqJwNi4/TjsgX2k1iHBgvvMAoPXcsyReKQVTRBYYw
+ 
+Initial Root Token: hvs.YB3HbTPCsXrl5QTf2L6zthD7
+ 
+Vault initialized with 5 key shares and a key threshold of 3. Please securely
+distribute the key shares printed above. When the Vault is re-sealed,
+restarted, or stopped, you must supply at least 3 of these keys to unseal it
+before it can start servicing requests.
+ 
+Vault does not store the generated root key. Without at least 3 keys to
+reconstruct the root key, Vault will remain permanently sealed!
+ 
+It is possible to generate new unseal keys, provided you have a quorum of
+existing unseal keys shares. See "vault operator rekey" for more information.
+--
+ 
+. Unseal Vault using any of the three keys that were created.
++
+--
+ 
+[root@mcctb ~]# vault operator unseal
+Unseal Key (will be hidden):
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    1/3
+Unseal Nonce       d45a3848-8338-febc-2e0b-b72b76ef3394
+Version            1.12.2
+Build Date         2022-11-23T12:53:46Z
+Storage Type       file
+HA Enabled         false
+[root@mcctb ~]# vault operator unseal
+Unseal Key (will be hidden):
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    2/3
+Unseal Nonce       d45a3848-8338-febc-2e0b-b72b76ef3394
+Version            1.12.2
+Build Date         2022-11-23T12:53:46Z
+Storage Type       file
+HA Enabled         false
+[root@mcctb ~]# vault operator unseal
+Unseal Key (will be hidden):
+2022-12-15T15:15:00.980+0530 [INFO]  core.cluster-listener.tcp: starting listener: listener_address=127.0.0.1:8201
+2022-12-15T15:15:00.980+0530 [INFO]  core.cluster-listener: serving cluster requests: cluster_listen_address=127.0.0.1:8201
+2022-12-15T15:15:00.981+0530 [INFO]  core: post-unseal setup starting
+2022-12-15T15:15:00.981+0530 [INFO]  core: loaded wrapping token key
+2022-12-15T15:15:00.982+0530 [INFO]  core: successfully setup plugin catalog: plugin-directory=""
+2022-12-15T15:15:00.983+0530 [INFO]  core: successfully mounted backend: type=system version="" path=sys/
+2022-12-15T15:15:00.984+0530 [INFO]  core: successfully mounted backend: type=identity version="" path=identity/
+2022-12-15T15:15:00.984+0530 [INFO]  core: successfully mounted backend: type=cubbyhole version="" path=cubbyhole/
+2022-12-15T15:15:00.986+0530 [INFO]  core: successfully enabled credential backend: type=token version="" path=token/ namespace="ID: root. Path: "
+2022-12-15T15:15:00.986+0530 [INFO]  rollback: starting rollback manager
+2022-12-15T15:15:00.987+0530 [INFO]  core: restoring leases
+2022-12-15T15:15:00.987+0530 [INFO]  expiration: lease restore complete
+2022-12-15T15:15:00.987+0530 [INFO]  identity: entities restored
+2022-12-15T15:15:00.987+0530 [INFO]  identity: groups restored
+2022-12-15T15:15:00.988+0530 [INFO]  core: usage gauge collection is disabled
+2022-12-15T15:15:00.989+0530 [INFO]  core: post-unseal setup complete
+2022-12-15T15:15:00.989+0530 [INFO]  core: vault is unsealed
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    5
+Threshold       3
+Version         1.12.2
+Build Date      2022-11-23T12:53:46Z
+Storage Type    file
+Cluster Name    vault-cluster-2d3ed3b4
+Cluster ID      fc47f0fd-135d-39a1-7a7c-97c7c4710166
+HA Enabled      false
+--
+ 
+ 
+. Verify that the Vault sealed status is false.
++
+--
+[root@mcctb ~]# vault status
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    5
+Threshold       3
+Version         1.12.2
+Build Date      2022-11-23T12:53:46Z
+Storage Type    file
+Cluster Name    vault-cluster-2d3ed3b4
+Cluster ID      fc47f0fd-135d-39a1-7a7c-97c7c4710166
+HA Enabled      false
+--
+ 
+ 
+. Ensure the Vault service starts on the host during boot.
++
+--
+[root@mcctb ~]#  cd /etc/systemd/system
+[root@mcctb system]# cat > vault.service << EOF
+> [Unit]
+> Description=Vault Service
+> After=mariadb.service
+>
+> [Service]
+> Type=forking
+> ExecStart=/usr/bin/vault server -config /root/config.hcl &
+> Restart=on-failure
+>
+> [Install]
+> WantedBy=multi-user.target
+> EOF
+[root@mcctb system]#  systemctl daemon-reload
+ 
+[root@mcctb system]#  systemctl enable vault.service
+Created symlink /etc/systemd/system/multi-user.target.wants/vault.service → /etc/systemd/system/vault.service.
+--
+
 +
 NOTE: You are prompted to use this feature during the installation of MetroCluster Tiebreaker. 
 If you want to change the method to unseal VAULT, then you need to uninstall and reinstall the MetroCluster Tiebreaker software.
@@ -878,3 +1091,4 @@ You should use a local Network Time Protocol (NTP) source for the Tiebreaker sof
 // 20 OCT 2021, BURT 1288643
 // 17 NOV 2021, BURT 1369211
 // 15 MAR 2022, BURTs 1463677 and 1463465
+// 2022-DEC-15, BURT 1498844
