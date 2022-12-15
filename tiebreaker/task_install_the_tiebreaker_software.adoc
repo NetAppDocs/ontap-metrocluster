@@ -274,41 +274,41 @@ If you do not have or want to use the local VAULT server, you must install VAULT
 
 . Create a directory and move into the directory.
 +
---
+----
 [root@mcctb ~]#  mkdir -p /usr/src/vault
 [root@mcctb ~]# cd /usr/src/vault/
---
+----
  
 . Download the Vault zip file.
 +
---
+----
 [root@mcctb vault]#  curl -sO https://releases.hashicorp.com/vault/1.12.2/vault_1.12.2_linux_amd64.zip
---
+----
  
 . Unzip the Vault file.
 +
---
+----
 [root@mcctb vault]# unzip vault_1.12.2_linux_amd64.zip
 Archive:  vault_1.12.2_linux_amd64.zip
   inflating: vault
---  
+----
 . Move the folder to the correct file path.
 +
---
+----
    
 [root@mcctb vault]# mv vault /usr/local/bin/
---
+----
  
 . Verify the installation
 +
---
+----
 [root@mcctb vault]# vault -version
 Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53:46Z
---
+----
  
 . Create a vault configuration file.
 +
---
+----
 [root@mcctb ~]# cat > config.hcl << EOF
  storage "file" {
   address = "127.0.0.1:8500"
@@ -319,21 +319,21 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
    tls_disable = 1
  }
 EOF
---
+----
 
 . Start the Vault server.
 +
---
+----
 vault server -config config.hcl &
--- 
+----
 . Export the Vault address.
 +
---
+----
 [root@mcctb ~]# export VAULT_ADDR="http://127.0.0.1:8200"
---
+----
 . Initialize Vault.
 +
---
+----
 [root@mcctb ~]# vault operator init
 2022-12-15T14:57:22.113+0530 [INFO]  core: security barrier not initialized
 2022-12-15T14:57:22.113+0530 [INFO]  core: seal configuration missing, not initialized
@@ -377,11 +377,11 @@ reconstruct the root key, Vault will remain permanently sealed!
  
 It is possible to generate new unseal keys, provided you have a quorum of
 existing unseal keys shares. See "vault operator rekey" for more information.
---
+----
  
 . Unseal Vault using any of the three keys that were created.
 +
---
+----
  
 [root@mcctb ~]# vault operator unseal
 Unseal Key (will be hidden):
@@ -445,12 +445,12 @@ Storage Type    file
 Cluster Name    vault-cluster-2d3ed3b4
 Cluster ID      fc47f0fd-135d-39a1-7a7c-97c7c4710166
 HA Enabled      false
---
+----
  
  
 . Verify that the Vault sealed status is false.
 +
---
+----
 [root@mcctb ~]# vault status
 Key             Value
 ---             -----
@@ -465,12 +465,12 @@ Storage Type    file
 Cluster Name    vault-cluster-2d3ed3b4
 Cluster ID      fc47f0fd-135d-39a1-7a7c-97c7c4710166
 HA Enabled      false
---
+----
  
  
 . Ensure the Vault service starts on the host during boot.
 +
---
+----
 [root@mcctb ~]#  cd /etc/systemd/system
 [root@mcctb system]# cat > vault.service << EOF
 > [Unit]
@@ -489,7 +489,7 @@ HA Enabled      false
  
 [root@mcctb system]#  systemctl enable vault.service
 Created symlink /etc/systemd/system/multi-user.target.wants/vault.service → /etc/systemd/system/vault.service.
---
+----
 
 +
 NOTE: You are prompted to use this feature during the installation of MetroCluster Tiebreaker. 
