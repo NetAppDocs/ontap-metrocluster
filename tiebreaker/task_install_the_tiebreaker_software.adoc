@@ -66,7 +66,7 @@ The following guidelines show you how to secure the host where the MetroCluster 
 *  You can use users that are able to elevate to root access to install and administer the MetroCluster Tiebreaker.
 * You can use users that are not able to elevate to root access to administer MetroCluster Tiebreaker.
 +
-NOTE: During installation, a group named 'mcctbgrp' is created. The host root user and the user created during the installation are both members. Only members of this group can fully administer MetroCluster Tiebreaker software.
+NOTE: During installation, you should create a group named 'mcctbgrp'. The host root user and the user created during the installation are both members. Only members of this group can fully administer MetroCluster Tiebreaker software.
 * Users who are not members of this group cannot access the MetroClusterTiebreaker software or CLI.
 You can create additional users on the host and make them members of the group. These additional members cannot fully administer MetroCluster Tiebreaker software -- they have ReadOnly access and cannot add, change, or delete monitors.
 
@@ -88,8 +88,33 @@ NOTE: You must leave either serial console access (if supported) or at least one
 ** Secure the host using FIPS
 * You can install the host OS in FIPS compliant mode and then install MetroCluster Tiebreaker.
 +
-NOTE: OpenJDK 8 checks on startup whether the host is installed in FIPS mode. No manual changes should be required.
-* You can use multifactor authentication (MFA) to access the host where the MetroCluster Tiebreaker software is installed.
+NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. No manual changes should be required.
+
+** Baseline recommendations 
+
+  
+
+* Do not run as root. Use a dedicated, unprivileged service account to run MetroCluster Tiebreaker. 
+
+  
+
+* Allow minimal write privileges. The unprivileged MetroCluster Tiebreaker service account should not have access to overwrite its executable binary or any  configuration files. Only directories and files for local MetroCluster Tiebreaker storage (eg., for the Integrated Storage backend) or audit logs should be writable by the MetroCluster Tiebreaker user. 
+
+* End-to-End TLS. MetroCluster Tiebreaker should always be used with TLS in production. If intermediate load balancers or reverse proxies are used to front MetroCluster Tiebreaker, you should use TLS for all network connections between every component of the system (including Storage Backends) to ensure all traffic is encrypted in transit to and from MetroCluster Tiebreaker. When possible, you should set the HTTP Strict Transport Security (HSTS) header by using MetroCluster Tiebreaker's custom response headers feature. 
+
+  
+
+* Disable Shell Command History.  
+
+* Upgrade Frequently. MetroCluster Tiebreaker is actively developed, and updating frequently is important to incorporate security fixes and any changes in default settings such as key lengths or cipher suites. Subscribe to the HashiCorp Announcement mailing list to receive announcements of new releases and visit the MetroCluster Tiebreaker CHANGELOG for details on what changes are being made in each release. 
+
+  
+
+* Use the correct Filesystem permissions. Always ensure appropriate permissions are applied to files before starting theMetroCluster Tiebreaker software, especially those containing sensitive information. 
+
+  
+
+* Multifactor authentication (MFA) enhances your organization's security by requiring your users to identify themselves by more than a username and password. While important, usernames and passwords are vulnerable to brute force attacks and can be stolen by third parties. RHEL 8 provides Multi-factor authentication that requires users to provide more than one piece of information to authenticate successfully to an account or Linux host. The additional information may be a one-time password (OTP) sent to your cell phone via SMS or credentials from an app like Google Authenticator, Twilio Authy, or FreeOTP. 
 
 ==== Related information
 .User Management
@@ -108,7 +133,6 @@ link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/ht
 
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/changing-and-resetting-the-root-password-from-the-command-line_configuring-basic-system-settings[Managing and resetting the root password]
 
-.Securing the installation
 
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/security_hardening/index[Security hardening]
 
@@ -118,10 +142,6 @@ link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/ht
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-system-services-with-systemctl_configuring-basic-system-settings[Managing system services with systemctl]
 
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8[Landing page for RHEL 8 documentation]
-
-.OpenJDK 8
-
-link:https://access.redhat.com/documentation/ru-ru/openjdk/8/html/configuring_openjdk_8_on_rhel_with_fips/config-fips-in-openjdk[Configuring OpenJDK 8 in FIPS mode]
 
 link:https://access.redhat.com/documentation/ru-ru/openjdk/8/html/configuring_openjdk_8_on_rhel_with_fips/openjdk-default-fips-configuration[Default FIPS configuration in OpenJDK 8]
 
@@ -152,6 +172,9 @@ NOTE: If you require encryption, the encryption settings must be enabled before 
 
 ==== Related information
 link:https://mariadb.com/docs/security/data-at-rest-encryption/es/[Data-at-rest encryption for MariaDB server]
+
+Securing the Vault installation: 
+HashiCorp Vault security recommendations (link?)
 
 
 == Installing MetroCluster Tiebreaker dependencies
