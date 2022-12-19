@@ -2,31 +2,48 @@
 permalink: install-ip/concept_considerations_mc_compliant_switches.html
 sidebar: sidebar
 keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant
-summary: Beginning with ONTAP 9.7, MetroCluster IP configurations can support switches that are not NetApp-validated provided that they are compliant with NetApp specifications.
+summary: MetroCluster IP switches that are listed as supported switches in the link:https://hwu.netapp.com/[NetApp HardWare Universe^] and provided by NetApp are NetApp-validated. Beginning with ONTAP 9.7, MetroCluster IP configurations can use MetroCluster-compliant switches. These are switches that are not NetApp-validated but are compliant with NetApp specifications. However, NetApp does not provide support services, troubleshooting and/or configuration for any non-validated switch.
+
 ---
 = Considerations for using MetroCluster-compliant switches
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-MetroCluster IP switches provided by NetApp are NetApp-validated. Beginning with ONTAP 9.7, MetroCluster IP configurations can support switches that are not NetApp-validated provided that they are compliant with NetApp specifications.
+MetroCluster IP switches that are listed as supported switches in the link:https://hwu.netapp.com/[NetApp HardWare Universe^] and provided by NetApp are NetApp-validated. Beginning with ONTAP 9.7, MetroCluster IP configurations can use MetroCluster-compliant switches. These are switches that are not NetApp-validated but are compliant with NetApp specifications. However, NetApp does not provide support services, troubleshooting and/or configuration for any non-validated switch. 
 
-== General requirements
+== NetApp-validated switches
+
+A switch is NetApp validated if it meets all the following:
+
+*	The switch is provided by NetApp as part of the MetroCluster IP configuration
+* The switch is listed in link:https://hwu.netapp.com/[NetApp HardWare Universe^] as a supported switch under “MetroCluster-over-IP-connections”
+*	The switch is only used to connect MetroCluster IP controllers and, in some configurations, NS224 drive shelves
+*	The switch is configured using the NetApp provided RCF (Reference Configuration File)
+
+Any switch not meeting these criteria is *not* a NetApp-validated switch. 
+
+== MetroCluster-compliant switches
+A MetroCluster-compliant switch is not NetApp-validated but can be used in a MetroCluster IP configuration if it meets the below requirements and configuration guidelines.
+
+NOTE: NetApp does not provide support services, troubleshooting and/or configuration for any non-validated MetroCluster-compliant switch.
+
+== General requirements for MetroCluster-compliant switches
 
 The requirements show how to configure MetroCluster-compliant switches without using reference configuration (RCF) files.
 
 * The switches connecting to the MetroCluster nodes can carry non-MetroCluster traffic.
 //GitHub issue 100 /21/12/2021
-* Only platforms that provide dedicated ports for switchless cluster interconnects are supported. Platforms such as FAS2750 and AFF A220 are not supported because MetroCluster traffic and MetroCluster interconnect traffic share the same network ports.
+* Only platforms that provide dedicated ports for switchless cluster interconnects can be used with a MetroCluster-compliant switch. Platforms such as the FAS2750 and AFF A220 cannot be used because MetroCluster traffic and MetroCluster interconnect traffic share the same network ports.
 +
-Connecting local cluster connections to a MetroCluster-compliant switch is not supported.
+The MetroCluster-compliant switch must not be used for local cluster connections.
 
 * The MetroCluster IP interface can be connected to any switch port that can be configured to meet the requirements.
 * The speed of the switch ports must be 25 Gbps for FAS8200 and AFF A300 platforms, and at least 40 Gbps for all other platforms (40 Gbps or 100 Gbps).
 * Four IP switches are required, two for each switch fabric.
 //ontap-metrocluster/issues/82 2021.11.21
 * The ISLs must be 10 Gbps or higher and must be sized appropriately for the load on the MetroCluster configuration.
-* The MetroCluster configuration must be connected to two networks. Connecting both the MetroCluster interfaces to the same network or switch is not supported. Each MetroCluster node must be connected to two network switches.
+* The MetroCluster configuration must be connected to two networks. The MetroCluster interfaces cannot be connected to the same network or switch. Each MetroCluster node must be connected to two network switches.
 * The network must meet the following requirements:
 ** link:../install-ip/concept_considerations_isls.html#basic-metrocluster-isl-requirements[Basic MetroCluster ISL requirements]
 ** link:../install-ip/concept_considerations_isls.html#isl-requirements-in-shared-layer-2-networks[ISL requirements in shared layer 2 networks]
@@ -34,7 +51,7 @@ Connecting local cluster connections to a MetroCluster-compliant switch is not s
 * In MetroCluster IP configurations using MetroCluster-compliant switches, reverting to ONTAP 9.6 or earlier is not supported.
 * The MTU of 9216 must be configured on all switches that carry MetroCluster IP traffic.
 
-== Switch and cabling requirements
+== Switch and cabling requirements for MetroCluster-compliant switches
 
 * The switches must support QoS/traffic classification.
 * The switches must support explicit congestion notification (ECN).
@@ -42,9 +59,9 @@ Connecting local cluster connections to a MetroCluster-compliant switch is not s
 * The switches must support L2 Flow Control (L2FC).
 * The cables connecting the nodes to the switches must be purchased from NetApp. The cables we provide must be supported by the switch vendor.
 
-== Limitations
+== Limitations to MetroCluster-compliant switches
 
-Any configuration or feature that requires that the local cluster connections are connected to a switch is not supported. For example, the following configurations and procedures are not supported:
+Any configuration or feature that requires that the local cluster connections are connected to a switch cannot be used. For example, the following configurations and procedures cannot be used with a MetroCluster-compliant switch:
 
 * Eight-node MetroCluster configurations
 * Transitioning from MetroCluster FC to MetroCluster IP configurations
@@ -54,7 +71,7 @@ Any configuration or feature that requires that the local cluster connections ar
 
 The following table provides platform-specific network speeds and switch port modes for MetroCluster compliant switches. You should configure the switch port mode as outlined in the table.
 
-NOTE: Missing values indicate that the platform is not supported.
+NOTE: Missing values indicate that the platform cannot be used with a MetroCluster-compliant switch.
 
 |===
 
@@ -244,7 +261,7 @@ class type queuing c-out-8q-q-default
   random-detect threshold burst-optimized ecn
 ----
 
-You need to configure a switch that has MetroCluster traffic on an ISL but does not connect to any MetroCluster interfaces. In this case, the traffic is already classified and only needs to be mapped to the appropriate queue. In the following example, all of the COS5 traffic is mapped to the class RDMA, and all of the COS4 traffic is mapped to the class iSCSI. Note that this will affect *all* of the COS5 and COS4 traffic, not only the MetroCluster traffic. If you only want to map the MetroCluster traffic, then you must use the above class maps to identify the traffic using the access groups.
+You may need to configure a switch that has MetroCluster traffic on an ISL but does not connect to any MetroCluster interfaces. In this case, the traffic is already classified and only needs to be mapped to the appropriate queue. In the following example, all of the COS5 traffic is mapped to the class RDMA, and all of the COS4 traffic is mapped to the class iSCSI. Note that this will affect *all* of the COS5 and COS4 traffic, not only the MetroCluster traffic. If you only want to map the MetroCluster traffic, then you must use the above class maps to identify the traffic using the access groups.
 
 Example:
 
@@ -365,5 +382,6 @@ fec off
 
 NOTE: You must always run this command *after* the interface is configured. A transceiver module might need to be inserted for the command to work.
 
+//rewrite December 13 2022
 //BURT 1484617 June 15th 2022
 // GitHub issue 164, August 9th 2022
