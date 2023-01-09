@@ -504,15 +504,15 @@ cluster_A::>
 
 . Mirror the root aggregates:
 +
-`storage aggregate mirror -aggregate aggr0_node_A_3-IP`
+`storage aggregate mirror -aggregate aggr0_node_A_3_IP`
 +
 NOTE: You must complete this step on each MetroCluster IP node.
 +
 
 ....
-cluster_A::> aggr mirror -aggregate aggr0_node_A_3-IP
+cluster_A::> aggr mirror -aggregate aggr0_node_A_3_IP
 
-Info: Disks would be added to aggregate "aggr0_node_A_3-IP"on node "node_A_3-IP"
+Info: Disks would be added to aggregate "aggr0_node_A_3_IP"on node "node_A_3-IP"
       in the following manner:
 
       Second Plex
@@ -541,19 +541,19 @@ cluster_A::> aggr show
 
 Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
 --------- -------- --------- ----- ------- ------ ---------------- ------------
-aggr0_node_A_1-FC
+aggr0_node_A_1_FC
            349.0GB   16.84GB   95% online       1 node_A_1-FC      raid_dp,
                                                                    mirrored,
                                                                    normal
-aggr0_node_A_2-FC
+aggr0_node_A_2_FC
            349.0GB   16.84GB   95% online       1 node_A_2-FC      raid_dp,
                                                                    mirrored,
                                                                    normal
-aggr0_node_A_3-IP
+aggr0_node_A_3_IP
            467.6GB   22.63GB   95% online       1 node_A_3-IP      raid_dp,
                                                                    mirrored,
                                                                    normal
-aggr0_node_A_4-IP
+aggr0_node_A_4_IP
            467.6GB   22.62GB   95% online       1 node_A_4-IP      raid_dp,
                                                                    mirrored,
                                                                    normal
@@ -621,12 +621,12 @@ cluster_A::>
 NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
 +
 
-The following example shows the creation of an aggregate on node_A_1-new.
+The following example shows the creation of an aggregate on node_A_3-IP.
 +
 ....
-cluster_A::> storage aggregate create -aggregate data_a3 -node node_A_1-new -diskcount 10 -mirror t
+cluster_A::> storage aggregate create -aggregate data_a3 -node node_A_3-IP -diskcount 10 -mirror t
 
-Info: The layout for aggregate "data_a3" on node "node_A_1-new" would be:
+Info: The layout for aggregate "data_a3" on node "node_A_3-IP" would be:
 
       First Plex
 
