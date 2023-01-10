@@ -278,13 +278,15 @@ Complete!
 ....
 
 [[install-vault]]
-=== Install and configure VAULT
+=== Install and configure Vault
+
+If you do not have or want to use the local Vault server, you must install Vault.
 
 NOTE: If you have a Vault server in your network, you can configure the MetroCluster Tiebreaker host to use that Vault installation. In this case you do not need to install Vault on the host.
 
  
 
-If you do not have or want to use the local Vault server, you must install Vault.
+
 
 .Steps
 
@@ -484,7 +486,7 @@ HA Enabled      false
 ----
  
  
-. Ensure the Vault service starts on the host during boot.
+. Verify the Vault service starts on the host during boot.
 +
 ----
 [root@mcctb ~]#  cd /etc/systemd/system
@@ -805,7 +807,7 @@ If the MySQL login is working, the output will end at the `mysql>` prompt.
 
 ==== Enabling the MySQL autostart setting
 
-You should ensure that the autostart feature is turned on for the MySQL deamon. Turning on the MySQL daemon automatically restarts MySQL if the system on which the MetroCluster Tiebreaker software resides reboots. If the MySQL daemon is not running, the Tiebreaker software continues running, but it cannot be restarted and configuration changes cannot be made.
+You should verify that the autostart feature is turned on for the MySQL deamon. Turning on the MySQL daemon automatically restarts MySQL if the system on which the MetroCluster Tiebreaker software resides reboots. If the MySQL daemon is not running, the Tiebreaker software continues running, but it cannot be restarted and configuration changes cannot be made.
 
 .Step
 
@@ -900,7 +902,7 @@ Complete!
 `[root@mcctb ~]# systemctl start mariadb`
 
 
-. Verify MariaDB server has started:
+. Verify that the MariaDB server has started:
 +
 `[root@mcctb ~]# systemctl status mariadb`
 +
@@ -914,7 +916,7 @@ Nov 08 21:28:59 mcctb systemd[1]: Starting MariaDB database server...
 Nov 08 21:29:01 scspr0523972001 systemd[1]: Started MariaDB database server.
 ....
 +
-NOTE: Ensure that the "enable autostart" setting is turned on for MariaDB. See <<mariadb-autostart>>.
+NOTE: Verify that the "enable autostart" setting is turned on for MariaDB. See <<mariadb-autostart>>.
 
 . Configure the security and password settings:
 +
@@ -951,7 +953,7 @@ Thanks for using MariaDB!
 [[mariadb-autostart]]
 ==== Enabling the autostart setting for the MariaDB
 
-You should ensure that the autostart feature is turned on for the MariaDB. If you do not enable the autostart feature, and the system on which the MetroCluster Tiebreaker software resides has to reboot, then the Tiebreaker software continues running, but the MariaDB service cannot be restarted and configuration changes cannot be made.
+You should verify that the autostart feature is turned on for the MariaDB. If you do not enable the autostart feature, and the system on which the MetroCluster Tiebreaker software resides has to reboot, then the Tiebreaker software continues running, but the MariaDB service cannot be restarted and configuration changes cannot be made.
 
 .Steps
 
@@ -1052,14 +1054,14 @@ Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
 a|
 Upgrading an existing installation
 a|
-. Ensure openjdk 19 is installed and is the current java version located on the host.
+. Verify openjdk 19 is installed and is the current java version located on the host.
 +
 ----
 [root@mcctb ~]# readlink -f /usr/bin/java
 /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
 ----
 
-. Ensure the Vault service is unsealed and running.
+. Verify the Vault service is unsealed and running.
 +
 
 ----
@@ -1139,7 +1141,7 @@ Cleaning up / removing...
 NOTE: If you enter the wrong MySQL root password, the Tiebreaker software indicates that it was installed successfully, but displays "Access denied" messages. To resolve the issue, you must uninstall the Tiebreaker software by using the `rpm -e` command, and then reinstall the software by using the correct MySQL root password.
 
 
-. Verify the Tiebreaker connectivity to the MetroCluster software by opening an SSH connection from the Tiebreaker host to each of the node management LIFs and cluster management LIFs.
+. Check the Tiebreaker connectivity to the MetroCluster software by opening an SSH connection from the Tiebreaker host to each of the node management LIFs and cluster management LIFs.
 
 .Related information
 
