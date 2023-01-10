@@ -45,16 +45,24 @@ ClusterB::> aggr delete -aggregate aggregate_name
 +
 NOTE: Root aggregates are not deleted.
 
+ .. Move the data LIFs offline.
+ +
+ `network interface modify -vserver _svm-name_ -lif _data-lif_ -status-admin down`
+
  .. Migrate all data LIFs to home nodes in another DR group.
  +
 `network interface show -home-node _old_node_`
 +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
+`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-node _new_node_ -home-port _port-id_`
+
+ .. Move the data LIFs back online.
+ `network interface modify -vserver _svm-name_ -lif _data-lif_ -status-admin up`
+
  .. Migrate the cluster management LIF to a home node in another DR group.
 +
 `network interface show -role cluster-mgmt`
 +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
+`network interface modify -vserver _svm-name_ -lif _cluster_mgmt_ -home-node _new_node_ -home-port _port-id_`
 +
 Node management and inter-cluster LIFs are not migrated.
 
@@ -160,3 +168,4 @@ You must perform this step on each cluster.
 . Halt, power down, and remove the old controller modules and storage shelves.
 
 // 2022 SEPT 26 BURT 1501656
+// 2022-NOV-15 GitHub issue 232, 234 
