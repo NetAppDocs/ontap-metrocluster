@@ -13,20 +13,9 @@ You can use this guided automated MetroCluster switchover operation to perform a
 
 == Supported platform combinations
 
-The following table shows which controller model combinations are supported.
-
-If the intersection of the *Current platform* row and *Target platform* column is not green, this procedure cannot be used. 
+** For information on what platform upgrade combinations are supported, review the MetroCluster FC upgrade table in  link:concept_choosing_controller_upgrade_mcc.html#metrocluster-fc-controller-upgrades[Choose a controller upgrade procedure].
 
 Refer to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosing_an_upgrade_method_mcc.html[Choosing an upgrade or refresh method] for additional procedures.
-
-[NOTE] 
-====
-
-* Upgrades from AFF A700/FAS9000 controllers to AFF A900/FAS9500 controllers are not shown in this table. That combination is supported using the link:task_upgrade_A700_to_A900_in_a_four_node_mcc_fc_us_switchover_and_switchback.html[AFF A700 / FAS9500 switchover/switchback procedure].
-* Upgrades from AFF A300 or FAS8200 platforms using onboard ports 0e and 0f as FC-VI connections are supported only on systems running ONTAP versions prior to 9.9.1. For more information, review the link:https://mysupport.netapp.com/site/bugs-online/product/ONTAP/BURT/1507088[Public Report].
-====
-
-image::supported_controller_upgrades_mccfc_sosb.png[supported controller upgrade combinations in FC configurations]
 
 == About this task
 
@@ -623,7 +612,7 @@ If either node is in takeover mode, perform a giveback using the `storage failov
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Adding or removing ports from a broadcast domain^]
 
-.. Add the physical port that will host the intercluster LIFs to the corresponding Broadcast domain.
+.. Add the physical port that will host the intercluster LIFs to the corresponding broadcast domain.
 .. Modify intercluster LIFs to use the new physical port as home port.
 .. After the intercluster LIFs are up, check the cluster peer status and re-establish cluster peering as needed.
 +
@@ -638,6 +627,12 @@ VLAN and interface group membership might be different than that of the old node
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Creating a VLAN^]
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups^]
+
+.. Verify that the partner cluster is reachable and that the
+configuration is successfully resynchronized on the partner cluster: 
++
+`metrocluster switchback -simulate true`
+
 . If encryption is used, restore the keys using the correct command for your key management configuration.
 +
 
@@ -701,3 +696,4 @@ If the MetroCluster configuration was previously configured for monitoring by th
 
 // BURT 1404898, 19 OCT 2021
 // BURT 1448684, 02 FEB 2022
+// NOV-29-2022, BURT 1509902

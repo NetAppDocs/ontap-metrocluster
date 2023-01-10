@@ -35,7 +35,7 @@ Examples in this section are based on the following assumptions:
 . Display the boot menu:
 +
 `boot_ontap menu`
-. Select option 9a.
+. Select Option 9a and respond `no` when prompted.
 +
 The following screen shows the boot menu prompt:
 +
@@ -43,29 +43,36 @@ The following screen shows the boot menu prompt:
 
 Please choose one of the following:
 
-    (1) Normal Boot.
-    (2) Boot without /etc/rc.
-    (3) Change password.
-    (4) Clean configuration and initialize all disks.
-    (5) Maintenance mode boot.
-    (6) Update flash from backup config.
-    (7) Install new software first.
-    (8) Reboot node.
-    (9) Configure Advanced Drive Partitioning.
-    Selection (1-9)?  9a
-########## WARNING ##########
+(1) Normal Boot.
+(2) Boot without /etc/rc.
+(3) Change password.
+(4) Clean configuration and initialize all disks.
+(5) Maintenance mode boot.
+(6) Update flash from backup config.
+(7) Install new software first.
+(8) Reboot node.
+(9) Configure Advanced Drive Partitioning.
+(10) Set Onboard Key Manager recovery secrets.
+(11) Configure node for external key management.
+Selection (1-11)? 9a
 
-    This is a disruptive operation and will result in the
-    loss of all filesystem data. Before proceeding further,
-    make sure that:
-    1) This option (9a) has been executed or will be executed
-    on the HA partner node (and DR/DR-AUX partner nodes if
-    applicable), prior to reinitializing any system in the
-    HA-pair (or MetroCluster setup).
-    2) The HA partner node (and DR/DR-AUX partner nodes if
-    applicable) is currently waiting at the boot menu.
+...
 
-    Do you still want to continue (yes/no)? yes
+########## WARNING: AGGREGATES WILL BE DESTROYED ##########
+This is a disruptive operation that applies to all the disks
+that are attached and visible to this node.
+
+Before proceeding further, make sure that:
+
+The aggregates visible from this node do not contain
+data that needs to be preserved.
+This option (9a) has been executed or will be executed
+on the HA partner node (and DR/DR-AUX partner nodes if
+applicable), prior to reinitializing any system in the
+HA-pair or MetroCluster configuration.
+The HA partner node (and DR/DR-AUX partner nodes if
+applicable) is currently waiting at the boot menu.
+Do you want to abort this operation (yes/no)? no
 ----
 
 . When the node restarts, press Ctrl-C when prompted to display the boot menu and then select the option for *Maintenance mode boot*.
@@ -86,8 +93,8 @@ The drives should be assigned symmetrically, so each node has an equal number of
 . Display the boot menu:
 +
 `boot_ontap menu`
-. Select option "4" from the boot menu and let the system boot.
 . Repeat these steps on the other nodes in the MetroCluster IP configuration.
+. Select Option *4* from the boot menu on both nodes and let the system boot.
 . Proceed to link:task_sw_config_setup_ontap.html[Setting up ONTAP].
 
 == Manually assigning drives for pool 0 (ONTAP 9.3)
@@ -157,3 +164,5 @@ You should complete this step on a node before proceeding to the next node.
 +
 `boot_ontap menu`
 .. Select option 4 from the boot menu and proceed.
+
+// 2022-NOV-22 GitHub issue 228
