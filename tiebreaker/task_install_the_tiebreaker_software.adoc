@@ -101,7 +101,7 @@ NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. N
 
   
 
-* Allow minimal write privileges. The unprivileged MetroCluster Tiebreaker service account should not have access to overwrite its executable binary or any  configuration files. Only directories and files for local MetroCluster Tiebreaker storage (eg., for the integrated backend storage) or audit logs should be writable by the MetroCluster Tiebreaker user. 
+* Allow minimal write privileges. The unprivileged MetroCluster Tiebreaker service account should not have access to overwrite its executable binary or any  configuration files. Only directories and files for local MetroCluster Tiebreaker storage (eg., for integrated backend storage) or audit logs should be writable by the MetroCluster Tiebreaker user. 
 
 * End-to-End TLS. MetroCluster Tiebreaker should always be used with TLS in production. If intermediate load balancers or reverse proxies are used to front MetroCluster Tiebreaker, you should use TLS for all network connections between every component of the system (including backend storage) to ensure all traffic is encrypted in transit to and from MetroCluster Tiebreaker. When possible, you should set the HTTP Strict Transport Security (HSTS) header by using MetroCluster Tiebreaker's custom response headers feature. 
 
@@ -119,7 +119,7 @@ NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. N
 
   
 
-* Multifactor authentication (MFA) enhances your organization's security by requiring administrators to identify themselves by using more than a username and password. While important, usernames and passwords are vulnerable to brute force attacks and can be stolen by third parties. RHEL 8 provides multifactor authentication that requires users to provide more than one piece of information to authenticate successfully to an account or Linux host. The additional information might be a one-time password (OTP) sent to your cell phone via SMS or credentials from an app like Google Authenticator, Twilio Authy, or FreeOTP. 
+* Multifactor authentication (MFA) enhances your organization's security by requiring administrators to identify themselves by using more than a username and password. While important, usernames and passwords are vulnerable to brute force attacks and can be stolen by third parties. RHEL 8 provides MFA that requires users to provide more than one piece of information to authenticate successfully to an account or Linux host. The additional information might be a one-time password (OTP) sent to your cell phone via SMS or credentials from an app like Google Authenticator, Twilio Authy, or FreeOTP. 
 
 ==== Related information
 .User Management
@@ -150,22 +150,22 @@ link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8[RH
 
 link:https://access.redhat.com/documentation/ru-ru/openjdk/8/html/configuring_openjdk_8_on_rhel_with_fips/openjdk-default-fips-configuration[Default FIPS configuration in OpenJDK 8^]
 
-NOTE: If you secure the host, then you must ensure that the host is able to boot without user intervention. If user intervention is required, then MetroCluster Tiebreaker functionality may not be available in case the host unexpectedly reboots. In such case MetroCluster Tiebreaker functionality will only be available after the manual intervention and the host is fully booted.
+NOTE: If you secure the host, then you must ensure that the host is able to boot without user intervention. If user intervention is required, then MetroCluster Tiebreaker functionality might not be available in case the host unexpectedly reboots. In this case, MetroCluster Tiebreaker functionality is only be available after the manual intervention and the host is fully booted.
 
 === Secure the database installation
 
 The following guidelines show how to secure and harden the MariaDB 10.x database installation.
 
-** Limit the access of the ‘root’ user
+** Limit the access of the "root" user
 * MetroCluster Tiebreaker uses a dedicated account. The account and tables for storing (configuration) data is created during the installation of MetroCluster Tiebreaker. The only time elevated access to the database is required is during installation.
 ** During installation the following access and privileges are required:
 +
 * The ability to create a database and tables
-* The ability to create global options. The following global option is required: ** insert option** HERE**
+* The ability to create global options. 
 * The ability to create a database user and set the password
 * The ability to associate the database user with the database and tables and assign access rights.
 +
-NOTE: The user account that you specify during MetroCluster Tiebreaker installation must have all these privileges. Using multiple user accounts for the different tasks is not supported.
+NOTE: The user account that you specify during the MetroCluster Tiebreaker installation must have all these privileges. Using multiple user accounts for the different tasks is not supported.
 ** Use encryption of the database
 * We support data-at-rest encryption
 * Data in flight is not encrypted. Data in flight uses a local ‘socks’ file connection.
