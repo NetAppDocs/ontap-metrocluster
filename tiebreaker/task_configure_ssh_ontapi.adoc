@@ -1,0 +1,30 @@
+---
+permalink: tiebreaker/task_configure_ssh_ontapi.html
+sidebar: sidebar
+keywords: admin, access, ontapi, ssh, configure
+summary: The Tiebreaker software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters.
+---
+= Configure admin access to ONTAPI and SSH
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You can configure admin access to ONTAPI and SSH.
+
+. Create an admin user with ONTAPI access: 
++
+----
+cluster_A::> security login create -user-or-group-name mcctb -application ontapi -authentication-method password
+----
+. Create an admin user with SSH access.
++
+----
+cluster_A::> security login create -user-or-group-name _mcctb_ -application _ssh_ -authentication-method _password_
+----
+
+. Verify that the new admin users are created: `security login show`
++
+----
+cluster_A::> security login show
+----
+. Repeat these steps on both clusters.
