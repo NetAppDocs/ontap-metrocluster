@@ -11,15 +11,15 @@ summary: The Tiebreaker software provides monitoring capabilities for a clustere
 [.lead]
 You can configure admin access to ONTAPI and SSH.
 
-. Create an admin user with ONTAPI access: 
+. Create an admin user with ONTAPI access: `security login create -user-or-group-name _mcctb_ -application ontapi -authentication-method _password_`
 +
 ----
-cluster_A::> security login create -user-or-group-name _mcctb_ -application ontapi -authentication-method _password_
+cluster_A::> security login create -user-or-group-name mcctb -application _ontapi_ -authentication-method password
 ----
-. Create an admin user with SSH access.
+. Create an admin user with SSH access: `security login create -user-or-group-name _mcctb_ -application _ssh_ -authentication-method _password_`
 +
 ----
-cluster_A::> security login create -user-or-group-name _mcctb_ -application _ssh_ -authentication-method _password_
+cluster_A::> security login create -user-or-group-name mcctb -application ssh -authentication-method password
 ----
 
 . Verify that the new admin users are created: `security login show`
