@@ -78,7 +78,7 @@ You can create additional users on the host and make them members of the group. 
 
 
 ** Use disk encryption
-* You can enable disk encryption. This can be FullDiskEncryption (hardware) or encryption provided by the HostOS (software) or by the SVM host.
+* You can enable disk encryption. This can be FullDiskEncryption (hardware), or encryption provided by the HostOS (software), or by the SVM host.
 ** Disable unused services that allow incoming connections. You can disable any service that isn’t in use. The Tiebreaker software does not require a service for incoming connections because all connections from the Tiebreaker installation are outgoing.
 The services that might be enabled by default and can be disabled are:
 * HTTP/HTTPS server
@@ -323,7 +323,7 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
 . Create a Vault configuration file.
 +
 ----
-[root@mcctb ~]# cat > config.hcl << EOF
+[root@mcctb ~]# cat > config.hcl
  storage "file" {
   address = "127.0.0.1:8500"
   path    = "/mcctb_vdata/data"
@@ -332,7 +332,6 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
    address     = "127.0.0.1:8200"
    tls_disable = 1
  }
-EOF
 ----
 
 . Start the Vault server.
@@ -489,24 +488,37 @@ HA Enabled      false
  
  
 . Verify the Vault service starts on the host during boot.
+.. Run the following command: `cd /etc/systemd/` 
 +
 ----
-[root@mcctb ~]#  cd /etc/systemd/system
-[root@mcctb system]# cat > vault.service << EOF
-> [Unit]
-> Description=Vault Service
-> After=mariadb.service
->
-> [Service]
-> Type=forking
-> ExecStart=/usr/bin/vault server -config /root/config.hcl &
-> Restart=on-failure
->
-> [Install]
-> WantedBy=multi-user.target
-> EOF
+[root@mcctb ~]#  cd /etc/systemd/
+----
+.. Run the following command: `cat > vault.service`
++
+----
+[root@mcctb system]# cat > vault.service
+[Unit]
+Description=Vault Service
+After=mariadb.service
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/vault server -config /root/config.hcl &
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+----
+
+.. Run the following command: `systemctl daemon-reload` 
++
+----
 [root@mcctb system]#  systemctl daemon-reload
- 
+----
+
+.. Run the following command: `systemctl enable vault.service`
++
+---- 
 [root@mcctb system]#  systemctl enable vault.service
 Created symlink /etc/systemd/system/multi-user.target.wants/vault.service → /etc/systemd/system/vault.service.
 ----
@@ -535,7 +547,7 @@ Last login: Fri Jan  8 21:33:00 2016 from host.domain.com
 +
 `[root@mcctb ~]# yum localinstall \https://dev.mysql.com/get/mysql57-community-release-el6-11.noarch.rpm`
 +
-....
+----
 
 Loaded plugins: product-id, refresh-packagekit, security, subscription-manager
 Setting up Local Package Process
@@ -569,13 +581,13 @@ Running Transaction
 Installed:
   mysql-community-release.noarch 0:el6-5
 Complete!
-....
+----
 
-. Disable the mysql 57 repository:
+. Disable the MySQL 57 repository:
 +
 `[root@mcctb ~]# yum-config-manager --disable mysql57-community`
 
-. Enable the mysql 56 repository:
+. Enable the MySQL 56 repository:
 +
 `[root@mcctb ~]# yum-config-manager --enable mysql56-community`
 
@@ -583,12 +595,12 @@ Complete!
 +
 `[root@mcctb ~]# yum repolist enabled | grep "mysql.*-community.*"`
 +
-....
+----
 
 mysql-connectors-community           MySQL Connectors Community            21
 mysql-tools-community                MySQL Tools Community                 35
 mysql56-community                    MySQL 5.6 Community Server           231
-....
+----
 
 . Install the MySQL Community server:
 +
@@ -669,7 +681,7 @@ Complete!
 +
 `[root@mcctb ~]# service mysqld start`
 +
-....
+----
 
 Initializing MySQL database:  2016-04-05 19:44:38 0 [Warning] TIMESTAMP
 with implicit DEFAULT value is deprecated. Please use
@@ -704,7 +716,7 @@ If you do not want to use this, either remove it, or use the
 
                                                            [  OK  ]
 Starting mysqld:                                           [  OK  ]
-....
+----
 
 . Confirm that MySQL server is running:
 +
@@ -719,7 +731,7 @@ mysqld (pid  2739) is running...
 +
 `[root@mcctb ~]# mysql_secure_installation`
 +
-....
+----
 
 NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
        SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
@@ -782,14 +794,13 @@ NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
  Thanks for using MySQL!
 
  Cleaning up...
-....
+----
 
 . Verify that the MySQL login is working:
 +
 `[root@mcctb ~]# mysql -u root –p`
 +
-....
-
+----
 Enter password: <configured_password>
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 17
@@ -803,7 +814,7 @@ owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql>
-....
+----
 +
 If the MySQL login is working, the output will end at the `mysql>` prompt.
 
@@ -817,12 +828,12 @@ You should verify that the autostart feature is turned on for the MySQL deamon. 
 +
 `[root@mcctb ~]# systemctl list-unit-files mysqld.service`
 +
-....
+----
 UNIT FILE          State
 ------------------ ----------
 mysqld.service     enabled
 
-....
+----
 
 +
 If MySQL is not enabled to autostart when booted, see the MySQL documentation to enable the autostart feature for your installation.
@@ -839,18 +850,18 @@ Your host system must be running on Red Hat Enterprise Linux (RHEL) 8.
 .Steps
 . Log in as `root` user or a user that can sudo to advanced privilege mode.
 +
-....
+----
 
 login as: root
 root@mcctb's password:
 Last login: Fri Jan  8 21:33:00 2017 from host.domain.com
-....
+----
 
 . Install MariaDB server:
 +
 `[root@mcctb ~]# yum install mariadb-server.x86_64`
 +
-....
+----
  [root@mcctb ~]# yum install mariadb-server.x86_64
 Loaded plugins: fastestmirror, langpacks
 ...
@@ -897,7 +908,7 @@ perl-PlRPC.noarch 0:0.2020-14.el7
 Dependency Updated:
   mariadb-libs.x86_64 1:5.5.56-2.el7
 Complete!
-....
+----
 
 . Start MariaDB server:
 +
@@ -924,7 +935,7 @@ NOTE: Verify that the "enable autostart" setting is turned on for MariaDB. See <
 +
 `[root@mcctb ~]# mysql_secure_installation`
 +
-....
+----
 
 [root@mcctb ~]# mysql_secure_installation
 NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB
@@ -950,7 +961,7 @@ Cleaning up...
 All done! If you've completed all of the above steps, your MariaDB
 installation should now be secure.
 Thanks for using MariaDB!
-....
+----
 
 [[mariadb-autostart]]
 ==== Enabling the autostart setting for the MariaDB
@@ -967,14 +978,11 @@ You should verify that the autostart feature is turned on for the MariaDB. If yo
 +
 `[root@mcctb ~]# systemctl list-unit-files mariadb.service`
 +
-....
+----
 UNIT FILE          State
 ------------------ ----------
 mariadb.service    enabled
-
-....
-
-
+----
 
 [[install-upgrade-sw-pkg]]
 == Installing or upgrading the software package
@@ -1008,7 +1016,7 @@ a|
 +
 The system displays the following output for a successful installation:
 +
-....
+----
 [root@mcctb ~]# rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm
 Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
@@ -1051,7 +1059,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/netapp-metrocluster-
 Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
 Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
-....
+----
 
 a|
 Upgrading an existing installation
@@ -1063,9 +1071,8 @@ a|
 /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
 ----
 
-. Verify the Vault service is unsealed and running.
+. Verify the Vault service is unsealed and running: `vault status` 
 +
-
 ----
 [root@mcctb ~]# vault status
 Key             Value
