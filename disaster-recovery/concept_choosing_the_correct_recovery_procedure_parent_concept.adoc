@@ -12,6 +12,8 @@ summary: After a failure in a MetroCluster configuration, you must select the co
 [.lead]
 After a failure in a MetroCluster configuration, you must select the correct recovery procedure. Use the following table and examples to select the appropriate recovery procedure.
 
+This information in this table assumes that the installation or transition is complete, meaning that the `metrocluster configure` command ran successfully.
+
 |===
 
 h| Scope of failures at disaster site h| Procedure
@@ -62,6 +64,10 @@ a|
 link:task_recover_from_a_multi_controller_and_or_storage_failure.html[Recovering from a multi-controller or storage failure]
 
 |===
+
+== Controller module failure scenarios during MetroCluster installation
+
+If the controller module fails during installation, and you have not yet issued the `metrocluster configure` command or the command has failed, you must replace the controller module. Then, you must wipe all of the controller modules (link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module]) and resume the configuration procedure from the beginning.
 
 == Controller module failure scenarios during MetroCluster FC-to-IP Transition
 
@@ -149,3 +155,4 @@ link:task_recover_from_a_multi_controller_and_or_storage_failure.html[Recovering
 image::../media/mcc_dr_groups_2_node_with_a_single_controller_failure.gif[]
 
 // BURT 1448684, 12 JAN 2022
+// 2023-JAN-20, BURT 1496296
