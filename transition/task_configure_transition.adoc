@@ -153,7 +153,7 @@ You must perform this task on both clusters.
 .Steps
 
 . Add the MetroCluster IP nodes to the existing MetroCluster configuration.
-.. Join the first MetroCluster IP node (node_A_1-IP) to the existing MetroCluster FC configuration.
+.. Join the first MetroCluster IP node (node_A_3-IP) to the existing MetroCluster FC configuration.
 +
 ....
 
@@ -206,8 +206,8 @@ Do you want to use this configuration? {yes, no} [yes]: yes
 .
 ....
 
-.. Join the second MetroCluster IP node (node_A_2-IP) to the existing MetroCluster FC configuration.
-. Repeat these steps to join node_B_1-IP and node_B_2-IP to cluster_B.
+.. Join the second MetroCluster IP node (node_A_4-IP) to the existing MetroCluster FC configuration.
+. Repeat these steps to join node_B_3-IP and node_B_4-IP to cluster_B.
 
 == Configuring intercluster LIFs, creating the MetroCluster interfaces, and mirroring root aggregates
 
@@ -322,7 +322,7 @@ Group Cluster Node               State          Mirroring Mode
 See link:../install-ip/task_sw_config_configure_clusters.html#configuring-and-connecting-the-metrocluster-ip-interfaces[Configuring and connecting the MetroCluster IP interfaces] for considerations when configuring the IP interfaces.
 // BURT 1380267
 +
-NOTE: You can configure the MetroCluster IP interfaces from either cluster. Also, beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:../install-ip/concept_considerations_layer_3.html.
+NOTE: You can configure the MetroCluster IP interfaces from either cluster. Also, beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:../install-ip/concept_considerations_layer_3.html[ Considerations for layer 3 wide-area networks]
 +
 
 ....
@@ -498,9 +498,11 @@ Disk                   Size Shelf Bay Type    Type        Name      Owner
 2.20.10             546.9GB    20  10 SAS     aggregate   rha1_a1_aggr1 node_a_1
 ...
 43 entries were displayed.
-
 cluster_A::>
 ....
++
+NOTE: On systems configured for Advanced Drive Partitioning (ADP), the container type is "shared" rather than "remote" as shown in the example output.
+
 
 . Mirror the root aggregates:
 +
@@ -729,3 +731,4 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 // BURT 1448684, 21 JAN 2022
 // BURT 1438441, 28 MAR 2022
 // 2022-DEC-12, GH issue 239
+// 2023-JAN-10, GH issue 252
