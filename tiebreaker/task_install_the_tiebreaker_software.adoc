@@ -176,21 +176,25 @@ NOTE: If you require encryption, the encryption settings must be enabled before 
 
 
 ==== Related information
+* Database user management
++
+link:https://dev.mysql.com/doc/refman/8.0/en/access-control.html[Access Control and Account Management^]
 
-* Securing the database
-
+* Secure the database
++
 link:https://dev.mysql.com/doc/refman/8.0/en/security-against-attack.html[Making MySQL Secure Against Attackers^]
-
++
 link:https://mariadb.com/kb/en/securing-mariadb/[Securing MariaDB^]
 
 * Encryption for data-at-rest
-
++
 link:https://mariadb.com/kb/en/data-at-rest-encryption-overview/[Data-at-Rest Encryption Overview^]
-
++
 link:https://www.mysql.com/products/enterprise/tde.html[MySQL Enterprise Transparent Data Encryption (TDE)^]
 
-* Securing the Vault installation: 
-HashiCorp Vault security recommendations (link?)
+* Secure the Vault installation
++
+link:https://developer.hashicorp.com/vault/tutorials/operations/production-hardening/[Production hardening^]
 
 
 == Installing MetroCluster Tiebreaker dependencies
@@ -280,23 +284,16 @@ Complete!
 [[install-vault]]
 === Install and configure Vault
 
-If you do not have or want to use the local Vault server, you must install Vault.
+If you do not have or want to use the local Vault server, you must install Vault. 
+You can refer to this standard procedure for installing Vault, or refer to the Hashicorp installation instructions for alternative guidelines.
 
 NOTE: If you have a Vault server in your network, you can configure the MetroCluster Tiebreaker host to use that Vault installation. In this case you do not need to install Vault on the host.
 
 .Steps
-
-. Create a directory and move into the directory.
-+
-----
-[root@mcctb ~]#  mkdir -p /usr/src/vault
-[root@mcctb ~]# cd /usr/src/vault/
-----
- 
 . Download the Vault zip file.
 +
 ----
-[root@mcctb vault]#  curl -sO https://releases.hashicorp.com/vault/1.12.2/vault_1.12.2_linux_amd64.zip
+[root@mcctb /bin]#  curl -sO https://releases.hashicorp.com/vault/1.12.2/vault_1.12.2_linux_amd64.zip
 ----
  
 . Unzip the Vault file.
@@ -306,13 +303,7 @@ NOTE: If you have a Vault server in your network, you can configure the MetroClu
 Archive:  vault_1.12.2_linux_amd64.zip
   inflating: vault
 ----
-. Move the folder to the correct file path.
-+
-----
-   
-[root@mcctb vault]# mv vault /usr/local/bin/
-----
- 
+
 . Verify the installation.
 +
 ----
@@ -320,7 +311,7 @@ Archive:  vault_1.12.2_linux_amd64.zip
 Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53:46Z
 ----
  
-. Create a Vault configuration file.
+. Create a Vault configuration file and ensure the configuration file is created under the '/root' directory.
 +
 ----
 [root@mcctb ~]# cat > config.hcl
@@ -369,15 +360,14 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
 2022-12-15T14:57:23.387+0530 [INFO]  core: pre-seal teardown starting
 2022-12-15T14:57:23.387+0530 [INFO]  rollback: stopping rollback manager
 2022-12-15T14:57:23.387+0530 [INFO]  core: pre-seal teardown complete
-Unseal Key 1: Ay/dLJt0WkpN1U61wPKsm6A9Bo4eHj0D0bnepg7s7ofG
-Unseal Key 2: QRp2tFJnTZVvauP5s634xpIdN/4osFkau27zYBWon46I
-Unseal Key 3: yBwDjn4dQE/7QjmujIR3vg/qfRDhE+a9ovsqPZrbxsNp
-Unseal Key 4: wgEfK7Zj5RcIQSFGOFwHuMeF+4MN9bhda9VYw0+qPmhh
-Unseal Key 5: p1guqJwNi4/TjsgX2k1iHBgvvMAoPXcsyReKQVTRBYYw
+Unseal Key 1: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Unseal Key 2: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Unseal Key 3: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Unseal Key 4: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Unseal Key 5: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  
-Initial Root Token: hvs.YB3HbTPCsXrl5QTf2L6zthD7
+Initial Root Token: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-// remove token?
 
 Vault initialized with 5 key shares and a key threshold of 3. Please securely
 distribute the key shares printed above. When the Vault is re-sealed,
@@ -394,7 +384,7 @@ existing unseal keys shares. See "vault operator rekey" for more information.
 . Export the Vault root token.
 +
 ----
-[root@mcctb ~]#  export VAULT_TOKEN="hvs.YB3HbTPCsXrl5QTf2L6zthD7"
+[root@mcctb ~]#  export VAULT_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ----
  
 . Unseal Vault using any of the three keys that were created.
@@ -533,7 +523,7 @@ If you want to change the method to unseal Vault, then you need to uninstall and
 You must install MySQL Server 5.5.30 or later and 5.6.x version on your host system before installing or upgrading the Tiebreaker software.
 
 .Steps
-. Log in as `root` user or a user that can sudo to advanced privilege mode.
+. Log in as a root user or a sudo user that can change to advanced privilege mode.
 +
 ----
 
@@ -1038,11 +1028,11 @@ Sealed          false
 mkfs.fat 4.1 (2017-01-24)
 Do you wish to auto unseal vault(y/n)?y
 Enter the key1:
-Ay/dLJt0WkpN1U61wPKsm6A9Bo4eHj0D0bnepg7s7ofG
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Enter the key2:
-QRp2tFJnTZVvauP5s634xpIdN/4osFkau27zYBWon46I
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Enter the key3:
-yBwDjn4dQE/7QjmujIR3vg/qfRDhE+a9ovsqPZrbxsNp
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Success! Uploaded policy: mcctb-policy
 Error enabling approle auth: Error making API request.
  
@@ -1116,11 +1106,11 @@ Sealed          false
 mkfs.fat 4.1 (2017-01-24)
 Do you wish to auto unseal vault(y/n)?y
 Enter the key1:
-XxvESDWXi+2fdj0AZQKGuKrtJxjazFms9ewuCoB0JXCW
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Enter the key2:
-4pvDAQJyvY4ZrgGq+scsjYawp4FvIF5a2mg2rea0Ntqw
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Enter the key3:
-WTQwE/mK5xgVS8mkC0QSSORYTg7Dnp/iBRO45PElMqIp
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Success! Uploaded policy: mcctb-policy
 Error enabling approle auth: Error making API request.
  
