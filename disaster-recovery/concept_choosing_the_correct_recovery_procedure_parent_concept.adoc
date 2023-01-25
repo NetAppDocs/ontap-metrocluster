@@ -67,7 +67,14 @@ link:task_recover_from_a_multi_controller_and_or_storage_failure.html[Recovering
 
 == Controller module failure scenarios during MetroCluster installation
 
-If the controller module fails during installation, and you have not yet issued the `metrocluster configure` command or the command has failed, you must replace the controller module. Then, you must wipe all of the controller modules (link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module]) and resume the configuration procedure from the beginning.
+Responding to a controller failure during the MetroCluster configuration procedure depends on whether the `metrocluster configure` command successfully completed.
+
+•	If the metrocluster configure command was not yet run, or failed, you must restart the MetroCluster software configuration procedure from the beginning with a replacement controller module.
++
+NOTE: You must be sure to perform the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module] on each controller (including the replacement controller) to ensure that the previous configuration is removed.
+
+•	If the `metrocluster configure` command successfully completed and then the controller module failed, use the above table to determine the correct recovery procedure.
+
 
 == Controller module failure scenarios during MetroCluster FC-to-IP Transition
 
