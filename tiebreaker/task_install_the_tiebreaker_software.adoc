@@ -85,7 +85,7 @@ The services that might be enabled by default and can be disabled are:
 +
 NOTE: You must leave either serial console access (if supported) or at least one protocol enabled to administer the host remotely. If you disable all protocols, then you require physical access to the host for administration.
 ** Secure the host using FIPS
-* You can install the host OS in FIPS compliant mode and then install Tiebreaker.
+* You can install the host OS in FIPS-compliant mode and then install Tiebreaker.
 +
 NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. No manual changes should be required.
 
@@ -805,7 +805,7 @@ If the MySQL login is working, the output will end at the `mysql>` prompt.
 
 ==== Enabling the MySQL autostart setting
 
-You should verify that the autostart feature is turned on for the MySQL deamon. Turning on the MySQL daemon automatically restarts MySQL if the system on which the MetroCluster Tiebreaker software resides reboots. If the MySQL daemon is not running, the Tiebreaker software continues running, but it cannot be restarted and configuration changes cannot be made.
+You should verify that the autostart feature is turned on for the MySQL daemon. Turning on the MySQL daemon automatically restarts MySQL if the system on which the MetroCluster Tiebreaker software resides reboots. If the MySQL daemon is not running, the Tiebreaker software continues running, but it cannot be restarted and configuration changes cannot be made.
 
 .Step
 
@@ -1098,8 +1098,8 @@ Found Java 19. Proceeding with the installation.
 Enter host user account to use for the installation:
 mcctbuser1
 ----
-+
 
++
 ----
 User account mcctbuser1 found. Proceeding with the installation
 Sealed          false
@@ -1194,7 +1194,7 @@ MetroCluster: cluster_A
 . Change all of the monitors to observer mode.
 +
 ----
-NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name _monitor_name_ -observer-mode true
+NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name monitor_name -observer-mode true
 ----
 
 . To upgrade the Tiebreaker host, follow all of the steps in the following procedure:
@@ -1204,7 +1204,7 @@ NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name _monitor_name_ -o
 . Disable observer mode to move all of the monitors back to online mode.
 +
 ----
-NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name _monitor_name_ -observer-mode false
+NetApp MetroCluster Tiebreaker :> monitor modify -monitor-name monitor_name -observer-mode false
 ----
 
 == Selecting the NTP source for the Tiebreaker software
