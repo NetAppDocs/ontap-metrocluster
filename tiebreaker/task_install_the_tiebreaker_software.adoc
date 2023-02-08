@@ -79,7 +79,7 @@ You can create additional users on the host and make them members of the group. 
 The services that might be enabled by default and can be disabled are:
 * HTTP/HTTPS server
 * FTP server
-* Telnet and RSH
+* Telnet, RSH, rlogin 
 * NFS, CIFS, and other protocol access
 * RDP (RemoteDesktopProtocol), X11 Server, VNC or other remote "desktop" service providers.
 +
@@ -93,7 +93,8 @@ NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. N
 
   
 
-* Do not run as root. Use a dedicated, unprivileged service account to run Tiebreaker. 
+* Do not run Tiebreaker as a root user. Use a dedicated, unprivileged service account to run Tiebreaker. 
+* Change the default community string in the "/etc/snmp/snmpd.conf" file.
 
   
 
@@ -295,7 +296,7 @@ NOTE: If you have a Vault server in your network, you can configure the MetroClu
 . Unzip the Vault file.
 +
 ----
-[root@mcctb vault]# unzip vault_1.12.2_linux_amd64.zip
+[root@mcctb /bin]# unzip vault_1.12.2_linux_amd64.zip
 Archive:  vault_1.12.2_linux_amd64.zip
   inflating: vault
 ----
@@ -303,7 +304,7 @@ Archive:  vault_1.12.2_linux_amd64.zip
 . Verify the installation.
 +
 ----
-[root@mcctb vault]# vault -version
+[root@mcctb /bin]# vault -version
 Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53:46Z
 ----
  
@@ -322,6 +323,10 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
 ----
 
 . Start the Vault server: `vault server -config config.hcl &`
++
+----
+[root@mcctb ~] vault server -config config.hcl
+----
 
 . Export the Vault address.
 +
@@ -984,6 +989,21 @@ You must install or upgrade the MetroCluster Tiebreaker software on your local c
 https://mysupport.netapp.com/site/[NetApp Support^]
 
 . Log in to the host as the root user.
+
+. Verify the RPM file.
+..  Download and import the RPM key file:
++
+----
+[root@mcctb ~]# rpm --import MetroCluster_Tiebreaker_RPM_GPG.key
+----
+.. Verify the signature: `[root@mcctb ~]# rpm --checksig NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm`
++
+----
+NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm: digests OK
+----
++
+NOTE: You must only proceed with installation after you have successfully verified the signature.
+
 . [[install-tiebreaker]]Install or upgrade the Tiebreaker software: 
 +
 NOTE: If you are upgrading to MetroCluster Tiebreaker version 1.5 or later, you must uninstall and purge the existing software version, and then install the new version. You also need to reconfigure all the Tiebreaker monitors.
@@ -1001,8 +1021,8 @@ Select the correct procedure from below depending on whether you're performing a
 +
 The system displays the following output for a successful installation:
 +
-----
-[root@mcctb ~]# rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm
+----    
+
 Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
 Updating / installing...
@@ -1010,43 +1030,37 @@ Updating / installing...
 Enter the absolute path for Java 19: /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
 Verifying if Java 19 exists...
 Found Java 19. Proceeding with the installation.
-Enter host user account to use for the installation:mcctbuser1
+Enter host user account to use for the installation:
+mcctbuser1
 User account mcctbuser1 found. Proceeding with the installation
-Enter mysql user name:
+Enter database user name:
 root
- 
-Please enter mysql password for root
+
+Please enter database password for root
 Enter password:
 Sealed          false
-10240+0 records in
-10240+0 records out
-10485760 bytes (10 MB, 10 MiB) copied, 0.0242069 s, 433 MB/s
-mkfs.fat 4.1 (2017-01-24)
 Do you wish to auto unseal vault(y/n)?y
 Enter the key1:
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Enter the key2:
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Enter the key3:
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Success! Uploaded policy: mcctb-policy
 Error enabling approle auth: Error making API request.
-----
 
-+
-----
 URL: POST http://127.0.0.1:8200/v1/sys/auth/approle
 Code: 400. Errors:
- 
+
 * path is already in use at approle/
 Success! Enabled the kv secrets engine at: mcctb/
 Success! Data written to: auth/approle/role/mcctb-app
-Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+
+Password updated successfully in the vault.Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
 Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
 Created symlink /etc/systemd/system/multi-user.target.wants/netapp-metrocluster-tiebreaker-software.service → /etc/systemd/system/netapp-metrocluster-tiebreaker-software.service.
+
 Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
 Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
+ 
 ----
 --
 
@@ -1085,9 +1099,9 @@ HA Enabled      false
 ----
 +
 The system displays the following output for a successful upgrade:
+
 +
 ----
-
 Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
 Updating / installing...
@@ -1097,44 +1111,37 @@ Verifying if Java 19 exists...
 Found Java 19. Proceeding with the installation.
 Enter host user account to use for the installation:
 mcctbuser1
-----
-
-+
-----
 User account mcctbuser1 found. Proceeding with the installation
 Sealed          false
-10240+0 records in
-10240+0 records out
-10485760 bytes (10 MB, 10 MiB) copied, 0.0242487 s, 432 MB/s
-mkfs.fat 4.1 (2017-01-24)
 Do you wish to auto unseal vault(y/n)?y
 Enter the key1:
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Enter the key2:
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Enter the key3:
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Success! Uploaded policy: mcctb-policy
 Error enabling approle auth: Error making API request.
- 
+
 URL: POST http://127.0.0.1:8200/v1/sys/auth/approle
 Code: 400. Errors:
- 
+
 * path is already in use at approle/
 Success! Enabled the kv secrets engine at: mcctb/
 Success! Data written to: auth/approle/role/mcctb-app
- 
+
 Enter database user name : root
- 
+
 Please enter database password for root
 Enter password:
- 
+
 Password updated successfully in the database.
 Password updated successfully in the vault.
+Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
+
+Attempting to start NetApp MetroCluster Tiebreaker software services
+Started NetApp MetroCluster Tiebreaker software services
 Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.5.
 Cleaning up / removing...
    2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
-
 --
 ====
 
@@ -1151,8 +1158,6 @@ https://mysupport.netapp.com/site/[NetApp Support^]
 == Upgrading the host where the Tiebreaker monitor is running
 
 You can upgrade the host on which the Tiebreaker monitor is running with minimal disruption if you place the monitors in observer mode before the upgrade.
-
-NOTE: If you are upgrading to MetroCluster Tiebreaker version 1.5 or later, you must uninstall and purge the existing software version, and then install the new version. You also need to reconfigure all the Tiebreaker monitors.
 
 .Steps
 . Verify that the monitors are in observer mode:
