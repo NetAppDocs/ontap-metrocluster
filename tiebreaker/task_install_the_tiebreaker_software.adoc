@@ -102,6 +102,10 @@ NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. N
 
 * End-to-End TLS. Tiebreaker should always be used with TLS in production. If intermediate load balancers or reverse proxies are used to front Tiebreaker, you should use TLS for all network connections between every component of the system (including backend storage) to ensure all traffic is encrypted in transit to and from Tiebreaker. When possible, you should set the HTTP Strict Transport Security (HSTS) header by using Tiebreaker's custom response headers feature. 
 
+* You must install and run the latest version of OpenSSH. 
+* Do not permit anonymous users. 
+* Set AllowTcpForwarding to "no" or use the Match directive to restrict anonymous users.
+
   
 
 * Disable Shell Command History.  
