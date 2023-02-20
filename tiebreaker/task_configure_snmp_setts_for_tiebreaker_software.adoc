@@ -9,27 +9,30 @@ summary: To use SNMP with the Tiebreaker software, you must configure SNMP setti
 :imagesdir: ../media/
 
 [.lead]
-To use SNMP with the Tiebreaker software, you must configure SNMP settings.
+To use SNMP with the Tiebreaker software, you must configure the SNMP settings.
 
-. Use the Tiebreaker CLI snmp config wizard command to add MetroCluster configurations.
+. Use the Tiebreaker CLI `snmp config wizard` command to add MetroCluster configurations.
 +
 NOTE: Only one SNMP trap host is currently supported.
 
 +
-The following example shows the configuration of an SNMP receiver that supports SNMP V1 with an IP address of 10.222.210.234, port number 162 for trap messages, and the community string set to public:
+The following example shows the configuration of an SNMP receiver that supports SNMP V3 with an IP address of 10.240.45.66 and port number 162 for trap messages. The Tiebreaker software is ready to send traps to the SNMP receiver that you specified.
 +
 ....
 
 NetApp MetroCluster Tiebreaker :> snmp config wizard
-Enter SNMP Version [V1/V3]: V1
-Enter SNMP Host: 10.222.210.234
+Enter SNMP Version[V1/V3]: v3
+Enter SNMP Host: 10.240.45.66
 Enter SNMP Port: 162
-Enter SNMP V1 Community: public
+Enter SNMP V3 Security Name: v3sec
+Enter SNMP V3 Authentication password:
+Enter SNMP V3 Privacy password:
+Engine ID : 8000031504932eff571825192a6f1193b265e24593
 Successfully added SNMP properties to NetApp MetroCluster Tiebreaker software.
-NetApp MetroCluster Tiebreaker :>
 ....
+
 +
-The Tiebreaker software is ready to send traps to the SNMP receiver that you specified.
+NOTE: You should configure SNMPv3 because SNMPv1 is not secure. If you choose to configure SNMPv1, make sure the community string is *NOT* set to public.
 
 . Verify that the SNMP settings are configured:
 +

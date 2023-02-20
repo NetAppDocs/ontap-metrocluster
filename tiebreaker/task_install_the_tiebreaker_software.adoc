@@ -41,7 +41,7 @@ NOTE: Only MetroCluster Tiebreaker 1.4 is compatible with RHEL versions 7-7.9.
   ** Open JRE 8
 +  
 For systems running Tiebreaker 1.4 and earlier, run JRE 8. 
-For systems running Tiebreaker 1.5 and later, run OpenJDK 19. 
+For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19. 
 
 
 
@@ -235,7 +235,7 @@ Install MariaDB
 [[install-java-1-8]]
 === Install JRE
 
-You must install JRE on your host system before installing or upgrading the Tiebreaker software. For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run OpenJDK 19.
+You must install JRE on your host system before installing or upgrading the Tiebreaker software. For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19.
 The outputs in the example show JRE 1.8.0. (JRE 8).
 
 .Steps
@@ -996,6 +996,19 @@ https://mysupport.netapp.com/site/[NetApp Support^]
 ----
 [root@mcctb ~]# rpm --import MetroCluster_Tiebreaker_RPM_GPG.key
 ----
+
+.. Verify the that the correct key was imported by checking the fingerprint. 
++
+.Example 
+The following example shows a correct key fingerprint:
++
+----
+root@mcctb:~/signing/mcctb-rpms# gpg --show-keys --with-fingerprint MetroCluster_Tiebreaker_RPM_GPG.key
+pub   rsa3072 2022-11-17 [SCEA] [expires: 2025-11-16]
+      65AC 1562 E28A 1497 7BBD  7251 2855 EB02 3E77 FAE5
+uid                      MCCTB-RPM (mcctb RPM production signing) <mcctb-rpm@netapp.com>
+----
+
 .. Verify the signature: `rpm --checksig NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm`
 +
 ----
@@ -1027,15 +1040,14 @@ Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
 Updating / installing...
    1:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
-Enter the absolute path for Java 19: /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
-Verifying if Java 19 exists...
-Found Java 19. Proceeding with the installation.
+Enter the absolute path for Java : /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
+Verifying if Java exists...
+Found Java. Proceeding with the installation.
 Enter host user account to use for the installation:
 mcctbuser1
 User account mcctbuser1 found. Proceeding with the installation
 Enter database user name:
 root
-
 Please enter database password for root
 Enter password:
 Sealed          false
@@ -1045,18 +1057,15 @@ Enter the key2:
 Enter the key3:
 Success! Uploaded policy: mcctb-policy
 Error enabling approle auth: Error making API request.
-
 URL: POST http://127.0.0.1:8200/v1/sys/auth/approle
 Code: 400. Errors:
-
 * path is already in use at approle/
 Success! Enabled the kv secrets engine at: mcctb/
 Success! Data written to: auth/approle/role/mcctb-app
-
-Password updated successfully in the vault.Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Password updated successfully in the vault.
+Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
 Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
 Created symlink /etc/systemd/system/multi-user.target.wants/netapp-metrocluster-tiebreaker-software.service → /etc/systemd/system/netapp-metrocluster-tiebreaker-software.service.
-
 Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
 Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
@@ -1066,7 +1075,9 @@ Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
 
 .Upgrading an existing installation
 --
-. Verify OpenJDK 19 is installed and is the current Java version located on the host.
+. Verify that a supported version of OpenJDK is installed and is the current Java version located on the host. 
++
+NOTE: For upgrades to Tiebreaker 1.5, you must install either OpenJDK version 17, 18, or 19.
 +
 ----
 [root@mcctb ~]# readlink -f /usr/bin/java
@@ -1106,9 +1117,9 @@ Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
 Updating / installing...
    1:NetApp-MetroCluster-Tiebreaker-So################################# [ 50%]
-Enter the absolute path for Java 19: /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
-Verifying if Java 19 exists...
-Found Java 19. Proceeding with the installation.
+Enter the absolute path for Java : /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
+Verifying if Java exists...
+Found Java. Proceeding with the installation.
 Enter host user account to use for the installation:
 mcctbuser1
 User account mcctbuser1 found. Proceeding with the installation
@@ -1119,24 +1130,18 @@ Enter the key2:
 Enter the key3:
 Success! Uploaded policy: mcctb-policy
 Error enabling approle auth: Error making API request.
-
 URL: POST http://127.0.0.1:8200/v1/sys/auth/approle
 Code: 400. Errors:
-
 * path is already in use at approle/
 Success! Enabled the kv secrets engine at: mcctb/
 Success! Data written to: auth/approle/role/mcctb-app
-
 Enter database user name : root
-
 Please enter database password for root
 Enter password:
-
 Password updated successfully in the database.
 Password updated successfully in the vault.
 Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
 Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
-
 Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
 Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.5.
