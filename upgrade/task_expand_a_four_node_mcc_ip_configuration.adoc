@@ -773,6 +773,26 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 
 .Steps
 
+. Refresh the MetroCluster configuration:
+.. Enter advanced privilege mode:
++
+`set -privilege advanced`
+.. Refresh the MetroCluster configuration on one of the new nodes:
++
+`metrocluster configure`
++
+The following example shows the MetroCluster configuration refreshed on both DR groups:
++
+----
+cluster_A::*> metrocluster configure -refresh true
+
+[Job 726] Job succeeded: Configure is successful.
+----
+
+.. Return to admin privilege mode:
++
+`set -privilege admin`
+
 . Create mirrored data aggregates on each of the new MetroCluster nodes:
 +
 `storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true`
@@ -819,25 +839,6 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ----
 
-. Refresh the MetroCluster configuration:
-.. Enter advanced privilege mode:
-+
-`set -privilege advanced`
-.. Refresh the MetroCluster configuration on one of the new nodes:
-+
-`metrocluster configure`
-+
-The following example shows the MetroCluster configuration refreshed on both DR groups:
-+
-----
-cluster_A::*> metrocluster configure -refresh true
-
-[Job 726] Job succeeded: Configure is successful.
-----
-
-.. Return to admin privilege mode:
-+
-`set -privilege admin`
 . Verify that the nodes are added to their DR group.
 +
 ----
@@ -926,6 +927,18 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 +
 `set -privilege admin`
 . Move epsilon from an old node to a new node:
++
+.. Enter advanced privilege mode.
++
+`set -priv advanced`
++
+----
+cluster_B::> set -priv advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by NetApp personnel.
+Do you want to continue? {y|n}: y
+----
++
 .. Identify which node currently has epsilon:
 +
 `cluster show -fields epsilon`
@@ -964,3 +977,4 @@ node_A_4-new      false
 ----
 
 // 2021-04-21 1374268
+// 2023-02-20, GH225
