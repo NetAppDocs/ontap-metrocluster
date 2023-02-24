@@ -67,16 +67,16 @@ link:task_recover_from_a_multi_controller_and_or_storage_failure.html[Recovering
 
 == Controller module failure scenarios during MetroCluster installation
 
-Responding to a controller failure during the MetroCluster configuration procedure depends on whether the `metrocluster configure` command successfully completed.
+Responding to a controller module failure during the MetroCluster configuration procedure depends on whether the `metrocluster configure` command successfully completed.
 
 •	If the `metrocluster configure` command was not yet run, or failed, you must restart the MetroCluster software configuration procedure from the beginning with a replacement controller module.
 +
-NOTE: You must be sure to perform the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module] on each controller (including the replacement controller) to ensure that the previous configuration is removed.
+NOTE: You must be sure to perform the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module] on each controller (including the replacement controller) to verify that the previous configuration is removed.
 
-•	If the `metrocluster configure` command successfully completed and then the controller module failed, use the above table to determine the correct recovery procedure.
+•	If the `metrocluster configure` command successfully completed and then the controller module failed, use the previous table to determine the correct recovery procedure.
 
 
-== Controller module failure scenarios during MetroCluster FC-to-IP Transition
+== Controller module failure scenarios during MetroCluster FC-to-IP transition
 
 The recovery procedure can be used if a site failure occurs during transition. However, it can only be used if the configuration is a stable mixed configuration, with the FC DR group and IP DR group both fully configured. The output of the `metrocluster node show` command should show both DR groups with all eight nodes.
 
