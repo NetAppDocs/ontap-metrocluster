@@ -574,20 +574,42 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 
 .Steps
 
-. Configure the MetroCluster to implement the changes:
+. Configure the MetroCluster depending on whether it has a single or multiple data aggregates: 
 +
-`metrocluster configure`
-+
+
+|===
+
+h| If your MetroCluster configuration has... h| Then do this...
+
+a|
+Multiple data aggregates
+a|
+From any node's prompt, configure MetroCluster:
+
+`metrocluster configure _node-name_`
+
 NOTE: You must run `metrocluster configure` and *not* `metrocluster configure -refresh true`
+
+a|
+A single mirrored data aggregate
+
+a|
+.. From any node's prompt, change to the advanced privilege level:
 +
+`set -privilege advanced`
++
+You must respond with `y` when you are prompted to continue into advanced mode and you see the advanced mode prompt (*>).
 
-....
-cluster_A::> metrocluster configure
+.. Configure the MetroCluster with the `-allow-with-one-aggregate true` parameter:
++
+`metrocluster configure -allow-with-one-aggregate true _node-name_`
 
-[Job 439] Job succeeded: Configure is successful.
-
-cluster_A::>
-....
+.. Return to the admin privilege level:
++
+`set -privilege admin`
+|===
++
+NOTE: The best practice is to have multiple mirrored data aggregates. When there is only one mirrored aggregate, there is less protection because the metadata volumes are located on the same aggregate rather than on separate aggregates.
 
 . Verify that the nodes are added to their DR group:
 +
