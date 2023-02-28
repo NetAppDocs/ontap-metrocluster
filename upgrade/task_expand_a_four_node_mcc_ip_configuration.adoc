@@ -269,6 +269,77 @@ link:../install-ip/using_rcf_generator.html[Cabling the IP switches]
 +
 Do not complete the cluster wizard or node wizard at this time.
 
+== Upgrade RCF files
+
+[.lead]
+If you are installing new switch firmware, you must install the switch firmware before upgrading the RCF file.
+
+.About this task
+
+This procedure disrupts traffic on the switch where the RCF file is upgraded. Traffic will resume once the new RCF file is applied.
+
+.Steps
+. Verify the health of the configuration.
+.. Verify that the MetroCluster components are healthy:
++
+`metrocluster check run`
++
+----
+cluster_A::*> metrocluster check run
+
+----
+
++
+The operation runs in the background.
+
+.. After the `metrocluster check run` operation completes, run `metrocluster check show` to view the results.
++
+After approximately five minutes, the following results are displayed:
++
+----
+-----------
+::*> metrocluster check show
+
+Last Checked On: 4/7/2019 21:15:05
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          warning
+clusters            ok
+connections         not-applicable
+volumes             ok
+7 entries were displayed.
+----
+
+.. Check the status of the running MetroCluster check operation:
++
+`metrocluster operation history show -job-id 38`
+.. Verify that there are no health alerts:
++
+`system health alert show`
+. Prepare the IP switches for the application of the new RCF files.
++
+Follow the steps for your switch vendor:
++
+* link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
++
+* link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
+
+. Download and install the IP RCF file, depending on your switch vendor.
+
++
+NOTE: Update the switches in the following order:  Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2
+
+* link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom IP RCF files]
+
+* link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
++
+
+NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switchport mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
+
 == Joining the new nodes to the clusters
 
 You must add the four new MetroCluster IP nodes to the existing MetroCluster configuration.
