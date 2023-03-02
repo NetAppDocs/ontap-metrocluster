@@ -971,7 +971,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 The following example shows the command and output for moving "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" to aggregate "data_a3" on "node_A_3".
 +
 ----
-cluster_A::> vol move start -volume MDV_CRS_d6b0b313ff5611e9837100a098544e51_A -destination-aggregate data_a3 -vserver cluster_A
+cluster_A::*> vol move start -volume MDV_CRS_d6b0b313ff5611e9837100a098544e51_A -destination-aggregate data_a3 -vserver cluster_A
 
 Warning: You are about to modify the system volume
          "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A". This might cause severe
@@ -987,28 +987,14 @@ Warning: You are about to modify the system volume
 The following output shows that the MDV volume has been successfully moved.
 +
 ----
-cluster_A::> vol show MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
+cluster_A::*> vol show MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 Vserver     Volume       Aggregate    State      Type       Size  Available Used%
 ---------   ------------ ------------ ---------- ---- ---------- ---------- -----
 cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
                        aggr_a2      online     RW         10GB     9.50GB    0%
 ----
 
-.. Return to admin mode:
-+
-`set -privilege admin`
 . Move epsilon from an old node to a new node:
-+
-.. Enter advanced privilege mode.
-+
-`set -priv advanced`
-+
-----
-cluster_B::*> set -priv advanced
-
-Warning: These advanced commands are potentially dangerous; use them only when directed to do so by NetApp personnel.
-Do you want to continue? {y|n}: y
-----
 +
 .. Identify which node currently has epsilon:
 +
