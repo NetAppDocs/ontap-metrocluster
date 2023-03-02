@@ -114,11 +114,11 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 `cluster show`
 +
 ----
-cluster_A::> cluster show -vserver Cluster
-Node           Health  Eligibility   Epsilon
--------------- ------  -----------   -------
-node_A_1    true    true          false
-node_A_2    true    true          false
+cluster_A::> cluster show
+Node           Health  Eligibility   
+-------------- ------  -----------   
+node_A_1       true    true          
+node_A_2       true    true          
 
 cluster_A::>
 ----
@@ -1004,7 +1004,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 `set -priv advanced`
 +
 ----
-cluster_B::> set -priv advanced
+cluster_B::*> set -priv advanced
 
 Warning: These advanced commands are potentially dangerous; use them only when directed to do so by NetApp personnel.
 Do you want to continue? {y|n}: y
@@ -1015,7 +1015,7 @@ Do you want to continue? {y|n}: y
 `cluster show -fields epsilon`
 +
 ----
-cluster_B::> cluster show -fields epsilon
+cluster_B::*> cluster show -fields epsilon
 node             epsilon
 ---------------- -------
 node_A_1-old      true
@@ -1037,7 +1037,7 @@ node_A_4-new      false
 +
 
 ----
-cluster_A::> cluster show -fields epsilon
+cluster_A::*> cluster show -fields epsilon
 node             epsilon
 ---------------- -------
 node_A_1-old      false
@@ -1049,3 +1049,4 @@ node_A_4-new      false
 
 // 2021-04-21 1374268
 // 2023-02-20, GH225
+// 2023-03-02, GH225
