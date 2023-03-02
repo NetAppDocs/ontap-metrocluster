@@ -96,7 +96,7 @@ NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. N
 
 * Allow minimal write privileges. The unprivileged  Tiebreaker service account should not have access to overwrite its executable binary or any  configuration files. Only directories and files for local Tiebreaker storage (eg., for integrated backend storage) or audit logs should be writable by the Tiebreaker user. 
 
-* End-to-End TLS. Tiebreaker should always be used with TLS in production. If intermediate load balancers or reverse proxies are used to front Tiebreaker, you should use TLS for all network connections between every component of the system (including backend storage) to ensure all traffic is encrypted in transit to and from Tiebreaker. When possible, you should set the HTTP Strict Transport Security (HSTS) header by using Tiebreaker's custom response headers feature. 
+* End-to-End Transport Layer Security (TLS). Tiebreaker should always be used with TLS. If intermediate load balancers or reverse proxies are used to front Tiebreaker, you should use TLS for all network connections between every component of the system (including backend storage) to ensure all traffic is encrypted in transit to and from Tiebreaker. When possible, you should set the HTTP Strict Transport Security (HSTS) header by using Tiebreaker's custom response headers feature. 
 
 * You must install and run the latest version of OpenSSH. 
 * Do not permit anonymous users. 
@@ -310,7 +310,7 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
  
 . Create a Vault configuration file and ensure the configuration file is created under the "/root" directory.
 +
-NOTE: TLS is disabled in the configuration file provided in the following example and the file is unsecure. However, the Vault server is running on the local host, and therefore there is no security risk.
+NOTE: To secure the communication with Vault, you should use TLS for all network connections.
 +
 ----
 [root@mcctb ~]# cat > config.hcl
@@ -332,9 +332,25 @@ NOTE: TLS is disabled in the configuration file provided in the following exampl
 
 . Export the Vault address.
 +
+Select the correct option depending on whether you are using TLS.
++
+[role="tabbed-block"]
+====
+.Option 1. When using TLS
+--
+----
+[root@mcctb ~]# export VAULT_ADDR=’https://127.0.0.1:8300'
+----
+--
+.Option 2. When not using TLS
+--
 ----
 [root@mcctb ~]# export VAULT_ADDR="http://127.0.0.1:8200"
 ----
+--
+====
+
+
 . Initialize Vault.
 +
 ----
