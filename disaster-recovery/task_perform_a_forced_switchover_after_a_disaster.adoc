@@ -50,14 +50,14 @@ The `metrocluster switchover` command switches over the nodes in all DR groups i
 
 .Steps
 
-. Implement the switchover:
+. Perform the switchover by running the following command from the surviving site:
 +
 `metrocluster switchover -forced-on-disaster true`
 +
-The operation can take a period of minutes to complete.
+The operation can take a period of minutes to complete. You can verify progress using the `metrocluster operation show` command.
 
 . Answer `y` when prompted to continue with the switchover.
-. Verify that the switchover was completed successfully by running the metrocluster operation show command.
+. Verify that the switchover was completed successfully by running the `metrocluster operation show` command.
 +
 ....
 mcc1A::> metrocluster operation show
@@ -110,3 +110,6 @@ If your database uses LUNs, review the steps to make the LUNs accessible to the 
 .Related information
 
 link:../manage/concept_monitoring_and_protecting_database_validity_by_using_nvfail.html[Monitoring and protecting database validity by using NVFAIL]
+
+// 2023-MAR-7, GH issue 273
+
