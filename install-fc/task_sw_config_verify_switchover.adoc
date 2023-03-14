@@ -2339,6 +2339,8 @@ Remote: cluster_A         Configuration state configured
 
 You must configure either in-order delivery (IOD) or out-of-order delivery (OOD) of frames according to the fibre channel (FC) switch configuration. If the FC switch is configured for IOD, then the ONTAP software must be configured for IOD. Similarly, if the FC switch is configured for OOD, then ONTAP must be configured for OOD.
 
+NOTE: Changing the configuration requires rebooting the controller.
+
 .Steps
 
 . Configure ONTAP to operate either IOD or OOD of frames.
@@ -2397,7 +2399,9 @@ mcc4-b2      mlx4_0          IB       Up    false    192.0.2.10  	 ib2b
 mcc4-b12_siteB::*> metrocluster interconnect adapter modify -node mcc4-b1 -is-ood-enabled true
 mcc4-b12_siteB::*> metrocluster interconnect adapter modify -node mcc4-b2 -is-ood-enabled true
 ----
-
++
+.. Reboot the controller by performing a high-availability (HA) takeover in both directions.
++
 .. Verify the settings:
 +
 `metrocluster interconnect adapter show`
