@@ -4,14 +4,27 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, replace, ip, switch
 summary: 'You might need to replace a failed switch, or upgrade or downgrade a switch. The new switch can be the same as the old switch when a switch has failed, or you can change the switch type \(upgrade or downgrade the switch\).'
 ---
-= Replacing an IP switch
+= Replace an IP switch or change the use of existing MetroCluster IP switches
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-You might need to replace a failed switch, or upgrade or downgrade a switch. The new switch can be the same as the old switch when a switch has failed, or you can change the switch type (upgrade or downgrade the switch).
+You might need to replace a failed switch, upgrade or downgrade a switch, or change the use of existing MetroCluster IP switches. 
 
+The following conversions are supported in this procedure:
+
+. Change of the switch vendor, type, or both. The new switch can be the same as the old switch when a switch has failed, or you can change the switch type (upgrade or downgrade the switch). 
++
+For example, if you need to expand a MetroCluster IP from a single four-node configuration using AFF A400 controllers and BES-53248 switches to an eight-node configuration using AFF A400 controllers. The BES-53248 does not support this configuration so you must change the switches to a supported type for the configuration. 
++
 If you want to replace a failed switch with the same type of switch, you only need to replace the failed switch. If you want to upgrade or downgrade a switch, you need to adjust two switches that are in the same network. Two switches are in the same network if they are connected with an inter-switch link (ISL) and are not located at the same site. For example, Network 1 includes IP_switch_A_1 and IP_switch_B_1. Network 2 includes IP_switch_A_2 and IP_switch_B_2 as shown in the diagram below:
+
+. Convert a MetroCluster IP to a MetroCluster IP using shared storage MetroCluster switches
++
+For example, if you have a regular MetroCluster IP configuration using A700 controllers and you want to reconfigure the MetroCluster to connect NS224 shelves to the same switches. 
++
+NOTE: Your MetroCluster IP might already connect NS224 shelves directly or to dedicated storage switches.
+
 
 image::../media/mcc_ip_hardware_architecture_ip_interconnect.png[]
 
@@ -70,7 +83,7 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 ----
 
  .. Check that there are no health alerts: `*system health alert show*`
-. Configure the new switch before installation.
+. Configure the new switch before installation. If you are reusing existing switches, skip this step and go directly to [[Step 4]]
 +
 NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
 +
@@ -85,10 +98,24 @@ If you upgrade or downgrade a switch, apply the latest supported RCF file for th
 `*network port show*`
 . Disconnect the ISL connections from the remote switch that connect to the old switch.
 +
-You should disconnect the ISL connections from the ports on the IP_switch_A_1 that connect to IP_switch_B_1.
+You should disconnect the ISL connections from the ports on the IP_switch_A_1 that connect to IP_switch_B_1. Uncable the local cluster interfaces (if required), the MetroCluster IP interfaces and all ISL's (if required).
++
+.. Remove the connections in the following order:
++
+If the local cluster interfaces are connected to a switch:
++
+... uncable the local cluster interfaces
+... uncable the local cluster ISL's
+... uncable the MetroCluster IP interfaces
++
+.. If your current switches are not MetroCluster compliant switches, uncable the ISLs to the remote site if you are in on of the following two configurations:
++
+* You are using new switches
+* You are using existing switches and the new configuration uses different cabling for the MetroCluster ISL connections
 
-. Power off the switch, remove the cables and physically remove IP_switch_B_1.
-. Install the new switch.
+. If you are using new switches, power off the switch, remove the cables and physically remove IP_switch_B_1. If you are using existing switches, skip this step. 
+
+. Install the new switch. Skip this step if you are reusing existing switches. 
 +
 Cable the new switch first (including the ISLs) according to the steps in the _Cabling the IP switches_ section in the link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration].
 +
@@ -97,6 +124,14 @@ Cable the new switch first (including the ISLs) according to the steps in the _C
 The used ports might be different from those on the old switch if the switch type is different.
 If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs. Only cable the local ISLs if you are upgrading or downgrading the switches in the second network and both switches at one site are the same type.
 ====
+
+. Configure the  existing switches. Skip this step if you are using new switches.
++
+To configure the existing switches follow the steps to upgrade the firmware and RCF files.
++
+If you need to upgrade the firmware: Upgrading firmware on MetroCluster IP switches
++
+Upgrade the RCF files: Upgrade RCF files on MetroCluster IP switches
 
 . Power up the switch or switches.
 +
@@ -107,3 +142,5 @@ If the new switch is the same, power up the new switch. If you are upgrading or 
 If you are upgrading or downgrading the switches in the first network, you might see some alerts related to local clustering.
 +
 NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for the second network.
+
+// 2022 Apr 13, BURT 1536708
