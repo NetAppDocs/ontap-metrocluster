@@ -4,16 +4,19 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, refresh, four, node, ip, configuration, add, autosupport
 summary: 'Beginning with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.'
 ---
-= Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
+= Refreshing a four-node or an eight-node MetroCluster IP configuration (ONTAP 9.8 and later)
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 Beginning with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.
 
+Beginning with ONTAP 9.13.1, you can upgrade the controllers and storage in an eight-node MetroCluster IP configuration by expanding the configuration to become a temporary twelve-node configuration and then removing the old DR groups.
+
 .About this task
 
-* This procedure is supported on systems running ONTAP 9.8 and later.
+* If you have a four-node configuration, your system must be running ONTAP 9.8 or later.
+* If you have an eight-node configuration, your system must be running ONTAP 9.13.1 or later
 * If you are upgrading the IP switches, they should be upgraded before to performing this refresh procedure.
 * References to "old nodes" mean the nodes that you intend to replace.
 
@@ -89,6 +92,8 @@ After you have removed the old DR group (DR group one), the configuration appear
 +
 image::../media/mcc_dr_group_d.png[]
 
+. If you have an eight-node configuration, you must repeat the entire procedure for DR groups three and four.
+
 . Confirm the operational mode of the MetroCluster configuration and perform a MetroCluster check.
 .. Confirm the MetroCluster configuration and that the operational mode is normal:
 +
@@ -137,3 +142,4 @@ Refer to the product documentation.
 
 // BURT 1374268, 21 APR 2021
 // BURT 1448684, 02 FEB 2022
+// 14 Apr 2023, BURT 1546321
