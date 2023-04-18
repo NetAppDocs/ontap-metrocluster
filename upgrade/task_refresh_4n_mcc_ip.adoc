@@ -23,7 +23,7 @@ Beginning with ONTAP 9.13.1, you can upgrade the controllers and storage in an e
 * You can only refresh specific platform models using this procedure in a MetroCluster FC configuration. 
 ** For information on what platform upgrade combinations are supported review the MetroCluster IP refresh table in  link:../upgrade/concept_choosing_tech_refresh_mcc.html#supported-metrocluster-ip-tech-refresh-combinations[Choosing a system refresh method].
 
-NOTE: You *must* complete this procedure for each of the DR groups, one DR group at a time.
+NOTE: You *must* perform this procedure on one DR group at a time, for each of the DR groups.
 
 .Steps
 
@@ -32,6 +32,10 @@ NOTE: You *must* complete this procedure for each of the DR groups, one DR group
 At this stage, the four-node configuration appears as shown in the following image:
 +
 image::../media/mcc_dr_group_a.png[]
++
+The eight-node configuration appears as shown in the following image:
++
+image::../media/mcc_dr_groups_8_node.gif[]
 
 . To prevent automatic support case generation, send an AutoSupport message to indicate the upgrade is underway.
 .. Issue the following command:
@@ -74,10 +78,12 @@ Refer to the product documentation.
 When the expansion procedure is complete, the temporary configuration appears as shown in the following images:
 +
 .Temporary eight-node configuration
++
 image::../media/mcc_dr_group_b.png[]
 +
 .Temporary twelve-node configuration
-
++
+image::../media/mcc_dr_group_b.png[]
 . Move the CRS volumes.
 +
 Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations].
