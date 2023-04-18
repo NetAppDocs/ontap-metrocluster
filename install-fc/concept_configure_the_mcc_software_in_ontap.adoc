@@ -1677,11 +1677,11 @@ policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.
 +
 [role="tabbed-block"]
 ====
-.In ONTAP 9.6 and later
+.ONTAP 9.6 and later
 --
 Run the command: `network interface show -service-policy default-intercluster`
 --
-.In ONTAP 9.5 and earlier
+.ONTAP 9.5 and earlier
 --
 Run the command: `network interface show -role intercluster`
 --
@@ -1706,21 +1706,20 @@ cluster01
 +
 [role="tabbed-block"]
 ====
-.In ONTAP 9.6 and later
+.ONTAP 9.6 and later
 --
-Ron the command: `network interface show -service-policy default-intercluster -failover`
+Run the command: `network interface show -service-policy default-intercluster -failover`
 --
-.In ONTAP 9.5 and earlier
+.ONTAP 9.5 and earlier
 --
 Run the command: `network interface show -role intercluster -failover`
 --
 ====
-
 +
 For complete command syntax, see the man page.
 +
 The following example shows that the intercluster LIFs "cluster01_icl01" and "cluster01_icl02" on the SVM "e0e" port will fail over to the "e0f" port.
-
++
 ----
 cluster01::> network interface show -service-policy default-intercluster –failover
          Logical         Home                  Failover        Failover
@@ -1778,11 +1777,11 @@ cluster01-02
 +
 [role="tabbed-block"]
 ====
-.In ONTAP 9.6 and later
+.ONTAP 9.6 and later
 --
 Run the command: `network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
 --
-.In ONTAP 9.5 and earlier
+.ONTAP 9.5 and earlier
 --
 Run the command:
 `network interface create -vserver system_SVM -lif LIF_name -role intercluster -home-node node -home-port port -address port_IP -netmask netmask`
@@ -1809,11 +1808,11 @@ policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.
 +
 [role="tabbed-block"]
 ====
-.In ONTAP 9.6 and later
+.ONTAP 9.6 and later
 --
 Run the command: `network interface show -service-policy default-intercluster`
 --
-.In ONTAP 9.5 and earlier
+.ONTAP 9.5 and earlier
 --
 Run the command: `network interface show -role intercluster`
 --
@@ -1837,11 +1836,11 @@ cluster01
 +
 [role="tabbed-block"]
 ====
-.In ONTAP 9.6 and later
+.ONTAP 9.6 and later
 --
 Run the command: `network interface show –service-policy default-intercluster -failover`
 --
-.In ONTAP 9.5 and earlier
+.ONTAP 9.5 and earlier
 --
 Run the command: 
 `network interface show -role intercluster -failover`
@@ -2361,10 +2360,10 @@ If the FC switch is configured for IOD, then the ONTAP software must be configur
 
 . Configure ONTAP to operate either IOD or OOD of frames.
 ** By default, IOD of frames is enabled in ONTAP. To check the configuration details:
-... Enter advanced mode:
+.. Enter advanced mode:
 +
 `set advanced`
-... Verify the settings:
+.. Verify the settings:
 +
 `metrocluster interconnect adapter show`
 +
@@ -2384,10 +2383,10 @@ mcc4-b2      mlx4_0          IB       Up    false    192.0.2.10  	 ib2b
 8 entries were displayed.
 ----
 ** The following steps must be performed on each node to configure OOD of frames:
-... Enter advanced mode:
+.. Enter advanced mode:
 +
 `set advanced`
-... Verify the MetroCluster configuration settings:
+.. Verify the MetroCluster configuration settings:
 +
 `metrocluster interconnect adapter show`
 +
@@ -2407,7 +2406,7 @@ mcc4-b2      mlx4_0          IB       Up    false    192.0.2.10  	 ib2b
 8 entries were displayed.
 ----
 
-... Enable OOD on node "`mcc4-b1`" and node "`mcc4-b2`":
+.. Enable OOD on node "`mcc4-b1`" and node "`mcc4-b2`":
 +
 `metrocluster interconnect adapter modify -node _node_name_ -is-ood-enabled true`
 +
@@ -2416,7 +2415,7 @@ mcc4-b12_siteB::*> metrocluster interconnect adapter modify -node mcc4-b1 -is-oo
 mcc4-b12_siteB::*> metrocluster interconnect adapter modify -node mcc4-b2 -is-ood-enabled true
 ----
 
-... Verify the settings:
+.. Verify the settings:
 +
 `metrocluster interconnect adapter show`
 +
@@ -2786,7 +2785,7 @@ NOTE: Support for Config Advisor is limited, and available only online.
 
 . Go to the Config Advisor download page and download the tool.
 +
-https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor^]
 
 . Run Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
@@ -2902,4 +2901,7 @@ You can provide additional protection for the cluster configuration backup files
 The https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[Cluster Management with the CLI] contains additional information under the section _Managing configuration backups_.
 
 // BURT 1448684, 12 JAN 2022
-// 2023-FEB-14, GH issue 138
+// 2030-FEB-14, GH issue 138
+// 2023-MAR-20, internal GH issue 221
+
+
