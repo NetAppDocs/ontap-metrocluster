@@ -93,9 +93,10 @@ The Tiebreaker software immediately triggers an alert when the node stops operat
 
 === Panic
 
-The Tiebreaker software triggers an alert when the NV interconnect connection between the sites is down and the surviving site indicates the "`AllLinksSevered`" status. This only happens after the coredump process is complete. In this scenario, the time taken between the cluster becoming unreachable and the detection of a disaster might be longer or approximately equal to the time taken for the coredump process. In many cases, the detection time is more than 30 seconds.
+In MetroCluster FC configurations, the Tiebreaker software triggers an alert when the NV interconnect connection between the sites is down and the surviving site indicates the "`AllLinksSevered`" status. This only happens after the coredump process is complete. In this scenario, the time taken between the cluster becoming unreachable and the detection of a disaster might be longer or approximately equal to the time taken for the coredump process. In many cases, the detection time is more than 30 seconds.
 
 If a node stops operating but does not generate a file for the coredump process, then the detection time should not be longer than 30 seconds.
+In MetroCluster IP configurations, the NV stops communicating and the surviving site is not aware of the coredump process.
 
 === Halt or reboot
 

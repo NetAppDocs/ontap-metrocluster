@@ -16,15 +16,14 @@ Beginning with ONTAP 9.9.1, you can add four new nodes to the MetroCluster IP co
 * The old and new nodes must be running the same version of ONTAP.
 * You must ensure that the old and new platform models are supported for platform mixing.
 +
-https://hwu.netapp.com[NetApp Hardware Universe]
+https://hwu.netapp.com[NetApp Hardware Universe^]
 
 * You must ensure that the old and new platform models are both supported by the IP switches.
 +
-https://hwu.netapp.com[NetApp Hardware Universe]
+https://hwu.netapp.com[NetApp Hardware Universe^]
 
 * The new nodes must have enough storage to accommodate the data of the old nodes, along with adequate disks for root aggregates and spare disks.
 * This procedure is not supported on FAS2750 or AFF A220 systems.
-
 
 == Example naming in this procedure
 
@@ -111,14 +110,14 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 . Verify that the cluster is healthy:
 +
-`cluster show -vserver Cluster`
+`cluster show`
 +
 ----
-cluster_A::> cluster show -vserver Cluster
-Node           Health  Eligibility   Epsilon
--------------- ------  -----------   -------
-node_A_1    true    true          false
-node_A_2    true    true          false
+cluster_A::> cluster show
+Node           Health  Eligibility   
+-------------- ------  -----------   
+node_A_1       true    true          
+node_A_2       true    true          
 
 cluster_A::>
 ----
@@ -268,6 +267,77 @@ link:../install-ip/using_rcf_generator.html[Cabling the IP switches]
 . From Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the boot_ontap command to boot the system and get to cluster setup.
 +
 Do not complete the cluster wizard or node wizard at this time.
+
+== Upgrade RCF files
+
+[.lead]
+If you are installing new switch firmware, you must install the switch firmware before upgrading the RCF file.
+
+.About this task
+
+This procedure disrupts traffic on the switch where the RCF file is upgraded. Traffic will resume once the new RCF file is applied.
+
+.Steps
+. Verify the health of the configuration.
+.. Verify that the MetroCluster components are healthy:
++
+`metrocluster check run`
++
+----
+cluster_A::*> metrocluster check run
+
+----
+
++
+The operation runs in the background.
+
+.. After the `metrocluster check run` operation completes, run `metrocluster check show` to view the results.
++
+After approximately five minutes, the following results are displayed:
++
+----
+-----------
+::*> metrocluster check show
+
+Last Checked On: 4/7/2019 21:15:05
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          warning
+clusters            ok
+connections         not-applicable
+volumes             ok
+7 entries were displayed.
+----
+
+.. Check the status of the running MetroCluster check operation:
++
+`metrocluster operation history show -job-id 38`
+.. Verify that there are no health alerts:
++
+`system health alert show`
+. Prepare the IP switches for the application of the new RCF files.
++
+Follow the steps for your switch vendor:
++
+* link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults^]
++
+* link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults^]
+
+. Download and install the IP RCF file, depending on your switch vendor.
+
++
+NOTE: Update the switches in the following order:  Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2
+
+* link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom IP RCF files]
+
+* link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
++
+
+NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switchport mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
 
 == Joining the new nodes to the clusters
 
@@ -773,6 +843,26 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 
 .Steps
 
+. Refresh the MetroCluster configuration:
+.. Enter advanced privilege mode:
++
+`set -privilege advanced`
+.. Refresh the MetroCluster configuration on one of the new nodes:
++
+`metrocluster configure`
++
+The following example shows the MetroCluster configuration refreshed on both DR groups:
++
+----
+cluster_A::*> metrocluster configure -refresh true
+
+[Job 726] Job succeeded: Configure is successful.
+----
+
+.. Return to admin privilege mode:
++
+`set -privilege admin`
+
 . Create mirrored data aggregates on each of the new MetroCluster nodes:
 +
 `storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true`
@@ -819,25 +909,6 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ----
 
-. Refresh the MetroCluster configuration:
-.. Enter advanced privilege mode:
-+
-`set -privilege advanced`
-.. Refresh the MetroCluster configuration on one of the new nodes:
-+
-`metrocluster configure`
-+
-The following example shows the MetroCluster configuration refreshed on both DR groups:
-+
-----
-cluster_A::*> metrocluster configure -refresh true
-
-[Job 726] Job succeeded: Configure is successful.
-----
-
-.. Return to admin privilege mode:
-+
-`set -privilege admin`
 . Verify that the nodes are added to their DR group.
 +
 ----
@@ -899,7 +970,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 The following example shows the command and output for moving "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" to aggregate "data_a3" on "node_A_3".
 +
 ----
-cluster_A::> vol move start -volume MDV_CRS_d6b0b313ff5611e9837100a098544e51_A -destination-aggregate data_a3 -vserver cluster_A
+cluster_A::*> vol move start -volume MDV_CRS_d6b0b313ff5611e9837100a098544e51_A -destination-aggregate data_a3 -vserver cluster_A
 
 Warning: You are about to modify the system volume
          "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A". This might cause severe
@@ -915,23 +986,21 @@ Warning: You are about to modify the system volume
 The following output shows that the MDV volume has been successfully moved.
 +
 ----
-cluster_A::> vol show MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
+cluster_A::*> vol show MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 Vserver     Volume       Aggregate    State      Type       Size  Available Used%
 ---------   ------------ ------------ ---------- ---- ---------- ---------- -----
 cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
                        aggr_a2      online     RW         10GB     9.50GB    0%
 ----
 
-.. Return to admin mode:
-+
-`set -privilege admin`
 . Move epsilon from an old node to a new node:
++
 .. Identify which node currently has epsilon:
 +
 `cluster show -fields epsilon`
 +
 ----
-cluster_B::> cluster show -fields epsilon
+cluster_B::*> cluster show -fields epsilon
 node             epsilon
 ---------------- -------
 node_A_1-old      true
@@ -953,7 +1022,7 @@ node_A_4-new      false
 +
 
 ----
-cluster_A::> cluster show -fields epsilon
+cluster_A::*> cluster show -fields epsilon
 node             epsilon
 ---------------- -------
 node_A_1-old      false
@@ -964,3 +1033,5 @@ node_A_4-new      false
 ----
 
 // 2021-04-21 1374268
+// 2023-02-20, GH225
+// 2023-03-02, GH225

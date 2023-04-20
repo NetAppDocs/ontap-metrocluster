@@ -37,7 +37,7 @@ The switchover process, in addition to providing nondisruptive operations during
 
 .Before you begin
 
-* At least one of the surviving site nodes must up and running before you perform the switchover.
+* At least one of the surviving site nodes must be up and running before you perform the switchover.
 * All previous configuration changes must be complete before performing a switchback operation.
 +
 This is to avoid competition with the negotiated switchover or switchback operation.
@@ -50,14 +50,15 @@ The `metrocluster switchover` command switches over the nodes in all DR groups i
 
 .Steps
 
-. Implement the switchover:
+. Perform the switchover by running the following command at the surviving site:
 +
 `metrocluster switchover -forced-on-disaster true`
+
 +
-The operation can take a period of minutes to complete.
+NOTE: The operation can take a period of minutes to complete. You can verify progress using the `metrocluster operation show` command.
 
 . Answer `y` when prompted to continue with the switchover.
-. Verify that the switchover was completed successfully by running the metrocluster operation show command.
+. Verify that the switchover was completed successfully by running the `metrocluster operation show` command.
 +
 ....
 mcc1A::> metrocluster operation show
@@ -110,3 +111,6 @@ If your database uses LUNs, review the steps to make the LUNs accessible to the 
 .Related information
 
 link:../manage/concept_monitoring_and_protecting_database_validity_by_using_nvfail.html[Monitoring and protecting database validity by using NVFAIL]
+
+// 2023-MAR-7, GH issue 273
+
