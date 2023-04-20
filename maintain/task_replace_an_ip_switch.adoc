@@ -21,7 +21,7 @@ If you want to replace a failed switch with the same type of switch, you only ne
 +
 image::../media/mcc_ip_hardware_architecture_ip_interconnect.png[]
 
-. Convert a MetroCluster IP to a MetroCluster IP using shared storage MetroCluster switches
+. Convert a MetroCluster IP to a MetroCluster IP using shared Storage MetroCluster switches
 +
 For example, if you have a regular MetroCluster IP configuration using A700 controllers and you want to reconfigure the MetroCluster to connect NS224 shelves to the same switches. 
 +
@@ -41,13 +41,15 @@ If you upgrade or downgrade the networks, you must repeat this procedure for the
 
 The following is an example worksheet for converting a MetroCluster IP configuration to a shared Storage configuration connecting two NS224 shelves using the existing switches.
 
+Worksheet definitions:
+
 * Existing configuration: The cabling of the existing MetroCluster configuration.
 * New configuration with NS224 shelves: The target configuration where the switches are shared between Storage and the MetroCluster.
 
 The highlighted fields in this worksheet indicate the following:
 
 * Green: Indicates that the cabling does not need to change.
-* Yellow: Indicates that the ports must be moved (with the same or different configuration)
+* Yellow: Indicates that the ports must be moved (with the same or a different configuration).
 * Blue: Indicates ports that are new connections.
 
 image:../media/mcc_port_usage_workflow.png[]
@@ -103,7 +105,7 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 ----
 
  .. Check that there are no health alerts: `*system health alert show*`
-. Configure the new switch before installation. If you are reusing existing switches, skip this step and go directly to <<existing,step_4>>
+. Configure the new switch before installation. If you are reusing existing switches, skip this step and go directly to <<existing,step 4>>
 +
 NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
 +
@@ -116,7 +118,7 @@ If you upgrade or downgrade a switch, apply the latest supported RCF file for th
 . Run the port show command to view information about the network ports:
 +
 `*network port show*`
-. [[existing,step_4]]Disconnect the ISL connections from the remote switch that connect to the old switch.
+. [[existing,step 4]]Disconnect the ISL connections from the remote switch that connect to the old switch.
 +
 You should disconnect the ISL connections from the ports on the IP_switch_A_1 that connect to IP_switch_B_1. 
 +
@@ -134,7 +136,7 @@ In the example <<port_usage_worksheet>>, the switches do not change. The MetroCl
 
 . If you are using new switches, power off the switch, remove the cables and physically remove IP_switch_B_1. If you are reusing existing switches, you can skip this step.
 +
-NOTE: Do *not* cable the new switches with the exception of the management interface (if used)
+NOTE: Do *not* cable the new switches with the exception of the management interface (if used).
 
 . Configure the existing switches. If you are using new switches, you can skip this step.
 +
@@ -156,7 +158,7 @@ Cable the switches the following order (if required):
 ====
 * The used ports might be different from those on the old switch if the switch type is different.
 If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs. Only cable the local ISLs if you are upgrading or downgrading the switches in the second network and both switches at one site are the same type.
-* If you are upgrading switches Switch-A1 and Switch-B1, you must perform Steps 1 through 6 for switches Switch-A2 and Switch-B2
+* If you are upgrading switches Switch-A1 and Switch-B1, you must perform Steps 1 through 6 for switches Switch-A2 and Switch-B2.
 ====
 
 . Finalize the local cluster cabling.
@@ -167,7 +169,7 @@ If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs.
 
 .. If the local cluster interfaces are *not* connected to a switch:
 +
-* Use the generic procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in the install guide or the RCF cabling files to connect the local cluster interface.
+* Use the generic procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration.] or the RCF cabling files to connect the local cluster interface.
 
 . Power up the switch or switches.
 +
@@ -184,6 +186,7 @@ NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for
 If you are reconfiguring a MetroCluster IP that does not connect NS224 shelves to the MetroCluster IP switches, then use the appropriate guides to add or move the NS224 shelves:
 +
 * link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_add_shelves_using_shared_storage.html[Adding shelves to a MetroCluster IP using shared Storage MetroCluster switches]
-* Move NS224 shelves from direct connect to the switch
-* Move NS224 shelves from dedicates storage switches to the MetroCluster IP switches
+* link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-cluster-dat-storage.html[Migrate from a switchless cluster with direct-attached storage]
+* link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switched-cluster-sat-storage.html[Migrate from a switched cluster with switch-attached storage]
+
 // 2022 Apr 13, BURT 1536708
