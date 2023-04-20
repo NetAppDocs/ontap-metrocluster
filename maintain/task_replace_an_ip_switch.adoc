@@ -28,7 +28,7 @@ For example, if you have a regular MetroCluster IP configuration using A700 cont
 [NOTE] 
 ====
 * If you are adding or removing shelves in a MetroCluster IP configuration using shared storage MetroCluster IP switches, follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_add_shelves_using_shared_storage.html[Adding shelves to a MetroCluster IP using shared Storage MetroCluster switches]
-* Your MetroCluster IP might already connect NS224 shelves directly or to dedicated storage switches.
+* Your MetroCluster IP might already directly connect to NS224 shelves or to dedicated storage switches.
 ====
 
 This procedure applies when you are using NetApp-validated switches. If you are using MetroCluster-compliant switches, refer to the switch vendor.
@@ -36,9 +36,10 @@ This procedure applies when you are using NetApp-validated switches. If you are 
 
 If you upgrade or downgrade the networks, you must repeat this procedure for the second network.
 
-.Create a cabling worksheet
+[[port_usage_worksheet]]
+.Port usage worksheet
 
-The following is an example worksheet for converting a MetroCluster IP configuration to a shared Storage configuration connecting two NS224 shelves using the existing switches.
+You can create a cabling worksheet to help you perform this procedure. The following is an example worksheet for converting a MetroCluster IP configuration to a shared Storage configuration connecting two NS224 shelves using the existing switches.
 
 * Existing configuration: The cabling of the existing MetroCluster configuration.
 * New configuration with NS224 shelves: The target configuration where the switches are shared between Storage and the MetroCluster.
@@ -102,7 +103,7 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 ----
 
  .. Check that there are no health alerts: `*system health alert show*`
-. Configure the new switch before installation. If you are reusing existing switches, skip this step and go directly to [[Step 4]]
+. Configure the new switch before installation. If you are reusing existing switches, skip this step and go directly to <<existing,step_4>>
 +
 NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
 +
@@ -115,7 +116,7 @@ If you upgrade or downgrade a switch, apply the latest supported RCF file for th
 . Run the port show command to view information about the network ports:
 +
 `*network port show*`
-. Disconnect the ISL connections from the remote switch that connect to the old switch.
+. [[existing,step_4]]Disconnect the ISL connections from the remote switch that connect to the old switch.
 +
 You should disconnect the ISL connections from the ports on the IP_switch_A_1 that connect to IP_switch_B_1. 
 +
@@ -129,7 +130,7 @@ Remove the connections in the following order:
 * Disconnect the MetroCluster IP interfaces
 * Disconnect the MetroCluster ISLs
 +
-In the <<Create a cabling worksheet>> example, the switches do not change. The MetroCluster ISLs are relocated and must be disconnected. All connections marked in green on the worksheet do not need to be disconnected.
+In the example <<port_usage_worksheet>>, the switches do not change. The MetroCluster ISLs are relocated and must be disconnected. All connections marked in green on the worksheet do not need to be disconnected.
 
 . If you are using new switches, power off the switch, remove the cables and physically remove IP_switch_B_1. If you are reusing existing switches, you can skip this step.
 +
