@@ -18,22 +18,41 @@ The following conversions are supported in this procedure:
 For example, if you need to expand a MetroCluster IP from a single four-node configuration using AFF A400 controllers and BES-53248 switches to an eight-node configuration using AFF A400 controllers. The BES-53248 does not support this configuration so you must change the switches to a supported type for the configuration. 
 +
 If you want to replace a failed switch with the same type of switch, you only need to replace the failed switch. If you want to upgrade or downgrade a switch, you need to adjust two switches that are in the same network. Two switches are in the same network if they are connected with an inter-switch link (ISL) and are not located at the same site. For example, Network 1 includes IP_switch_A_1 and IP_switch_B_1. Network 2 includes IP_switch_A_2 and IP_switch_B_2 as shown in the diagram below:
++
+image::../media/mcc_ip_hardware_architecture_ip_interconnect.png[]
 
 . Convert a MetroCluster IP to a MetroCluster IP using shared storage MetroCluster switches
 +
 For example, if you have a regular MetroCluster IP configuration using A700 controllers and you want to reconfigure the MetroCluster to connect NS224 shelves to the same switches. 
 +
-NOTE: Your MetroCluster IP might already connect NS224 shelves directly or to dedicated storage switches.
-
-
-image::../media/mcc_ip_hardware_architecture_ip_interconnect.png[]
+[NOTE] 
+====
+* If you are adding or removing shelves in a MetroCluster IP configuration using shared storage MetroCluster IP switches, follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_add_shelves_using_shared_storage.html[Adding shelves to a MetroCluster IP using shared Storage MetroCluster switches]
+* Your MetroCluster IP might already connect NS224 shelves directly or to dedicated storage switches.
+====
 
 This procedure applies when you are using NetApp-validated switches. If you are using MetroCluster-compliant switches, refer to the switch vendor.
 //GH issue #64 25/01/2022
 
 If you upgrade or downgrade the networks, you must repeat this procedure for the second network.
 
+.Create a cabling worksheet
+
+The following is an example worksheet for converting a MetroCluster IP configuration to a shared Storage configuration connecting two NS224 shelves using the existing switches.
+
+* Existing configuration: The cabling of the existing MetroCluster configuration.
+* New configuration with NS224 shelves: The target configuration where the switches are shared between Storage and the MetroCluster.
+
+The highlighted fields in this worksheet indicate the following:
+
+* Green: Indicates that the cabling does not need to change.
+* Yellow: Indicates that the ports must be moved (with the same or different configuration)
+* Blue: Indicates ports that are new connections.
+
+image:../media/mcc_port_usage_workflow.png[]
+
 .Steps
+
 . Check the health of the configuration.
  .. Check that the MetroCluster is configured and in normal mode on each cluster: `*metrocluster show*`
 +
@@ -98,40 +117,56 @@ If you upgrade or downgrade a switch, apply the latest supported RCF file for th
 `*network port show*`
 . Disconnect the ISL connections from the remote switch that connect to the old switch.
 +
-You should disconnect the ISL connections from the ports on the IP_switch_A_1 that connect to IP_switch_B_1. Uncable the local cluster interfaces (if required), the MetroCluster IP interfaces and all ISL's (if required).
+You should disconnect the ISL connections from the ports on the IP_switch_A_1 that connect to IP_switch_B_1. 
 +
-.. Remove the connections in the following order:
+NOTE: You only disconnect connections that are not using the same port in the old and new configuration. If you are using new switches, you must disconnect all connections.
 +
-If the local cluster interfaces are connected to a switch:
+Remove the connections in the following order:
 +
-... uncable the local cluster interfaces
-... uncable the local cluster ISL's
-... uncable the MetroCluster IP interfaces
+* If the local cluster interfaces are connected to a switch:
+** Disconnect the local cluster interfaces
+** Disconnect the local cluster ISLs
+* Disconnect the MetroCluster IP interfaces
+* Disconnect the MetroCluster ISLs
 +
-.. If your current switches are not MetroCluster compliant switches, uncable the ISLs to the remote site if you are in on of the following two configurations:
-+
-* You are using new switches
-* You are using existing switches and the new configuration uses different cabling for the MetroCluster ISL connections
+In the <<Create a cabling worksheet>> example, the switches do not change. The MetroCluster ISLs are relocated and must be disconnected. All connections marked in green on the worksheet do not need to be disconnected.
 
-. If you are using new switches, power off the switch, remove the cables and physically remove IP_switch_B_1. If you are using existing switches, skip this step. 
-
-. Install the new switch. Skip this step if you are reusing existing switches. 
+. If you are using new switches, power off the switch, remove the cables and physically remove IP_switch_B_1. If you are reusing existing switches, you can skip this step.
 +
-Cable the new switch first (including the ISLs) according to the steps in the _Cabling the IP switches_ section in the link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration].
+NOTE: Do *not* cable the new switches with the exception of the management interface (if used)
+
+. Configure the existing switches. If you are using new switches, you can skip this step.
++
+To configure the existing switches, follow the steps to upgrade the firmware and RCF files:
++
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_upgrade_firmware_on_mcc_ip_switches.html[Upgrading firmware on MetroCluster IP switches]
++
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_upgrade_rcf_files_on_mcc_ip_switches.html[Upgrade RCF files on MetroCluster IP switches]
+
+. Cable the switches. You can follow the steps in the  _Cabling the IP switches_ section in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration]. 
++
+Cable the switches the following order (if required): 
++
+.. Cable the ISLs to the remote site
+.. Cable the MetroCluster IP interfaces
+.. Cable the local cluster interfaces
 +
 [NOTE]
 ====
-The used ports might be different from those on the old switch if the switch type is different.
+* The used ports might be different from those on the old switch if the switch type is different.
 If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs. Only cable the local ISLs if you are upgrading or downgrading the switches in the second network and both switches at one site are the same type.
+* If you are upgrading switches Switch-A1 and Switch-B1, you must perform Steps 1 through 6 for switches Switch-A2 and Switch-B2
 ====
 
-. Configure the  existing switches. Skip this step if you are using new switches.
+. Finalize the local cluster cabling.
 +
-To configure the existing switches follow the steps to upgrade the firmware and RCF files.
+.. If the local cluster interfaces are connected to a switch:
 +
-If you need to upgrade the firmware: Upgrading firmware on MetroCluster IP switches
+* Cable the local cluster ISLs
+
+.. If the local cluster interfaces are *not* connected to a switch:
 +
-Upgrade the RCF files: Upgrade RCF files on MetroCluster IP switches
+* Use the generic procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in the install guide or the RCF cabling files to connect the local cluster interface.
 
 . Power up the switch or switches.
 +
@@ -143,4 +178,11 @@ If you are upgrading or downgrading the switches in the first network, you might
 +
 NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for the second network.
 
+. Optional, move the NS224 shelves.
++
+If you are reconfiguring a MetroCluster IP that does not connect NS224 shelves to the MetroCluster IP switches, then use the appropriate guides to add or move the NS224 shelves:
++
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_add_shelves_using_shared_storage.html[Adding shelves to a MetroCluster IP using shared Storage MetroCluster switches]
+* Move NS224 shelves from direct connect to the switch
+* Move NS224 shelves from dedicates storage switches to the MetroCluster IP switches
 // 2022 Apr 13, BURT 1536708
