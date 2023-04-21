@@ -64,12 +64,15 @@ At any stage during the upgrade, you can run the `system controller replace show
 
 .	Start the automated controller replacement procedure from site A to replace the controllers at site B:
 +
-`system controller replace start`
+`system controller replace start -nso true`
 +
 The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
 +
-NOTE: The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
+[NOTE]
+====
+* If you do not run the `system controller replace start -nso true` command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
 
+* The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
 +
 The `system controller replace start` command might report the following precheck error:
 +
@@ -81,6 +84,7 @@ Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed 
 ----
 +
 Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
+====
 
 .	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
 
@@ -209,7 +213,7 @@ After you gather information and resume the operation, the automation  proceeds 
 
 .About this task
 
-The automation operation initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers and reassign the root aggregate disks to the new controller module from flash backup, using the `sysids` gathered earlier.
+The automation operation initiates the switchover operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers, and reassign the root aggregate disks to the new controller module from flash backup using the `sysids` gathered earlier.
 
 .Before you begin
 
@@ -379,6 +383,12 @@ a|
 +
 After you run the command, wait until the node stops at the LOADER prompt.
 
+. Set the MetroCluster IP bootarg variables.
++
+Use the steps in link:task_upgrade_A700_to_A900_in_a_four_node_mcc_ip_us_switchover_and_switchback.html#configure-the-new-controllers[Set the MetroCluster IP bootarg variables].
++
+NOTE: Failure to do so will result in missing disks after you reassign the root aggregate disks to the new controller module.
+
 . Boot the node back into Maintenance mode to enable the configuration changes to take effect:
 +
 `boot_ontap maint`
@@ -456,6 +466,8 @@ rr18:9.126L27 node_B_1-old(4068741254)   Pool0  S0M1PSDW         node_B_1-old(40
 . Reassign the root aggregate disks on the drive shelves to the new controller:
 +
 `disk reassign -s _old-sysid_ -d _new-sysid_`
++
+NOTE: If your MetroCluster IP system is configured with Advanced Disk Partitioning, you must include the DR partner system id by running the `disk reassign -s old-sysid -d new-sysid -r dr-partner-sysid` command.
 +
 The following example shows reassignment of drives:
 +
@@ -568,14 +580,6 @@ Successfully restored env file from boot media...
 Rebooting to load the restored env file...
 ----
 
-. Double-check that the partner-sysid is correct:
-+
-`printenv partner-sysid`
-+
-If the partner-sysid is not correct, set it:
-+
-`setenv partner-sysid _partner-sysID_`
-
 . If root encryption is used, select the boot menu option again for your key management configuration.
 +
 
@@ -680,7 +684,7 @@ The automation operation runs verification system checks and then pauses so you 
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
-.	The automation operation performs switchback at site A and the post upgrade checks. When the operation pauses, manually check the SAN LIF status and verify the network configuration by following the console message.
+.	The automation operation performs `heal-aggregate`, `heal-root-aggregate`, and switchback operations at site A, and the post upgrade checks. When the operation pauses, manually check the SAN LIF status and verify the network configuration by following the console message.
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
