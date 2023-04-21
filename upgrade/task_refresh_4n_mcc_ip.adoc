@@ -9,21 +9,27 @@ summary: 'Beginning with ONTAP 9.8, you can upgrade the controllers and storage 
 :imagesdir: ../media/
 
 [.lead]
-Beginning with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.
-
 Beginning with ONTAP 9.13.1, you can upgrade the controllers and storage in an eight-node MetroCluster IP configuration by expanding the configuration to become a temporary twelve-node configuration and then removing the old DR groups.
+
+Beginning with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.
 
 .About this task
 
 * If you have a four-node configuration, your system must be running ONTAP 9.8 or later.
 * If you have an eight-node configuration, your system must be running ONTAP 9.13.1 or later.
-* If you are upgrading the IP switches, they should be upgraded before to performing this refresh procedure.
+* If you are upgrading the IP switches, they must be upgraded before to performing this refresh procedure.
+* This procedure describes the steps required to refresh one four-node DR group. If you have an eight-node configuration (two DR groups) and you want to refresh both DR groups, you must repeat the entire procedure for the second DR group.
 * References to "old nodes" mean the nodes that you intend to replace.
-
-* You can only refresh specific platform models using this procedure in a MetroCluster FC configuration. 
+* If you have an eight-node configuration, you can refresh one or both DR groups. 
++
+If you refresh both DR groups, you must refresh one DR group at a time. 
+* For eight-node configurations, the source and target eight-node MetroCluster platform combination must be supported. 
++
+NOTE: If you refresh both DR groups, the platform combination might not be supported after you refresh the first DR group. You must refresh both DR groups to achieve a supported eight-node configuration.
+* You can only refresh specific platform models using this procedure in a MetroCluster IP configuration. 
 ** For information on what platform upgrade combinations are supported review the MetroCluster IP refresh table in  link:../upgrade/concept_choosing_tech_refresh_mcc.html#supported-metrocluster-ip-tech-refresh-combinations[Choosing a system refresh method].
-
-NOTE: You *must* perform this procedure on one DR group at a time, for each of the DR groups.
+* The lower limits of the source and target platform apply. If you transition to a higher platform, the limits of the new platform applies only after the tech refresh of all DR groups is completed.
+* If you perform a tech refresh to a platform with lower limits than the source platform, you must adjust and reduce the limits to be at, or below, the target platform limits before performing this procedure. 
 
 .Steps
 
