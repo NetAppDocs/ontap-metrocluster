@@ -26,7 +26,7 @@ Other components in the configuration, such as storage shelves or switches, cann
 +
 https://hwu.netapp.com[NetApp Hardware Universe^]
 
-* The systems must be running the same ONTAP version. 
+* The MetroCluster systems must be running the same ONTAP version at both sites. 
 * You can use this procedure to upgrade controllers in a four-node MetroCluster IP configuration using NSO based automated switchover and switchback. 
 +
 NOTE: Performing an upgrade using aggregate relocation (ARL) with “systems controller replace” commands” is not supported for a four-node MetroCluster IP configuration.
@@ -333,9 +333,54 @@ After you install the new nodes, you need to netboot to ensure the new nodes are
 
 This task is performed on each of the new controller modules.
 
-// include reference
-include::../_include/netboot_steps.adoc[]
-// end include reference
+.Steps
+
+. Access the https://mysupport.netapp.com/site/[NetApp Support Site^] to download the files used for performing the netboot of the system.
+. Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the ontap-version_image.tgz file on a web-accessible directory.
+. Go to the web-accessible directory and verify that the files you need are available.
++
+Your directory listing should contain a netboot folder with a kernel file: ontap-version_image.tgz
++
+You do not need to extract the ontap-version_image.tgz file.
+
+. At the LOADER prompt, configure the netboot connection for a management LIF:
+** If IP addressing is DHCP, configure the automatic connection:
++
+`ifconfig e0M -auto`
+** If IP addressing is static, configure the manual connection:
++
+`ifconfig e0M -addr=ip_addr -mask=netmask` `-gw=gateway`
+
+. Perform the netboot.
+** If the platform is an 80xx series system, use this command:
++
+`netboot \http://web_server_ip/path_to_web-accessible_directory/netboot/kernel`
+** If the platform is any other system, use the following command:
++
+`netboot \http://web_server_ip/path_to_web-accessible_directory/ontap-version_image.tgz`
+
+. From the boot menu, select option *(7) Install new software first* to download and install the new software image to the boot device.
+
+    Disregard the following message: "This procedure is not supported for Non-Disruptive Upgrade on an HA pair". It applies to nondisruptive upgrades of software, not to upgrades of controllers.
+
+. If you are prompted to continue the procedure, enter `y`, and when prompted for the package, enter the URL of the image file: `\http://web_server_ip/path_to_web-accessible_directory/ontap-version_image.tgz`
++
+....
+Enter username/password if applicable, or press Enter to continue.
+....
+
+. Be sure to enter `n` to skip the backup recovery when you see a prompt similar to the following:
++
+....
+Do you want to restore the backup configuration now? {y|n}
+....
+
+. Reboot by entering `y` when you see a prompt similar to the following:
++
+....
+The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n}
+....
+
 
 
 === Clearing the configuration on a controller module
@@ -572,7 +617,7 @@ Option "`11`"
 Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 
-. If autoboot is enabled, interrupt autoboot by pressing Ctrl-C.
+
 . From the boot menu, run option "`6`".
 +
 NOTE: Option "`6`" will reboot the node twice before completing.
@@ -585,7 +630,8 @@ Successfully restored env file from boot media...
 
 Rebooting to load the restored env file...
 ----
-
++
+During one of the reboots after option "`6`", the confirmation prompt `Override system ID? {y|n}` appears. Enter `y`.
 . If root encryption is used, select the boot menu option again for your key management configuration.
 +
 
