@@ -19,7 +19,7 @@ Beginning with ONTAP 9.8, you can upgrade the controllers and storage in a four-
 
 * If you have an eight-node configuration, your system must be running ONTAP 9.13.1 or later.
 * If you have a four-node configuration, your system must be running ONTAP 9.8 or later.
-* If you are upgrading the IP switches, they must be upgraded before performing this refresh procedure.
+* If you are also upgrading the IP switches, you must upgrade them before performing this refresh procedure.
 * This procedure describes the steps required to refresh one four-node DR group. If you have an eight-node configuration (two DR groups) you can refresh one or both DR groups. 
 +
 If you refresh both DR groups, you must refresh one DR group at a time. 
@@ -29,8 +29,8 @@ If you refresh both DR groups, you must refresh one DR group at a time.
 NOTE: If you refresh both DR groups, the platform combination might not be supported after you refresh the first DR group. You must refresh both DR groups to achieve a supported eight-node configuration.
 
 * You can only refresh specific platform models using this procedure in a MetroCluster IP configuration. 
-** For information on which platform upgrade combinations are supported review the MetroCluster IP refresh table in  link:../upgrade/concept_choosing_tech_refresh_mcc.html#supported-metrocluster-ip-tech-refresh-combinations[Choosing a system refresh method].
-* The lower limits of the source and target platform apply. If you transition to a higher platform, the limits of the new platform applies only after the tech refresh of all DR groups is completed.
+** For information on which platform upgrade combinations are supported, review the MetroCluster IP refresh table in  link:../upgrade/concept_choosing_tech_refresh_mcc.html#supported-metrocluster-ip-tech-refresh-combinations[Choosing a system refresh method].
+* The lower limits of the source and target platforms apply. If you transition to a higher platform, the limits of the new platform applies only after the tech refresh of all DR groups completes.
 * If you perform a tech refresh to a platform with lower limits than the source platform, you must adjust and reduce the limits to be at, or below, the target platform limits before performing this procedure. 
 
 .Steps
@@ -79,7 +79,7 @@ Successfully removed monitor from NetApp MetroCluster Tiebreaker
 software.
 ----
 
-. Confirm that the MetroCluster configuration is removed properly by using the Tiebreaker CLI `monitor show -status` command.
+. Confirm that the MetroCluster configuration is removed correctly by using the Tiebreaker CLI `monitor show -status` command.
 +
 ----
 
@@ -114,15 +114,15 @@ image::../media/mcc_dr_group_c4.png[]
 +
 Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations].
 
-. Move the data from the old nodes to new nodes using the following procedures in link:https://docs.netapp.com/us-en/ontap-systems-upgrade/index.html[AFF and FAS System Upgrade Documentation^]
+. Move the data from the old nodes to the new nodes by using the following procedures in link:https://docs.netapp.com/us-en/ontap-systems-upgrade/index.html[AFF and FAS System Upgrade Documentation^]
 
 .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-AFE432F6-60AD-4A79-86C0-C7D12957FA63.html[Creating an aggregate and moving volumes to the new nodes^].
 +
 NOTE: You might choose to mirror the aggregate when or after it is created.
  .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-95CA9262-327D-431D-81AA-C73DEFF3DEE2.html[Moving non-SAN data LIFs and cluster management LIFs to the new nodes].
 
-. Modify the cluster's peer IP address of the transitioned nodes for each cluster:
-.. Identify the cluster_A peer using the `cluster peer show` command:
+. Modify the IP address for the cluster peer of the transitioned nodes for each cluster:
+.. Identify the cluster_A peer by using the `cluster peer show` command:
 +
 ----
 cluster_A::> cluster peer show
@@ -131,12 +131,12 @@ Peer Cluster Name         Cluster Serial Number Availability   Authentication
 cluster_B         1-80-000011           Unavailable    absent
 ----
 
-... Modify the cluster_A peer IP address using the following command:
+... Modify the cluster_A peer IP address:
 +
 `cluster peer modify -cluster cluster_A -peer-addrs node_A_3_IP -address-family ipv4`
 
 
-.. Identify the cluster_B peer using the `cluster peer show` command:
+.. Identify the cluster_B peer by using the `cluster peer show` command:
 +
 ----
 cluster_B::> cluster peer show
@@ -144,12 +144,12 @@ Peer Cluster Name         Cluster Serial Number Availability   Authentication
 ------------------------- --------------------- -------------- --------------
 cluster_A         1-80-000011           Unavailable    absent
 ----
-... Modify the cluster_B peer IP address using the following command:
+... Modify the cluster_B peer IP address:
 +
 `cluster peer modify -cluster cluster_B -peer-addrs node_B_3_IP -address-family ipv4`
 
 .. Verify that the cluster peer IP address is updated for each cluster:
-... Verify that the IP address is updated for each cluster using the `cluster peer show -instance` command.
+... Verify that the IP address is updated for each cluster by using the `cluster peer show -instance` command.
 +
 The `Remote Intercluster Addresses` field in the following examples displays the updated IP address. 
 +
@@ -210,7 +210,7 @@ cluster_B::>
 
 . Follow the steps in link:concept_removing_a_disaster_recovery_group.html[Removing a Disaster Recovery group] to remove the old DR group.
 +
-. If you want to refresh both DR groups in an eight-node configuration, you must repeat the entire procedure for each of the DR groups.
+. If you want to refresh both DR groups in an eight-node configuration, you must repeat the entire procedure for each DR group.
 +
 After you have removed the old DR group, the configuration appears as shown in the following images:
 +
