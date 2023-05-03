@@ -152,8 +152,8 @@ node_A_1-IP      true
 node_A_2-IP      false
 4 entries were displayed.
 ....
-. Modify the cluster's peer IP address of the transitioned IP nodes for each cluster:
-.. Identify the cluster_A peer using the `cluster peer show` command:
+. Modify the IP address for the cluster peer of the transitioned IP nodes for each cluster:
+.. Identify the cluster_A peer by using the `cluster peer show` command:
 +
 ----
 cluster_A::> cluster peer show
@@ -162,12 +162,12 @@ Peer Cluster Name         Cluster Serial Number Availability   Authentication
 cluster_B         1-80-000011           Unavailable    absent
 ----
 
-... Modify the cluster_A peer IP address using the following command:
+... Modify the cluster_A peer IP address:
 +
 `cluster peer modify -cluster cluster_A -peer-addrs node_A_3_IP -address-family ipv4`
 
 
-.. Identify the cluster_B peer using the `cluster peer show` command:
+.. Identify the cluster_B peer by using the `cluster peer show` command:
 +
 ----
 cluster_B::> cluster peer show
@@ -175,12 +175,12 @@ Peer Cluster Name         Cluster Serial Number Availability   Authentication
 ------------------------- --------------------- -------------- --------------
 cluster_A         1-80-000011           Unavailable    absent
 ----
-... Modify the cluster_B peer IP address using the following command:
+... Modify the cluster_B peer IP address:
 +
 `cluster peer modify -cluster cluster_B -peer-addrs node_B_3_IP -address-family ipv4`
 
 .. Verify that the cluster peer IP address is updated for each cluster:
-... Verify that the IP address is updated for each cluster using the `cluster peer show -instance` command.
+... Verify that the IP address is updated for each cluster by using the `cluster peer show -instance` command.
 +
 The `Remote Intercluster Addresses` field in the following examples displays the updated IP address. 
 +
