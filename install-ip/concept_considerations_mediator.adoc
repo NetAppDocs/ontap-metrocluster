@@ -35,7 +35,7 @@ You cannot use any third-party applications or appliances that can trigger a swi
 
 == How the ONTAP Mediator supports automatic unplanned switchover
 
-The ONTAP Mediator stores state information about the MetroCluster nodes in mailboxes located on the Mediator host. The MetroCluster nodes can use this information to monitor the state of their DR partners and implement a Mediator-assisted automatic unplanned switchover (MAUSO) in the case of a disaster.
+The ONTAP Mediator stores state information about the MetroCluster nodes in mailboxes located on the Mediator host. The MetroCluster nodes can use this information to monitor the state of their DR partners and implement a MAUSO in the case of a disaster.
 
 When a node detects a site failure requiring a switchover, it takes steps to confirm that the switchover is appropriate and, if so, performs the switchover.
 
@@ -43,17 +43,16 @@ A MAUSO is only initiated in the following scenarios:
 
 * Both SyncMirror mirroring and DR mirroring of each node's nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
 * None of the nodes at the surviving site are in takeover state.
+* If a site disaster occurs. A site disaster is a failure of *all* nodes at the same site.
+* Beginning with ONTAP 9.13.1, if the above conditions are met and a fan or hardware failure initiates an environmental shutdown, for example, a power supply unit, NVRAM battery, or Service Processor heartbeat failure, or high or low temperature. 
 
-IMPORTANT: A MAUSO is only initiated if a site disaster occurs.
-A site disaster is a failure of *all* nodes at the same site; however, there are some exceptions.
 
 A MAUSO is *not* initiated in the following shutdown scenarios:
 
- * You initiate a shutdown. For example, when you:
- ** halt the nodes
- ** reboot the nodes
+* You initiate a shutdown. For example, when you:
+** halt the nodes
+** reboot the nodes
 
- * A fan or component failure initiates a shutdown (environmental shutdown)
-
-// BURT 1442346 24/01/2022
-// BURT 1456187 11/02/2022
+// 2023 APR 19, BURT 1532596
+// 2022 JAN 24, BURT 1442346 
+// 2022 FEB 11, BURT 1456187 
