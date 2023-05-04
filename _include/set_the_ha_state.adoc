@@ -1,0 +1,28 @@
+You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
+
+.Steps
+
+. In Maintenance mode, display the HA state of the controller module and chassis:
++
+`ha-config show`
++
+The HA state for all components should be `mccip`.
+
+. If the displayed system state of the controller or chassis is not correct, set the HA state:
++
+`ha-config modify controller mccip`
++
+`ha-config modify chassis mccip`
+.	Halt the node: `halt`
++
+The node should stop at the `LOADER>` prompt.
+
+.	On each node, check the system date, time, and time zone: `show date`
+.	If necessary, set the date in UTC or GMT: `set date <mm/dd/yyyy>`
+.	Check the time by using the following command at the boot environment prompt: `show time`
+.	If necessary, set the time in UTC or GMT: `set time <hh:mm:ss>`
+
+.	Save the settings: `saveenv`
+.	Gather environment variables: `printenv`
+
+// 2023 APR 24, BURT 1535231

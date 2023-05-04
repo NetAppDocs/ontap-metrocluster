@@ -27,14 +27,16 @@ nondisruptively move data from the old configuration to the new, upgraded config
 Select your Current platform from the FC or IP table below. If the intersection of the Current platform row and Target platform column is blank, the upgrade is not supported.
 
 === Supported MetroCluster IP controller upgrades
+If your platform is not listed, there is no supported controller upgrade combination.
 
-image::../media/metrocluster_ip_upgrade_table_yellowdogdp1.PNG[]
+image::../media/metrocluster_ip_upgrade_table_9_13_1.PNG[]
 * Note 1: For this upgrade use the procedure link:task_upgrade_A700_to_A900_in_a_four_node_mcc_ip_us_switchover_and_switchback.html[Upgrade controllers from AFF A700/FAS9000 to AFF A900/FAS9500 in a MetroCluster IP configuration using switchover and switchback (ONTAP 9.10.1 or later)]
-
+// removing as not supported in table: * AFF A320 platform models are not supported for upgrade when using BES-53248 IP switches.
+* Note 2: Controller upgrades are supported on systems running ONTAP 9.13.1 or later.
 
 === Supported MetroCluster FC controller upgrades
 
-image::../media/metrocluster_fc_upgrade_table_yellowdogp1.PNG[]
+image::../media/metrocluster_fc_upgrade_table_p_13_1.PNG[]
 
 * Note 1: For upgrading controllers when FCVI connections on existing FAS8020 or AFF8020 nodes use ports 1c and 1d, see the following
  https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/Upgrading_controllers_when_FCVI_connections_on_existing_FAS8020_or_AFF8020_nodes_use_ports_1c_and_1d[Knowledge base article^].
@@ -43,11 +45,21 @@ image::../media/metrocluster_fc_upgrade_table_yellowdogp1.PNG[]
 
 * Note 3: For this upgrade refer to link:task_upgrade_A700_to_A900_in_a_four_node_mcc_fc_us_switchover_and_switchback.html[Upgrade controllers from AFF A700/FAS9000 to AFF A900/FAS9500 in a MetroCluster FC configuration using switchover and switchback (ONTAP 9.10.1 or later)]
 
+* Note4: Controller upgrades are supported on systems running ONTAP 9.13.1 or later.
+
 [cols="2,1,1,2"]
 |===
 
 h| MetroCluster type h| Upgrade method  h| ONTAP version h| Procedure
 
+a|
+IP 
+a|
+Upgrade with 'system controller replace' commands
+a|
+9.13.1 and later
+a|
+link:task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_ip.html[Link to procedure]
 a|
 FC 
 a|
@@ -149,6 +161,7 @@ https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade-arl-manual/index.htm
 |===
 
 
+// 2023 APR 17, BURT 1535231
 // BURT 1491888  August 8th, 2022
 // 2022-DEC-19, BURT 1509650
 // 2023-MAR-9, BURT 1533595 (new C-Series platforms)
