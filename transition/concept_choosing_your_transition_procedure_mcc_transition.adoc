@@ -16,7 +16,6 @@ You should also ensure that the MetroCluster IP platform is an appropriate size 
 The following table shows the supported platform combinations. You can transition from platforms in the left-hand column to platforms listed as supported in the columns to the right, as indicated by the colored table cells.
 
 
-
 For example, transitioning from a MetroCluster FC configuration consisting of AFF8060 controller modules to an IP configuration consisting of AFF A400 controller modules is supported.
 
 
@@ -30,10 +29,12 @@ image::../media/metrocluster_fc_ip_transition_matrix_yellowdogp1.png[]
 
 * The transition procedures all require ONTAP 9.8 or later unless stated otherwise in the notes or as required by an individual platform.
 
-NOTE: Do not exceed any object limits of the 'lower' of the platforms in the combination. Apply the lower object limit of the two platforms. Refer to the link:https://hwu.netapp.html[Hardware universe^] for platform limits. 
-
-
-
+[NOTE] 
+====
+* Do not exceed any object limits of the 'lower' of the platforms in the combination. Apply the lower object limit of the two platforms.
+* If the target platform limits are lower then the MetroCluster limits, you must reconfigure the MetroCluster to be at, or below, the target platform limits before you add the new nodes.
+* Refer to the link:https://hwu.netapp.html[Hardware universe^] for platform limits. 
+====
 
 You must select a transition procedure depending on your existing MetroCluster FC configuration.
 

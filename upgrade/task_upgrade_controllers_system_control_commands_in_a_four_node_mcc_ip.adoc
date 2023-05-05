@@ -1,19 +1,21 @@
 ---
-permalink: upgrade/task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_fc.html
+permalink: upgrade/task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_ip.html
 sidebar: sidebar
-keywords: metrocluster, upgrade, controllers, switchover, switchback, fc, configuration, net, boot, root, aggregate, system, commands, mcc
-summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster FC configuration.'
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster IP configuration.'
 ---
-= Upgrading controllers in a four-node MetroCluster FC configuration using switchover and switchback with "system controller replace" commands (ONTAP 9.10.1 and later)
+= Upgrade controllers in a four-node MetroCluster IP configuration using switchover and switchback with "system controller replace" commands (ONTAP 9.13.1 and later)
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade on a four-node MetroCluster FC configuration. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
+You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade on a four-node MetroCluster IP configuration. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
 == Supported platform combinations
 
-** For information on what platform upgrade combinations are supported, review the MetroCluster FC upgrade table in  link:concept_choosing_controller_upgrade_mcc.html#metrocluster-fc-controller-upgrades[Choose a controller upgrade procedure].
+This procedure only supports AFF A300 to AFF A900 controller upgrades.
+
+For more information on platform upgrade combinations, review the MetroCluster IP upgrade table in  link:concept_choosing_controller_upgrade_mcc.html#supported-metrocluster-ip-controller-upgrades[Choose a controller upgrade procedure].
 
 Refer to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosing_an_upgrade_method_mcc.html[Choosing an upgrade or refresh method] for additional procedures.
 
@@ -22,13 +24,16 @@ Refer to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosi
 * You can use this procedure only for controller upgrade.
 +
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
-* This procedure applies to controller modules in a four-node MetroCluster FC configuration.
-* The platforms must be running ONTAP 9.10.1 or later.
+* This procedure applies to controller modules in a four-node MetroCluster IP configuration running ONTAP 9.13.1 or later.
 +
 https://hwu.netapp.com[NetApp Hardware Universe^]
 
-* You can use this procedure to upgrade controllers in a four-node MetroCluster FC configuration using NSO based automated switchover and switchback. If you want to perform a controller upgrade using aggregate relocation (ARL), refer to https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade-arl-auto-app/[Use "system controller replace" commands to upgrade controller hardware running ONTAP 9.8 or later]. It is recommended to use the NSO based automated procedure.
-* If your MetroCluster sites are physically at two different locations, you should use the automated NSO controller upgrade procedure to upgrade the controllers at both sites in sequence.
+* The MetroCluster systems must be running the same ONTAP version at both sites. 
+* You can use this procedure to upgrade controllers in a four-node MetroCluster IP configuration using NSO based automated switchover and switchback. 
++
+NOTE: Performing an upgrade using aggregate relocation (ARL) with “systems controller replace” commands” is not supported for a four-node MetroCluster IP configuration.
+
+* You must use the automated NSO controller upgrade procedure to upgrade the controllers at both sites in sequence.
 * This automated NSO based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster disaster recovery (DR) site. You can only initiate a controller replacement at one site at a time.
 * To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The operation guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
 
@@ -49,9 +54,11 @@ The following example names are used in this procedure:
   *** node_B_1-new
   *** node_B_2-new
 
-== Preparing for the upgrade
+== Prepare for the upgrade
 
 To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
+
+Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must <<man_reconfig_mediator,manually reconfigure ONTAP Mediator>>.
 
 At any stage during the upgrade, you can run the `system controller replace show` or `system controller replace show-details` command from site A to check the status. If the commands return a blank output, wait for a few minutes and rerun the command.
 
@@ -59,12 +66,15 @@ At any stage during the upgrade, you can run the `system controller replace show
 
 .	Start the automated controller replacement procedure from site A to replace the controllers at site B:
 +
-`system controller replace start`
+`system controller replace start -nso true`
 +
 The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
 +
-NOTE: The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
+[NOTE]
+====
+* If you do not run the `system controller replace start -nso true` command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
 
+* The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
 +
 The `system controller replace start` command might report the following precheck error:
 +
@@ -76,6 +86,7 @@ Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed 
 ----
 +
 Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
+====
 
 .	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
 
@@ -85,7 +96,7 @@ Before upgrading, if the root volume is encrypted, you must gather the backup ke
 
 .About this task
 
-This task is performed on the existing MetroCluster FC configuration.
+This task is performed on the existing MetroCluster IP configuration.
 
 .Steps
 
@@ -95,6 +106,8 @@ This task is performed on the existing MetroCluster FC configuration.
 `system controller replace show`
 +
 Run the commands listed under the `show` command from the partner cluster.
++
+The `show` command output displays three tables containing the MetroCluster interface IPs, system IDs, and system UUIDs. This information is required later in the procedure to set the bootargs when you boot the new node. 
 
 . Gather the system IDs of the nodes in the MetroCluster configuration:
 +
@@ -103,7 +116,7 @@ Run the commands listed under the `show` command from the partner cluster.
 
 During the replacement procedure you will replace these system IDs with the system IDs of the new controller modules.
 
-In this example for a four-node MetroCluster FC configuration, the following old system IDs are retrieved:
+In this example for a four-node MetroCluster IP configuration, the following old system IDs are retrieved:
 
 ** node_A_1-old: 4068741258
 ** node_A_2-old: 4068741260
@@ -121,7 +134,7 @@ dr-group-id        cluster           node            node-systemid     ha-partne
 4 entries were displayed.
 ----
 
-In this example for a two-node MetroCluster FC configuration, the following old system IDs are retrieved:
+In this example for a two-node MetroCluster IP configuration, the following old system IDs are retrieved:
 
 ** node_A_1: 4068741258
 ** node_B_1: 4068741254
@@ -204,7 +217,7 @@ After you gather information and resume the operation, the automation  proceeds 
 
 .About this task
 
-The automation operation initiates the switchover, `heal-aggregates`, and `heal root-aggregates` operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers, and reassign the root aggregate disks to the new controller module from flash backup using the `sysids` gathered earlier.
+The automation operation initiates the switchover operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers, and reassign the root aggregate disks to the new controller module from flash backup using the `sysids` gathered earlier.
 
 .Before you begin
 
@@ -217,7 +230,7 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 .About this task
 
 * This task must be performed on each of the old nodes.
-* You will use the information gathered in <<Preparing for the upgrade>>.
+* You will use the information gathered in <<Prepare for the upgrade>>.
 
 .Steps
 
@@ -304,7 +317,7 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Install the controller modules in the rack or cabinet.
 +
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
+https://docs.netapp.com/us-en/ontap-systems/index.html[AFF and FAS Documentation Center^]
 
 . If the new controller modules did not come with FC-VI cards of their own and if FC-VI cards from old controllers are compatible on new controllers, swap FC-VI cards and install those in correct slots.
 +
@@ -314,7 +327,7 @@ See the link:https://hwu.netapp.com[NetApp Hardware Universe^] for slot info for
 +
 Do not connect any other cables that were disconnected from old controllers at this time.
 +
-https://docs.netapp.com/platstor/index.jsp[AFF and FAS Documentation Center^]
+https://docs.netapp.com/us-en/ontap-systems/index.html[AFF and FAS Documentation Center^]
 
 . Power up the new nodes and press Ctrl-C when prompted to display the LOADER prompt.
 
@@ -324,9 +337,54 @@ After you install the new nodes, you need to netboot to ensure the new nodes are
 
 This task is performed on each of the new controller modules.
 
-// include reference
-include::../_include/netboot_steps.adoc[]
-// end include reference
+.Steps
+
+. Access the https://mysupport.netapp.com/site/[NetApp Support Site^] to download the files used for performing the netboot of the system.
+. Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the ontap-version_image.tgz file on a web-accessible directory.
+. Go to the web-accessible directory and verify that the files you need are available.
++
+Your directory listing should contain a netboot folder with a kernel file: ontap-version_image.tgz
++
+You do not need to extract the ontap-version_image.tgz file.
+
+. At the LOADER prompt, configure the netboot connection for a management LIF:
+** If IP addressing is DHCP, configure the automatic connection:
++
+`ifconfig e0M -auto`
+** If IP addressing is static, configure the manual connection:
++
+`ifconfig e0M -addr=ip_addr -mask=netmask` `-gw=gateway`
+
+. Perform the netboot.
+** If the platform is an 80xx series system, use this command:
++
+`netboot \http://web_server_ip/path_to_web-accessible_directory/netboot/kernel`
+** If the platform is any other system, use the following command:
++
+`netboot \http://web_server_ip/path_to_web-accessible_directory/ontap-version_image.tgz`
+
+. From the boot menu, select option *(7) Install new software first* to download and install the new software image to the boot device.
+
+    Disregard the following message: "This procedure is not supported for Non-Disruptive Upgrade on an HA pair". It applies to nondisruptive upgrades of software, not to upgrades of controllers.
+
+. If you are prompted to continue the procedure, enter `y`, and when prompted for the package, enter the URL of the image file: `\http://web_server_ip/path_to_web-accessible_directory/ontap-version_image.tgz`
++
+....
+Enter username/password if applicable, or press Enter to continue.
+....
+
+. Be sure to enter `n` to skip the backup recovery when you see a prompt similar to the following:
++
+....
+Do you want to restore the backup configuration now? {y|n}
+....
+
+. Reboot by entering `y` when you see a prompt similar to the following:
++
+....
+The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n}
+....
+
 
 
 === Clearing the configuration on a controller module
@@ -394,6 +452,124 @@ a|
 `fcadmin show`
 |===
 
+=== Set the HA state on the new controllers and chassis
+
+include::../_include/set_the_ha_state.adoc[]
+
+=== Update the switch RCF files to accommodate the new platforms
+
+include::../_include/update_the_switch_rcf_files.adoc[]
+
+=== Set the MetroCluster IP bootarg variables
+
+Certain MetroCluster IP bootarg values must be configured on the new controller modules. The values must match those configured on the old controller modules.
+
+.About this task
+
+In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#gathering-information-before-the-upgrade[Gathering information before the upgrade].
+
+.Steps
+
+.	At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
++
+`setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
++
+`setenv bootarg.mcc.port_b_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
++
+The following example sets the values for node_B_1 using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
+----
++
+The following example sets the values for node_B_2 using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13,130
+----
+
+
+
+. At the new nodes' `LOADER` prompt, set the UUIDs:
++
+`setenv bootarg.mgwd.partner_cluster_uuid _partner-cluster-UUID_`
++
+`setenv bootarg.mgwd.cluster_uuid _local-cluster-UUID_`
++
+`setenv bootarg.mcc.pri_partner_uuid _DR-partner-node-UUID_`
++
+`setenv bootarg.mcc.aux_partner_uuid _DR-aux-partner-node-UUID_`
++
+`setenv bootarg.mcc_iscsi.node_uuid _local-node-UUID_`
+
+
+.. Set the UUIDs on node_B_1.
++
+The following example shows the commands for setting the UUIDs on node_B_1:
++
+----
+setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
+setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
+setenv bootarg.mcc.pri_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
+setenv bootarg.mcc.aux_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
+setenv bootarg.mcc_iscsi.node_uuid f03cb63c-9a7e-11e7-b68b-00a098908039
+----
+
+.. Set the UUIDs on node_B_2:
++
+The following example shows the commands for setting the UUIDs on node_B_2:
++
+----
+setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
+setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
+setenv bootarg.mcc.pri_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
+setenv bootarg.mcc.aux_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
+setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
+----
+
+. If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, enable ADP:
++
+`setenv bootarg.mcc.adp_enabled true`
+
+. Set the following variables:
++
+`setenv bootarg.mcc.local_config_id _original-sys-id_`
++
+`setenv bootarg.mcc.dr_partner _dr-partner-sys-id_`
++
+NOTE: The `setenv bootarg.mcc.local_config_id` variable must be set to the sys-id of the *original* controller module, node_B_1.
+
+.. Set the variables on node_B_1.
++
+The following example shows the commands for setting the values on node_B_1:
++
+----
+setenv bootarg.mcc.local_config_id 537403322
+setenv bootarg.mcc.dr_partner 537403324
+----
+
+.. Set the variables on node_B_2.
++
+The following example shows the commands for setting the values on node_B_2:
++
+----
+setenv bootarg.mcc.local_config_id 537403321
+setenv bootarg.mcc.dr_partner 537403323
+----
+
+. If using encryption with external key manager, set the required bootargs:
++
+`setenv bootarg.kmip.init.ipaddr`
++
+`setenv bootarg.kmip.kmip.init.netmask`
++
+`setenv bootarg.kmip.kmip.init.gateway`
++
+`setenv bootarg.kmip.kmip.init.interface`
+
+
 === Reassigning root aggregate disks
 
 Reassign the root aggregate disks to the new controller module, using the `sysids` gathered earlier
@@ -402,7 +578,7 @@ Reassign the root aggregate disks to the new controller module, using the `sysid
 
 This task is performed in Maintenance mode.
 
-The old system IDs were identified in link:task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_fc.html#gathering-information-before-the-upgrade[Gathering information before the upgrade].
+The old system IDs were identified in link:task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_ip.html#gathering-information-before-the-upgrade[Gathering information before the upgrade].
 
 The examples in this procedure use controllers with the following system IDs:
 
@@ -451,6 +627,8 @@ rr18:9.126L27 node_B_1-old(4068741254)   Pool0  S0M1PSDW         node_B_1-old(40
 . Reassign the root aggregate disks on the drive shelves to the new controller:
 +
 `disk reassign -s _old-sysid_ -d _new-sysid_`
++
+NOTE: If your MetroCluster IP system is configured with Advanced Disk Partitioning, you must include the DR partner system id by running the `disk reassign -s old-sysid -d new-sysid -r dr-partner-sysid` command.
 +
 The following example shows reassignment of drives:
 +
@@ -549,7 +727,7 @@ Option "`11`"
 Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
 |===
 
-. If autoboot is enabled, interrupt autoboot by pressing Ctrl-C.
+
 . From the boot menu, run option "`6`".
 +
 NOTE: Option "`6`" will reboot the node twice before completing.
@@ -562,15 +740,8 @@ Successfully restored env file from boot media...
 
 Rebooting to load the restored env file...
 ----
-
-. Double-check that the partner-sysid is correct:
 +
-`printenv partner-sysid`
-+
-If the partner-sysid is not correct, set it:
-+
-`setenv partner-sysid _partner-sysID_`
-
+During one of the reboots after option "`6`", the confirmation prompt `Override system ID? {y|n}` appears. Enter `y`.
 . If root encryption is used, select the boot menu option again for your key management configuration.
 +
 
@@ -618,7 +789,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58
 +
 You may need to reconfigure cluster peering.
 +
-link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Creating a cluster peer relationship]
+link:../install-ip/task_sw_config_configure_clusters.html#peering-the-clusters[Creating a cluster peer relationship]
 
 .. Recreate VLANs and interface groups as needed.
 +
@@ -675,7 +846,7 @@ The automation operation runs verification system checks and then pauses so you 
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
-.	The automation operation performs switchback at site A and the post upgrade checks. When the operation pauses, manually check the SAN LIF status and verify the network configuration by following the console message.
+.	The automation operation performs `heal-aggregate`, `heal-root-aggregate`, and switchback operations at site A, and the post upgrade checks. When the operation pauses, manually check the SAN LIF status and verify the network configuration by following the console message.
 .	After you complete the verification, resume the operation:
 +
 `system controller replace resume`
@@ -688,12 +859,17 @@ If the post upgrade checks did not report any errors, the upgrade is complete.
 
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
 
+[[man_reconfig_mediator]]
+=== Reconfigure ONTAP Mediator 
+
+Manually configure ONTAP Mediator which was automatically removed before you started the upgrade. 
+
+. Use the steps in link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[Configure the ONTAP Mediator service from a MetroCluster IP configuration]. 
+
 === Restoring Tiebreaker monitoring
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
 . Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations].
 
-// BURT 1404898, 19 OCT 2021
-// BURT 1448684, 02 FEB 2022
-// NOV-29-2022, BURT 1509902
+// 2023 APR 17, BURT 1535231
