@@ -13,7 +13,7 @@ You can use this guided automated MetroCluster switchover operation to perform a
 
 == Supported platform combinations
 
-This procedure supports FAS8200 to FAS9500 and AFF A300 to AFF A900 controller upgrades.
+This procedure only supports AFF A300 to AFF A900 controller upgrades.
 
 For more information on platform upgrade combinations, review the MetroCluster IP upgrade table in  link:concept_choosing_controller_upgrade_mcc.html#supported-metrocluster-ip-controller-upgrades[Choose a controller upgrade procedure].
 
@@ -58,7 +58,7 @@ The following example names are used in this procedure:
 
 To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
 
-Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must link:task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_ip.html#reconfigure-ontap-mediator[manually reconfigure ONTAP Mediator].
+Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must <<man_reconfig_mediator,manually reconfigure ONTAP Mediator>>.
 
 At any stage during the upgrade, you can run the `system controller replace show` or `system controller replace show-details` command from site A to check the status. If the commands return a blank output, wait for a few minutes and rerun the command.
 
@@ -230,7 +230,7 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 .About this task
 
 * This task must be performed on each of the old nodes.
-* You will use the information gathered in <<Preparing for the upgrade>>.
+* You will use the information gathered in <<Prepare for the upgrade>>.
 
 .Steps
 
@@ -859,6 +859,7 @@ If the post upgrade checks did not report any errors, the upgrade is complete.
 
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
 
+[[man_reconfig_mediator]]
 === Reconfigure ONTAP Mediator 
 
 Manually configure ONTAP Mediator which was automatically removed before you started the upgrade. 
