@@ -1,13 +1,39 @@
 ---
-permalink: maintain/task_how_to_modify_switch_ip_address.html
+permalink: maintain/task_modify_switch_ip_address.html
 sidebar: sidebar
-keywords: metrocluster, maintain, service, identifying, storage, ip, configuration
-summary: 'If you need to replace a drive or shelf module, you first need to identify the location.'
+keywords: metrocluster, atto, fc, switches, bridges, modify, IP, address
+summary: 'Replace old health monitoring IP addresses after modifying the IP addresses of MetroCluster FC back-end switches and ATTO bridges.'
 ---
-= How to modify a switch IP address
+= Modify a switch IP address
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
+After modifying the IP addresses of MetroCluster FC back-end switches and ATTO bridges, you must replace the old health monitoring IP addresses with the new values. 
 
+.Before you begin
+Refer to the switch vendor's documentation for your switch model to change the IP address on the switch before changing the health monitoring IP address.
+
+.Steps
+. Run the `::> storage bridge show` and in the output, note the ATTO bridges that are reporting errors.
+
+. Remove the ATTO bridge entries with old IP addresses:
++
+`::> storage bridge remove -name <ATTO-name>`
+
+. Add the ATTO bridges with new IP addresses:
++
+`::> storage bridge add -name <ATTO-name> -address <new-IP-address> -managed-by in-band`
+
+. Verify the new IP addresses and confirm that there are no errors:
++
+`::> storage bridge show`
+
+. If required, refresh the entries:
++
+`::> set advanced`
++
+`::*> storage bridge refresh`
++
+`::*> set admin`
 // 2023 May 4, BURT 1539930
