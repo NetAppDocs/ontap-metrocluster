@@ -237,6 +237,15 @@ You should issue this command on each cluster.
 .. Display the results of the MetroCluster check:
 +
 `metrocluster check show`
++
+After you run the `metrocluster check run` and `metrocluster check show` commands, you might see the following error : 
++
+----
+Cluster_A:: node_A_1 (non-overridable veto): DR partner NVLog mirroring is not online. Make sure that the links between the two sites are healthy and properly configured.
+----
++ 
+This error occurs due to controller mismatch during the upgrade process. You can safely ignore the error and proceed to the next step. 
+
 . Check the MetroCluster cabling with the Config Advisor tool.
 .. Download and run Config Advisor.
 +
@@ -501,7 +510,7 @@ image:../media/drw_a900_move-remove_NVRAM_module.png[NVS module]
 
 [NOTE] 
 ====
-* If there are any add-on modules used as coredump devices on the AFF A700 non-volatile storage module in slot6, do not transfer those to the AFF A900 or FAS9500 NVS module. Do not transfer any parts from the AFF A700 controller module and NVS to the AFF A900 controller module.
+* If there are any add-on modules used as coredump devices on the AFF A700 non-volatile storage module in slot6, do not transfer those to the AFF A900 NVS module. Do not transfer any parts from the AFF A700 controller module and NVS to the AFF A900 controller module.
 * For FAS9000 to FAS9500 upgrades, only Flash Cache modules on the FAS9000 NVS module should be transferred to FAS9500 NVS module. Do not transfer any other parts from the FAS9000 controller module and NVS to the FAS9500 controller module. 
 ====
 
