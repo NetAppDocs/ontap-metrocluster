@@ -21,7 +21,7 @@ Replace the old health monitoring IP address of a MetroCluster FC back-end switc
 Refer to the switch vendor's documentation for your switch model to change the IP address on the switch before changing the health monitoring IP address.
 
 .Steps
-. Run the `::> storage switch show` and in the output, note the switches that are reporting errors.
+. Run the `::> storage switch show` command and in the output, note the switches that are reporting errors.
 
 . Remove the switch entries with old IP addresses:
 +
@@ -47,17 +47,17 @@ Refer to the switch vendor's documentation for your switch model to change the I
 Replace the old health monitoring IP address of an ATTO bridge.
 
 .Steps
-. Run the `::> storage bridge show` and in the output, note the ATTO bridges that are reporting errors.
+. Run the `::> storage bridge show` command and in the output, note the ATTO bridges that are reporting errors.
 
 . Remove the ATTO bridge entries with old IP addresses:
 +
 `::> storage bridge remove -name _ATTO_bridge_name_`
 
 . Add the ATTO bridges with new IP addresses:
-
++
 `::> storage bridge add -name _ATTO_bridge_name_ -address _new_IP_address_ -managed-by in-band`
 
-.Verify the new IP addresses and confirm that there are no errors:
+. Verify the new IP addresses and confirm that there are no errors:
 +
 `::> storage bridge show`
 
