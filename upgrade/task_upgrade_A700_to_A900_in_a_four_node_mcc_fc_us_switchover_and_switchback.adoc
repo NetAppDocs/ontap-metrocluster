@@ -498,7 +498,12 @@ image:../media/drw_a900_move-remove_NVRAM_module.png[NVS module]
 | image:../media/number2.png[number 2] |I/O latch completely unlocked
 |===
 
-NOTE: If there are any add-on modules used as coredump devices on the AFF A700 or FAS9000 non-volatile storage module, do not transfer those to the AFF A900 or FAS9500 NVS. Do not transfer any parts from the AFF A700 or A900 controller module and NVS to the AFF A900 or FAS9500 controller module.
+
+[NOTE] 
+====
+* Do not transfer any add-on modules used as coredump devices on the AFF A700 non-volatile storage module in slot 6 to the AFF A900 NVS module. Do not transfer any parts from the AFF A700 controller and NVS modules to the AFF A900 controller module.
+* For FAS9000 to FAS9500 upgrades, you should only transfer Flash Cache modules on the FAS9000 NVS module to the FAS9500 NVS module. Do not transfer any other parts from the FAS9000 controller and NVS modules to the FAS9500 controller module. 
+====
 
 == Install the AFF A900 or FAS9500 NVS and controller module
 
@@ -1115,6 +1120,14 @@ This task can be performed on any node in the MetroCluster configuration.
 .. Display the results of the MetroCluster check:
 +
 `metrocluster check show`
++
+After running the `metrocluster check run` and `metrocluster check show` commands, you might see an error similar to the following example: 
++
+----
+Cluster_A:: node_A_1 (non-overridable veto): DR partner NVLog mirroring is not online. Make sure that the links between the two sites are healthy and properly configured.
+----
++ 
+This error occurs due to a controller mismatch during the upgrade process. You can safely ignore the error and proceed to upgrade the nodes on site_A. 
 
 == Upgrade the nodes on site_A
 
@@ -1142,5 +1155,5 @@ If the MetroCluster configuration was previously configured for monitoring by th
 
 . Use the steps in: link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
 
-
+// 2023 May 05, GH issue 277
 //BURT 1414896 /05/01/22
