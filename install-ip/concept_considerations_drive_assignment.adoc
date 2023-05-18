@@ -11,13 +11,27 @@ summary: Beginning with ONTAP 9.4, MetroCluster IP configurations support new in
 [.lead]
 Beginning with ONTAP 9.4, MetroCluster IP configurations support new installations with AFF systems using ADP (Advanced Drive Partitioning). In most configurations, partitioning and disk assignment are performed automatically during the initial configuration of the MetroCluster sites.
 
-ONTAP 9.4 and later releases include the following changes for ADP support:
+ONTAP 9.4 and later includes the following changes for ADP support:
 
 * Pool 0 disk assignments are done at the factory.
 * The unmirrored root is created at the factory.
 * Data partition assignment is done at the customer site during the setup procedure.
 * In most cases, drive assignment and partitioning is done automatically during the setup procedures.
-* A disk and all its partitions must be owned by nodes in the same high-availability (HA) pair. They cannot be owned by the disaster recovery (DR) partner or DR auxiliary partner.
+* A disk and all its partitions must be owned by nodes in the same high-availability (HA) pair. Partition or drive ownership within a single drive cannot be mixed between the local HA pair and the disaster recovery (DR) partner or DR auxiliary partner.
++
+Example of a supported configuration:
++
+|===
+| Drive owner: | `ClusterA-Node01`
+| Partition 1: | `ClusterA-Node01`
+| Partition 2: | `ClusterA-Node02`
+| Partition 3: | `ClusterA-Node01`
+|===
+ 
+* The ha-config state must be set to `mccip` before automatic provisioning to make sure that the correct partition sizes are selected allowing for appropriate root volume size. For more information, see link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_verify_haconfig.html[Verifying the ha-config state of components]
+
+
+
 
 NOTE: When upgrading from ONTAP 9.4 to 9.5, the system recognizes the existing disk assignments.
 
