@@ -28,11 +28,6 @@ h| Drive/Partition h| Owner
 | Partition 2: | `ClusterA-Node02`
 | Partition 3: | `ClusterA-Node01`
 |===
- 
-* The ha-config state must be set to `mccip` before automatic provisioning to make sure that the correct partition sizes are selected to allow for appropriate root volume size. For more information, see link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_verify_haconfig.html[Verifying the ha-config state of components].
-
-
-
 
 NOTE: When upgrading from ONTAP 9.4 to 9.5, the system recognizes the existing disk assignments.
 
@@ -41,6 +36,8 @@ NOTE: When upgrading from ONTAP 9.4 to 9.5, the system recognizes the existing d
 ADP is performed automatically during initial configuration of the platform.
 
 NOTE: Beginning with ONTAP 9.5, automatic assignment of disks must be enabled with the command `storage disk option modify -autoassign on`.
+ 
+The ha-config state must be set to `mccip` before automatic provisioning to make sure that the correct partition sizes are selected to allow for appropriate root volume size. For more information, see link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_verify_haconfig.html[Verifying the ha-config state of components].
 
 A maximum of 96 drives can be automatically partitioned during installation. You can add extra drives after the initial installation.
 //BURT 1440058
