@@ -1,5 +1,5 @@
 ---
-permalink: maintain/
+permalink: maintain/task_change_an_fc_switch.html
 sidebar: sidebar
 keywords: metrocluster, maintain, service, change, fc, switch
 summary: 
@@ -10,9 +10,12 @@ summary:
 :imagesdir: ../media/
 
 [.lead]
-You might need to to change the vendor of an FC switch (Cisco to Broadcom or vice versa), change the switch model, or both. 
+You might need to to change the vendor of an FC switch (Cisco to Broadcom or vice versa), change the switch model, or both.  
 
-This procedure applies when you are using NetApp validated switches. 
+.About this task
+
+* This procedure applies when you are using NetApp validated switches.
+* You must perform the steps in this procedure on one Fabric at a time, for both Fabrics in the configuration. 
 
 .Steps
 
@@ -67,18 +70,13 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
  .. Check that there are no health alerts: `*system health alert show*`
 . Configure the new switch before installation.
 +
-Follow the steps in the section _Configuring the IP switches_ in the link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration.]
+Follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/task_reset_the_brocade_fc_switch_to_factory_defaults.html[Configure the FC switches].
 +
-Make sure that you apply the correct RCF file for switch _A_1, _A_2, _B_1 or _B_2. If the new switch is the same as the old switch, you need to apply the same RCF file.
+Make sure that you apply the correct RCF file for switch _A_1, _A_2, _B_1 or _B_2.
 +
-If you upgrade or downgrade a switch, apply the latest supported RCF file for the new switch.
+If the new switch is the same as the old switch, you need to apply the same RCF file.
 
-. Run the port show command to view information about the network ports:
-+
-`*network port show*`
-. [[existing_step4]]Disconnect the connections from the old switch. 
-+
-NOTE: You only disconnect connections that are not using the same port in the old and new configurations. If you are using new switches, you must disconnect all connections.
+. Disconnect the connections from the old switch. 
 +
 Remove the connections in the following order:
 +
@@ -87,69 +85,28 @@ Remove the connections in the following order:
 ** Disconnect the local cluster ISLs
 * Disconnect the MetroCluster IP interfaces
 * Disconnect the MetroCluster ISLs
-+
-In the example <<port_usage_worksheet>>, the switches do not change. The MetroCluster ISLs are relocated and must be disconnected. You do not need to disconnect the connections marked in green on the worksheet.
+.
 
-. If you are using new switches, power off the old switch, remove the cables, and physically remove the old switch.
+. Power off the old switch, remove the cables, and physically replace the old switch with the new switch.
 +
-If you are reusing existing switches, go to <<existing_step6,Step 6>>.
-+
-NOTE: Do *not* cable the new switches except for the management interface (if used).
-
-. [[existing_step6]]Configure the existing switches.
-+ 
-If you have pre-configured the switches already, you can skip this step.
-+
-To configure the existing switches, follow the steps to install and upgrade the firmware and RCF files:
-+
-* link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_upgrade_firmware_on_mcc_ip_switches.html[Upgrading firmware on MetroCluster IP switches]
-+
-* link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_upgrade_rcf_files_on_mcc_ip_switches.html[Upgrade RCF files on MetroCluster IP switches]
 
 . Cable the switches. 
 +
-You can follow the steps in the  _Cabling the IP switches_ section in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration]. 
+You must follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/task_rack_the_hardware_components_mcc_fabric_and_ip.html[Install and cable the MetroCluster components]. 
 +
 Cable the switches in the following order (if required): 
 +
 .. Cable the ISLs to the remote site.
 .. Cable the MetroCluster IP interfaces.
 .. Cable the local cluster interfaces.
-+
-[NOTE]
-====
-* The used ports might be different from those on the old switch if the switch type is different.
-If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs. Only cable the local ISLs if you are upgrading or downgrading the switches in the second network and both switches at one site are the same type and cabling.
-* If you are upgrading Switch-A1 and Switch-B1, you must perform steps 1 to 6 for switches Switch-A2 and Switch-B2.
-====
-
-. Finalize the local cluster cabling.
-+
 .. If the local cluster interfaces are connected to a switch:
 +
 ... Cable the local cluster ISLs.
 
-.. If the local cluster interfaces are *not* connected to a switch:
-+
-... Use the link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-bes-53248/migrate-to-2n-switched.html[Migrate to a switched NetApp cluster environment] procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration] or the RCF cabling files to connect the local cluster interface.
+. Power up the switch.
 
-. Power up the switch or switches.
-+
-If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second network is updated.
+. Verify that the MetroCluster configuration is healthy by repeating Step 1.
 
-. Verify that the MetroCluster configuration is healthy by repeating <<all_step1,Step 1>>.
-+
-If you are upgrading or downgrading the switches in the first network, you might see some alerts related to local clustering.
-+
-NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for the second network.
+. Repeat the entire procedure for Fabric 2. 
 
-. Optionally, move the NS224 shelves.
-+
-If you are reconfiguring a MetroCluster IP configuration that does not connect NS224 shelves to the MetroCluster IP switches, use the appropriate procedure to add or move the NS224 shelves:
-+
-* link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_add_shelves_using_shared_storage.html[Adding shelves to a MetroCluster IP using shared storage MetroCluster switches]
-* link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-cluster-dat-storage.html[Migrate from a switchless cluster with direct-attached storage^]
-* link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-configuration-sat-storage.html[Migrate from a switchless configuration with switch-attached storage by reusing the storage switches^]
-
-// 2022 Apr 13, BURT 1536708
-// 2022 May 04, Issue 235
+// 2023 May 18, BURT 1491844
