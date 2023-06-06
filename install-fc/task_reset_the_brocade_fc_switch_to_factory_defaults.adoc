@@ -6,7 +6,7 @@ summary: 'Before installing a new software version and RCF files, you must erase
 ---
 = Resetting the Brocade FC switch to factory defaults
 :icons: font
-:imagesdir: ../media/ 
+:imagesdir: ../media/
 
 [.lead]
 Before installing a new software version and RCF files, you must erase the current switch configuration and perform basic configuration.
@@ -110,10 +110,20 @@ NOTE: For Brocade Fabric OS versions before 8.0, you run the following commands 
 
 .. Run the license command:
 +
-`licenseport --show`
+[role="tabbed-block"]
+====
+.For Fabric OS 8.2.x and earlier:
+--
+Run the command `licenseport --show`
+--
+.For Fabric OS 9.0 and later:
+--
+Run the command `license --show -port`
+--
+====
 +
 ----
-FC_switch_A_1:admin> licenseport -show
+FC_switch_A_1:admin> license --show -port
 24 ports are available in this switch
 Full POD license is installed
 Dynamic POD method is in use
@@ -127,11 +137,22 @@ FC_switch_A_1:admin> rootaccess --set consoleonly
 ----
 
 .. Run the license command:
+
 +
-`licenseport --show`
+[role="tabbed-block"]
+====
+.For Fabric OS 8.2.x and earlier:
+--
+Run the command `licenseport --show`
+--
+.For Fabric OS 9.0 and later:
+--
+Run the command `license --show -port`
+--
+====
 +
 ----
-FC_switch_A_1:root> licenseport -show
+FC_switch_A_1:root> license --show -port
 24 ports are available in this switch
 Full POD license is installed
 Dynamic POD method is in use
@@ -139,9 +160,22 @@ Dynamic POD method is in use
 
 .. Change the license method to dynamic:
 +
-`licenseport --method dynamic`
+
+[role="tabbed-block"]
+====
+.For Fabric OS 8.2.x and earlier:
+--
+Run the command `licenseport --method dynamic`
+--
+.For Fabric OS 9.0 and later:
+--
+Run the command `license --method dynamic`
+--
+====
+
 +
 NOTE: If the dynamic POD method is not in use (if POD method is in static) you must change the license assignment method to dynamic. Skip this step if the dynamic POD method is in use.
+
 +
 ----
 FC_switch_A_1:admin> licenseport --method dynamic
