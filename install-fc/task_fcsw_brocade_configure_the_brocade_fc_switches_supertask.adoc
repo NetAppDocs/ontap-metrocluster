@@ -69,8 +69,19 @@ The Enterprise license includes Brocade Network Advisor and all licenses except 
 .Step
 
 . Verify that the licenses are installed:
+
 +
-`licenseshow`
+[role="tabbed-block"]
+====
+.For Fabric OS 8.2.x and earlier:
+--
+Run the command `licenseshow`
+--
+.For Fabric OS 9.0 and later:
+--
+Run the command `license --show`
+--
+====
 +
 If you do not have these licenses, you should contact your sales representative before proceeding.
 
@@ -224,7 +235,7 @@ FC_switch_B_1:admin> fosconfig --disable vf
 `ad options`
 +
 The following example shows the commands on FC_switch_A_1:
-+
++ao
 ----
 FC_switch_A_1:admin> switch:admin> ad --select AD0
 FC_switch_A_1:> defzone --noaccess
@@ -409,21 +420,27 @@ https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_th
 
 .. Run the license command:
 +
-
+[role="tabbed-block"]
+====
+.For Fabric OS 8.2.x and earlier:
 --
-
-`licensePort --show`
-
+Run the command `licenseport --show`
+--
+.For Fabric OS 9.0 and later:
+--
+Run the command `license --show -port`
+--
+====
++
 ----
 FC_switch_A_1:admin> licenseport -show
 24 ports are available in this switch
 Full POD license is installed
 Dynamic POD method is in use
 ----
-
++
 NOTE: Brocade FabricOS versions before 8.0 run the following commands as admin and versions 8.0 and later run them as root.
 
---
 .. Enable the root user.
 +
 If the root user is already disabled by Brocade, enable the root user as shown in the following example:
@@ -446,11 +463,21 @@ Dynamic POD method is in use
 
 .. Change the license method to dynamic:
 +
-`licenseport --method dynamic`
+[role="tabbed-block"]
+====
+.For Fabric OS 8.2.x and earlier:
+--
+Run the command `licenseport --method dynamic`
+--
+.For Fabric OS 9.0 and later:
+--
+Run the command `license --method dynamic`
+--
+====
 +
 NOTE: If the dynamic license method is not in use (if the method is static), you must change the license method to dynamic. Skip this step if the dynamic license method is in use.
-+
 
++
 ----
 FC_switch_A_1:admin> licenseport --method dynamic
 The POD method has been changed to dynamic.
@@ -3052,7 +3079,7 @@ The system displays the following output:
 +
 ----
 Warning: Activating the authentication policy requires either DH-CHAP secrets or PKI certificates depending on the protocol selected. Otherwise, ISLs will be segmented during next E-port bring-up.
-ARE YOU SURE  (yes, y, no, n): [no] yes
+ARE YOU SURE  (yes, y, no, n): [no] yes 
 Auth Policy is set to ON
 ----
 
