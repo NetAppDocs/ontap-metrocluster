@@ -137,7 +137,6 @@ FC_switch_A_1:admin> rootaccess --set consoleonly
 ----
 
 .. Run the license command:
-
 +
 [role="tabbed-block"]
 ====
@@ -158,30 +157,17 @@ Full POD license is installed
 Dynamic POD method is in use
 ----
 
-.. Change the license method to dynamic:
+.. If you are running Fabric OS 8.2.x and earlier, you must change the license method to dynamic:
 +
-
-[role="tabbed-block"]
-====
-.For Fabric OS 8.2.x and earlier:
---
-Run the command `licenseport --method dynamic`
---
-.For Fabric OS 9.0 and later:
---
-Run the command `license --method dynamic`
---
-====
-
-+
-NOTE: If the dynamic POD method is not in use (if POD method is in static) you must change the license assignment method to dynamic. Skip this step if the dynamic POD method is in use.
-
+`licenseport --method dynamic`
 +
 ----
 FC_switch_A_1:admin> licenseport --method dynamic
 The POD method has been changed to dynamic.
 Please reboot the switch now for this change to take effect
 ----
++
+NOTE: In Fabric OS 9.0 and later, the license method is dynamic by default. The static license method is not supported. 
 
 . Reboot the switch:
 +
