@@ -1,0 +1,71 @@
+---
+permalink: maintain/task_modify_switch_or_bridge_ip_address_for_health_monitoring.html
+sidebar: sidebar
+keywords: metrocluster, atto, fc, switches, bridges, modify, IP, address
+summary: 'Replace old health monitoring IP addresses after modifying the IP addresses of MetroCluster FC back-end switches or ATTO bridges.'
+---
+= Modify a switch or ATTO bridge IP address for health monitoring
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+After modifying the IP addresses of MetroCluster FC back-end switches and ATTO bridges, you must replace the old health monitoring IP addresses with the new values. 
+
+* <<Modify a switch IP address>>
+* <<Modify an ATTO bridge IP address>>
+
+== Modify a switch IP address
+Replace the old health monitoring IP address of a MetroCluster FC back-end switch. 
+
+.Before you begin
+Refer to the switch vendor's documentation for your switch model to change the IP address on the switch before changing the health monitoring IP address.
+
+.Steps
+. Run the `::> storage switch show` command and in the output, note the switches that are reporting errors.
+
+. Remove the switch entries with old IP addresses:
++
+`::> storage switch remove -name _switch_name_`
+
+. Add the switches with new IP addresses:
++
+`::> storage switch add -name _switch_name_ -address _new_IP_address_ -managed-by in-band`
+
+. Verify the new IP addresses and confirm that there are no errors:
++
+`::> storage switch show`
+
+. If required, refresh the entries:
++
+`::> set advanced`
++
+`::*> storage switch refresh`
++
+`::*> set admin`
+
+== Modify an ATTO bridge IP address
+Replace the old health monitoring IP address of an ATTO bridge.
+
+.Steps
+. Run the `::> storage bridge show` command and in the output, note the ATTO bridges that are reporting errors.
+
+. Remove the ATTO bridge entries with old IP addresses:
++
+`::> storage bridge remove -name _ATTO_bridge_name_`
+
+. Add the ATTO bridges with new IP addresses:
++
+`::> storage bridge add -name _ATTO_bridge_name_ -address _new_IP_address_ -managed-by in-band`
+
+. Verify the new IP addresses and confirm that there are no errors:
++
+`::> storage bridge show`
+
+. If required, refresh the entries:
++
+`::> set advanced`
++
+`::*> storage bridge refresh`
++
+`::*> set admin`
+// 2023 May 4, BURT 1539930
