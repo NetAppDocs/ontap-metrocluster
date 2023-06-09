@@ -232,32 +232,20 @@ FC_switch_B_1:admin> fosconfig --disable vf
 
 . Clear the Administrative Domain (AD) configuration:
 +
-`ad options`
-+
 The following example shows the commands on FC_switch_A_1:
 +
 ----
-FC_switch_A_1:admin> switch:admin> ad --select AD0
 FC_switch_A_1:> defzone --noaccess
 FC_switch_A_1:> cfgsave
 FC_switch_A_1:> exit
-FC_switch_A_1:admin> ad --clear -f
-FC_switch_A_1:admin> ad --apply
-FC_switch_A_1:admin> ad --save
-FC_switch_A_1:admin> exit
 ----
 +
 The following example shows the commands on FC_switch_B_1:
 +
 ----
-FC_switch_B_1:admin> switch:admin> ad --select AD0
 FC_switch_A_1:> defzone --noaccess
 FC_switch_A_1:> cfgsave
 FC_switch_A_1:> exit
-FC_switch_B_1:admin> ad --clear -f
-FC_switch_B_1:admin> ad --apply
-FC_switch_B_1:admin> ad --save
-FC_switch_B_1:admin> exit
 ----
 
 . Reboot the switch:
@@ -3128,5 +3116,4 @@ Perform all of the steps on the switches in the other fabric in a MetroCluster c
 
 // 2023 Jun 07, BURT 1411208
 // BURT 1448684, 01 FEB 2022
-
-
+// 2023 May 31, Issue 92
