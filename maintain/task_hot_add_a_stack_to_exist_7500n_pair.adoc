@@ -50,11 +50,6 @@ node_A_2             on           on           on           default
 2 entries were displayed.
 ----
 
-. Disable the switch ports for the new stack.
-. Update the FibreBridge firmware on each bridge.
-+
-If the new bridge is the same type as the partner bridge upgrade to the same firmware as the partner bridge. If the new bridge is a different type to the partner bridge, upgrade to the latest firmware supported by the bridge and version of ONTAP. See the section "Updating firmware on a FibreBridge bridge" in the _MetroCluster Maintenance Guide_.
-
 . On each bridge in the pair, enable the SAS port that will connect to the new stack:
 +
 `SASPortEnable _port-letter_`
@@ -175,7 +170,6 @@ NOTE: If you are splitting the ownership of a single stack of disk shelves among
 +
 NOTE: You must not add disk drives to aggregates or volumes until after the disk drive firmware and disk shelf firmware have been updated and the verification steps in this task have been completed.
 
-. Enable the switch ports for the new stack.
 . Verify the operation of the MetroCluster configuration in ONTAP:
  .. Check whether the system is multipathed:
 +
@@ -192,9 +186,9 @@ NOTE: You must not add disk drives to aggregates or volumes until after the disk
  .. Display the results of the MetroCluster check:
 +
 `metrocluster check show`
- .. Check for any health alerts on the switches (if present):
+ .. Check for any health alerts on the bridges after adding the new stacks:
 +
-`storage switch show`
+`storage bridge show`
  .. Run Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor^]
@@ -202,4 +196,5 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
  .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 . If applicable, repeat this procedure for the partner site.
 
+// BURT 1498367, 20 Jun 2023
 // BURT 1448684, 17 JAN 2022
