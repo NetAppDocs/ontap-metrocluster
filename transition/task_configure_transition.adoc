@@ -685,7 +685,20 @@ cluster_A::>
 ....
 
 
-
+. Check that takeover is possible and that the nodes are connected: 
++
+`storage failover show`
++
+----
+cluster_A::> storage failover show
+                                    Takeover
+Node           Partner              Possible    State Description
+-------------- -------------------- ---------   ------------------
+Node_FC_1      Node_FC_2              true      Connected to Node_FC_2
+Node_FC_2      Node_FC_1              true      Connected to Node_FC_1
+Node_IP_1      Node_IP_2              true      Connected to Node_IP_2
+Node_IP_2      Node_IP_1              true      Connected to Node_IP_1
+----
 
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
 .. Display the volumes to identify the MDV volumes:
@@ -750,6 +763,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 +
 `set -privilege admin`
 
+// 22 Jun 2023, GH issue 243
 // BURT 1448684, 21 JAN 2022
 // BURT 1438441, 28 MAR 2022
 // 2022-DEC-12, GH issue 239
