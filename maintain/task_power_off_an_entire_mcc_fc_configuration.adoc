@@ -13,7 +13,7 @@ You must power off the entire MetroCluster FC configuration and all of the equip
 
 .About this task
 
-You must perform the steps in this procedure from both sites in the MetroCluster configuration. 
+You must perform the steps in this procedure from both sites, at the same time. 
 
 NOTE: Beginning with ONTAP 9.8, the `*storage switch*` command is replaced with `*system switch*`. The following steps show the `*storage switch*` command, but if you are running ONTAP 9.8 or later, the `*system switch*` command is preferred.
 
@@ -68,11 +68,10 @@ cluster_A_site_A::*>metrocluster modify -auto-switchover-failure-domain auso-dis
 
 . Halt the nodes by using the following command:
 `*halt*`
- ** For a four-node or eight-node MetroCluster configuration, use the parameter:
-`*inhibit-takeover*`
+ ** For a four-node or eight-node MetroCluster configuration, use the `*inhibit-takeover*` and `*skip-lif-migration-before-shutdown*` parameters
 +
 ----
-system node halt -node node1_SiteA -inhibit-takeover true -ignore-quorum-warnings true
+system node halt -node node1_SiteA -inhibit-takeover true -ignore-quorum-warnings true -skip-lif-migration-before-shutdown true
 ----
 
  ** For a two-node MetroCluster configuration, use the command:
