@@ -1,0 +1,235 @@
+---
+permalink: install-ip/concept_considerations_layer_2_layer_3.html
+sidebar: sidebar
+keywords: differences, eight-node, four-node, fabric-attached, stretch, metrocluster ip, storage, bridges, fc-to-sas, atto, fibrebridge, SAS, local HA, auso, automatic unplanned switchover, array luns, mediator, tiebreaker
+summary: Beginning with ONTAP 9.6, MetroCluster IP configurations with supported Cisco switches can share existing networks for ISLs, rather than using dedicated MetroCluster ISLs.
+---
+= Considerations when deploying MetroCluster in shared layer 2 or layer 3 networks
+
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Beginning with ONTAP 9.6, MetroCluster IP configurations with supported Cisco switches can share existing networks for Inter-Switch Links (ISLs) instead of using dedicated MetroCluster ISLs. This topology is called “shared layer 2 networks”.
+
+Beginning with ONTAP 9.9.1, MetroCluster IP configurations can be implemented with IP-routed (layer 3) backend connections. This topology is called “shared layer 3 networks”.
+
+NOTE: You verify that you have adequate capacity and that you size the ISLs appropriately. Low latency is critical for replication of data between the MetroCluster sites. Latency issues on these connections can impact client I/O.
+
+== ISL requirements for layer 2 and layer 3 networks
+
+The following requirements apply to layer 2 and layer 3 networks:
+
+* The speed and number of ISLs between the MetroCluster switches and the intermediate network switches, and between the intermediate network switches and each other, does not need to match.
++
+For example, the MetroCluster switches can connect using 1x40-Gbps ISL to the intermediate switches, and the intermediate switches can connect to each other using 2x 100-Gbps ISLs.
+
+* Network monitoring should be configured on the intermediate network to monitor the ISLs for utilization, errors (drops, link flaps, corruption, and so on), and failures.
+* The MTU size must be set to 9216 on all ports carrying MetroCluster end-to-end traffic.
+* No other traffic can be configured with a higher priority than class of service (COS) five.
+* ECN (explicit congestion notifications) must be configured on all paths carrying end-to-end MetroCluster traffic.
+* ISLs carrying MetroCluster traffic must be native links between the switches. Link sharing services such as Multiprotocol Label Switching (MPLS) links are not supported.
+* The number of intermediate switches is not limited. However, NetApp recommends that you keep the number of switches to the minimum required.
+
+== Considerations for layer 2 networks
+
+The MetroCluster backend switches are connected to the customer network.
+
+image::../media/mcc_layer3_backend.png[]
+// edit image
+
+The intermediate customer-provided switches must meet the following requirements:
+
+* The intermediate network must provide the same VLANs between the sites. This must match the MetroCluster VLANs set in the RCF file.
+* Layer 2 VLANs with IDs that match the MetroCluster VLAN IDs must span the shared network.
+** In ONTAP 9.7 and earlier, FAS2750 and AFF A220 systems require VLAN 10 and 20.
+** In ONTAP 9.8 and later, AFF A150, FAS2750, AFF A220, FAS500f, C250, AFF A250, FAS8300, C800, AFF A400, and FAS8700 systems use VLAN 10 and 20 by default. 
++
+NOTE: 
+For all the platforms listed above, you can only specify the VLAN during interface creation. Once the MetroCluster interfaces are created, the VLAN ID cannot not be changed.
+You can configure other VLANs during interface creation, and they must be within the range 101-4096. 
++
+ For all other platforms not mentioned previously, you can use other VLANs.
+The RcfFileGenerator does not allow the creation of an RCF file using VLAN’s that are not supported by the platform.
+The RcfFileGenerator might restrict the use of certain VLAN IDs (for example, if they are intended for future use). Generally, reserved VLANs are up to and including 100.
+•	The L2 VLANs must natively span the sites. VLAN overlay such as Virtual Extensible LAN (VXLAN) is not supported.
+
+// March 8
+
+== Considerations for layer 3 networks
+
+The MetroCluster backend switches are connected to the routed IP network, either directly to routers (as shown in the following simplified example) or through other intervening switches.
+
+image::../media/mcc_layer3_backend.png[]
+
+The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_parts_of_an_ip_mcc_configuration_mcc_ip.html[Configure the MetroCluster hardware components]. When you perform the installation and cabling procedure, you must perform the steps specific to the layer 3 configuration:
+
+* If you use NetApp validated switches:
+** The MetroCluster switches can be connected directly to the router or to one or more intervening switches.
+* If you use MetroCluster compliant switches:
+** The MetroCluster IP interfaces can be connected directly to the router or to one of the intervening switches.
+* The VLAN must be extended to the gateway device.
+* You use the -gateway parameter to configure the MetroCluster IP (MCC-IP) interface address with an IP gateway address.
+* The VLAN IDs for the MetroCluster VLANs must be the same at each site. However, the subnets can be different. 
+* Dynamic routing is not supported for the MetroCluster traffic.
+* Only four-node MetroCluster configurations are supported (two nodes at each site).
+* Two subnets are required on each MetroCluster site—one in each network.
+* Auto-IP assignment is not supported.
+
+When you configure routers and gateway IP addresses, ensure the following requirements are met:
+
+* On each node, two interfaces cannot have the same gateway IP address.
+* The corresponding interfaces on the HA pairs on each site must have the same gateway IP address.
+* The corresponding interfaces on a node and its DR and AUX partners cannot have the same gateway IP address.
+* The corresponding interfaces on a node and its DR and AUX partners must have the same VLAN ID.
+* Only the MetroCluster IP interfaces are cable to the switches. The local cluster interfaces cannot be connected to the switches. The MetroCluster will be cabled as a “switchless” cluster.
+
+
+== Required settings for intermediate switches
+
+When MetroCluster traffic traverses an ISL in an intermediate network, the configuration of the intermediate switches provided by the customer must ensure that the MetroCluster traffic (RDMA and storage) meets the required service levels across the entire path between the MetroCluster sites.
+
+The following diagram gives an overview of the required settings when using NetApp validated switch that are Cisco or NVIDIA switches:
+
+image::../media/switch_traffic_with_cisco_switches.png[]
+
+The following diagram gives an overview of the required settings for a shared network when the external switches are IP Broadcom switches.
+
+image::../media/switch_traffic_with_broadcom_switches.png[]
+
+In this example, the following policies and maps are created for MetroCluster traffic:
+
+* A MetroClusterIP_Ingress policy is applied to ports on the intermediate switch that connect to the MetroCluster IP switches.
++
+The MetroClusterIP_Ingress policy maps the incoming tagged traffic to the appropriate queue on the intermediate switch. Tagging happens on the node-port, not on the ISL. Non-MetroCluster traffic that is using the same ports on the ISL remains in the default queue.
+
+* A MetroClusterIP_Egress policy is applied to ports on the intermediate switch that connect to ISLs between intermediate switches
+
+You must configure the intermediate switches with matching QoS access-maps, class-maps, and policy-maps along the path between the MetroCluster IP switches. The intermediate switches map RDMA traffic to COS5 and storage traffic to COS4.
+
+The following examples are for Cisco Nexus 3232 and 9336 switches. Depending on your switch vendor and models, you must ensure that your intermediate switches have an equivalent configuration.
+
+The following example shows the class map definitions. This matches the traffic based on DSCP and COS value and assigns it to Q4 and Q5 respectively.
+
+If you need to ‘classify’ the traffic on the ingress on the ISL port of the intermediate switch:
+----
+ip access-list rdma
+  10 permit tcp any eq 10006 any
+  20 permit tcp any any eq 10006
+ip access-list storage
+  10 permit tcp any eq 65200 any
+  20 permit tcp any any eq 65200
+
+class-map type qos match-all rdma
+  match access-group name rdma
+class-map type qos match-all storage
+  match access-group name storage
+----
+
+If you do not need to classify the traffic on the ingress on the ISL port of the intermediate switch:
+----
+class-map type qos match-any c5
+  match cos 5
+  match dscp 40
+class-map type qos match-any c4
+  match cos 4
+  match dscp 32
+----
+
+Create a policy map for the ingress on the ISL port of the intermediate switch
+
+If you need to ‘classify’ the traffic on the ingress on the ISL port of the intermediate switch:
+
+----
+policy-map type qos MetroClusterIP_Ingress_Classify
+  class rdma
+    set dscp 40
+    set cos 5
+    set qos-group 5
+  class storage
+    set dscp 32
+    set cos 4
+    set qos-group 4
+  class class-default
+    set qos-group 0
+-----
+
+If you do not need to classify the traffic on the ingress on the ISL port of the intermediate switch:
+
+----
+policy-map type qos MetroClusterIP_Ingress_Match
+  class c5
+    set dscp 40
+    set cos 5
+    set qos-group 5
+  class c4
+    set dscp 32
+    set cos 4
+    set qos-group 4
+  class class-default
+    set qos-group 0
+----
+The following example shows the policy map definitions:
+
+----
+policy-map type qos MetroClusterIP_Ingress
+   class rdma
+      set dscp 40
+      set cos 5
+      set qos-group 5
+   class storage
+      set dscp 32
+      set cos 4
+      set qos-group 4
+policy-map type queuing MetroClusterIP_Egress
+   class type queuing c-out-8q-q7
+      priority level 1
+   class type queuing c-out-8q-q6
+      priority level 2
+   class type queuing c-out-8q-q5
+      priority level 3
+      random-detect threshold burst-optimized ecn
+   class type queuing c-out-8q-q4
+      priority level 4
+      random-detect threshold burst-optimized ecn
+   class type queuing c-out-8q-q3
+      priority level 5
+   class type queuing c-out-8q-q2
+      priority level 6
+   class type queuing c-out-8q-q1
+      priority level 7
+   class type queuing c-out-8q-q-default
+      bandwidth remaining percent 100
+      random-detect threshold burst-optimized ecn
+----
+
+These settings must be done on all switches and ISLs carrying MetroCluster traffic.
+Note: In this example the Q4 and Q5 are configured with “random-detect threshold burst-optimized ecn”. Depending on your configuration you may need to explicitly set minimum and maximum thresholds.
+
+For example:
+class type queuing c-out-8q-q5
+  priority level 3
+  random-detect minimum-threshold 3000 kbytes maximum-threshold 4000 kbytes drop-probability 0 weight 0 ecn
+class type queuing c-out-8q-q4
+  priority level 4
+  random-detect minimum-threshold 2000 kbytes maximum-threshold 3000 kbytes drop-probability 0 weight 0 ecn
+
+Values for minimum and maximum can vary depending on the switch and your requirements.
+
+Example 1: if your configuration has Cisco or NVidia switches, then you do not need to classify on the first ingress port of the intermediate switch. You then configure the following:
+•	class-map type qos match-any c5
+•	class-map type qos match-any c4
+•	MetroClusterIP_Ingress_Match
+You assign the MetroClusterIP_Ingress_Match policy map to the ISL ports carrying MetroCluster traffic
+
+Example 2: if your configuration has Broadcom switches, then you need to classify on the first ingress port of the intermediate switch. You then configure the following:
+•	ip access-list rdma
+•	ip access-list storage
+•	class-map type qos match-all rdma
+•	class-map type qos match-all storage
+•	MetroClusterIP_Ingress_Classify
+•	class-map type qos match-any c5
+•	class-map type qos match-any c4
+•	MetroClusterIP_Ingress_Match
+You assign the MetroClusterIP_Ingress_Classify policy map to the ISL ports on the intermediate switch connecting the Broadcom switch.
+You assign the MetroCLusterIP_Ingress_Match policy map the ISL ports on the intermediate switch carrying MetroCluster traffic but do not connect the Broadcom switch.
