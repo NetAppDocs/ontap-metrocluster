@@ -4,12 +4,12 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, migrate, root, aggregate, adp, disks, partition, advanced, disk, partitioning
 summary: 'You might need to move root volumes to another root aggregate within a two-node or four-node MetroCluster configuration.'
 ---
-= Migrate an existing root aggregate with ADP enabled 
+= Migrate an existing root aggregate using ADP 
 :icons: font
 :imagesdir: ../media/
 
 [lead]
-You can nondisruptively migrate an existing root aggregate with Advanced Disk Partitioning (ADP) enabled to a larger root aggregate with ADP enabled. You can use this procedure if the root aggregate is running out of space or if you want to switch from using low capacity SSDs to large capacity SSDs.
+You can nondisruptively migrate an existing root aggregate that is using Advanced Disk Partitioning (ADP) to a larger root aggregate with ADP. You can use this procedure if a root aggregate is running out of space or if you want to switch from using low capacity SSDs to large capacity SSDs.
 
 .About this task 
 
@@ -201,7 +201,13 @@ controller_A_2 controller_A_1 true     Connected to controller_A_1
 +
 For each node, perform the migration specifying the list of disks in Pool0 and the target RAID type as parameters:
 +
-`*system node migrate-root -node cluster-01 -disklist 1.11.1.P3,1.11.2.P3,1.11.3.P3,1.11.4.P3,1.11.5.P3,1.11.6.P3,1.11.7.P3,1.11.8.P3,1.11.9.P3,1.11.10.P3 -raid-type raid_dp*`
+`system node migrate-root -node cluster-01 -disklist <pool0_disk_list_> -raid-type <target_raid_type>`
++
+Example:
++
+----
+system node migrate-root -node cluster-01 -disklist 1.11.1.P3,1.11.2.P3,1.11.3.P3,1.11.4.P3,1.11.5.P3,1.11.6.P3,1.11.7.P3,1.11.8.P3,1.11.9.P3,1.11.10.P3 -raid-type raid_dp
+----
 +
 IMPORTANT: If the number of disks found is not enough, add more disks or choose a different RAID type.
 +
@@ -209,7 +215,7 @@ Wait for the migration process to complete. This might take several minutes and 
 
 . Re-enable RAID auto-partitioning for all MetroCluster IP nodes:
 +
-`storage raidlm policy modify -node <node> -policy-name auto_partition_ssds_post_init -policy-type Shared-Disk -is-enable true`
+`*storage raidlm policy modify -node <node> -policy-name auto_partition_ssds_post_init -policy-type Shared-Disk -is-enable true*`
 
 . Verify that the migration was successful:
 +
