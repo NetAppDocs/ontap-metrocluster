@@ -2,9 +2,9 @@
 permalink: maintain/concept_migrating_root_agg_with_adp.html
 sidebar: sidebar
 keywords: metrocluster, maintain, service, migrate, root, aggregate, adp, disks, partition, advanced, disk, partitioning
-summary: 'You might need to move root volumes to another root aggregate within a two-node or four-node MetroCluster configuration.'
+summary: 'You can nondisruptively migrate an existing root aggregate that is using Advanced Disk Partitioning (ADP).'
 ---
-= Migrate an existing root aggregate on systems configured for ADP  
+= Migrate an existing root aggregate with ADP configured
 :icons: font
 :imagesdir: ../media/
 
@@ -170,7 +170,9 @@ In this example, the root partition size is 14119850.
 +
 `cluster_A*> disk partition -n 3 -i 3 -b <root_partition_size> <disk_id>` 
 +
-. Assign the partitions:
+. Assign the partitions.
++
+NOTE: In systems using ADP, aggregates are created using partitions in which each drive is partitioned in to P1, P2 and P3 partitions. The root aggregate is created using P3 partitions.
 +
 .. Assign the P3 partition to the same node that owns the container disk:
 +
