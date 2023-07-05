@@ -4,12 +4,12 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, migrate, root, aggregate, adp, disks, partition, advanced, disk, partitioning
 summary: 'You might need to move root volumes to another root aggregate within a two-node or four-node MetroCluster configuration.'
 ---
-= Migrate a root aggregate with ADP
+= Migrate an existing root aggregate with ADP enabled 
 :icons: font
 :imagesdir: ../media/
 
 [lead]
-You can migrate a root aggregate with ADP to a larger root aggregate with ADP. 
+You can nondisruptively migrate an existing root aggregate with Advanced Disk Partitioning (ADP) enabled to a larger root aggregate with ADP enabled. You can use this procedure if the root aggregate is running out of space or if you want to switch from using low capacity SSDs to large capacity SSDs.
 
 .About this task 
 
@@ -72,7 +72,7 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
  .. Check that there are no health alerts: `*system health alert show*`
 
  . Confirm that the local HA pair is enabled for storage failover:
- `storage failover show`
+ `*storage failover show*`
 +
 The output should indicate that takeover is possible for both nodes:
 +
@@ -89,11 +89,11 @@ cluster-02     cluster-01       true   Connected to cluster-01
 
 . Zero the spare disks:
 +
-`run * disk zero spares`
+`*run * disk zero spares*`
 
 . Identify the root aggregate size:
 +
-`::*> node run local aggr status -r <root_agg_name>`
+`*node run local aggr status -r <root_agg_name>*`
 +
 In the following example, the root aggregate has ten disks in "Pool0" and ten disks in "Pool1".
 +
@@ -139,7 +139,7 @@ siteA::*>
 +
 Before you assign the disks, confirm that the recommended number of spare drives are assigned to each node. These drives are partitioned before the root aggregate is placed on them. Use the following command to assign the disks: 
 +
-`cluster::> storage disk assign -disklist <disklist> -owner <cluster-01> -pool 0`
+`*storage disk assign -disklist 1.11.0,1.11.1,…  -owner cluster-01 -pool 0*`
 
 . Identify the root partition size.
 +
@@ -166,25 +166,25 @@ In this example, the root partition size is 14119850.
 
 . Partition each disk in the root aggregate:
 +
-`cluster-01*> disk partition -n 3 -i 3 -b <root_partition_size> <disk_name>` 
+`cluster-01*> disk partition -n 3 -i 3 -b <root_partition_size> <disk_id>` 
 +
 . Assign the partitions:
 +
-* Assign the P3 partition to the same node that owns the container disk:
+.. Assign the P3 partition to the same node that owns the container disk:
 +
-`storage disk assign -disk <disk_name> -root true -pool 0 -owner cluster-01`
+`*storage disk assign -disk <disk_id> -root true -pool 0 -owner cluster-01*`
 
-* Assign the P1 partition to the system with the lower system ID number in the HA pair:
+.. Assign the P1 partition to the system with the lower system ID number in the HA pair:
 +
-`storage disk assign -disk <disk_name> -data1 true -pool 0 -owner cluster-01`
+`*storage disk assign -disk <disk_id> -data1 true -pool 0 -owner cluster-01*`
 
-* Assign the P2 partition to the system with the higher system ID number in the HA pair:
+.. Assign the P2 partition to the system with the higher system ID number in the HA pair:
 +
-`storage disk assign -disk <disk_name> -data2 true -pool 0 -owner cluster-02`
+`*storage disk assign -disk <disk_name> -data2 true -pool 0 -owner cluster-02*`
 +
 Repeat this step for every partitioned disk
 
-. Run the `storage failover show` command to confirm that takeover is possible: 
+. Run the `*storage failover show*` command to confirm that takeover is possible: 
 +
 ----
 cluster::> storage failover show
@@ -201,7 +201,7 @@ cluster-02     cluster-01       true   Connected to cluster-01
 +
 For each node, perform the migration specifying the list of disks in Pool0 and the target RAID type as parameters:
 +
-`system node migrate-root -node cluster-01 -disklist 1.11.1.P3,1.11.2.P3,1.11.3.P3,1.11.4.P3,1.11.5.P3,1.11.6.P3,1.11.7.P3,1.11.8.P3,1.11.9.P3,1.11.10.P3 -raid-type raid_dp`
+`*system node migrate-root -node cluster-01 -disklist 1.11.1.P3,1.11.2.P3,1.11.3.P3,1.11.4.P3,1.11.5.P3,1.11.6.P3,1.11.7.P3,1.11.8.P3,1.11.9.P3,1.11.10.P3 -raid-type raid_dp*`
 +
 IMPORTANT: If the number of disks found is not enough, add more disks or choose a different RAID type.
 +
@@ -213,7 +213,7 @@ Wait for the migration process to complete. This might take several minutes and 
 
 . Verify that the migration was successful:
 +
-`run local aggr status -r <root_agg_name>`
+`*run local aggr status -r <root_agg_name>*`
 +
 ----
 siteA::*> node run local aggr status -r <root_agg_name>
