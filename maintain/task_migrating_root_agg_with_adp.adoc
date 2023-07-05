@@ -22,7 +22,7 @@ You can nondisruptively migrate an existing root aggregate that is using Advance
 .Steps 
 
 . Check the health of the configuration.
- .. Check that the MetroCluster is configured and in normal mode on each cluster: `*metrocluster show*`
+ .. Check that the MetroCluster is configured and in normal mode on each cluster: `metrocluster show`
 +
 ----
 cluster_A::> metrocluster show
@@ -36,7 +36,7 @@ Remote: cluster_B         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
- .. Check that mirroring is enabled on each node: `*metrocluster node show*`
+ .. Check that mirroring is enabled on each node: `metrocluster node show`
 +
 ----
 cluster_A::> metrocluster node show
@@ -50,7 +50,7 @@ Group Cluster Node           State          Mirroring Mode
 2 entries were displayed.
 ----
 
- .. Check that the MetroCluster components are healthy: `*metrocluster check run*`
+ .. Check that the MetroCluster components are healthy: `metrocluster check run`
 +
 ----
 cluster_A::> metrocluster check run
@@ -69,10 +69,10 @@ Command completed. Use the "metrocluster check show -instance" command or sub-co
 To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
 ----
 
- .. Check that there are no health alerts: `*system health alert show*`
+ .. Check that there are no health alerts: `system health alert show`
 
  . Confirm that the local HA pair is enabled for storage failover:
- `*storage failover show*`
+ `storage failover show`
 +
 The output should indicate that takeover is possible for both nodes:
 +
@@ -89,11 +89,11 @@ controller_A_2 controller_A_1 true     Connected to controller_A_1
 
 . Zero the spare disks:
 +
-`*run * disk zero spares*`
+`run * disk zero spares`
 
 . Identify the root aggregate size:
 +
-`*node run local aggr status -r <root_agg_name>*`
+`node run local aggr status -r <root_agg_name>`
 +
 In the following example, the root aggregate has ten disks in "Pool0" and ten disks in "Pool1".
 +
@@ -141,7 +141,7 @@ Before you assign the disks, confirm that the recommended number of spare drives
 +
 Run the following command to assign the disks: 
 +
-`*storage disk assign -disklist 1.11.0,1.11.1,…  -owner cluster-01 -pool 0*`
+`storage disk assign -disklist 1.11.0,1.11.1,…  -owner cluster-01 -pool 0`
 
 . Identify the root partition size.
 +
@@ -174,19 +174,19 @@ In this example, the root partition size is 14119850.
 +
 .. Assign the P3 partition to the same node that owns the container disk:
 +
-`*storage disk assign -disk <disk_id> -root true -pool 0 -owner cluster-01*`
+`storage disk assign -disk <disk_id> -root true -pool 0 -owner cluster-01`
 
 .. Assign the P1 partition to the system with the lower system ID number in the HA pair:
 +
-`*storage disk assign -disk <disk_id> -data1 true -pool 0 -owner cluster-01*`
+`storage disk assign -disk <disk_id> -data1 true -pool 0 -owner cluster-01`
 
 .. Assign the P2 partition to the system with the higher system ID number in the HA pair:
 +
-`*storage disk assign -disk <disk_name> -data2 true -pool 0 -owner cluster-02*`
+`storage disk assign -disk <disk_name> -data2 true -pool 0 -owner cluster-02`
 +
 Repeat this step for every partitioned disk
 
-. Run the `*storage failover show*` command to confirm that takeover is possible: 
+. Run the `storage failover show` command to confirm that takeover is possible: 
 +
 ----
 cluster_A::> storage failover show
@@ -205,7 +205,7 @@ For each node, perform the migration specifying the list of disks in Pool0 and t
 +
 `system node migrate-root -node cluster-01 -disklist <pool0_disk_list_> -raid-type <target_raid_type>`
 +
-Example:
+For example, if the root aggregate for "cluster-01" consists of ten disks with "raid_dp", the following command migrates the root aggregate:
 +
 ----
 system node migrate-root -node cluster-01 -disklist 1.11.1.P3,1.11.2.P3,1.11.3.P3,1.11.4.P3,1.11.5.P3,1.11.6.P3,1.11.7.P3,1.11.8.P3,1.11.9.P3,1.11.10.P3 -raid-type raid_dp
@@ -217,11 +217,11 @@ Wait for the migration process to complete. This might take several minutes and 
 
 . Re-enable RAID auto-partitioning for all MetroCluster IP nodes:
 +
-`*storage raidlm policy modify -node <node> -policy-name auto_partition_ssds_post_init -policy-type Shared-Disk -is-enable true*`
+`storage raidlm policy modify -node <node> -policy-name auto_partition_ssds_post_init -policy-type Shared-Disk -is-enable true`
 
 . Verify that the migration was successful:
 +
-`*run local aggr status -r <root_agg_name>*`
+`run local aggr status -r <root_agg_name>`
 +
 ----
 cluster_A::*> node run local aggr status -r <root_agg_name>
