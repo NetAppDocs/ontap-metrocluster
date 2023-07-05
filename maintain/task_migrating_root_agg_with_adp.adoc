@@ -77,13 +77,13 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 The output should indicate that takeover is possible for both nodes:
 +
 ----
-cluster::> storage failover show
+cluster_A::> storage failover show
                               Takeover
 Node           Partner        Possible State Description
 -------------- -------------- -------- ---------------------------
-cluster-01     cluster-02       true   Connected to cluster-02
+controller_A_1 controller_A_2 true     Connected to controller_A_2
 
-cluster-02     cluster-01       true   Connected to cluster-01
+controller_A_2 controller_A_1 true     Connected to controller_A_1
 2 entries were displayed.
 ----
 
@@ -98,7 +98,7 @@ cluster-02     cluster-01       true   Connected to cluster-01
 In the following example, the root aggregate has ten disks in "Pool0" and ten disks in "Pool1".
 +
 ----
-siteA::*> node run local aggr status -r <root_agg_name>
+cluster_A::*> node run local aggr status -r <root_agg_name>
 Aggregate <root_agg_name> (online, raid_dp, mirrored, fast zeroed) (block checksums)
   Plex /<root_agg_name>/plex0 (online, normal, active, pool0)
     RAID group /<root_agg_name>/plex0/rg0 (normal, block checksums, max_wdbn 5767167)
@@ -132,7 +132,7 @@ Aggregate <root_agg_name> (online, raid_dp, mirrored, fast zeroed) (block checks
       data      0m.i2.3L13P3    0m    22  0          1 SSD-NVM   N/A 23956/6132864     23964/6134912 (fast zeroed)
       data      0v.i1.1L26P3    0v    22  1          1 SSD-NVM   N/A 23956/6132864     23964/6134912 (fast zeroed)
  
-siteA::*>
+cluster_A::*>
 ----
 
 . Assign the container disks. 
@@ -166,7 +166,7 @@ In this example, the root partition size is 14119850.
 
 . Partition each disk in the root aggregate:
 +
-`cluster-01*> disk partition -n 3 -i 3 -b <root_partition_size> <disk_id>` 
+`cluster_A*> disk partition -n 3 -i 3 -b <root_partition_size> <disk_id>` 
 +
 . Assign the partitions:
 +
@@ -187,13 +187,13 @@ Repeat this step for every partitioned disk
 . Run the `*storage failover show*` command to confirm that takeover is possible: 
 +
 ----
-cluster::> storage failover show
+cluster_A::> storage failover show
                               Takeover
 Node           Partner        Possible State Description
 -------------- -------------- -------- ---------------------------
-cluster-01     cluster-02       true   Connected to cluster-02
+controller_A_1 controller_A_2 true     Connected to controller_A_2
 
-cluster-02     cluster-01       true   Connected to cluster-01
+controller_A_2 controller_A_1 true     Connected to controller_A_1
 2 entries were displayed.
 ----
 
@@ -216,7 +216,7 @@ Wait for the migration process to complete. This might take several minutes and 
 `*run local aggr status -r <root_agg_name>*`
 +
 ----
-siteA::*> node run local aggr status -r <root_agg_name>
+cluster_A::*> node run local aggr status -r <root_agg_name>
 Aggregate <root_agg_name> (online, raid0, fast zeroed) (block checksums)
   Plex /<root_agg_name>/plex0 (online, normal, active, pool0)
     RAID group /<root_agg_name>/plex0/rg0 (normal, block checksums, max_wdbn 6127616)
@@ -226,7 +226,7 @@ Aggregate <root_agg_name> (online, raid0, fast zeroed) (block checksums)
       data      e2a.11.0.16P3   e2a   11  16  NV:A   0 SSD-NVM   N/A 23956/6132864     23964/6134912 (fast zeroed)
       data      e10b.11.3.17P3  e10b  11  17  NV:B   0 SSD-NVM   N/A 23956/6132864     23964/6134912 (fast zeroed)
  
-siteA::*>
+cluster_A::*>
 ----
 
 . Verify the health of the configuration by repeating Step 1. 
