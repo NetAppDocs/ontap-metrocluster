@@ -9,7 +9,7 @@ summary: 'You can nondisruptively migrate an existing root aggregate that is usi
 :imagesdir: ../media/
 
 [lead]
-You can nondisruptively migrate an existing root aggregate that is using Advanced Disk Partitioning (ADP) to a larger root aggregate if the root aggregate is running out of space or if you want to switch from using low capacity SSDs to large capacity SSDs.
+You can nondisruptively migrate an existing root aggregate that is using Advanced Disk Partitioning (ADP) if the root aggregate is running out of space or if you want to switch from using low capacity SSDs to large capacity SSDs.
 
 .About this task 
 
@@ -154,14 +154,14 @@ You can use the following table to determine the root aggregate layout:
 |===
 | Number of disks to partition
 | Root aggregate layout 
-| 4 per node | 2 data drives and 2 parity drives
-| 12 per node | 8 data drives, 2 parity-drives, and 2 spare-drives
-| 24 per node | 20 data-drives, 2 parity-drives, and 2 spare-drives
+| 4 disks per node | 2 data drives and 2 parity drives
+| 12 disks per node | 8 data drives, 2 parity drives, and 2 spare drives
+| 24 disks per node | 20 data-drives, 2 parity drives, and 2 spare drives
 |===
 +
 To identify the root partition size, you divide the total number of 4K blocks equally between all data drives.
 +
-For example, if you have a root aggregate layout of 8 data drives, 2 parity drives, and 2 spare drives with a root aggregate size of “112958795 blks", you must divide 112958795 by 8 to get the root partition size:
+For example, if you have a root aggregate layout of 8 data drives, 2 parity drives, and 2 spare drives with a root aggregate size of 112958795 blocks, you must divide 112958795 by 8 to get the root partition size:
 +
 (112958795 / 8) = 14119849.375 = ROUNDUP(14119849.374) = 14119850.
 +
@@ -187,7 +187,7 @@ NOTE: In systems using ADP, aggregates are created using partitions in which eac
 +
 `storage disk assign -disk <disk_name> -data2 true -pool 0 -owner cluster-02`
 +
-Repeat this step for every partitioned disk
+Repeat this step for every partitioned disk.
 
 . Run the `storage failover show` command to confirm that takeover is possible: 
 +
@@ -214,9 +214,9 @@ For example, if the root aggregate for "cluster-01" consists of ten disks with "
 system node migrate-root -node cluster-01 -disklist 1.11.1.P3,1.11.2.P3,1.11.3.P3,1.11.4.P3,1.11.5.P3,1.11.6.P3,1.11.7.P3,1.11.8.P3,1.11.9.P3,1.11.10.P3 -raid-type raid_dp
 ----
 +
-IMPORTANT: If there are not enough disks found, add more disks or choose a different RAID type.
+IMPORTANT: If the number of disks found is not enough, add more disks or choose a different RAID type.
 +
-Wait for the migration process to complete. This might take several minutes and the node reboots several times. During migration, you might see errors on the other nodes, you can safely ignore these errors and wait for the migration process to finish.  
+Wait for the migration process to finish. This might take several minutes to complete. During migration, the node reboots several times and you might see errors on the other nodes, you can safely ignore these errors and wait for the migration process to finish.  
 
 . Re-enable RAID auto-partitioning for all MetroCluster IP nodes:
 +
