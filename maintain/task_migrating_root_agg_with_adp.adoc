@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, migrate, root, aggregate, adp, disks, partition, advanced, disk, partitioning
 summary: 'You can nondisruptively migrate an existing root aggregate that is using Advanced Disk Partitioning (ADP).'
 ---
-= Migrate a root aggregate configured for ADP in MetroCluster IP configurations
+= Migrate a root aggregate configured with ADP in MetroCluster IP configurations
 :icons: font
 :imagesdir: ../media/
 
@@ -13,7 +13,6 @@ You can nondisruptively migrate an existing root aggregate that is using Advance
 
 .About this task 
 
-* This procedure is only supported on MetroCluster IP configurations.
 * The local high availability (HA) pair must be enabled for storage failover. 
 * This procedure is nondisruptive. 
 * The configuration should be in a steady state and serving data normally, without frequent disruptions. 
@@ -161,11 +160,7 @@ You can use the following table to determine the root aggregate layout:
 +
 To identify the root partition size, you divide the total number of 4K blocks equally between all data drives.
 +
-For example, if you have a root aggregate layout of 8 data drives, 2 parity drives, and 2 spare drives with a root aggregate size of 112958795 blocks, you must divide 112958795 by 8 to get the root partition size:
-+
-(112958795 / 8) = 14119849.375 = ROUNDUP(14119849.374) = 14119850.
-+
-In this example, the root partition size is 14119850. 
+For example, if you have a root aggregate layout of 8 data drives, 2 parity drives, and 2 spare drives with a root aggregate size of 112958795 blocks, you must divide 112958795 by 8 to get the root partition size.
 
 . Partition each disk in the root aggregate:
 +
@@ -206,17 +201,34 @@ cluster-02     cluster-01      true     Connected to cluster-01
 +
 For each node, perform the migration specifying the list of disks in Pool0 and the target RAID type as parameters:
 +
-`system node migrate-root -node cluster-01 -disklist <pool0_disk_list_> -raid-type <target_raid_type>`
+`system node migrate-root -node cluster-01 -disklist <pool0_disk_list> -raid-type <target_raid_type>`
++
+
 +
 For example, if the root aggregate for "cluster-01" consists of ten disks with "raid_dp", the following command migrates the root aggregate:
 +
 ----
 system node migrate-root -node cluster-01 -disklist 1.11.1.P3,1.11.2.P3,1.11.3.P3,1.11.4.P3,1.11.5.P3,1.11.6.P3,1.11.7.P3,1.11.8.P3,1.11.9.P3,1.11.10.P3 -raid-type raid_dp
+
+Warning: This is a partially automated and guided procedure for migrating the
+         root aggregate on the node "cluster-01".
+         Negotiated switchover is about to start.
+         Warning: This operation will create a new root aggregate and replace
+         the existing root on the node "cluster-01". The existing root
+         aggregate will be discarded.
+Do you want to continue? {y|n}: y
+
+Info: Started migrate-root job. Run "job show -id 51 -instance" command to
+      check the progress of the job.
+      Once the job is complete, mirror the root aggregate using the "storage
+      aggregate mirror" command
 ----
 +
 IMPORTANT: If the number of disks found is not enough, add more disks or choose a different RAID type.
+
+. Optionally, monitor the migration progress. 
 +
-Wait for the migration process to finish. This might take several minutes to complete. During migration, the node reboots several times and you might see errors on the other nodes, you can safely ignore these errors and wait for the migration process to finish.  
+Run the `job show -id 51 -instance` on the second site if you want to monitor the migration progress. The migration process might take several minutes to complete. During migration, the node reboots several times and you might see errors on the other nodes, you can safely ignore these errors and wait for the migration process to finish.  
 
 . Re-enable RAID auto-partitioning for all MetroCluster IP nodes:
 +
