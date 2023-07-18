@@ -27,9 +27,9 @@ https://hwu.netapp.com/[NetApp Hardware Universe^]
 
 
 * All controllers in the configuration should be upgraded during the same maintenance period.
-
 +
 The following table shows the supported model matrix for the controller upgrade.
++
 |===
 
 h| Old platform model h| New platform model
@@ -257,7 +257,7 @@ If the AFF A700 or FAS9000 controllers have a card in slot 7, you should move it
 
 === Gather information before the upgrade
 
-Before upgrading, you must gather information for each of the nodes, and, if necessary, adjust the network broadcast domains, remove any VLANs and interface groups, and gather encryption information.
+Before upgrading, you must gather information for each of the old nodes, and, if necessary, adjust the network broadcast domains, remove any VLANs and interface groups, and gather encryption information.
 
 .About this task
 
@@ -269,7 +269,7 @@ This task is performed on the existing MetroCluster FC configuration.
 +
 `metrocluster node show -fields node-systemid,dr-partner-systemid`
 +
-During the replacement procedure you will replace these system IDs with the system IDs of the controller modules.
+During the upgrade procedure, you will replace these old system IDs with the system IDs of the controller modules.
 +
 In this example for a four-node MetroCluster FC configuration, the following old system IDs are retrieved:
 +
@@ -293,7 +293,7 @@ dr-group-id cluster    node           node-systemid ha-partner-systemid dr-partn
 ----
 
 
-. Gather port and LIF information for each node.
+. Gather port and LIF information for each old node.
 +
 You should gather the output of the following commands for each node:
 +
@@ -1155,5 +1155,6 @@ If the MetroCluster configuration was previously configured for monitoring by th
 
 . Use the steps in: link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
 
+// 2023 JULY 5, ONTAPDOC-1083
 // 2023 May 05, GH issue 277
 //BURT 1414896 /05/01/22
