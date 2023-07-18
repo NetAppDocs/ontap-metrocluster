@@ -1,0 +1,47 @@
+---
+permalink: install-ip/concept_requirement_and_limitations_mcc_compliant_switches.html
+sidebar: sidebar
+keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant, limitations
+summary: MetroCluster IP switches that are listed as supported switches in the link:https://hwu.netapp.com/[NetApp HardWare Universe^] and provided by NetApp are NetApp-validated. Beginning with ONTAP 9.7, MetroCluster IP configurations can use MetroCluster-compliant switches. These are switches that are not NetApp-validated but are compliant with NetApp specifications. However, NetApp does not provide support services, troubleshooting and/or configuration for any non-validated switch.
+---
+
+= Requirements and Limitations of MetroCluster-compliant switches
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Beginning with ONTAP 9.7, MetroCluster IP configurations can use MetroCluster-compliant switches. These are switches that are not NetApp-validated but are compliant with NetApp specifications. However, NetApp does not provide support services, troubleshooting and/or configuration for any non-validated switch.
+
+== General requirements for MetroCluster-compliant switches
+
+The switch connecting the MetroCluster IP interfaces must meet the following:
+
+* The switches must support quality of service (QoS) and traffic classification.
+* The switches must support explicit congestion notification (ECN).
+* The switches must support L4 port-vlan load-balancing policies to preserve order along the path.
+* The switches must support L2 Flow Control (L2FC).
+* The cables connecting the nodes to the switches must be provided by NetApp. These cables must be supported by the switch vendor.
+* The switches connecting the MetroCluster nodes can carry non-MetroCluster traffic.
+* Only platforms that provide dedicated ports for switchless cluster interconnects can be used with a MetroCluster-compliant switch. Platforms such as the FAS2750 and AFF A220 cannot be used because MetroCluster traffic and MetroCluster interconnect traffic share the same network ports.
+* The MetroCluster-compliant switch must not be used for local cluster connections.
+* The MetroCluster IP interface can be connected to any switch port that can be configured to meet the requirements.
+* Four IP switches are required, two for each switch fabric. If you use directors, then you can use a single director at each side, but the MetroCluster IP interfaces must connect to two different blades in two different failure domains on that director.
+* The MetroCluster interfaces from one node must connect to two network switches or blades. The MetroCluster interfaces from one node cannot be connected to the same network or switch or blade.
+* The network must meet the following requirements as outlined in the sections:
+** Considerations for Inter-Switch Links (ISLs)
+** Considerations when deploying MetroCluster in a shared layer 2 or layer 3 network
+* The maximum transmission unit (MTU) of 9216 must be configured on all switches that carry MetroCluster IP traffic.
+* Reverting to ONTAP 9.6 or earlier is not supported.
+
+If you use any more intermediate switches between the switches connecting the MetroCluster IP interfaces at both sites, then these intermediate switches must meet the requirements and must be configured as outlined in section “Considerations when deploying MetroCluster in a shared layer 2 or layer 3 network”.
+
+== Limitations to MetroCluster-compliant switches
+
+Any configuration or feature that requires that the local cluster connections are connected to a switch cannot be used. For example, the following configurations and procedures cannot be used with a MetroCluster-compliant switch:
+
+* Eight-node MetroCluster configurations
+* Transitioning from MetroCluster FC to MetroCluster IP configurations
+* Refreshing a four-node MetroCluster IP configuration
+* Platforms sharing a physical interface for local cluster and MetroCluster traffic. Refer to the table below for support speed.
+
+// 2023-07-18, burt 1451528/ONTAPDOC-928
