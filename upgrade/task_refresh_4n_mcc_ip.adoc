@@ -110,6 +110,21 @@ image::../media/mcc_dr_group_b.png[]
 +
 image::../media/mcc_dr_group_c4.png[]
 
+. Confirm that takeover is possible and the nodes are connected by running the following command on both clusters: 
++
+`storage failover show`
++
+----
+cluster_A::> storage failover show
+                                    Takeover
+Node           Partner              Possible    State Description
+-------------- -------------------- ---------   ------------------
+Node_FC_1      Node_FC_2              true      Connected to Node_FC_2
+Node_FC_2      Node_FC_1              true      Connected to Node_FC_1
+Node_IP_1      Node_IP_2              true      Connected to Node_IP_2
+Node_IP_2      Node_IP_1              true      Connected to Node_IP_1
+---- 
+
 . Move the CRS volumes.
 +
 Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations].
@@ -267,6 +282,7 @@ Refer to the product documentation.
 `system node autosupport invoke -node * -type all -message MAINT=end`
 .. Repeat the command on the partner cluster.
 
+// 22 Jun 2023, GH issue 243
 // BURT 1374268, 21 APR 2021
 // BURT 1448684, 02 FEB 2022
 // 14 Apr 2023, BURT 1546321
