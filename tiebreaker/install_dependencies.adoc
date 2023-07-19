@@ -100,6 +100,12 @@ You can refer to this standard procedure for installing Vault, or refer to the H
 NOTE: If you have a Vault server in your network, you can configure the MetroCluster Tiebreaker host to use that Vault installation. In this case you do not need to install Vault on the host.
 
 .Steps
+. Navigate to the `/bin` directory:
++
+----
+[root@mcctb] cd /bin
+----
+
 . Download the Vault zip file.
 +
 ----
@@ -120,7 +126,11 @@ Archive:  vault_1.12.2_linux_amd64.zip
 [root@mcctb /bin]# vault -version
 Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53:46Z
 ----
- 
+. Navigate to the `/root` directory:
++
+----
+[root@mcctb /bin] cd /root
+----
 . Create a Vault configuration file and ensure the configuration file is created under the "/root" directory.
 +
 NOTE: For securing the communication with Vault, you should use TLS.
@@ -137,32 +147,17 @@ NOTE: For securing the communication with Vault, you should use TLS.
  }
 ----
 
-. Start the Vault server: `vault server -config config.hcl &`
+. Start the Vault server: 
 +
 ----
-[root@mcctb ~] vault server -config config.hcl
+[root@mcctb ~] vault server -config config.hcl &
 ----
 
 . Export the Vault address.
 +
-Select the correct option depending on whether you are using TLS.
-+
-[role="tabbed-block"]
-====
-.Option 1. When using TLS
---
-----
-[root@mcctb ~]# export VAULT_ADDR=’https://127.0.0.1:8300'
-----
---
-.Option 2. When not using TLS
---
 ----
 [root@mcctb ~]# export VAULT_ADDR="http://127.0.0.1:8200"
 ----
---
-====
-
 
 . Initialize Vault.
 +
@@ -192,13 +187,13 @@ Select the correct option depending on whether you are using TLS.
 2022-12-15T14:57:23.387+0530 [INFO]  core: pre-seal teardown starting
 2022-12-15T14:57:23.387+0530 [INFO]  rollback: stopping rollback manager
 2022-12-15T14:57:23.387+0530 [INFO]  core: pre-seal teardown complete
-Unseal Key 1: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Unseal Key 2: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Unseal Key 3: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Unseal Key 4: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Unseal Key 5: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Unseal Key 1: <unseal_key_1_id>
+Unseal Key 2: <unseal_key_2_id>
+Unseal Key 3: <unseal_key_3_id>
+Unseal Key 4: <unseal_key_4_id>
+Unseal Key 5: <unseal_key_5_id>
  
-Initial Root Token: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Initial Root Token: <initial_root_token_id>
 
 
 Vault initialized with 5 key shares and a key threshold of 3. Please securely
@@ -212,17 +207,20 @@ reconstruct the root key, Vault will remain permanently sealed!
 It is possible to generate new unseal keys, provided you have a quorum of
 existing unseal keys shares. See "vault operator rekey" for more information.
 ----
++
+IMPORTANT: You *must* record and store the key IDs and initial root token information in a secure place. You will need to use the key IDs and root tokens later in the procedure. 
 
 . Export the Vault root token.
 +
 ----
-[root@mcctb ~]#  export VAULT_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+[root@mcctb ~]#  export VAULT_TOKEN="<initial_root_token_id>"
 ----
  
-. Unseal Vault using any of the three keys that were created.
+. Unseal Vault using any three of the five keys that were created. 
++
+*Key 1 example*:
 +
 ----
- 
 [root@mcctb ~]# vault operator unseal
 Unseal Key (will be hidden):
 Key                Value
@@ -238,6 +236,11 @@ Version            1.12.2
 Build Date         2022-11-23T12:53:46Z
 Storage Type       file
 HA Enabled         false
+----
++
+*Key 2 example*
++
+----
 [root@mcctb ~]# vault operator unseal
 Unseal Key (will be hidden):
 Key                Value
@@ -253,6 +256,11 @@ Version            1.12.2
 Build Date         2022-11-23T12:53:46Z
 Storage Type       file
 HA Enabled         false
+----
++
+*Key 3 example*
++
+----
 [root@mcctb ~]# vault operator unseal
 Unseal Key (will be hidden):
 2022-12-15T15:15:00.980+0530 [INFO]  core.cluster-listener.tcp: starting listener: listener_address=127.0.0.1:8201
@@ -308,11 +316,11 @@ HA Enabled      false
 ----
  
  
-. Verify the Vault service starts on the host during boot.
-.. Run the following command: `cd /etc/systemd/` 
+. Configure the Vault service to start on boot.
+.. Run the following command: `cd /etc/systemd/system` 
 +
 ----
-[root@mcctb ~]#  cd /etc/systemd/
+[root@mcctb ~]#  cd /etc/systemd/system
 ----
 .. Run the following command: `cat > vault.service`
 +
@@ -749,42 +757,77 @@ Nov 08 21:28:59 mcctb systemd[1]: Starting MariaDB database server...
 ...
 Nov 08 21:29:01 scspr0523972001 systemd[1]: Started MariaDB database server.
 ....
-+
-NOTE: Verify that the "enable autostart" setting is turned on for MariaDB. See <<mariadb-autostart>>.
 
 . Configure the security and password settings:
++
+NOTE: When you are prompted for the root password, you can leave it empty to continue to configure the security and password settings. 
 +
 `[root@mcctb ~]# mysql_secure_installation`
 +
 ----
+root@localhost systemd]# mysql_secure_installation
 
-[root@mcctb ~]# mysql_secure_installation
 NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB
-SERVERS IN PRODUCTION USE! PLEASE READ EACH STEP CAREFULLY!
+      SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+In order to log into MariaDB to secure it, we'll need the current
+password for the root user.  If you've just installed MariaDB, and
+you haven't set the root password yet, the password will be blank,
+so you should just press enter here.
+
+Enter current password for root (enter for none):
+OK, successfully used password, moving on...
+
+Setting the root password ensures that nobody can log into the MariaDB
+root user without the proper authorisation.
+
 Set root password? [Y/n] y
 New password:
 Re-enter new password:
 Password updated successfully!
+Reloading privilege tables..
+ ... Success!
+
+
+By default, a MariaDB installation has an anonymous user, allowing anyone
+to log into MariaDB without having to have a user account created for
+them.  This is intended only for testing, and to make the installation
+go a bit smoother.  You should remove them before moving into a
+production environment.
+
 Remove anonymous users? [Y/n] y
-... Success!
-Normally, root should only be allowed to connect from 'localhost'. This
+ ... Success!
+
+Normally, root should only be allowed to connect from 'localhost'.  This
 ensures that someone cannot guess at the root password from the network.
+
 Disallow root login remotely? [Y/n] y
-... Success!
+ ... Success!
+
+By default, MariaDB comes with a database named 'test' that anyone can
+access.  This is also intended only for testing, and should be removed
+before moving into a production environment.
+
 Remove test database and access to it? [Y/n] y
-- Dropping test database...
-... Success!
-- Removing privileges on test database...
-... Success!
+ - Dropping test database...
+ ... Success!
+ - Removing privileges on test database...
+ ... Success!
+
+Reloading the privilege tables will ensure that all changes made so far
+will take effect immediately.
+
 Reload privilege tables now? [Y/n]
-... Success!
+ ... Success!
+
 Cleaning up...
-All done! If you've completed all of the above steps, your MariaDB
+
+All done!  If you've completed all of the above steps, your MariaDB
 installation should now be secure.
+
 Thanks for using MariaDB!
 ----
 
-[[mariadb-autostart]]
 ==== Enabling the autostart setting for the MariaDB
 
 You should verify that the autostart feature is turned on for the MariaDB. If you do not enable the autostart feature, and the system on which the MetroCluster Tiebreaker software resides has to reboot, then the Tiebreaker software continues running, but the MariaDB service cannot be restarted and configuration changes cannot be made.
