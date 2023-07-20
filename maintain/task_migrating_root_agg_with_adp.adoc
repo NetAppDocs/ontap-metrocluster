@@ -21,8 +21,10 @@ You can nondisruptively migrate an existing root aggregate that is using Advance
 
 .Steps 
 
-. Check the health of the configuration.
- .. Check that the MetroCluster is configured and in normal mode on each cluster: `metrocluster show`
+. [[step_1, verify the health of the configuration]]Check the health of the configuration.
+ .. Check that the MetroCluster is configured and in normal mode on each cluster:
+ +
+`metrocluster show`
 +
 ----
 cluster_A::> metrocluster show
@@ -36,7 +38,9 @@ Remote: cluster_B         Configuration state configured
                           AUSO Failure Domain auso-on-cluster-disaster
 ----
 
- .. Check that mirroring is enabled on each node: `metrocluster node show`
+ .. Check that mirroring is enabled on each node: 
++
+`metrocluster node show`
 +
 ----
 cluster_A::> metrocluster node show
@@ -50,7 +54,9 @@ Group Cluster Node           State          Mirroring Mode
 2 entries were displayed.
 ----
 
- .. Check that the MetroCluster components are healthy: `metrocluster check run`
+ .. Check that the MetroCluster components are healthy: 
++
+`metrocluster check run`
 +
 ----
 cluster_A::> metrocluster check run
@@ -69,7 +75,9 @@ Command completed. Use the "metrocluster check show -instance" command or sub-co
 To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
 ----
 
- .. Check that there are no health alerts: `system health alert show`
+ .. Check that there are no health alerts:
++
+`system health alert show`
 
  . Confirm that the local HA pair is enabled for storage failover:
  `storage failover show`
@@ -261,6 +269,6 @@ Aggregate <root_agg_name> (online, raid0, fast zeroed) (block checksums)
 cluster_A::*>
 ----
 
-. Verify the health of the configuration by repeating Step 1. 
+. Repeat the step to <<step_1,verify the health of the configuration>>. 
 
 // 2023 July 05, BURT 1565527
