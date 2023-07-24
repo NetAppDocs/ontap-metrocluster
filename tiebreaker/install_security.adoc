@@ -19,6 +19,8 @@ For configurations running MetroCluster Tiebreaker 1.5 and later, you can secure
 
 The following guidelines show you how to secure the host where the Tiebreaker software is installed.
 
+=== User management recommendations 
+
 ** Limit access of the "root" user.
 *  You can use users that are able to elevate to root access to install and administer the Tiebreaker software.
 * You can use users that are not able to elevate to root access to administer Tiebreaker software.
@@ -28,36 +30,12 @@ The following guidelines show you how to secure the host where the Tiebreaker so
 NOTE: Users who are not members of this group cannot access the Tiebreaker software or CLI.
 You can create additional users on the host and make them members of the group. These additional members cannot fully administer the Tiebreaker software -- they have ReadOnly access and cannot add, change, or delete monitors.
 
-** Use disk encryption
-* You can enable disk encryption. This can be FullDiskEncryption (hardware), or encryption provided by the HostOS (software), or by the SVM host.
-** Disable unused services that allow incoming connections. You can disable any service that isn’t in use. The Tiebreaker software does not require a service for incoming connections because all connections from the Tiebreaker installation are outgoing.
-The services that might be enabled by default and can be disabled are:
-* HTTP/HTTPS server
-* FTP server
-* Telnet, RSH, rlogin 
-* NFS, CIFS, and other protocol access
-* RDP (RemoteDesktopProtocol), X11 Server, VNC or other remote "desktop" service providers.
-+
-NOTE: You must leave either serial console access (if supported) or at least one protocol enabled to administer the host remotely. If you disable all protocols, then you require physical access to the host for administration.
-
-** Secure the host using FIPS
-* You can install the host OS in FIPS-compliant mode and then install Tiebreaker.
-+
-NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. No manual changes should be required.
-
-* If you secure the host, then you must ensure that the host is able to boot without user intervention. If user intervention is required, then Tiebreaker functionality might not be available in case the host unexpectedly reboots. In this case, Tiebreaker functionality is only available after the manual intervention and when the host is fully booted.
-
-=== User management recommendations 
-
 * Do not run Tiebreaker as a root user. Use a dedicated, unprivileged service account to run Tiebreaker. 
-* Change the default community string in the "/etc/snmp/snmpd.conf" file.
+** Change the default community string in the "/etc/snmp/snmpd.conf" file.
 
-* Allow minimal write privileges. The unprivileged Tiebreaker service account should not have access to overwrite its executable binary or any configuration files. Only directories and files for local Tiebreaker storage (eg., for integrated backend storage) or audit logs should be writable by the Tiebreaker user. 
-
-* End-to-End Transport Layer Security (TLS). Tiebreaker should always be used with TLS. If intermediate load balancers or reverse proxies are used to front Tiebreaker, you should use TLS for all network connections between every component of the system (including backend storage) to ensure all traffic is encrypted in transit to and from Tiebreaker. When possible, you should set the HTTP Strict Transport Security (HSTS) header by using Tiebreaker's custom response headers feature. 
-
-* You must install and run the latest version of OpenSSH. 
-* Do not permit anonymous users. 
+** Allow minimal write privileges. The unprivileged Tiebreaker service account should not have access to overwrite its executable binary or any configuration files. Only directories and files for local Tiebreaker storage (eg., for integrated backend storage) or audit logs should be writable by the Tiebreaker user. 
+ 
+** Do not permit anonymous users. 
 * Set AllowTcpForwarding to "no" or use the Match directive to restrict anonymous users. 
 
 For more information on user and account management, review the following documentation:
@@ -77,6 +55,25 @@ link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/ht
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/changing-and-resetting-the-root-password-from-the-command-line_configuring-basic-system-settings[Managing and resetting the root password^]
 
 === Baseline host security recommendations
+
+** Use disk encryption
+* You can enable disk encryption. This can be FullDiskEncryption (hardware), or encryption provided by the HostOS (software), or by the SVM host.
+** Disable unused services that allow incoming connections. You can disable any service that isn’t in use. The Tiebreaker software does not require a service for incoming connections because all connections from the Tiebreaker installation are outgoing.
+The services that might be enabled by default and can be disabled are:
+* HTTP/HTTPS server
+* FTP server
+* Telnet, RSH, rlogin 
+* NFS, CIFS, and other protocol access
+* RDP (RemoteDesktopProtocol), X11 Server, VNC or other remote "desktop" service providers.
++
+NOTE: You must leave either serial console access (if supported) or at least one protocol enabled to administer the host remotely. If you disable all protocols, then you require physical access to the host for administration.
+
+** Secure the host using FIPS
+* You can install the host OS in FIPS-compliant mode and then install Tiebreaker.
++
+NOTE: OpenJDK 19 checks on startup whether the host is installed in FIPS mode. No manual changes should be required.
+
+* If you secure the host, then you must ensure that the host is able to boot without user intervention. If user intervention is required, then Tiebreaker functionality might not be available in case the host unexpectedly reboots. In this case, Tiebreaker functionality is only available after the manual intervention and when the host is fully booted.
 
 * Disable Shell Command History.  
 
