@@ -537,6 +537,31 @@ IP_switch_A_1# copy running-config startup-config
 ----
 . Repeat the previous step on the other three switches in the MetroCluster IP configuration.
 
+== Disable unused ISLs ports and port channels
+
+NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. 
+
+. Identify the unused ISLs and port channels:
++
+`show interface brief`
+
+
+. Disable the unused ISL ports and port channels.
++
+You must run the following commands for each identified unused port or port channel.
++
+----
+SwitchA_1# config t
+Enter configuration commands, one per line. End with CNTL/Z.
+SwitchA_1(config)# int Eth1/14
+SwitchA_1(config-if)# shutdown
+SwitchA_12(config-if)# exit
+SwitchA_1(config-if)# copy running-config startup-config
+[########################################] 100%
+Copy complete, now saving to disk (please wait)...
+Copy complete.
+----
+
 // 21 APR 2021, BURT 1371395
 // 23 APR 2021, BURT 1374271
 // 20 JAN 2022, BURT 1448684

@@ -780,7 +780,9 @@ IP_switch_A_1# reload
 
 NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. 
 
-. Identify the unused ISLs and port channels:
+. Identify the unused ISLs and port channels using the RCF file:
++
+NOTE: The port or ports might be in breakout mode so the port representation you must use in the command might be different than what is stated in the file.
 +
 [role="tabbed-block"]
 ====
@@ -790,12 +792,25 @@ Run the command `show port all`.
 --
 .For port channel details
 --
-Run the command `show port-channel all `.
+Run the command `show port-channel all`.
 --
 ====
 
-. Disable unused ISLs and port channels:
 
+. Disable the unused ISL ports and port channels.
++
+You must run the following commands for each identified unused port or port channel.
++
+----
+(SwtichA_1)> enable
+(SwtichA_1)# configure
+(SwtichA_1)(Config)# <port_name>
+(SwtichA_1)(Interface 0/15)# shutdown
+(SwtichA_1)(Interface 0/15)# end
+(SwtichA_1)# write memory 
+----
+
+// 25 July 2023, BURT 1524708, 1540349, GH issue 296
 // 21 APR 2021, BURT 1371395
 // 23 APR 2021, BURT 1374271
 // 16 SEP 2021, BURT 1392530

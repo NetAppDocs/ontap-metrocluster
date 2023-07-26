@@ -342,6 +342,30 @@ Running Step 24: Final reboot of the switch
 ... The switch will reboot if all steps applied successfully ...
 ----
 
+== Disable unused ISLs ports and port channels
+
+NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. 
+
+. Identify the unused ISLs and port channels using the RCF file:
++
+`net show interface`
+
+
+. Disable the unused ISL ports and port channels using the RCF file.
++
+You must run the following commands for each identified unused port or port channel.
++
+----
+SwitchA_1# config t
+Enter configuration commands, one per line. End with CNTL/Z.
+SwitchA_1(config)# int Eth1/14
+SwitchA_1(config-if)# shutdown
+SwitchA_12(config-if)# exit
+SwitchA_1(config-if)# copy running-config startup-config
+[########################################] 100%
+Copy complete, now saving to disk (please wait)...
+Copy complete.
+----
 
 // 2023-06-14, GH issue #257 
 //BURT 1404891 10/07/2022
