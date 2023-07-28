@@ -108,17 +108,19 @@ In this example, the following policies and maps are created for MetroCluster tr
 +
 The `MetroClusterIP_Ingress` policy maps the incoming tagged traffic to the appropriate queue on the intermediate switch. Tagging happens on the node-port, not on the ISL. Non-MetroCluster traffic that is using the same ports on the ISL remains in the default queue.
 
-* A `MetroClusterIP_Egress` policy is applied to ports on the intermediate switch that connect to ISLs between intermediate switches
+* A `MetroClusterIP_Egress` policy is applied to ports on the intermediate switch that connect to ISLs between intermediate switches.
 
 * You must configure the intermediate switches with matching QoS access-maps, class-maps, and policy-maps along the path between the MetroCluster IP switches. The intermediate switches map RDMA traffic to COS5 and storage traffic to COS4.
 
 The following examples are for Cisco Nexus 3232 and 9336 switches. Depending on your switch vendor and models, you must ensure that your intermediate switches have an equivalent configuration.
 
-The following examples show the class map definitions. This matches the traffic based on DSCP and COS value and assigns it to Q4 and Q5 respectively.
-+
+.Configure the class map for the intermediate switch ISL port
+
+The following example shows the class map definitions depending on whether you need to classify traffic on ingress or not. This matches the traffic based on DSCP and COS value and assigns it to Q4 and Q5 respectively. 
+
 [role="tabbed-block"]
 ====
-.Classify the traffic on the ingress on the ISL port of the intermediate switch:
+.Classify traffic on ingress:
 --
 ----
 ip access-list rdma
@@ -134,7 +136,7 @@ class-map type qos match-all storage
   match access-group name storage
 ----
 --
-.Do not classify the traffic on the ingress on the ISL port of the intermediate switch
+.Do not classify traffic on ingress:
 --
 ----
 class-map type qos match-any c5
@@ -146,27 +148,29 @@ class-map type qos match-any c4
 ----
 ====
 
-.Create a policy map for the ingress on the ISL port of the intermediate switch:
-+
+.Create an ingress policy map on the ISL port of the intermediate switch:
+
+The following examples show how to create an ingress policy map depending on whether you need to classify traffic on ingress. 
+
 [role="tabbed-block"]
 ====
-.Classify the traffic on the ingress on the ISL port of the intermediate switch::
+.Classify the traffic on ingress:
 --
 ----
-ip access-list rdma
-  10 permit tcp any eq 10006 any
-  20 permit tcp any any eq 10006
-ip access-list storage
-  10 permit tcp any eq 65200 any
-  20 permit tcp any any eq 65200
-
-class-map type qos match-all rdma
-  match access-group name rdma
-class-map type qos match-all storage
-  match access-group name storage
+policy-map type qos MetroClusterIP_Ingress_Classify
+  class rdma
+    set dscp 40
+    set cos 5
+    set qos-group 5
+  class storage
+    set dscp 32
+    set cos 4
+    set qos-group 4
+  class class-default
+    set qos-group 0
 ----
 --
-.Do not classify the traffic on the ingress on the ISL port of the intermediate switch
+.Do not classify the traffic on ingress:
 --
 ----
 policy-map type qos MetroClusterIP_Ingress_Match
@@ -183,19 +187,12 @@ policy-map type qos MetroClusterIP_Ingress_Match
 ----
 ====
 
+.Configure the egress queuing policy for the ISL ports
 
-.Example policy map definitions:
+The following example shows how to configure the egress queuing policy:
+
 ----
-policy-map type qos MetroClusterIP_Ingress
-   class rdma
-      set dscp 40
-      set cos 5
-      set qos-group 5
-   class storage
-      set dscp 32
-      set cos 4
-      set qos-group 4
-policy-map type queuing MetroClusterIP_Egress
+policy-map type queuing MetroClusterIP_ISL_Egress
    class type queuing c-out-8q-q7
       priority level 1
    class type queuing c-out-8q-q6
@@ -218,9 +215,9 @@ policy-map type queuing MetroClusterIP_Egress
 ----
 
 These settings must be applied on all switches and ISLs carrying MetroCluster traffic.
-+
+
 In this example the Q4 and Q5 are configured with “random-detect threshold burst-optimized ecn”. Depending on your configuration you might need to explicitly set minimum and maximum thresholds, as shown in the following example:
-+
+
 -----
 class type queuing c-out-8q-q5
   priority level 3
@@ -229,7 +226,7 @@ class type queuing c-out-8q-q4
   priority level 4
   random-detect minimum-threshold 2000 kbytes maximum-threshold 3000 kbytes drop-probability 0 weight 0 ecn
 -----
-+
+
 NOTE: Minimum and maximum values vary depending on the switch and your requirements.
 
 .Example 1: Cisco or NVIDIA
