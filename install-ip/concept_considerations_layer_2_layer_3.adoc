@@ -32,7 +32,7 @@ For example, the MetroCluster switches can connect using 1x40-Gbps ISL to the in
 * ECN (explicit congestion notifications) must be configured on all paths carrying end-to-end MetroCluster traffic.
 * ISLs carrying MetroCluster traffic must be native links between the switches. Link sharing services such as Multiprotocol Label Switching (MPLS) links are not supported.
 * The number of intermediate switches is not limited. However, NetApp recommends that you keep the number of switches to the minimum required.
-* Port mode is must be `trunk`
+* Port mode must be `trunk`
 *	Ports must be configured as "LACP trunk"
 * VLANs that are specified as “MetroCluster VLAN” are allowed
 *	No native VLAN is allowed
@@ -57,7 +57,7 @@ You can configure other VLANs during interface creation, and they must be within
 +
 For all other platforms not mentioned previously, you can use other VLANs.
 
-* The RcfFileGenerator does not allow the creation of an RCF file using VLAN’s that are not supported by the platform.
+* The RcfFileGenerator does not allow the creation of an RCF file using VLANs that are not supported by the platform.
 * The RcfFileGenerator might restrict the use of certain VLAN IDs, for example, if they are intended for future use. Generally, reserved VLANs are up to and including 100.
 •	The L2 VLANs must natively span the sites. VLAN overlay such as Virtual Extensible LAN (VXLAN) is not supported.
 
@@ -104,7 +104,7 @@ image::../media/switch_traffic_with_broadcom_switches.png[]
 
 In this example, the following policies and maps are created for MetroCluster traffic:
 
-* The `MetroClusterIP_Ingress` policy is applied to ports on the intermediate switch that connect to the MetroCluster IP switches.
+* The `MetroClusterIP_Ingress` policy is applied to ports on the intermediate switch that connects to the MetroCluster IP switches.
 +
 The `MetroClusterIP_Ingress` policy maps the incoming tagged traffic to the appropriate queue on the intermediate switch. Tagging happens on the node-port, not on the ISL. Non-MetroCluster traffic that is using the same ports on the ISL remains in the default queue.
 
