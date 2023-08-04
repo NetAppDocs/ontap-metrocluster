@@ -1,0 +1,276 @@
+---
+permalink: install-ip/concept_configure_mcc_compliant_switches.html
+sidebar: sidebar
+keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant, configuration
+summary: MetroCluster IP switches that are listed as supported switches in the link:https://hwu.netapp.com/[NetApp HardWare Universe^] and provided by NetApp are NetApp-validated. The following is an overview of how the various switch ports should be configured.
+---
+
+= Configuration overview
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+The following is an overview of how the various switch ports should be configured.
+
+Depending on the switch vendor you might require different values for DSCP. The following examples are using decimal values and follow the table that applies to Cisco switches. Refer to the corresponding table of your switch vendor to derive the correct value.
+
+|===
+
+h| DSCP value h| Decimal h| Hex h| Meaning
+
+a|
+101 000
+a|
+16
+a|
+0x10
+a|
+CS2
+a|
+011 000
+a|
+24
+a|
+0x18
+a|
+CS3
+a|
+100 000
+a|
+32
+a|
+0x20
+a|
+CS4
+a|
+101 000
+a|
+40
+a|
+0x28
+a|
+CS5
+
+|===
+
+.Switchport connecting a MetroCluster interface
+
+* Classification, remote direct memory access (RDMA) traffic: 
+** Match : TCP port 10006, source and/or destination
+** Optional match: COS 5
+** Optional match: DSCP 40
+** Set DSCP 40
+** Set COS 5
+** Optional : rate shaping to 20Gbps
+* Classification, iSCSI traffic: 
+** Match : TCP port 62500, source and/or destination
+** Optional match: COS 4
+** Optional match: DSCP 32
+** Set DSCP 32
+** Set COS 4
+* L2FlowControl (pause), RX and TX
+
+.ISL ports
+
+* Classification:
+** Match cos 5 or DSCP 40
+*** Set DSCP 40
+*** Set COS 5
+** Match cos 4 or DSCP 32
+*** Set DSCP 32
+*** Set COS 4
+* Egress queuing
+** We are currently configuring thresholds (min/max) of 2000/3000 for COS 4 and 3500/6500 for COS 5
++
+NOTE: The above configurations should be evaluated due to only stating what NetApp configure and as a result, they might or might not fit your environment.
++
+** ECN enabled for Q4 and Q5
+** RED enabled for Q4 and Q5
+
+.Bandwidth allocation (switch ports connecting MetroCluster interfaces and ISL ports)
+* RDMA, COS5 / DSCP 40: 60%
+* iSCSI, COS4 / DSCP 32: 40%
+* Minimum capacity requirement per MetroCluster and network: 10Gbps
+
+NOTE: If you use rate limits, then the traffic should be *shaped* without introducing loss.
+
+== Examples for configuring switch ports connecting the MetroCluster controller
+
+The examples provided are valid for Cisco NX3232 or Cisco NX9336 switches. If other switches are used, these commands can be used as guidance, but the commands might be different. If a feature or its equivalent shown in the examples is not available on the switch, this means that the switch does not meet the minimum requirements and cannot be used to deploy a MetroCluster configuration. This is true for any switch that is connecting a MetroCluster configuration and for all switches on the path between those switches.
+
+Examples might show the configuration for one network only.
+
+.Basic configuration
+A virtual LAN (VLAN) in each network must be configured. The example shows how to configure a VLAN in network 10.
+
+*Example:*
+
+----
+# vlan 10
+The load balancing policy should be set so that order is preserved.
+----
+
+*Example:*
+----
+# port-channel load-balance src-dst ip-l4port-vlan
+----
+
+== Configuring classification
+
+You must configure the access and class maps which map the RDMA and iSCSI traffic to the appropriate classes.
+
+All TCP traffic to and from the port 65200 is mapped to the storage (iSCSI) class. All TCP traffic to and from the port 10006 is mapped to the RDMA class. These policy-maps are used on switch ports connecting the MetroCluster interfaces.
+
+*Example:*
+----
+ip access-list storage
+  10 permit tcp any eq 65200 any
+  20 permit tcp any any eq 65200
+ip access-list rdma
+  10 permit tcp any eq 10006 any
+  20 permit tcp any any eq 10006
+
+class-map type qos match-all storage
+  match access-group name storage
+class-map type qos match-all rdma
+match access-group name rdma
+----
+
+You must configure the ingress policy. The ingress policy maps the traffic as classified to the different COS groups. In this example, the RDMA traffic is mapped to COS group 5 and iSCSI traffic is mapped to COS group 4. The ingress policy is used on switch ports connecting the MetroCluster interfaces and on the ISL ports carrying MetroCluster traffic.
+
+*Example:*
+----
+policy-map type qos MetroClusterIP_Ingress
+class rdma
+  set dscp 40
+  set cos 5
+  set qos-group 5
+class storage
+  set dscp 32
+  set cos 4
+  set qos-group 4
+----
+
+It is recommended that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10-Gbps.
+
+*Example:*
+----
+policy-map type qos MetroClusterIP_Ingress
+class rdma
+  set dscp 40
+  set cos 5
+  set qos-group 5
+class storage
+  set dscp 32
+  set cos 4
+  set qos-group 4
+----
+
+It is recommended that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10-Gbps.
+
+*Example:*
+----
+policy-map type queuing MetroClusterIP_Node_Egress
+class type queuing c-out-8q-q7
+  priority level 1
+class type queuing c-out-8q-q6
+  priority level 2
+class type queuing c-out-8q-q5
+  priority level 3
+  shape min 0 gbps max 20 gbpsclass type queuing c-out-8q-q4
+  priority level 4
+class type queuing c-out-8q-q3
+  priority level 5
+class type queuing c-out-8q-q2
+  priority level 6
+class type queuing c-out-8q-q1
+  priority level 7
+class type queuing c-out-8q-q-default
+  bandwidth remaining percent 100
+  random-detect threshold burst-optimized ecn
+----
+
+== Configuring the node ports 
+
+You might need to configure the node port in breakout mode. In this example, ports 25 and 26 are configured in 4 x 25 Gbps breakout mode.
+
+*Example:*
+----
+interface breakout module 1 port 25-26 map 25g-4x
+----
+
+You might need to configure the MetroCluster interface port speed. The example shows how to configure the speed to *auto* or into 40-Gbps mode
+
+*Example:*
+----
+	speed auto
+
+	speed 40000
+----
+
+The following example shows a switch port configured to connect a MetroCluster interface. It is an access mode port in VLAN 10, with MTU of 9216 and is operating in native speed. It has symmetric (send and receive) flow control (pause) enabled and the MetroCluster ingress and egress policies assigned.
+
+*Example:*
+----
+interface eth1/9
+description MetroCluster-IP Node Port
+speed auto
+switchport access vlan 10
+spanning-tree port type edge
+spanning-tree bpduguard enable
+mtu 9216
+flowcontrol receive on
+flowcontrol send on
+service-policy type qos input MetroClusterIP_Ingress
+service-policy type queuing output MetroClusterIP_Node_Egress
+no shutdown
+----
+
+On 25-Gbps ports, the Forward Error Correction (FEC) setting might need to be set to "off" as shown in the example.
+
+*Example:*
+----
+fec off
+----
+
+==  Configuration of the ISL ports throughout the network
+
+A MetroCluster-compliant switch is regarded as intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch need to be configured the same way as the ISL ports on an intermediate switch. Please refer to the section “Required settings on intermediate switches” for guidance and examples. Note that some policy-maps are the same for switch ports connecting MetroCluster interfaces and ISLs carrying MetroCluster traffic. You can leverage the same policy-map for both port usages.
+
+== Examples of MetroCluster network topologies
+
+Beginning with ONTAP 9.6, some additional network configurations are supported for MetroCluster IP configurations. This section provides some examples of those. Not all the supported topologies are listed.
+
+In either of these topologies, it is assumed that the ISL and/or intermediate network is meeting and is configured as per the prior outlined requirements.
+
+NOTE: If sharing an ISL with non-MetroCluster traffic, ensure that the MetroCluster has at least the minimum required bandwidth available at all times.
+
+=== Shared network configuration with direct links
+
+In this topology, two distinct sites are connected by direct links. These links can be between xWDM and TDM devices or switches. The capacity of the ISLs is not dedicated to the MetroCluster traffic but is shared with other non-MetroCluster traffic.
+
+image::../media/mcc_ip_networking_with_shared_isls.gif[]
+
+=== Shared infrastructure with intermediate networks
+
+In this topology, the MetroCluster sites are not directly connected but MetroCluster and the host traffic travel through a network. 
+The network can consist of a series of xWDM and TDM and/or switches, but unlike the shared configuration with direct ISLs, the links are not direct between the sites. Depending on the infrastructure between the sites, any combination of network configurations is possible. 
+
+image::../media/mcc_ip_networking_with_intermediate_private_networks.gif[]
+
+=== Multiple MetroCluster configurations sharing an intermediate network
+
+In this topology, two separate MetroCluster configurations are sharing the same intermediate network. In the example, MetroCluster one switch_A_1 and MetroCluster two switch_A_1 both connect to the same intermediate switch. 
+
+NOTE: “MetroCluster one” or “MetroCluster two” can both be one 8-node MetroCluster or two 4-node MetroClusters.
+
+image::../media/mcc_ip_two_mccs_sharing_the_same_shared_network_sx.gif[]
+
+=== Combination of one MetroCluster using NetApp validated switches and one using MetroCluster-compliant switches
+
+Two separate MetroCluster configurations share the same intermediate switch, where one MetroCluster is configured using NetApp validated switches in a shared L2 configuration (MetroCluster one), and the other MetroCluster is configured using MetroCluster-compliant switches connecting directly to the intermediate switches (MetroCluster two).
+
+image::../media/mcc_ip_unsupported_two_mccs_direct_to_shared_switches.png[]
+
+
+// 2023-07-18, burt 1451528/ONTAPDOC-928
