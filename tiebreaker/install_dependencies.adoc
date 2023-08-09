@@ -131,10 +131,12 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
 ----
 [root@mcctb /bin] cd /root
 ----
-. Create a Vault configuration file and ensure the configuration file is created under the "/root" directory.
+. Create a Vault configuration file under the "/root" directory.
++
+Use the following command to create the `config.hcl` file:
 +
 ----
-[root@mcctb ~]# cat > config.hcl
+[root@mcctb ~]# cat > config.hcl << EOF
  storage "file" {
   address = "127.0.0.1:8500"
   path    = "/mcctb_vdata/data"
@@ -143,6 +145,7 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
    address     = "127.0.0.1:8200"
    tls_disable = 1
  }
+EOF
 ----
 
 . Start the Vault server: 
@@ -216,9 +219,9 @@ IMPORTANT: You must record and store the key IDs and initial root token in a sec
  
 . Unseal Vault using any three of the five keys that were created. 
 +
-You must run the `vault operator unseal` command for each of the three keys as shown in the following examples:
+You must run the `vault operator unseal` command for each of the three keys:
 +
-Unseal vault using the first key:
+.. Unseal vault using the first key:
 +
 ----
 [root@mcctb ~]# vault operator unseal
@@ -238,7 +241,7 @@ Storage Type       file
 HA Enabled         false
 ----
 +
-Unseal vault using the second key:
+.. Unseal vault using the second key:
 +
 ----
 [root@mcctb ~]# vault operator unseal
@@ -258,7 +261,7 @@ Storage Type       file
 HA Enabled         false
 ----
 +
-Unseal vault using the third key:
+.. Unseal vault using the third key:
 +
 ----
 [root@mcctb ~]# vault operator unseal
@@ -322,10 +325,10 @@ HA Enabled      false
 ----
 [root@mcctb ~]#  cd /etc/systemd/system
 ----
-.. Run the following command: `cat > vault.service`
+.. Run the following command to create the vault service file.
 +
 ----
-[root@mcctb system]# cat > vault.service
+[root@mcctb system]# cat > vault.service << EOF
 [Unit]
 Description=Vault Service
 After=mariadb.service
@@ -337,6 +340,7 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
+EOF
 ----
 
 .. Run the following command: `systemctl daemon-reload` 
