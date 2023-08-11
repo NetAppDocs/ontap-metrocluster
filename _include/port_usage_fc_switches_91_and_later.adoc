@@ -3211,4 +3211,542 @@ a|
 MDS module 1 port 16
 |===
 
-// BURT 1448684, 12 JAN 2022
+
+== Cisco 9132T port usage in MetroCluster 4-node and 8-node configurations running ONTAP 9.1 and later
+
+|===
+6+^h| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+6+^h| Cisco 9132T
+6+^h| MetroCluster 1 or DR Group 1
+|
+|
+|
+2+^h| 4-node
+h| 8-node
+h| Component h| Port h| Connects to FC_switch... h| 9132T (1x LEM) h| 9132T (2x LEM) h| 9132T (2x LEM) 
+.8+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+LEM1-1
+a|
+LEM1-1
+a|
+LEM1-1
+a|
+FC-VI port b
+a|
+2
+a|
+LEM1-1
+a|
+LEM1-1
+a|
+LEM1-1
+a|
+FC-VI port c
+a|
+1
+a|
+LEM1-2
+a|
+LEM1-2
+a|
+LEM1-2
+a|
+FC-VI port d
+a|
+2
+a|
+LEM1-2
+a|
+LEM1-2
+a|
+LEM1-2
+a|
+HBA port a
+a|
+1
+a|
+LEM1-5
+a|
+LEM1-5
+a|
+LEM1-3
+a|
+HBA port b
+a|
+2
+a|
+LEM1-5
+a|
+LEM1-5
+a|
+LEM1-3
+a|
+HBA port c
+a|
+1
+a|
+LEM1-6
+a|
+LEM1-6
+a|
+LEM1-4
+a|
+HBA port d
+a|
+2
+a|
+LEM1-6
+a|
+LEM1-6
+a|
+LEM1-4
+.8+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+1
+a|
+LEM1-7
+a|
+LEM1-7
+a|
+LEM1-5
+a|
+FC-VI port b
+a|
+2
+a|
+LEM1-7
+a|
+LEM1-7
+a|
+LEM1-5
+a|
+FC-VI port c
+a|
+1
+a|
+LEM1-8
+a|
+LEM1-8
+a|
+LEM1-6
+a|
+FC-VI port d
+a|
+2
+a|
+LEM1-8
+a|
+LEM1-8
+a|
+LEM1-6
+a|
+HBA port a
+a|
+1
+a|
+LEM1-11
+a|
+LEM1-11
+a|
+LEM1-7
+a|
+HBA port b
+a|
+2
+a|
+LEM1-11
+a|
+LEM1-11
+a|
+LEM1-7
+a|
+HBA port c
+a|
+1
+a|
+LEM1-12
+a|
+LEM1-12
+a|
+LEM1-8
+a|
+HBA port d
+a|
+2
+a|
+LEM1-12
+a|
+LEM1-12
+a|
+LEM1-8
+6+^h| MetroCluster 2 or DR Group 2
+.8+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+1
+|
+|
+a|
+LEM2-1
+a|
+FC-VI port b
+a|
+2
+|
+|
+a|
+LEM2-1
+a|
+FC-VI port c
+a|
+1
+|
+|
+a|
+LEM2-2
+
+a|
+FC-VI port d
+a|
+2
+|
+|
+a|
+LEM2-2
+a|
+HBA port a
+a|
+1
+|
+|
+a|
+LEM2-3
+a|
+HBA port b
+a|
+2
+|
+|
+a|
+LEM2-3
+a|
+HBA port c
+a|
+1
+|
+|
+a|
+LEM2-4
+a|
+HBA port d
+a|
+2
+|
+|
+a|
+LEM2-4
+.8+a|
+controller_x_4
+a|
+FC-VI-1 port a
+a|
+1
+|
+|
+a|
+LEM2-5
+a|
+FC-VI-1 port b
+a|
+2
+|
+|
+a|
+LEM2-5
+a|
+FC-VI-1 port c
+a|
+1
+|
+|
+a|
+LEM2-6
+a|
+FC-VI-1 port d
+a|
+2
+|
+|
+a|
+LEM2-6
+a|
+HBA port a
+a|
+1
+|
+|
+a|
+a|
+HBA port b
+a|
+2
+|
+|
+a|
+LEM2-7
+a|
+HBA port c
+a|
+1
+|
+|
+a|
+LEM2-8
+a|
+HBA port d
+a|
+2
+|
+|
+a|
+LEM2-8
+|===
+
+|===
+
+7+^h| MetroCluster 1 or DR Group 1
+|
+|
+|
+|
+2+^h| 4-node
+h| 8-node
+2+^h| FibreBridge 7500 using two FC ports h| Port h| Connects to FC_switch... h| 9132T (1x LEM) h| 9132T (2x LEM) h| 9132T (2x LEM) 
+.4+a|
+Stack 1
+.2+a|
+bridge_x_1a
+a|
+FC1
+a|
+1
+a|
+LEM1-13
+a|
+LEM1-13
+a|
+LEM1-9
+a|
+FC2
+a|
+2
+a|
+LEM1-13
+a|
+LEM1-13
+a|
+LEM1-9
+.2+a|
+bridge_x_1b
+a|
+FC1
+a|
+1
+a|
+LEM1-14
+a|
+LEM1-14
+a|
+LEM1-10
+a|
+FC2
+a|
+2
+a|
+LEM1-14
+a|
+LEM1-14
+a|
+LEM1-10
+.4+a|
+Stack 2
+.2+a|
+bridge_x_2a
+a|
+FC1
+a|
+1
+|
+a|
+LEM1-15
+a|
+LEM1-11
+a|
+FC2
+a|
+2
+|
+a|
+LEM1-15
+a|
+LEM1-1
+.2+a|
+bridge_x_2b
+a|
+FC1
+a|
+1
+|
+a|
+LEM1-16
+a|
+LEM1-12
+a|
+FC2
+a|
+2
+|
+a|
+LEM1-16
+a|
+LEM1-12
+.4+a|
+Stack 3
+.2+a|
+bridge_x_3a
+a|
+FC1
+a|
+1
+|
+a|
+LEM2-1
+a|
+LEM2-9
+a|
+FC2
+a|
+2
+|
+a|
+LEM2-1
+a|
+LEM2-9
+.2+a|
+bridge_x_3b
+a|
+FC1
+a|
+1
+|
+a|
+LEM2-2
+a|
+LEM2-10
+a|
+FC2
+a|
+2
+|
+a|
+LEM2-2
+a|
+LEM2-10
+.4+a|
+Stack y
+.2+a|
+bridge_x_ya
+a|
+FC1
+a|
+1
+|
+a|
+LEM2-3
+a|
+LEM2-11
+a|
+FC2
+a|
+2
+|
+a|
+LEM2-3
+a|
+LEM2-11
+.2+a|
+bridge_x_yb
+a|
+FC1
+a|
+1
+|
+a|
+LEM2-4
+a|
+LEM2-11
+a|
+FC2
+a|
+2
+|
+a|
+LEM2-4
+a|
+LEM2-11
+|===
+
+|===
+4+^h| Cisco 9132T
+4+^h| MetroCluster 1 or DR Group 1
+.2+a| Port
+2+^h| 4-node
+h| 8-node
+h| 9132T (1x LEM) h| 9132T (2x LEM) h| 9132T (2x LEM) 
+|ISL1
+|LEM1-15
+|LEM2-9
+|LEM1-13
+|ISL2
+|LEM1-16
+|LEM2-10
+|LEM1-14
+|ISL3
+|
+|LEM2-11
+|LEM1-15
+|ISL4
+|
+|LEM2-12
+|LEM1-16
+|ISL5
+|
+|LEM2-13
+|
+|ISL6
+|
+|LEM2-14
+|
+|ISL7
+|
+|LEM2-15
+|
+|ISL8
+|
+|LEM2-16
+|
+|===
+
+// 2023 AUG 11, BURT 1537472
+// 2022 JAN , BURT 1448684
