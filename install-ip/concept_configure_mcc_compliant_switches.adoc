@@ -12,7 +12,7 @@ summary: MetroCluster IP switches that are listed as supported switches in the l
 [.lead]
 The following is an overview of how the various switch ports should be configured.
 
-Depending on the switch vendor you might require different values for DSCP. The following examples are using decimal values and follow the table that applies to Cisco switches. Refer to the corresponding table of your switch vendor to derive the correct value.
+The following examples use decimal values and follow the table that applies to Cisco switches. Depending on the switch vendor, you might require different values for DSCP. Refer to the corresponding table for your switch vendor to confirm the correct value.
 
 |===
 
@@ -55,14 +55,14 @@ CS5
 
 .Switchport connecting a MetroCluster interface
 
-* Classification, remote direct memory access (RDMA) traffic: 
+* Classification for remote direct memory access (RDMA) traffic: 
 ** Match : TCP port 10006, source and/or destination
 ** Optional match: COS 5
 ** Optional match: DSCP 40
 ** Set DSCP 40
 ** Set COS 5
 ** Optional : rate shaping to 20Gbps
-* Classification, iSCSI traffic: 
+* Classification for iSCSI traffic: 
 ** Match : TCP port 62500, source and/or destination
 ** Optional match: COS 4
 ** Optional match: DSCP 32
@@ -73,10 +73,10 @@ CS5
 .ISL ports
 
 * Classification:
-** Match cos 5 or DSCP 40
+** Match COS 5 or DSCP 40
 *** Set DSCP 40
 *** Set COS 5
-** Match cos 4 or DSCP 32
+** Match COS 4 or DSCP 32
 *** Set DSCP 32
 *** Set COS 4
 * Egress queuing
@@ -119,7 +119,7 @@ The load balancing policy should be set so that order is preserved.
 
 You must configure the access and class maps which map the RDMA and iSCSI traffic to the appropriate classes.
 
-All TCP traffic to and from the port 65200 is mapped to the storage (iSCSI) class. All TCP traffic to and from the port 10006 is mapped to the RDMA class. These policy-maps are used on switch ports connecting the MetroCluster interfaces.
+In the following example, all TCP traffic to and from the port 65200 is mapped to the storage (iSCSI) class. All TCP traffic to and from the port 10006 is mapped to the RDMA class. These policy-maps are used on switch ports connecting the MetroCluster interfaces.
 
 *Example:*
 ----
@@ -151,7 +151,7 @@ class storage
   set qos-group 4
 ----
 
-It is recommended that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10-Gbps.
+NetApp recommends that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10-Gbps.
 
 *Example:*
 ----
@@ -166,7 +166,7 @@ class storage
   set qos-group 4
 ----
 
-It is recommended that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10-Gbps.
+NetApp recommends that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10-Gbps.
 
 *Example:*
 ----
@@ -235,15 +235,15 @@ fec off
 
 ==  Configuration of the ISL ports throughout the network
 
-A MetroCluster-compliant switch is regarded as intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch need to be configured the same way as the ISL ports on an intermediate switch. Please refer to the section “Required settings on intermediate switches” for guidance and examples. Note that some policy-maps are the same for switch ports connecting MetroCluster interfaces and ISLs carrying MetroCluster traffic. You can leverage the same policy-map for both port usages.
+A MetroCluster-compliant switch is regarded as an intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch must be configured the same way as the ISL ports on an intermediate switch. Refer to the section link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_considerations_layer_2.html#required-settings-on-intermediate-switches[Required settings on intermediate switches^] for guidance and examples. Note that some policy-maps are the same for switch ports connecting MetroCluster interfaces and ISLs carrying MetroCluster traffic. You can leverage the same policy-map for both port usages.
 
 == Examples of MetroCluster network topologies
 
-Beginning with ONTAP 9.6, some additional network configurations are supported for MetroCluster IP configurations. This section provides some examples of those. Not all the supported topologies are listed.
+Beginning with ONTAP 9.6, some additional network configurations are supported for MetroCluster IP configurations. This section provides some examples of the supported network configurations. Not all the supported topologies are listed.
 
-In either of these topologies, it is assumed that the ISL and/or intermediate network is meeting and is configured as per the prior outlined requirements.
+In either of these topologies, it is assumed that the ISL and intermediate network is configured according to the requirements mentioned previously. 
 
-NOTE: If sharing an ISL with non-MetroCluster traffic, ensure that the MetroCluster has at least the minimum required bandwidth available at all times.
+NOTE: If sharing an ISL with non-MetroCluster traffic, you must make sure that the MetroCluster has at least the minimum required bandwidth available at all times.
 
 === Shared network configuration with direct links
 
@@ -254,7 +254,7 @@ image::../media/mcc_ip_networking_with_shared_isls.gif[]
 === Shared infrastructure with intermediate networks
 
 In this topology, the MetroCluster sites are not directly connected but MetroCluster and the host traffic travel through a network. 
-The network can consist of a series of xWDM and TDM and/or switches, but unlike the shared configuration with direct ISLs, the links are not direct between the sites. Depending on the infrastructure between the sites, any combination of network configurations is possible. 
+The network can consist of a series of xWDM and TDM and switches, but unlike the shared configuration with direct ISLs, the links are not direct between the sites. Depending on the infrastructure between the sites, any combination of network configurations is possible. 
 
 image::../media/mcc_ip_networking_with_intermediate_private_networks.gif[]
 
@@ -262,13 +262,13 @@ image::../media/mcc_ip_networking_with_intermediate_private_networks.gif[]
 
 In this topology, two separate MetroCluster configurations are sharing the same intermediate network. In the example, MetroCluster one switch_A_1 and MetroCluster two switch_A_1 both connect to the same intermediate switch. 
 
-NOTE: “MetroCluster one” or “MetroCluster two” can both be one 8-node MetroCluster or two 4-node MetroClusters.
+NOTE: Both “MetroCluster one” or “MetroCluster two” can be one 8-node MetroCluster configuration or two 4-node MetroCluster configurations.
 
 image::../media/mcc_ip_two_mccs_sharing_the_same_shared_network_sx.gif[]
 
-=== Combination of one MetroCluster using NetApp validated switches and one using MetroCluster-compliant switches
+=== Combination of a MetroCluster configuration using NetApp validated switches and a configuration using MetroCluster-compliant switches
 
-Two separate MetroCluster configurations share the same intermediate switch, where one MetroCluster is configured using NetApp validated switches in a shared L2 configuration (MetroCluster one), and the other MetroCluster is configured using MetroCluster-compliant switches connecting directly to the intermediate switches (MetroCluster two).
+Two separate MetroCluster configurations share the same intermediate switch, where one MetroCluster is configured using NetApp validated switches in a shared Layer 2 configuration (MetroCluster one), and the other MetroCluster is configured using MetroCluster-compliant switches connecting directly to the intermediate switches (MetroCluster two).
 
 image::../media/mcc_ip_unsupported_two_mccs_direct_to_shared_switches.png[]
 
