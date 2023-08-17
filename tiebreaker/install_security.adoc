@@ -5,14 +5,11 @@ keywords: install, tiebreaker, software, monitor, capabilities, capability, clus
 summary: "The Tiebreaker software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters."
 ---
 
-= Secure the Tiebreaker installation
+= Secure the Tiebreaker host and database installation
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-The Tiebreaker software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters.
-
-==  Secure the host and database installation 
 For configurations running MetroCluster Tiebreaker 1.5 and later, you can secure and harden the host OS and the database. 
 
 == Secure the host
@@ -22,13 +19,12 @@ The following guidelines show you how to secure the host where the Tiebreaker so
 === User management recommendations 
 
 ** Limit access of the "root" user.
-*  You can use users that are able to elevate to root access to install and administer the Tiebreaker software.
-* You can use users that are not able to elevate to root access to administer Tiebreaker software.
+*  You can use users that are able to elevate to root access to install and administer the Tiebreaker software. link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-sudo-access_configuring-basic-system-settings[Managing sudo access^]
+* You can use users that are not able to elevate to root access to administer Tiebreaker software. 
 +
 * During installation, you should create a group named "mcctbgrp". The host root user and the user created during the installation are both members. Only members of this group can fully administer the Tiebreaker software.
 +
-NOTE: Users who are not members of this group cannot access the Tiebreaker software or CLI.
-You can create additional users on the host and make them members of the group. These additional members cannot fully administer the Tiebreaker software -- they have ReadOnly access and cannot add, change, or delete monitors.
+NOTE: Users who are not members of this group cannot access the Tiebreaker software or CLI. You can create additional users on the host and make them members of the group. These additional members cannot fully administer the Tiebreaker software. They have ReadOnly access and cannot add, change, or delete monitors.
 
 * Do not run Tiebreaker as a root user. Use a dedicated, unprivileged service account to run Tiebreaker. 
 ** Change the default community string in the "/etc/snmp/snmpd.conf" file.
@@ -40,18 +36,20 @@ You can create additional users on the host and make them members of the group. 
 
 For more information on user and account management, review the following documentation:
 
+* User and account management
++
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/assembly_getting-started-with-managing-user-accounts_configuring-basic-system-settings[Getting started with managing user accounts^]
-
++
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/introduction-to-managing-user-and-group-accounts_configuring-basic-system-settings[Introduction to managing user and group accounts^]
-
+* Managing users and groups using the web console or CLI
++
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-user-accounts-in-the-web-console-new_configuring-basic-system-settings[Managing user accounts in the web console^]
-
++
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-users-from-the-command-line_configuring-basic-system-settings[Managing users from the command line^]
-
++
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/editing-user-groups-using-the-command-line_configuring-basic-system-settings[Editing user groups using the command line^]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-sudo-access_configuring-basic-system-settings[Managing sudo access^]
-
+* Managing the root password
++
 link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/changing-and-resetting-the-root-password-from-the-command-line_configuring-basic-system-settings[Managing and resetting the root password^]
 
 === Baseline host security recommendations
@@ -67,6 +65,8 @@ The services that might be enabled by default and can be disabled are:
 * RDP (RemoteDesktopProtocol), X11 Server, VNC or other remote "desktop" service providers.
 +
 NOTE: You must leave either serial console access (if supported) or at least one protocol enabled to administer the host remotely. If you disable all protocols, then you require physical access to the host for administration.
++
+link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-system-services-with-systemctl_configuring-basic-system-settings[Learn about managing system services with systemctl^]
 
 ** Secure the host using FIPS
 * You can install the host OS in FIPS-compliant mode and then install Tiebreaker.
@@ -85,16 +85,8 @@ For more details, see link:https://access.redhat.com/documentation/ru-ru/openjdk
 
 ** Use the correct file permissions. Always ensure appropriate permissions are applied to files before starting the Tiebreaker software, especially those containing sensitive information. 
 
-** Multifactor authentication (MFA) enhances your organization's security by requiring administrators to identify themselves by using more than a username and password. While important, usernames and passwords are vulnerable to brute force attacks and can be stolen by third parties. 
-* Red Hat Enterprise Linux 8 provides MFA that requires users to provide more than one piece of information to authenticate successfully to an account or Linux host. The additional information might be a one-time password sent to your cell phone via SMS or credentials from an app like Google Authenticator, Twilio Authy, or FreeOTP. 
-+
-For more information, refer to the link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8[RHEL 8 documentation^]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/security_hardening/index[Learn more about security hardening^]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/securing_networks/index[Learn more about securing networks^]
-
-link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-system-services-with-systemctl_configuring-basic-system-settings[Managing system services with systemctl^]
+** Multifactor authentication (MFA) enhances your organization's security by requiring administrators to identify themselves by using more than a username and password. While important, usernames and passwords are vulnerable to brute force attacks and can be stolen by third parties. link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/security_hardening/index[Learn more about security hardening^]
+* Red Hat Enterprise Linux 8 provides MFA that requires users to provide more than one piece of information to authenticate successfully to an account or Linux host. The additional information might be a one-time password sent to your cell phone via SMS or credentials from an app like Google Authenticator, Twilio Authy, or FreeOTP. link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/securing_networks/index[Learn more about securing networks^]
 
 
 == Secure the database installation
