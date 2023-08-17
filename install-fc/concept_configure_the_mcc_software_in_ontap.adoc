@@ -2544,6 +2544,8 @@ You must perform some special configuration steps before monitoring the componen
 
 These tasks apply only to systems with FC-to-SAS bridges.
 
+Beginning in Fabric OS 9.0.1, SNMP v2 is not supported for health monitoring. 
+
 [NOTE]
 ====
 * You should place bridges and a node management LIF in a dedicated network to avoid interference from other sources.
@@ -2560,12 +2562,23 @@ NOTE: Beginning with ONTAP 9.8, the `storage switch` command is replaced with `s
 
 . Add a switch with an IP address to each MetroCluster node:
 +
-`storage switch add -address ipaddress`
+The command you use depends on whether you are using SNMPv2 or SNMP v3.
++
+[role="tabbed-block"]
+====
+.If you are using SNMPv2
+--
+Run the command: `storage switch add -address ipaddress`
+--
+.If you are using SNMPv3
+--
+Run the command: `<need command here>`
+--
+==== 
 +
 This command must be repeated on all four switches in the MetroCluster configuration.
 +
 NOTE: Brocade 7840 FC switches and all alerts are supported in health monitoring, except NoISLPresent_Alert.
-
 +
 The following example shows the command to add a switch with IP address 10.10.10.10:
 +
