@@ -1,0 +1,115 @@
+---
+permalink: install-ip/task_config_switch_health.html
+sidebar: sidebar
+keywords:  ip, switch, connection, configuring, configure, broadcom, snmp, health, monitoring
+summary: You can configure the IP switches to use SNMPv3 for health monitoring. 
+---
+= Configure the MetroCluster IP switches for health monitoring
+
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+In an IP MetroCluster configuration, you can configure SNMPv3 to monitor the IP switches.
+
+== Configure SNMPv3 on Broadcom switches
+
+.Steps
+
+. Configure the SNMPv3 user on the switch:
++
+----
+(IP_switch_1)# config
+(IP_switch_1) (Config)# snmp-server user <user_name> network-admin [auth-md5/auth-sha/noauth] "<auth_password>" [priv-aes128/priv-des] "<priv_password>"
+----
++
+You must use quotation marks around the authentication and privacy passwords, as shown in the following example:
++
+----
+snmp-server user admin1 network-admin auth-md5 "password" priv-des "password"
+----
++
+IMPORTANT: You must use both authentication and privacy protocols together. Using authentication without privacy is not supported at this time.
+
+. If the 'network-admin' user group doesn't exist, create it by running the following command:
++
+`(IP_switch_1) (Config)# snmp-server group network-admin v3 auth read "Default`
+
+. Confirm the 'network-admin' group has been created:
++
+`(IP_switch_1) (Config)# show snmp group`
+
+.  Configure the SNMPv3 user in ONTAP:
++
+`security login create -user-or-group-name <user_name> -application snmp -authentication-method usm -remote-switch-ipaddress <ip_address>`
+. Configure switch health monitoring to monitor the switch using the new SNMPv3 user:
++
+`system switch ethernet modify -device <device_id> -snmp-version SNMPv3 -community-or-username <user_name>`
+. Verify that the device serial number that will be monitored with the newly created SNMPv3 user is correct:
++
+.. Display the switch health monitoring polling time period:
++
+`system switch ethernet polling-interval show`
++
+.. Run the following command after the polling time period has elapsed:
++
+`system switch ethernet show-all -instance -device <device_serial_number>`
+
+== Configure SNMPv3 on Cisco switches
+
+.Steps
+
+. Configure the SNMPv3 user on the switch.
++
+----
+IP_switch_A_1 # configure terminal
+IP_switch_A_1 (config) # snmp-server user <user_name>  auth [md5/sha/sha-256] <auth_password> priv (aes-128) <priv_password>
+IP_switch_A_1 (config) # show snmp user
+----
+
+. Configure the SNMPv3 user in ONTAP:
++
+`security login create -user-or-group-name <user_name> -application snmp -authentication-method usm -remote-switch-ipaddress <ip_address>`
+
+. Configure switch health monitoring to monitor the switch using the new SNMPv3 user:
++
+`system switch ethernet modify -device <device_id> -snmp-version SNMPv3 -community-or-username <user_name>`
+. Verify that the device serial number that will be monitored with the newly created SNMPv3 user is correct:
++
+.. Display the switch health monitoring polling time period:
++
+`system switch ethernet polling-interval show`
++
+.. Run the following command after the polling time period has elapsed:
++
+`system switch ethernet show-all -instance -device <device_serial_number>`
+
+== Configure SNMPv3 on NVIDIA switches
+
+.Steps
+
+. Configure the SNMPv3 user on the switch:
++
+----
+net add snmp-server username <user_name> [auth-md5/auth-sha/auth-none] <auth_password> [encrypt-aes/encrypt-des] <priv_password>
+net pending
+net commit
+----
+
+. Configure the SNMPv3 user in ONTAP:
++
+`security login create -user-or-group-name <user_name> -application snmp -authentication-method usm -remote-switch-ipaddress <ip_address>`
+
+. Configure switch health monitoring to monitor the switch using the new SNMPv3 user:
++
+`system switch ethernet modify -device <device_serial_number> -snmp-version SNMPv3 -community-or-username <user_name>`
+
+. Verify that the device serial number that will be monitored with the newly created SNMPv3 user is correct:
++
+.. Display the switch health monitoring polling time period:
++
+`system switch ethernet polling-interval show`
++
+.. Run the following command after the polling time period has elapsed:
++
+`system switch ethernet show-all -instance -device <device_serial_number>`
