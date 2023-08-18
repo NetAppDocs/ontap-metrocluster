@@ -10,9 +10,9 @@ summary: MetroCluster IP switches that are listed as supported switches in the l
 :imagesdir: ../media/
 
 [.lead]
-The following is an overview of how the various switch ports should be configured.
+You should know how the various switch ports should be configured.
 
-The following examples use decimal values and follow the table that applies to Cisco switches. Depending on the switch vendor, you might require different values for DSCP. Refer to the corresponding table for your switch vendor to confirm the correct value.
+NOTE: The following examples use decimal values and follow the table that applies to Cisco switches. Depending on the switch vendor, you might require different values for DSCP. Refer to the corresponding table for your switch vendor to confirm the correct value.
 
 |===
 
@@ -56,14 +56,14 @@ CS5
 .Switchport connecting a MetroCluster interface
 
 * Classification for remote direct memory access (RDMA) traffic: 
-** Match : TCP port 10006, source and/or destination
+** Match : TCP port 10006, source, destination, or both
 ** Optional match: COS 5
 ** Optional match: DSCP 40
 ** Set DSCP 40
 ** Set COS 5
 ** Optional : rate shaping to 20Gbps
 * Classification for iSCSI traffic: 
-** Match : TCP port 62500, source and/or destination
+** Match : TCP port 62500, source, destination, or both
 ** Optional match: COS 4
 ** Optional match: DSCP 32
 ** Set DSCP 32
