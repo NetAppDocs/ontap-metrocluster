@@ -12,11 +12,11 @@ summary: Beginning with ONTAP 9.6, MetroCluster IP configurations with supported
 [.lead]
 Depending on your requirements, you can use shared layer 2 or layer 3 networks to deploy MetroCluster. 
 
-Beginning with ONTAP 9.6, MetroCluster IP configurations with supported Cisco switches can share existing networks for Inter-Switch Links (ISLs) instead of using dedicated MetroCluster ISLs. This topology is known as “shared layer 2 networks”.
+Beginning with ONTAP 9.6, MetroCluster IP configurations with supported Cisco switches can share existing networks for Inter-Switch Links (ISLs) instead of using dedicated MetroCluster ISLs. This topology is known as _shared layer 2 networks_.
 
-Beginning with ONTAP 9.9.1, MetroCluster IP configurations can be implemented with IP-routed (layer 3) backend connections. This topology is known as “shared layer 3 networks”.
+Beginning with ONTAP 9.9.1, MetroCluster IP configurations can be implemented with IP-routed (layer 3) backend connections. This topology is known as _shared layer 3 networks_.
 
-NOTE: You must verify that you have adequate capacity and that you size the ISLs appropriately. Low latency is critical for replication of data between the MetroCluster sites. Latency issues on these connections can impact client I/O.
+NOTE: You must verify that you have adequate capacity and that the ISL size is sufficient. Low latency is critical for replication of data between the MetroCluster sites. Latency issues on these connections can impact client I/O.
 
 == ISL requirements for layer 2 and layer 3 networks
 
@@ -24,7 +24,7 @@ The following requirements apply to layer 2 and layer 3 networks:
 
 * The speed and number of ISLs does not need to match between the MetroCluster switches and the intermediate network switches, and between the intermediate network switches and each other.
 +
-For example, the MetroCluster switches can connect using 1x40-Gbps ISL to the intermediate switches, and the intermediate switches can connect to each other using 2x 100-Gbps ISLs.
+For example, the MetroCluster switches can connect using one 40Gbps ISL to the intermediate switches, and the intermediate switches can connect to each other using two 100Gbps ISLs.
 
 * Network monitoring should be configured on the intermediate network to monitor the ISLs for utilization, errors (drops, link flaps, corruption, and so on), and failures.
 * The MTU size must be set to 9216 on all ports carrying MetroCluster end-to-end traffic.
@@ -32,10 +32,10 @@ For example, the MetroCluster switches can connect using 1x40-Gbps ISL to the in
 * ECN (explicit congestion notifications) must be configured on all paths carrying end-to-end MetroCluster traffic.
 * ISLs carrying MetroCluster traffic must be native links between the switches. Link sharing services such as Multiprotocol Label Switching (MPLS) links are not supported.
 * The number of intermediate switches is not limited. However, NetApp recommends that you keep the number of switches to the minimum required.
-* Port mode must be `trunk`
-*	Ports must be configured as "LACP trunk"
-* VLANs that are specified as “MetroCluster VLAN” are allowed
-*	No native VLAN is allowed
+* Port mode must be in `trunk` mode.
+*	Ports must be configured as "LACP trunk".
+* VLANs that are specified as “MetroCluster VLAN” are allowed.
+*	Native VLANs are not allowed.
 
 
 == Considerations for layer 2 networks
@@ -48,18 +48,14 @@ image::../media/mcc_layer3_backend.png[]
 The intermediate customer-provided switches must meet the following requirements:
 
 * The intermediate network must provide the same VLANs between the sites. This must match the MetroCluster VLANs set in the RCF file.
-* Layer 2 VLANs with IDs that match the MetroCluster VLAN IDs must span the shared network.
+* Layer 2 VLANs with IDs that match the MetroCluster VLAN IDs must span the shared network. For all platforms listed below, you can only specify the VLAN during interface creation. After the MetroCluster interfaces are created, the VLAN ID cannot not be changed. You can configure other VLANs during interface creation but they must be within the range 101-4096. 
 ** In ONTAP 9.7 and earlier, FAS2750 and AFF A220 systems require VLAN 10 and 20.
 ** In ONTAP 9.8 and later, AFF A150, FAS2750, AFF A220, FAS500f, C250, AFF A250, FAS8300, C800, AFF A400, and FAS8700 systems use VLAN 10 and 20 by default. 
-+
-For all platforms listed above, you can only specify the VLAN during interface creation. After the MetroCluster interfaces are created, the VLAN ID cannot not be changed.
-You can configure other VLANs during interface creation, and they must be within the range 101-4096. 
-+
-For all other platforms not mentioned previously, you can use other VLANs.
+** For all other platforms not listed previously, you can use other VLANs.
 
 * The RcfFileGenerator does not allow the creation of an RCF file using VLANs that are not supported by the platform.
 * The RcfFileGenerator might restrict the use of certain VLAN IDs, for example, if they are intended for future use. Generally, reserved VLANs are up to and including 100.
-•	The L2 VLANs must natively span the sites. VLAN overlay such as Virtual Extensible LAN (VXLAN) is not supported.
+•	The layer 2 VLANs must natively span the sites. VLAN overlay such as Virtual Extensible LAN (VXLAN) is not supported.
 
 == Considerations for layer 3 networks
 
