@@ -155,21 +155,6 @@ NetApp recommends that you shape traffic on switch ports connecting a MetroClust
 
 *Example:*
 ----
-policy-map type qos MetroClusterIP_Ingress
-class rdma
-  set dscp 40
-  set cos 5
-  set qos-group 5
-class storage
-  set dscp 32
-  set cos 4
-  set qos-group 4
-----
-
-NetApp recommends that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10-Gbps.
-
-*Example:*
-----
 policy-map type queuing MetroClusterIP_Node_Egress
 class type queuing c-out-8q-q7
   priority level 1
