@@ -99,7 +99,7 @@ NOTE: If you use rate limits, then the traffic should be *shaped* without introd
 
 The examples provided are valid for Cisco NX3232 or Cisco NX9336 switches. If other switches are used, these commands can be used as guidance, but the commands might be different. If a feature or its equivalent shown in the examples is not available on the switch, this means that the switch does not meet the minimum requirements and cannot be used to deploy a MetroCluster configuration. This is true for any switch that is connecting a MetroCluster configuration and for all switches on the path between those switches.
 
-Examples might show the configuration for one network only.
+NOTE: The following examples might show the configuration for one network only.
 
 .Basic configuration
 A virtual LAN (VLAN) in each network must be configured. The example shows how to configure a VLAN in network 10.
@@ -152,7 +152,7 @@ class storage
   set qos-group 4
 ----
 
-NetApp recommends that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10-Gbps.
+NetApp recommends that you shape traffic on switch ports connecting a MetroCluster interface if the switch ports operational speed is greater than 10Gbps.
 
 *Example:*
 ----
@@ -178,14 +178,14 @@ class type queuing c-out-8q-q-default
 
 == Configuring the node ports 
 
-You might need to configure the node port in breakout mode. In this example, ports 25 and 26 are configured in 4 x 25 Gbps breakout mode.
+You might need to configure the node port in breakout mode. In this example, ports 25 and 26 are configured in 4 x 25Gbps breakout mode.
 
 *Example:*
 ----
 interface breakout module 1 port 25-26 map 25g-4x
 ----
 
-You might need to configure the MetroCluster interface port speed. The example shows how to configure the speed to *auto* or into 40-Gbps mode
+You might need to configure the MetroCluster interface port speed. The example shows how to configure the speed to *auto* or into 40Gbps mode
 
 *Example:*
 ----
@@ -212,7 +212,7 @@ service-policy type queuing output MetroClusterIP_Node_Egress
 no shutdown
 ----
 
-On 25-Gbps ports, the Forward Error Correction (FEC) setting might need to be set to "off" as shown in the example.
+On 25Gbps ports, the Forward Error Correction (FEC) setting might need to be set to "off" as shown in the example.
 
 *Example:*
 ----
