@@ -15,12 +15,14 @@ In MetroCluster IP configurations, you can configure SNMPv3 to monitor the healt
 == Step 1: Configure the SNMPv3 user on MetroCluster IP switches
 
 Use the following steps to configure the SNMPv3 user on the MetroCluster IP switches. 
-.Steps
+
+IMPORTANT: You must use both the authentication and privacy protocols in the commands. Using authentication without privacy is not supported.
 
 [role="tabbed-block"]
 ====
 .For Broadcom IP switches
 --
+.Steps
 
 . Configure the SNMPv3 user on Broadcom IP switches:
 +
@@ -34,8 +36,6 @@ You must use quotation marks around the authentication and privacy passwords, as
 ----
 snmp-server user admin1 network-admin auth-md5 "password" priv-des "password"
 ----
-+
-IMPORTANT: You must use both authentication and privacy protocols together. Using authentication without privacy is not supported at this time.
 
 . If the 'network-admin' user group doesn't exist, create it by running the following command:
 +
@@ -47,6 +47,7 @@ IMPORTANT: You must use both authentication and privacy protocols together. Usin
 --
 .For Cisco IP switches
 --
+.Step
 . Run the following commands to configure the SNMPv3 user on Cisco IP switches:
 +
 ----
@@ -57,6 +58,7 @@ IP_switch_A_1 (config) # show snmp user
 --
 .For NVIDIA IP switches
 --
+.Step
 . Run the following commands to configure the SNMPv3 user on NVIDIA IP switches:
 +
 ----
