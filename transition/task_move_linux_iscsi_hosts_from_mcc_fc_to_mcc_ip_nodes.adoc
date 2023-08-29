@@ -198,8 +198,9 @@ vsa_1 /vol/vsa_1_vol1/lun_linux_3 igroup_linux node_A_1-FC,node_A_2-FC,node_A_1-
 
 12 entries were displayed.
 ----
+. . To avoid a `rescan-scsi-bus.sh utility not found` error, verify that the `sg3-utilis` package is installed on the client host.
 
-. On the host, issue the following command to rescan the scsi bus on the host and discover the newly added paths:``/usr/bin/rescan-scsi-bus.sh -a``
+. On the host, issue the following command to rescan the SCSI bus on the host and discover the newly added paths:``/usr/bin/rescan-scsi-bus.sh -a``
 +
 ----
 [root@stemgr]# /usr/bin/rescan-scsi-bus.sh -a
@@ -313,7 +314,9 @@ vsa_1 /vol/vsa_1_vol2/lun_linux_4   group_linux   node_A_1-IP,node_A_2-IP
 12 entries were displayed.
 ----
 
-. On the iSCSI host, rescan the scsi bus: `/usr/bin/rescan-scsi-bus.sh -r`
+. To avoid a `rescan-scsi-bus.sh utility not found` error, verify that the `sg3-utilis` package is installed on the client host. 
+
+. On the iSCSI host, rescan the SCSI bus: `/usr/bin/rescan-scsi-bus.sh -r`
 +
 The paths that are removed are the paths from FC nodes.
 +
@@ -351,4 +354,5 @@ OLD: Host: scsi5 Channel: 00 Id: 00 Lun: 09
 +
 `multipath -ll -d`
 
-// 2023-05-30, burt 1554013s
+// 2023 Aug 29, BURT 1554012
+// 2023-05-30, burt 1554013
