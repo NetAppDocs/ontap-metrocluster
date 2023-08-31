@@ -14,9 +14,9 @@ When non-disruptively transitioning from MetroCluster FC to IP nodes, you must n
 . Set up new FC interfaces (LIFS) on MetroCluster IP nodes:
  .. If required, on MetroCluster IP nodes, modify FC ports to be used for client connectivity to FC target personality.
 +
-This may require a reboot of the nodes.
+This might require a reboot of the nodes.
 
- .. Create FC LIFS/interfaces on IP nodes for all SAN vservers. Optionally verify that the WWPNs from newly created FC LIFs are logged into the FC SAN switch
+ .. Create FC LIFS/interfaces on IP nodes for all SAN SVMs. Optionally, verify that the WWPNs from newly created FC LIFs are logged into the FC SAN switch
 . Update SAN zoning configuration for newly added FC LIFs on MetroCluster IP nodes.
 +
 To facilitate moving of volumes that contain LUNs actively serving data to FC SAN clients, update existing FC switch zones to allow FC SAN clients to access to LUNs on MetroCluster IP nodes.
@@ -27,7 +27,7 @@ To facilitate moving of volumes that contain LUNs actively serving data to FC SA
 +
 At this time, the client should see and be logged in to the FC interfaces on both the MetroCluster FC and MetroCluster IP nodes. LUNs and volumes are still physically hosted on the MetroCluster FC nodes.
 +
-Because LUNs are reported only on MetroCluster FC node interfaces, the client shows only paths over FC nodes. This can be seen in the output of the sanlun lun show -p and multipath -ll -d commands.
+Because LUNs are reported only on MetroCluster FC node interfaces, the client shows only paths over FC nodes. This can be seen in the output of the `sanlun lun show -p` and `multipath -ll -d` commands.
 +
 ----
 [root@stemgr]# sanlun lun show -p
@@ -104,8 +104,9 @@ vsa_1   /vol/vsa_1_vol3/lun_linux_7   igroup_linux    A_1,A_2,B_1,B_2
 
 12 entries were displayed.
 ----
+.. Verify that the `sg3-utils` package is installed on the Linux host. This avoids a `rescan-scsi-bus.sh utility not found`error when you rescan the Linux host for the newly mapped LUNs using the `rescan-scsi-bus` command. 
 
- .. Rescan the scsi bus on the host to discover the newly added paths: `/usr/bin/rescan-scsi-bus.sh -a`
+ .. Rescan the SCSI bus on the host to discover the newly added paths: `/usr/bin/rescan-scsi-bus.sh -a`
 +
 ----
 [root@stemgr]# /usr/bin/rescan-scsi-bus.sh -a
