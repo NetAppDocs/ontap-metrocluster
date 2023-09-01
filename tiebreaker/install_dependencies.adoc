@@ -49,7 +49,7 @@ Install MariaDB
 === Install JRE
 
 You must install JRE on your host system before installing or upgrading the Tiebreaker software. For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19.
-The outputs in the example show JRE 1.8.0. (JRE 8).
+The outputs in the following example show JRE 1.8.0. (JRE 8).
 
 .Steps
 . Log in as a "root" user or a sudo user that can change to advanced privilege mode.
@@ -63,13 +63,12 @@ Last login: Fri Jan  8 21:33:00 2017 from host.domain.com
 
 . Check for available Java versions:
 +
-[source,cli]
-yum search openjdk
+`yum search openjdk`
 
 . Install the appropriate JRE version for the version of Tiebreaker you are installing:
 +
-[source,cli]
-yum install java-<version>-openjdk.x86_64
++
+`yum install java-<version>-openjdk.x86_64`
 +
 ....
 [root@mcctb ~]# yum install java-1.8.0-openjdk.x86_64
@@ -137,12 +136,13 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
 ----
 [root@mcctb /bin] cd /root
 ----
-. Create a Vault configuration file under the "/root" directory.
+. Create a Vault configuration file under the `/root `directory.
 +
-Run the following command to create the `config.hcl` file:
+At the `[root@mcctb ~]` prompt, copy and run the following command to create the `config.hcl` file:
 +
+[source,cli]
 ----
-[root@mcctb ~]# cat > config.hcl << EOF
+# cat > config.hcl << EOF
  storage "file" {
   address = "127.0.0.1:8500"
   path    = "/mcctb_vdata/data"
@@ -331,10 +331,11 @@ HA Enabled      false
 ----
 [root@mcctb ~]#  cd /etc/systemd/system
 ----
-.. Run the following command to create the vault service file.
+.. At the `[root@mcctb system]` prompt, copy and run the following command to create the Vault service file.
 +
+[source,cli]
 ----
-[root@mcctb system]# cat > vault.service << EOF
+# cat > vault.service << EOF
 [Unit]
 Description=Vault Service
 After=mariadb.service
@@ -770,7 +771,7 @@ Nov 08 21:29:01 scspr0523972001 systemd[1]: Started MariaDB database server.
 
 . Configure the security and password settings:
 +
-NOTE: When you are prompted for the root password, you leave it empty and press enter to continue to configure the security and password settings. 
+NOTE: When you are prompted for the root password, leave it empty and press enter to continue to configure the security and password settings. 
 +
 `[root@mcctb ~]# mysql_secure_installation`
 +
@@ -791,9 +792,9 @@ OK, successfully used password, moving on...
 Setting the root password ensures that nobody can log into the MariaDB
 root user without the proper authorisation.
 
-Set root password? [Y/n] y
-New password:
-Re-enter new password:
+*Set root password? [Y/n] y*
+*New password:*
+*Re-enter new password:*
 Password updated successfully!
 Reloading privilege tables..
  ... Success!
@@ -805,20 +806,20 @@ them.  This is intended only for testing, and to make the installation
 go a bit smoother.  You should remove them before moving into a
 production environment.
 
-Remove anonymous users? [Y/n] y
+*Remove anonymous users? [Y/n] y*
  ... Success!
 
 Normally, root should only be allowed to connect from 'localhost'.  This
 ensures that someone cannot guess at the root password from the network.
 
-Disallow root login remotely? [Y/n] y
+*Disallow root login remotely? [Y/n] y*
  ... Success!
 
 By default, MariaDB comes with a database named 'test' that anyone can
 access.  This is also intended only for testing, and should be removed
 before moving into a production environment.
 
-Remove test database and access to it? [Y/n] y
+*Remove test database and access to it? [Y/n] y*
  - Dropping test database...
  ... Success!
  - Removing privileges on test database...
@@ -827,7 +828,7 @@ Remove test database and access to it? [Y/n] y
 Reloading the privilege tables will ensure that all changes made so far
 will take effect immediately.
 
-Reload privilege tables now? [Y/n]
+*Reload privilege tables now? [Y/n]*
  ... Success!
 
 Cleaning up...
