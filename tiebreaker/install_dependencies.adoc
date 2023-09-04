@@ -65,8 +65,7 @@ Last login: Fri Jan  8 21:33:00 2017 from host.domain.com
 +
 `yum search openjdk`
 
-. Install the appropriate JRE version for the version of Tiebreaker you are installing:
-+
+. Install an appropriate JRE version for the version of Tiebreaker you are installing:
 +
 `yum install java-<version>-openjdk.x86_64`
 +
@@ -759,15 +758,14 @@ Complete!
 +
 `[root@mcctb ~]# systemctl status mariadb`
 +
-....
-
+----
 [root@mcctb ~]# systemctl status mariadb
 mariadb.service - MariaDB database server
 ...
 Nov 08 21:28:59 mcctb systemd[1]: Starting MariaDB database server...
 ...
 Nov 08 21:29:01 scspr0523972001 systemd[1]: Started MariaDB database server.
-....
+----
 
 . Configure the security and password settings:
 +
@@ -775,6 +773,7 @@ NOTE: When you are prompted for the root password, leave it empty and press ente
 +
 `[root@mcctb ~]# mysql_secure_installation`
 +
+[source,java,subs="verbatim,quotes"]
 ----
 root@localhost systemd]# mysql_secure_installation
 
@@ -828,7 +827,8 @@ before moving into a production environment.
 Reloading the privilege tables will ensure that all changes made so far
 will take effect immediately.
 
-*Reload privilege tables now? [Y/n]*
+Reload privilege tables now? [Y/n]
+
  ... Success!
 
 Cleaning up...
@@ -837,6 +837,7 @@ All done!  If you've completed all of the above steps, your MariaDB
 installation should now be secure.
 
 Thanks for using MariaDB!
+
 ----
 
 ==== Enabling the autostart setting for the MariaDB
