@@ -2544,7 +2544,7 @@ You must perform some special configuration steps before monitoring the componen
 
 These tasks apply only to systems with FC-to-SAS bridges.
 
-Beginning in Fabric OS 9.0.1, SNMPv2 is not supported for health monitoring on Brocade switches and you must use SNMPv3. 
+Beginning in Fabric OS 9.0.1, SNMPv2 is not supported for health monitoring on Brocade switches, you must use SNMPv3. If you are using SNMPv3, you must configure SNMPv3 in ONTAP before proceeding to the following section. For more details, see <<Configuring SNMPv3 in a MetroCluster configuration>>.
 
 [NOTE]
 ====
@@ -2566,13 +2566,13 @@ The command you run depends on whether you are using SNMPv2 or SNMPv3.
 +
 [role="tabbed-block"]
 ====
-.Add a switch using SNMPv2:
---
-`storage switch add -address ipaddress`
---
 .Add a switch using SNMPv3:
 --
 `storage switch add -address <ip_adddress> -snmp-version SNMPv3 -snmp-community-or-username <SNMP_user_configured_on_the_switch>`
+--
+.Add a switch using SNMPv2:
+--
+`storage switch add -address ipaddress`
 --
 ==== 
 +
