@@ -46,7 +46,7 @@ Install MariaDB
 |===
 
 [[install-java-1-8]]
-=== Install JRE
+== Install JRE
 
 You must install JRE on your host system before installing or upgrading the Tiebreaker software. For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19.
 The outputs in the following example show JRE 1.8.0. (JRE 8).
@@ -69,7 +69,7 @@ Last login: Fri Jan  8 21:33:00 2017 from host.domain.com
 +
 `yum install java-<version>-openjdk.x86_64`
 +
-....
+----
 [root@mcctb ~]# yum install java-1.8.0-openjdk.x86_64
 Loaded plugins: fastestmirror, langpacks
 Loading mirror speeds from cached hostfile
@@ -93,10 +93,10 @@ Is this ok [y/d/N]: y
 Installed:
 java-1.8.0-openjdk.x86_64 1:1.8.0.144-0.b01.el7_4
 Complete!
-....
+----
 
 [[install-vault]]
-=== Install and configure Vault
+== Install and configure Vault
 
 If you do not have or want to use the local Vault server, you must install Vault. 
 You can refer to this standard procedure for installing Vault, or refer to the Hashicorp installation instructions for alternative guidelines.
@@ -135,6 +135,7 @@ Vault v1.12.2 (415e1fe3118eebd5df6cb60d13defdc01aa17b03), built 2022-11-23T12:53
 ----
 [root@mcctb /bin] cd /root
 ----
+
 . Create a Vault configuration file under the `/root `directory.
 +
 At the `[root@mcctb ~]` prompt, copy and run the following command to create the `config.hcl` file:
@@ -361,14 +362,13 @@ EOF
 [root@mcctb system]#  systemctl enable vault.service
 Created symlink /etc/systemd/system/multi-user.target.wants/vault.service → /etc/systemd/system/vault.service.
 ----
-
 +
 NOTE: You are prompted to use this feature during the installation of MetroCluster Tiebreaker. 
 If you want to change the method to unseal Vault, then you need to uninstall and reinstall the MetroCluster Tiebreaker software.
 
 
 [[install-mysql-redhat]]
-=== Installing MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7
+== Installing MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7
 
 You must install MySQL Server 5.5.30 or later and 5.6.x version on your host system before installing or upgrading the Tiebreaker software.
 
@@ -386,8 +386,8 @@ Last login: Fri Jan  8 21:33:00 2016 from host.domain.com
 +
 `[root@mcctb ~]# yum localinstall \https://dev.mysql.com/get/mysql57-community-release-el6-11.noarch.rpm`
 +
+[subs="quotes"]
 ----
-
 Loaded plugins: product-id, refresh-packagekit, security, subscription-manager
 Setting up Local Package Process
 Examining /var/tmp/yum-root-LLUw0r/mysql-community-release-el6-5.noarch.rpm: mysql-community-release-el6-5.noarch
@@ -409,7 +409,7 @@ Transaction Summary
 Install       1 Package(s)
 Total size: 4.3 k
 Installed size: 4.3 k
-Is this ok [y/N]: y
+*Is this ok [y/N]: y*
 Downloading Packages:
 Running rpm_check_debug
 Running Transaction Test
@@ -445,6 +445,7 @@ mysql56-community                    MySQL 5.6 Community Server           231
 +
 `[root@mcctb ~]# yum install mysql-community-server`
 +
+[subs="quotes"]
 ----
 
 Loaded plugins: product-id, refresh-packagekit, security, subscription-manager
@@ -476,7 +477,7 @@ Transaction Summary
 ===============================================================================
 Install       5 Package(s)
 Total download size: 74 M
-Is this ok [y/N]: y
+*Is this ok [y/N]: y*
 Downloading Packages:
 (1/5): mysql-community-client-5.6.29-2.el6.x86_64.rpm       |  18 MB     00:28
 (2/5): mysql-community-common-5.6.29-2.el6.x86_64.rpm       | 308 kB     00:01
@@ -492,7 +493,7 @@ Importing GPG key 0x5072E1F5:
 Package: mysql-community-release-el6-5.noarch
          (@/mysql-community-release-el6-5.noarch)
  From   : file:/etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
-Is this ok [y/N]: y
+*Is this ok [y/N]: y*
 Running rpm_check_debug
 Running Transaction Test
 Transaction Test Succeeded
@@ -570,6 +571,7 @@ mysqld (pid  2739) is running...
 +
 `[root@mcctb ~]# mysql_secure_installation`
 +
+[subs="quotes"]
 ----
 
 NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
@@ -580,16 +582,16 @@ NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
  you haven't set the root password yet, the password will be blank,
  so you should just press enter here.
 
- Enter current password for root (enter for none):   <== on default install
+ *Enter current password for root (enter for none):*   <== on default install
                                                          hit enter here
  OK, successfully used password, moving on...
 
  Setting the root password ensures that nobody can log into the MySQL
  root user without the proper authorization.
 
- Set root password? [Y/n] y
- New password:
- Re-enter new password:
+ *Set root password? [Y/n] y*
+ *New password:*
+ *Re-enter new password:*
  Password updated successfully!
  Reloading privilege tables..
   ... Success!
@@ -600,20 +602,20 @@ NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
  go a bit smoother.  You should remove them before moving into a
  production environment.
 
- Remove anonymous users? [Y/n] y
+ *Remove anonymous users? [Y/n] y*
   ... Success!
 
  Normally, root should only be allowed to connect from 'localhost'.  This
  ensures that someone cannot guess at the root password from the network.
 
- Disallow root login remotely? [Y/n] y
+ *Disallow root login remotely? [Y/n] y*
   ... Success!
 
  By default, MySQL comes with a database named 'test' that anyone can
  access.  This is also intended only for testing, and should be removed
  before moving into a production environment.
 
- Remove test database and access to it? [Y/n] y
+ *Remove test database and access to it? [Y/n] y*
   - Dropping test database...
  ERROR 1008 (HY000) at line 1: Can't drop database 'test';
  database doesn't exist
@@ -624,7 +626,7 @@ NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
  Reloading the privilege tables will ensure that all changes made so far
  will take effect immediately.
 
- Reload privilege tables now? [Y/n] y
+ *Reload privilege tables now? [Y/n] y*
   ... Success!
 
  All done!  If you've completed all of the above steps, your MySQL
@@ -657,7 +659,7 @@ mysql>
 +
 If the MySQL login is working, the output will end at the `mysql>` prompt.
 
-==== Enabling the MySQL autostart setting
+=== Enabling the MySQL autostart setting
 
 You should verify that the autostart feature is turned on for the MySQL daemon. Turning on the MySQL daemon automatically restarts MySQL if the system on which the MetroCluster Tiebreaker software resides reboots. If the MySQL daemon is not running, the Tiebreaker software continues running, but it cannot be restarted and configuration changes cannot be made.
 
@@ -673,7 +675,6 @@ UNIT FILE          State
 mysqld.service     enabled
 
 ----
-
 +
 If MySQL is not enabled to autostart when booted, see the MySQL documentation to enable the autostart feature for your installation.
 
@@ -719,7 +720,7 @@ Install  1 Package  (+8 Dependent packages)
 Upgrade             ( 1 Dependent package)
 
 Total download size: 22 M
-Is this ok [y/d/N]: y
+*Is this ok [y/d/N]: y*
 Downloading packages:
 No Presto metadata available for base warning:
 /var/cache/yum/x86_64/7/base/packages/mariadb-libs-5.5.56-2.el7.x86_64.rpm:
@@ -773,7 +774,7 @@ NOTE: When you are prompted for the root password, leave it empty and press ente
 +
 `[root@mcctb ~]# mysql_secure_installation`
 +
-[source,java,subs="verbatim,quotes"]
+[subs="quotes"]
 ----
 root@localhost systemd]# mysql_secure_installation
 
