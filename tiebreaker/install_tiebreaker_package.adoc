@@ -27,6 +27,31 @@ https://mysupport.netapp.com/site/[NetApp Support Site^]
 
 . Log in to the host as the root user.
 
+. Create a non-root user and the `mcctbgrp` group. 
++
+.. Create a non-root user and set the password.
++
+The following example commands create a non-root user named `mcctbuser1`:
++
+---- 
+[root@mcctb ~]# useradd mcctbuser1
+[root@mcctb ~]# passwd mcctbuser1
+Changing password for user mcctbuser1.
+New password:
+Retype new password:
+passwd: all authentication tokens updated successfully.
+----
+..	Create a group named "mcctbgrp”:
++
+`[root@mcctb ~~]# groupadd mcctbgrp`
+ 
+.. Add the non-root user you created to the "mcctbgrp" group.
++
+The following command adds `mcctbuser1` to the "mcctbgrp" group:
++
+`[root@mcctb ~]# usermod -a -G mcctbgrp mcctbuser1`
+
+
 . Verify the RPM file. 
 +
 Run the following substeps from the directory containing the RPM key. 
