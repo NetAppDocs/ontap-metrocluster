@@ -51,7 +51,7 @@ vsa_1 iscsi_lf__n2_p1_ 4 iqn.2020-01.com.netapp.englab.gdl:scspr1789621001 00:02
 2 entries were displayed.
 ----
 
-. List the iscsi interfaces in ONTAP for the SVM that contains the interfaces: `iscsi interface show -vserver svm-name`
+. List the iSCSI interfaces in ONTAP for the SVM that contains the interfaces: `iscsi interface show -vserver svm-name`
 +
 ----
 sti8200mcchtp001htp_siteA::*> iscsi interface show -vserver vsa_1
@@ -198,8 +198,9 @@ vsa_1 /vol/vsa_1_vol1/lun_linux_3 igroup_linux node_A_1-FC,node_A_2-FC,node_A_1-
 
 12 entries were displayed.
 ----
+.  Verify that the `sg3-utils` package is installed on the Linux host. This avoids a `rescan-scsi-bus.sh utility not found` error when you rescan the Linux host for the newly mapped LUNs using the `rescan-scsi-bus` command.  
 
-. On the host, issue the following command to rescan the scsi bus on the host and discover the newly added paths:``/usr/bin/rescan-scsi-bus.sh -a``
+. On the host, issue the following command to rescan the SCSI bus on the host and discover the newly added paths: `/usr/bin/rescan-scsi-bus.sh -a`
 +
 ----
 [root@stemgr]# /usr/bin/rescan-scsi-bus.sh -a
@@ -313,7 +314,9 @@ vsa_1 /vol/vsa_1_vol2/lun_linux_4   group_linux   node_A_1-IP,node_A_2-IP
 12 entries were displayed.
 ----
 
-. On the iSCSI host, rescan the scsi bus: `/usr/bin/rescan-scsi-bus.sh -r`
+. Verify that the `sg3-utils` package is installed on the Linux host. This avoids a `rescan-scsi-bus.sh utility not found` error when you rescan the Linux host for the newly mapped LUNs using the `rescan-scsi-bus` command.  
+
+. On the iSCSI host, rescan the SCSI bus: `/usr/bin/rescan-scsi-bus.sh -r`
 +
 The paths that are removed are the paths from FC nodes.
 +
@@ -351,4 +354,5 @@ OLD: Host: scsi5 Channel: 00 Id: 00 Lun: 09
 +
 `multipath -ll -d`
 
-// 2023-05-30, burt 1554013s
+// 2023 Aug 29, BURT 1554012
+// 2023-05-30, burt 1554013
