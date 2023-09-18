@@ -16,7 +16,7 @@ Beginning with ONTAP 9.6, MetroCluster IP configurations with supported Cisco sw
 
 Beginning with ONTAP 9.9.1, MetroCluster IP configurations can be implemented with IP-routed (layer 3) backend connections. This topology is known as _shared layer 3 networks_.
 
-NOTE: You must verify that you have adequate capacity and that the ISL size is sufficient. Low latency is critical for replication of data between the MetroCluster sites. Latency issues on these connections can impact client I/O.
+NOTE: You must verify that you have adequate network capacity and verify that the ISL size is appropriate for the configuration. Low latency is critical for replication of data between the MetroCluster sites. Latency issues on these connections can impact client I/O.
 
 == ISL requirements for layer 2 and layer 3 networks
 
@@ -50,11 +50,11 @@ The intermediate customer-provided switches must meet the following requirements
 * Layer 2 VLANs with IDs that match the MetroCluster VLAN IDs must span the shared network. For all platforms listed below, you can only specify the VLAN during interface creation. After the MetroCluster interfaces are created, the VLAN ID cannot not be changed. You can configure other VLANs during interface creation but they must be within the range 101-4096. 
 ** In ONTAP 9.7 and earlier, FAS2750 and AFF A220 systems require VLAN 10 and 20.
 ** In ONTAP 9.8 and later, AFF A150, FAS2750, AFF A220, FAS500f, C250, AFF A250, FAS8300, C800, AFF A400, and FAS8700 systems use VLAN 10 and 20 by default. 
-** For all other platforms not listed previously, you can use other VLANs.
+** For all other platforms not listed, you can use other VLANs.
 
 * The RcfFileGenerator does not allow the creation of an RCF file using VLANs that are not supported by the platform.
 * The RcfFileGenerator might restrict the use of certain VLAN IDs, for example, if they are intended for future use. Generally, reserved VLANs are up to and including 100.
-•	The layer 2 VLANs must natively span the sites. VLAN overlay such as Virtual Extensible LAN (VXLAN) is not supported.
+* The layer 2 VLANs must natively span the sites. VLAN overlay such as Virtual Extensible LAN (VXLAN) is not supported.
 
 == Considerations for layer 3 networks
 
@@ -69,7 +69,7 @@ The MetroCluster environment is configured and cabled as a standard MetroCluster
 * If you use MetroCluster compliant switches:
 ** The MetroCluster IP interfaces can be connected directly to the router or to one of the intervening switches.
 * The VLAN must be extended to the gateway device.
-* You use the `-gateway parameter` to configure the MetroCluster IP (MCC-IP) interface address with an IP gateway address.
+* You use the `-gateway parameter` to configure the MetroCluster IP interface address with an IP gateway address.
 * The VLAN IDs for the MetroCluster VLANs must be the same at each site. However, the subnets can be different. 
 * Dynamic routing is not supported for the MetroCluster traffic.
 * Only four-node MetroCluster configurations are supported (two nodes at each site).
@@ -87,7 +87,7 @@ When you configure routers and gateway IP addresses, you must meet the following
 
 == Required settings for intermediate switches
 
-When MetroCluster traffic traverses an ISL in an intermediate network, you should verify that the configuration of the intermediate switches provided ensures that the MetroCluster traffic (RDMA and storage) meets the required service levels across the entire path between the MetroCluster sites.
+When MetroCluster traffic traverses an ISL in an intermediate network, you should verify that the configuration of the intermediate switches ensures that the MetroCluster traffic (RDMA and storage) meets the required service levels across the entire path between the MetroCluster sites.
 
 The following diagram gives an overview of the required settings when using NetApp validated Cisco switches:
 
