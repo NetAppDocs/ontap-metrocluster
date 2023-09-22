@@ -51,10 +51,16 @@ The intermediate customer-provided switches must meet the following requirements
 * The intermediate network must provide the same VLANs between the sites. This must match the MetroCluster VLANs set in the RCF file.
 * Layer 2 VLANs with IDs that match the MetroCluster VLAN IDs must span the shared network. For all platforms listed below, you can only specify the VLAN during interface creation. After the MetroCluster interfaces are created, the VLAN ID cannot not be changed. You can configure other VLANs during interface creation but they must be within the range 10/20 or within the range 101 to 4096 (or the number supported by the switch vendor, whichever is the lower number).
 +
-NOTE: Some switch vendors might reserve VLANs for their use. 
-** In ONTAP 9.7 and earlier, FAS2750 and AFF A220 systems require VLAN 10 and 20.
-** In ONTAP 9.8 and later, AFF A150, FAS2750, AFF A220, FAS500f, C250, AFF A250, FAS8300, C800, AFF A400, and FAS8700 systems use VLAN 10 and 20 by default. 
-** For all other platforms not listed, you can use other VLANs.
+NOTE: Some switch vendors might reserve the use of certain VLANs. 
+
+** In ONTAP 9.7 or earlier, if you are using FAS2750 or AFF A220 platforms, you must use VLAN 10/20. Other VLANs are not supported.
+** In ONTAP 9.8 or later, you are required to specify the VLAN that you specified when generating the RCF files. This applies to all platforms *except* the following:
+*** FAS8200 and AFF A300
+*** AFF A320
+*** FAS9000 and AFF A700
+*** AFF A800
++
+NOTE: All other platforms requires you to configure the same VLAN in ONTAP when creating the MetroCluster interfaces.
 
 * The RcfFileGenerator does not allow the creation of an RCF file using VLANs that are not supported by the platform.
 * The RcfFileGenerator might restrict the use of certain VLAN IDs, for example, if they are intended for future use. Generally, reserved VLANs are up to and including 100.
@@ -68,25 +74,26 @@ image::../media/mcc_layer3_backend.png[]
 
 The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_parts_of_an_ip_mcc_configuration_mcc_ip.html[Configure the MetroCluster hardware components]. When you perform the installation and cabling procedure, you must perform the steps specific to the layer 3 configuration:
 
-* If you use NetApp validated switches:
-** The MetroCluster switches can be connected directly to the router or to one or more intervening switches.
-* If you use MetroCluster compliant switches:
-** The MetroCluster IP interfaces can be connected directly to the router or to one of the intervening switches.
+
+* The MetroCluster switches can be connected directly to the router or to one or more intervening switches.
+* The MetroCluster IP interfaces can be connected directly to the router or to one of the intervening switches.
 * The VLAN must be extended to the gateway device.
 * You use the `-gateway parameter` to configure the MetroCluster IP interface address with an IP gateway address.
 * The VLAN IDs for the MetroCluster VLANs must be the same at each site. However, the subnets can be different. 
 * Dynamic routing is not supported for the MetroCluster traffic.
-* Only four-node MetroCluster configurations are supported (two nodes at each site).
+* The following features are not supported:
+** Eight-node MetroCluster configurations
+** Refreshing a four-node MetroCluster configuration
+** Transition from MetroCluster FC to MetroCluster IP 
 * Two subnets are required on each MetroCluster site—one in each network.
 * Auto-IP assignment is not supported.
 
 When you configure routers and gateway IP addresses, you must meet the following requirements:
 
-* On each node, two interfaces cannot have the same gateway IP address.
+* Two interfaces on one node cannot have the same gateway IP address.
 * The corresponding interfaces on the HA pairs on each site must have the same gateway IP address.
 * The corresponding interfaces on a node and its DR and AUX partners cannot have the same gateway IP address.
 * The corresponding interfaces on a node and its DR and AUX partners must have the same VLAN ID.
-* Only the MetroCluster IP interfaces are cabled to the switches. The local cluster interfaces cannot be connected to the switches. The MetroCluster is cabled as a “switchless” cluster.
 
 
 == Required settings for intermediate switches
@@ -228,8 +235,8 @@ class type queuing c-out-8q-q4
 
 NOTE: Minimum and maximum values vary depending on the switch and your requirements.
 
-.Example 1: Cisco or NVIDIA
-If your configuration has Cisco or NVIDIA switches, then you do not need to classify on the first ingress port of the intermediate switch. You then configure the following:
+.Example 1: Cisco
+If your configuration has Cisco switches, you do not need to classify on the first ingress port of the intermediate switch. You then configure the following:
 
 *	class-map type qos match-any c5
 *	class-map type qos match-any c4
@@ -238,7 +245,7 @@ If your configuration has Cisco or NVIDIA switches, then you do not need to clas
 You assign the *MetroClusterIP_Ingress_Match* policy map to the ISL ports carrying MetroCluster traffic.
 
 .Example 2: Broadcom
-If your configuration has Broadcom switches, then you must classify on the first ingress port of the intermediate switch. You then configure the following:
+If your configuration has Broadcom switches, you must classify on the first ingress port of the intermediate switch. You then configure the following:
 
 *	ip access-list rdma
 *	ip access-list storage
