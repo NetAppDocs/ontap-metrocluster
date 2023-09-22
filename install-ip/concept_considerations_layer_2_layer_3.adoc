@@ -222,7 +222,7 @@ policy-map type queuing MetroClusterIP_ISL_Egress
 
 These settings must be applied on all switches and ISLs carrying MetroCluster traffic.
 
-In this example the Q4 and Q5 are configured with “random-detect threshold burst-optimized ecn”. Depending on your configuration, you might need to explicitly set the minimum and maximum thresholds, as shown in the following example:
+In this example the Q4 and Q5 are configured with `random-detect threshold burst-optimized ecn`. Depending on your configuration, you might need to set the minimum and maximum thresholds, as shown in the following example:
 
 -----
 class type queuing c-out-8q-q5
@@ -238,24 +238,24 @@ NOTE: Minimum and maximum values vary depending on the switch and your requireme
 .Example 1: Cisco
 If your configuration has Cisco switches, you do not need to classify on the first ingress port of the intermediate switch. You then configure the following:
 
-*	class-map type qos match-any c5
-*	class-map type qos match-any c4
-*	MetroClusterIP_Ingress_Match
+*	`class-map type qos match-any c5`
+*	`class-map type qos match-any c4`
+*	`MetroClusterIP_Ingress_Match`
 
-You assign the *MetroClusterIP_Ingress_Match* policy map to the ISL ports carrying MetroCluster traffic.
+You assign the `MetroClusterIP_Ingress_Match` policy map to the ISL ports carrying MetroCluster traffic.
 
 .Example 2: Broadcom
 If your configuration has Broadcom switches, you must classify on the first ingress port of the intermediate switch. You then configure the following:
 
-*	ip access-list rdma
-*	ip access-list storage
-*	class-map type qos match-all rdma
-*	class-map type qos match-all storage
-*	MetroClusterIP_Ingress_Classify
-*	class-map type qos match-any c5
-*	class-map type qos match-any c4
-*	MetroClusterIP_Ingress_Match
+*	`ip access-list rdma`
+*	`ip access-list storage`
+*	`class-map type qos match-all rdma`
+*	`class-map type qos match-all storage`
+*	`MetroClusterIP_Ingress_Classify`
+*	`class-map type qos match-any c5`
+*	`class-map type qos match-any c4`
+*	`MetroClusterIP_Ingress_Match`
 
-You assign the *MetroClusterIP_Ingress_Classify* policy map to the ISL ports on the intermediate switch connecting the Broadcom switch.
+You assign `the MetroClusterIP_Ingress_Classify` policy map to the ISL ports on the intermediate switch connecting the Broadcom switch.
 
-You assign the *MetroCLusterIP_Ingress_Match* policy map to the ISL ports on the intermediate switch that is carrying MetroCluster traffic but does not connect the Broadcom switch.
+You assign the `MetroCLusterIP_Ingress_Match` policy map to the ISL ports on the intermediate switch that is carrying MetroCluster traffic but does not connect the Broadcom switch.
