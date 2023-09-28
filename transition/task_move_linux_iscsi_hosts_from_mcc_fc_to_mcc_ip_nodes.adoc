@@ -11,16 +11,17 @@ summary: After you transition your MetroCluster nodes from FC to IP, you might n
 [.lead]
 After you transition your MetroCluster nodes from FC to IP, you might need to move your iSCSI host connections to the new nodes.
 
-In this procedure IPv4 interfaces are created.
+.About this task
+* IPv4 interfaces are created when you set up the new iSCSI connections.
+* The host commands and examples are specific to LINUX operating systems.
+* The MetroCluster FC nodes are called old nodes and the MetroCluster IP nodes are called new nodes.
 
-The host commands and examples given in these procedures are specific to LINUX operating systems.
-
-== Setting up new iSCSI connections
-
-[.lead]
+== Set up new iSCSI connections
 To move iSCSI connections, you must set up new iSCSI connections to the new nodes.
 
-. Create iSCSI interfaces on the new nodes and check ping connectivity from the iSCSI clients to the new IP interfaces on the new nodes.
+.Steps
+
+. Create iSCSI interfaces on the new nodes and check ping connectivity from the iSCSI clients to the new interfaces on the new nodes.
 +
 https://docs.netapp.com/us-en/ontap/networking/create_a_lif.html[Create network interfaces^]
 +
@@ -36,7 +37,7 @@ tcp: [1] 10.230.68.236:3260,1156 iqn.1992-08.com.netapp:sn.58d7f6df2cc611eaa9c50
 tcp: [2] 10.230.68.237:3260,1158 iqn.1992-08.com.netapp:sn.58d7f6df2cc611eaa9c500a098a71638:vs.6 (non-flash)
 ----
 
-. Verify the connections from the MetroCluster IP node: `iscsi session show -vserver svm-name`
+. Verify the connections from the new node: `iscsi session show -vserver svm-name`
 +
 ----
 node_A_1-IP::*> iscsi session show -vserver vsa_1
@@ -105,7 +106,7 @@ tcp: [2] 10.230.68.237:3260,1158 iqn.1992-08.com.netapp:sn.58d7f6df2cc611eaa9c50
 tcp: [3] 10.226.43.142:3260,1188 iqn.1992-08.com.netapp:sn.58d7f6df2cc611eaa9c500a098a71638:vs.6 (non-flash)
 ----
 
-. From the node, verify the login and connection with the client: `iscsi initiator show -vserver vsa_1`
+. From the new node, verify the login and connection with the client: `iscsi initiator show -vserver vsa_1`
 +
 ----
 sti8200mcchtp001htp_siteA::*> iscsi initiator show -vserver vsa_1
@@ -122,9 +123,9 @@ vsa_1 iscsi_lf__n4_p1_ 1 iqn.2020-01.com.netapp.englab.gdl:scspr1789621001 00:02
 4 entries were displayed.
 ----
 
-At the end of this tasks, the client can see all iSCSI interfaces (on the old and new nodes) and is logged in to all those interfaces.
+At the end of this task, the client can see all iSCSI interfaces (on the old and new nodes) and is logged in to all those interfaces.
 
-LUNs and volumes are still physically hosted on FC nodes. Because LUNs are reported only on the old node interfaces, the client will show only paths over old nodes. This can be seen in sanlun lun show -p and multipath -ll -d command outputs. The next step is to add IP nodes as reporting nodes.
+LUNs and volumes are still physically hosted on the old nodes. Because LUNs are reported only on the old node interfaces, the client will show only paths over old nodes. This can be seen in `sanlun lun show -p and multipath -ll -d` command outputs. The next step is to add the new nodes as reporting nodes.
 
 ----
 [root@scspr1789621001 ~]# sanlun lun show -p
@@ -155,9 +156,9 @@ size=2.0G features='4 queue_if_no_path pg_init_retries 50 retain_attached_hw_han
 == Add the new nodes as reporting nodes
 
 [.lead]
-After setting up the connections to the new nodes, you must add new reporting nodes.
+After setting up the connections to the new nodes, you add the new nodes as the reporting nodes.
 
-. List reporting nodes for LUNs on the SVM: `lun mapping show -vserver vsa_1 -fields reporting-nodes -ostype linux`
+. On the new node, list reporting nodes for LUNs on the SVM: `lun mapping show -vserver vsa_1 -fields reporting-nodes -ostype linux`
 +
 The following reporting nodes are local nodes as LUNs are physically on old nodes node_A_1-old and node_A_2-old.
 +
@@ -174,7 +175,7 @@ vsa_1 /vol/vsa_1_vol9/lun_linux_19 igroup_linux node_A_1-old,node_A_2-old
 12 entries were displayed.
 ----
 
-. Add reporting nodes: `lun mapping add-reporting-nodes -vserver svm-name -path /vol/vsa_1_vol*/lun_linux_* -nodes node1,node2 -igroup igroup_linux`
+. On the new node, add reporting nodes: `lun mapping add-reporting-nodes -vserver svm-name -path /vol/vsa_1_vol*/lun_linux_* -nodes node1,node2 -igroup igroup_linux`
 +
 ----
 node_A_1-new::*> lun mapping add-reporting-nodes -vserver vsa_1 -path /vol/vsa_1_vol*/lun_linux_* -nodes node_A_1-new,node_A_2-new
@@ -183,15 +184,15 @@ node_A_1-new::*> lun mapping add-reporting-nodes -vserver vsa_1 -path /vol/vsa_1
 12 entries were acted on.
 ----
 
-. Verify that the newly added nodes are present: `lun mapping show -vserver svm-name -fields reporting-nodes -ostype linux vserver path igroup reporting-nodes`
+. On the new node, verify that the newly added nodes are present: `lun mapping show -vserver svm-name -fields reporting-nodes -ostype linux vserver path igroup reporting-nodes`
 +
 ----
 
 node_A_1-new::*> lun mapping show -vserver vsa_1 -fields reporting-nodes -ostype linux vserver path igroup reporting-nodes
 ------- --------------------------- ------------ -------------------------------------------------------------------------------
 
-vsa_1 /vol/vsa_1_vol1/lun_linux_2 igroup_linux node_A_1-FC,node_A_2-FC,node_A_1-new,node_A_2-new
-vsa_1 /vol/vsa_1_vol1/lun_linux_3 igroup_linux node_A_1-FC,node_A_2-FC,node_A_1-new,node_A_2-new
+vsa_1 /vol/vsa_1_vol1/lun_linux_2 igroup_linux node_A_1-old,node_A_2-old,node_A_1-new,node_A_2-new
+vsa_1 /vol/vsa_1_vol1/lun_linux_3 igroup_linux node_A_1-old,node_A_2-old,node_A_1-new,node_A_2-new
 .
 .
 .
@@ -244,13 +245,13 @@ up secondary sdag host4 iscsi_lf__n4_p1_
 up secondary sdah host5 iscsi_lf__n3_p1_
 ----
 
-. Move the volume/volumes containing LUNs from old nodes to the new nodes.
+. Move the volume/volumes containing LUNs from the old nodes to the new nodes.
 +
 ----
 node_A_1-new::*> vol move start -vserver vsa_1 -volume vsa_1_vol1 -destination-aggregate sti8200mccip_htp_005_aggr1
 [Job 1877] Job is queued: Move "vsa_1_vol1" in Vserver "vsa_1" to aggregate "sti8200mccip_htp_005_aggr1". Use the "volume move show -vserver
 vsa_1 -volume vsa_1_vol1" command to view the status of this operation.
-node_A_1-IP::*> vol move show
+node_A_1-new::*> vol move show
 Vserver    Volume     State       Move       Phase            Percent-Complete  Time-To-Complete
 ---------  ---------- --------    ---------- ---------------- ----------------  ----------------
 vsa_1     vsa_1_vol1  healthy                initializing     -                 -
@@ -296,7 +297,7 @@ node_A_1-new::*> lun mapping remove-reporting-nodes -vserver vsa_1 -path * -igro
 12 entries were acted on.
 ----
 
-. From the newP node, check reporting nodes for the LUNs: `lun mapping show -vserver vsa_1 -fields reporting-nodes -ostype linux`
+. From the new node, check reporting nodes for the LUNs: `lun mapping show -vserver vsa_1 -fields reporting-nodes -ostype linux`
 +
 ----
 node_A_1-new::*> lun mapping show -vserver vsa_1 -fields reporting-nodes -ostype linux
@@ -318,7 +319,7 @@ vsa_1 /vol/vsa_1_vol2/lun_linux_4   group_linux   node_A_1-new,node_A_2-new
 
 . On the iSCSI host, rescan the SCSI bus: `/usr/bin/rescan-scsi-bus.sh -r`
 +
-The paths that are removed are the paths from FC nodes.
+The paths that are removed are the paths from the old nodes.
 +
 ----
 [root@scspr1789621001 ~]# /usr/bin/rescan-scsi-bus.sh -r
