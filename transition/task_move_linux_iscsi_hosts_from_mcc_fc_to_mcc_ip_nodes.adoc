@@ -14,7 +14,7 @@ After you transition your MetroCluster nodes from FC to IP, you might need to mo
 .About this task
 * IPv4 interfaces are created when you set up the new iSCSI connections.
 * The host commands and examples are specific to LINUX operating systems.
-* The MetroCluster FC nodes are called old nodes and the MetroCluster IP nodes are called new nodes.
+* The MetroCluster FC nodes are called old nodes and the minor editsMetroCluster IP nodes are called new nodes.
 
 == Set up new iSCSI connections
 To move iSCSI connections, you must set up new iSCSI connections to the new nodes.
@@ -27,7 +27,7 @@ https://docs.netapp.com/us-en/ontap/networking/create_a_lif.html[Create network 
 +
 All iSCSI interfaces from the SVM should be reachable by iSCSI client.
 
-. On the iSCSI host or client, identify the existing iSCSI connections from the host to the original node: `iscsiadm -m session`
+. On the iSCSI host or client, identify the existing iSCSI connections from the host to the old node: `iscsiadm -m session`
 +
 ----
 [root@scspr1789621001 ~]# iscsiadm -m session
@@ -40,7 +40,7 @@ tcp: [2] 10.230.68.237:3260,1158 iqn.1992-08.com.netapp:sn.58d7f6df2cc611eaa9c50
 . Verify the connections from the new node: `iscsi session show -vserver svm-name`
 +
 ----
-node_A_1-IP::*> iscsi session show -vserver vsa_1
+node_A_1-new::*> iscsi session show -vserver vsa_1
 
  Tpgroup Initiator Initiator
 
@@ -125,7 +125,7 @@ vsa_1 iscsi_lf__n4_p1_ 1 iqn.2020-01.com.netapp.englab.gdl:scspr1789621001 00:02
 
 At the end of this task, the client can see all iSCSI interfaces (on the old and new nodes) and is logged in to all those interfaces.
 
-LUNs and volumes are still physically hosted on the old nodes. Because LUNs are reported only on the old node interfaces, the client will show only paths over old nodes. This can be seen in `sanlun lun show -p and multipath -ll -d` command outputs. The next step is to add the new nodes as reporting nodes.
+LUNs and volumes are still physically hosted on the old nodes. Because LUNs are reported only on the old node interfaces, the client will show only paths over the old nodes. You can see this in the `sanlun lun show -p and multipath -ll -d` command outputs. The next step is to add the new nodes as reporting nodes.
 
 ----
 [root@scspr1789621001 ~]# sanlun lun show -p
