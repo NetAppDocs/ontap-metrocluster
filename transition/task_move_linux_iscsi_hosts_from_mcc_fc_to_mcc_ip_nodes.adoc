@@ -17,7 +17,7 @@ After you transition your MetroCluster nodes from FC to IP, you might need to mo
 * The MetroCluster FC nodes are called old nodes and the minor editsMetroCluster IP nodes are called new nodes.
 
 == Set up new iSCSI connections
-Move the iSCSI connections by setting up new iSCSI connections to the new nodes.
+To move the iSCSI connections, you set up new iSCSI connections to the new nodes.
 
 .Steps
 
@@ -123,6 +123,7 @@ vsa_1 iscsi_lf__n4_p1_ 1 iqn.2020-01.com.netapp.englab.gdl:scspr1789621001 00:02
 4 entries were displayed.
 ----
 
+.Result
 At the end of this task, the client can see all iSCSI interfaces (on the old and new nodes) and is logged in to all those interfaces.
 
 LUNs and volumes are still physically hosted on the old nodes. Because LUNs are reported only on the old node interfaces, the client will show only paths over the old nodes. You can see this in the `sanlun lun show -p and multipath -ll -d` command outputs. The next step is to add the new nodes as reporting nodes.
