@@ -1,0 +1,237 @@
+---
+permalink: tiebreaker/install_tiebreaker_package.html
+sidebar: sidebar
+keywords: install, tiebreaker, software, monitor, capabilities, capability, cluster, storage, environment, snmp, notification, event, node, connectivity, issue, site, disaster, system, install, upgrade, upgrading, software, dependencies, dependency, package, ntp, requirements, requirements for tiebreaker, tiebreaker requirements, mysql, mariadb, autostart, database
+summary: The Tiebreaker software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters.
+---
+= Installing or upgrading the software package
+
+:icons: font
+:imagesdir: ../media/
+
+[lead]
+You must install or upgrade the MetroCluster Tiebreaker software on your local computer to monitor MetroCluster configurations.
+
+.About this task
+* Your storage system must be running ONTAP 8.3.x or later.
+* You must have installed OpenJDK by using the `yum install java-x.x.x-openjdk` command. For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19. The outputs in the example show JRE 1.8.0. (JRE 8).
+* You can install MetroCluster Tiebreaker as a non-root user with sufficient administrative privileges to perform the Tiebreaker installation, create tables, users, and set the user password etc.
+
+.Steps
+. Download the latest version of the MetroCluster Tiebreaker software. This example uses version 1.5.
++
+https://mysupport.netapp.com/site/[NetApp Support Site^]
+
+. Download the `MetroCluster_Tiebreaker_RPM_GPG` key:
++
+https://mysupport.netapp.com/site/[NetApp Support Site^]
+
+. Log in to the host as the root user.
+
+. Create a non-root user and the `mcctbgrp` group. 
++
+.. Create a non-root user and set the password.
++
+The following example commands create a non-root user named `mcctbuser1`:
++
+---- 
+[root@mcctb ~]# useradd mcctbuser1
+[root@mcctb ~]# passwd mcctbuser1
+Changing password for user mcctbuser1.
+New password:
+Retype new password:
+passwd: all authentication tokens updated successfully.
+----
+..	Create a group named `mcctbgrp`:
++
+`[root@mcctb ~~]# groupadd mcctbgrp`
+ 
+.. Add the non-root user you created to the `mcctbgrp` group.
++
+The following command adds `mcctbuser1` to the `mcctbgrp` group:
++
+`[root@mcctb ~]# usermod -a -G mcctbgrp mcctbuser1`
+
+
+. Verify the RPM file. 
++
+Run the following substeps from the directory containing the RPM key. 
++
+..  Download and import the RPM key file:
++
+----
+[root@mcctb ~]# rpm --import MetroCluster_Tiebreaker_RPM_GPG.key
+----
+
+.. Verify the that the correct key was imported by checking the fingerprint. 
++
+The following example shows a correct key fingerprint:
++
+----
+root@mcctb:~/signing/mcctb-rpms# gpg --show-keys --with-fingerprint MetroCluster_Tiebreaker_RPM_GPG.key
+pub   rsa3072 2022-11-17 [SCEA] [expires: 2025-11-16]
+      65AC 1562 E28A 1497 7BBD  7251 2855 EB02 3E77 FAE5
+uid                      MCCTB-RPM (mcctb RPM production signing) <mcctb-rpm@netapp.com>
+----
+
+.. Verify the signature: `rpm --checksig NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm`
++
+----
+NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm: digests OK
+----
++
+NOTE: You must only proceed with installation after you have successfully verified the signature.
+
+. [[install-tiebreaker]]Install or upgrade the Tiebreaker software: 
++
+NOTE: You can only upgrade to Tiebreaker version 1.5 when you are upgrading from Tiebreaker version 1.4. Upgrading from earlier versions to Tiebreaker 1.5 is not supported.
++
+Select the correct procedure from below depending on whether you're performing a new installation or upgrading an existing installation.
++
+[role="tabbed-block"]
+====
+
+.Perform a new installation
+--
+.. Retrieve and record the absolute path for Java:
++
+----
+[root@mcctb ~]# readlink -f /usr/bin/java
+/usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
+----
+
+.. Run the following command:
+`rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm`
++
+The system displays the following output for a successful installation:
++
+NOTE: When prompted during the installation, provide the non-root user that you previously created and assigned to the `mcctbgrp` group.
++
+----    
+
+Verifying...                          ################################# [100%]
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
+Enter the absolute path for Java : /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
+Verifying if Java exists...
+Found Java. Proceeding with the installation.
+Enter host user account to use for the installation:
+mcctbuser1
+User account mcctbuser1 found. Proceeding with the installation
+Enter database user name:
+root
+Please enter database password for root
+Enter password:
+Sealed          false
+Do you wish to auto unseal vault(y/n)?y
+Enter the key1:
+Enter the key2:
+Enter the key3:
+Success! Uploaded policy: mcctb-policy
+Error enabling approle auth: Error making API request.
+URL: POST http://127.0.0.1:8200/v1/sys/auth/approle
+Code: 400. Errors:
+* path is already in use at approle/
+Success! Enabled the kv secrets engine at: mcctb/
+Success! Data written to: auth/approle/role/mcctb-app
+Password updated successfully in the vault.
+Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
+Created symlink /etc/systemd/system/multi-user.target.wants/netapp-metrocluster-tiebreaker-software.service → /etc/systemd/system/netapp-metrocluster-tiebreaker-software.service.
+Attempting to start NetApp MetroCluster Tiebreaker software services
+Started NetApp MetroCluster Tiebreaker software services
+Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
+ 
+----
+--
+
+.Upgrading an existing installation
+--
+
+.. Verify that a supported version of OpenJDK is installed and is the current Java version located on the host. 
++
+NOTE: For upgrades to Tiebreaker 1.5, you must install either OpenJDK version 17, 18, or 19.
++
+----
+[root@mcctb ~]# readlink -f /usr/bin/java
+/usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
+----
+
+.. Verify the Vault service is unsealed and running: `vault status` 
++
+----
+[root@mcctb ~]# vault status
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    5
+Threshold       3
+Version         1.12.2
+Build Date      2022-11-23T12:53:46Z
+Storage Type    file
+Cluster Name    vault
+Cluster ID      <cluster_id>
+HA Enabled      false
+----
+ 
+.. Upgrade the Tiebreaker software.
++
+----
+[root@mcctb ~]# rpm -Uvh NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm
+----
++
+The system displays the following output for a successful upgrade:
++
+----
+
+Verifying...                          ################################# [100%]
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:NetApp-MetroCluster-Tiebreaker-So################################# [ 50%]
+
+Enter the absolute path for Java : /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
+Verifying if Java exists...
+Found Java. Proceeding with the installation.
+Enter host user account to use for the installation:
+mcctbuser1
+User account mcctbuser1 found. Proceeding with the installation
+Sealed          false
+Do you wish to auto unseal vault(y/n)?y
+Enter the key1:
+Enter the key2:
+Enter the key3:
+Success! Uploaded policy: mcctb-policy
+Error enabling approle auth: Error making API request.
+URL: POST http://127.0.0.1:8200/v1/sys/auth/approle
+Code: 400. Errors:
+* path is already in use at approle/
+Success! Enabled the kv secrets engine at: mcctb/
+Success! Data written to: auth/approle/role/mcctb-app
+Enter database user name : root
+Please enter database password for root
+Enter password:
+Password updated successfully in the database.
+Password updated successfully in the vault.
+Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
+Attempting to start NetApp MetroCluster Tiebreaker software services
+Started NetApp MetroCluster Tiebreaker software services
+Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.5.
+Cleaning up / removing...
+   2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
+----
+--
+====
++
+NOTE: If you enter the wrong MySQL root password, the Tiebreaker software indicates that it was installed successfully, but displays "Access denied" messages. To resolve the issue, you must uninstall the Tiebreaker software by using the `rpm -e` command, and then reinstall the software by using the correct MySQL root password.
+
+. Check the Tiebreaker connectivity to the MetroCluster software by opening an SSH connection from the Tiebreaker host to each of the node management LIFs and cluster management LIFs.
+
+.Related information
+
+https://mysupport.netapp.com/site/[NetApp Support^]
+
+
