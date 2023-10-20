@@ -201,6 +201,27 @@ The following example shows the `sntp` commands, specifying the IP address of th
 (Routing) (Config)#exit
 (Routing) (Config)#
 ----
++
+For EFOS version 3.10.0.3 and later, use the `ntp` command, as shown in the following example:
++
+----
+> (Config)# ntp ?
+
+authenticate             Enables NTP authentication.
+authentication-key       Configure NTP authentication key.
+broadcast                Enables NTP broadcast mode.
+broadcastdelay           Configure NTP broadcast delay in microseconds.
+server                   Configure NTP server.
+source-interface         Configure the NTP source-interface.
+trusted-key              Configure NTP authentication key number for trusted time source.
+vrf                      Configure the NTP VRF.
+
+>(Config)# ntp server ?
+
+ip-address|ipv6-address|hostname  Enter a valid IPv4/IPv6 address or hostname.
+
+>(Config)# ntp server 10.99.99.5
+----
 
 . Configure the switch name:
 +
@@ -810,6 +831,7 @@ You must run the following commands for each identified unused port or port chan
 (SwtichA_1)# write memory 
 ----
 
+// 2023 OCt 12, ontap-metrocluster/issues/321
 // 25 July 2023, BURT 1524708, 1540349, GH issue 296
 // 21 APR 2021, BURT 1371395
 // 23 APR 2021, BURT 1374271
