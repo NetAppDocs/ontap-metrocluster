@@ -92,11 +92,12 @@ link:task_fb_new_install_cabl.html[Cabling disk shelves to the bridges]
  .. Cable FC port 1 of the bridge to an FC port on the controller module in cluster_A.
  .. Cable FC port 2 of the bridge to an FC port on the controller module in cluster_B.
 +
-If the controller module is configured with a quad-port FC adapter, ensure that the storage stacks are connected to two FC ports on the same ASIC. Port a and port b share the same ASIC, and port c and port d share the same ASIC. Do not connect a stack of shelves to port a and port b. Instead use port a and port c, or use port b and port d to avoid a single point of failure if an ASIC fails.
+If the controller module is configured with a quad-port FC adapter, verify that the storage stacks are not connected to two FC ports on the same ASIC. Port a and port b share the same ASIC, and port c and port d share the same ASIC. Do not connect a stack of shelves to port a and port b. Instead use port a and port c, or use port b and port d to avoid a single point of failure if an ASIC fails.
 +
 If the controller module is configured with more than one FC adapter, do not cable both bridge ports to the same adapter. You should distribute FC port 1 to adapter A and FC port 2 to adapter B to avoid a single point of failure.
 +
 image::../media/cluster_peering_network.gif[]
 . Repeat <<step3-cable-each-bridge,Step 3>> on the other bridges until all of the bridges have been cabled.
 
-// BURT 1448684, 17 JAN 2022
+// 2023 AUG SEP 1, ONTAPDOC-1216
+// 2022 JAN 17, BURT 1448684
