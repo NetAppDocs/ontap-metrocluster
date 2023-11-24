@@ -9,8 +9,18 @@ summary:
 :imagesdir: ../media/
 
 [.lead]
-You can install the Tiebreaker 1.6 software in MetroCluster configurations running <ONTAP version>. 
+Perform a new installation or upgrade the Tiebreaker software. 
 
+.Before you begin
+
+.Steps
+
+. If you have an existing version of Tiebreaker installed, verify the software version that you are running:
++
+`version show`
+
+. Install or upgrade the Tiebreaker software.
++
 [role="tabbed-block"]
 ====
 .Perform a new software installation 
@@ -21,33 +31,31 @@ Use the following steps for a new installation of Tiebreaker 1.6.
 
 . Run the following command from the root directory to begin the installation:
 +
-----
-[root@mcctb ~]# sh MetroClusterTiebreakerInstall-1.6
-----
+[source,cli]
+sh MetroClusterTiebreakerInstall-1.6
 +
-Respond to the prompts as shown in bold in the following example output: 
+Respond to the prompts as shown in the following example output: 
 +
-[subs="quotes"]
 ----
 Extracting the MetroCluster Tiebreaker installation/upgrade archive
 Install digest hash is Ok
 Performing the MetroCluster Tiebreaker code signature check
 Install code signature is Ok
-*Enter unix user account to use for the installation:
-mcctbadminuser*
-*Unix user account "mcctbadminuser" doesn't exist. Do you wish to create "mcctbadminuser" user account? [Y/N]: y*
+Enter unix user account to use for the installation:
+mcctbadminuser
+Unix user account "mcctbadminuser" doesn't exist. Do you wish to create "mcctbadminuser" user account? [Y/N]: y
 useradd: warning: the home directory already exists.
 Not copying any file from skel directory into it.
 Creating mailbox file: File exists
 Unix account "mcctbadminuser" created.
 Changing password for user mcctbadminuser.
-*New password:*
-*Retype new password:*
+New password:
+Retype new password:
 passwd: all authentication tokens updated successfully.
 MetroCluster Tiebreaker requires unix user account "mcctbadminuser" to be added to the group "mcctbgrp" for admin access.
-*Do you wish to add ? [Y/N]: y*
+Do you wish to add ? [Y/N]: y
 Unix user account "mcctbadminuser" added to "mcctbgrp".
-*Do you wish to generate your own public-private key pair for encrypting audit log? [Y/N]: y*
+Do you wish to generate your own public-private key pair for encrypting audit log? [Y/N]: y
 Generating public-private key pair...
 Configuring Vault...
 Starting vault server...
@@ -216,15 +224,8 @@ The Private key is:
 <private_key_id>
 
 -----END PRIVATE KEY-----
-
 ----
 
-. Verify the successful installation:
-+
-----
-[root@mcctb ~]# netapp-metrocluster-tiebreaker-software-cli
-NetApp MetroCluster Tiebreaker :>
-----
 --
 .Upgrade from Tiebreaker 1.5 to 1.6
 --
@@ -232,36 +233,28 @@ Use the following steps to upgrade the Tiebreaker 1.5 software version to Tiebre
 
 .Steps
 
-. Confirm that you are currently running the Tiebreaker 1.4 software:
-+
-----
-NetApp MetroCluster Tiebreaker :> version show
-NetApp MetroCluster Tiebreaker 1.4: Sun Mar 13 09:59:02 IST 2022
-NetApp MetroCluster Tiebreaker :> exit
 ----
 . Run the following command from the root directory to upgrade the software:
 +
-----
-[root@mcctb mcctb1.6]# sh MetroClusterTiebreakerInstall-1.6
-----
+[source,cli]
+sh MetroClusterTiebreakerInstall-1.6
 +
-Respond to the prompts as shown in bold in the following example output:
+Respond to the prompts as shown in the following example output:
 +
-[subs="quotes"]
 ----
 Extracting the MetroCluster Tiebreaker installation/upgrade archive
 Install digest hash is Ok
 Performing the MetroCluster Tiebreaker code signature check
 Install code signature is Ok
 
-*Enter database user name : root*
+Enter database user name : root
 
 Please enter database password for root
-*Enter password:*
+Enter password:
 
 Password updated successfully in the database.
 
-*Do you wish to generate your own public-private key pair for encrypting audit log? [Y/N]: y*
+Do you wish to generate your own public-private key pair for encrypting audit log? [Y/N]: y
 Generating public-private key pair...
 Configuring Vault...
 ==> Vault shutdown triggered
@@ -342,9 +335,9 @@ Success! Enabled approle auth method at: approle/
 Success! Enabled the kv secrets engine at: mcctb/
 Success! Data written to: auth/approle/role/mcctb-app
 Upgrading to NetApp-MetroCluster-Tiebreaker-Software-1.6-1.x86_64.rpm
-Preparing...                          # ############################### # [100%]
+Preparing...                          ################################# [100%]
 Updating / installing...
-   1:NetApp-MetroCluster-Tiebreaker-So# ############################### # [ 50%]
+   1:NetApp-MetroCluster-Tiebreaker-So################################# [ 50%]
 Performing file integrity check
 etc/cron.weekly/metrocluster-tiebreaker-support is Ok
 etc/cron.weekly/metrocluster-tiebreaker-support-cov is Ok
@@ -421,7 +414,7 @@ Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
 Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.6.
 Cleaning up / removing...
-   2:NetApp-MetroCluster-Tiebreaker-So# ############################### # [100%]
+   2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
 
 
 IMPORTANT: Please ensure you store the following private key used to decrypt audit logs securely in a safe location.
@@ -437,29 +430,22 @@ The Private key is:
 -----END PRIVATE KEY-----
 
 ----
+
 --
 .Upgrade from Tiebreaker 1.4 to 1.6
 --
+
 Use the following steps to upgrade the Tiebreaker 1.4 software version to Tiebreaker 1.6.
 
 .Steps
 
-. Confirm that you are currently running the Tiebreaker 1.4 software:
+. Run the following command from the `root` directory to upgrade the software:
 +
-----
-NetApp MetroCluster Tiebreaker :> version show
-NetApp MetroCluster Tiebreaker 1.4: Sun Mar 13 09:59:02 IST 2022
-NetApp MetroCluster Tiebreaker :> exit
-----
-. Run the following command from the root directory to upgrade the software:
+[source,cli]
+sh MetroClusterTiebreakerInstall-1.6
 +
-----
-[root@mcctb ~]# sh MetroClusterTiebreakerInstall-1.6
-----
+Respond to the prompts as shown in the following example output:
 +
-Respond to the prompts as shown in bold in the following example output:
-+
-[subs="quotes"]
 ----
 Extracting the MetroCluster Tiebreaker installation/upgrade archive
 Install digest hash is Ok
@@ -467,24 +453,24 @@ Performing the MetroCluster Tiebreaker code signature check
 Install code signature is Ok
 Enter unix user account to use for the installation:
 mcctbuseradmin1
-*Unix user account "mcctbuseradmin1" doesn't exist. Do you wish to create "mcctbuseradmin1" user account? [Y/N]: y*
+Unix user account "mcctbuseradmin1" doesn't exist. Do you wish to create "mcctbuseradmin1" user account? [Y/N]: y
 Unix account "mcctbuseradmin1" created.
 Changing password for user mcctbuseradmin1.
-*New password:*
-*Retype new password:*
+New password:
+Retype new password:
 passwd: all authentication tokens updated successfully.
 
-*Enter database user name : root*
+Enter database user name : root
 
 Please enter database password for root
-*Enter password:*
+Enter password:
 
 Password updated successfully in the database.
 
 MetroCluster Tiebreaker requires unix user account "mcctbuseradmin1" to be added to the group "mcctbgrp" for admin access.
-*Do you wish to add ? [Y/N]: y*
+Do you wish to add ? [Y/N]: y
 Unix user account "mcctbuseradmin1" added to "mcctbgrp".
-*Do you wish to generate your own public-private key pair for encrypting audit log? [Y/N]: y*
+Do you wish to generate your own public-private key pair for encrypting audit log? [Y/N]: y
 Generating public-private key pair...
 Configuring Vault...
 Starting vault server...
@@ -636,10 +622,10 @@ Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
 Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.6.
 Cleaning up / removing...
-   2:NetApp-MetroCluster-Tiebreaker-So# ############################### # [100%]
+   2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
 
 
-IMPORTANT: Please ensure you store the following private key used to decrypt audit logs securely in a safe location.
+ IMPORTANT: Please ensure you store the following private key used to decrypt audit logs securely in a safe location.
 Consider the following recommendations:
 - Save it to an encrypted storage device or file.
 - Use strong, unique passwords to protect the storage device or file.
@@ -651,13 +637,12 @@ The Private key is:
 <private_key_id>
 -----END PRIVATE KEY-----
 ----
+====
 
-. Verify the successful installation:
+. Verify the successful installation or upgrade:
 +
 ----
 [root@mcctb ~]# netapp-metrocluster-tiebreaker-software-cli
 NetApp MetroCluster Tiebreaker :> version show
-NetApp MetroCluster Tiebreaker 1.6: Thu Nov 16 01:12:10 EST 2023
+NetApp MetroCluster Tiebreaker 1.6:
 ----
---
-====
