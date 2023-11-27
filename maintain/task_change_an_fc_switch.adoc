@@ -1,0 +1,106 @@
+---
+permalink: maintain/task_change_an_fc_switch.html
+sidebar: sidebar
+keywords: metrocluster, maintain, service, change, fc, switch
+summary: "You might need to to change the vendor of an FC switch (Cisco to Brocade or vice versa), change the switch model, or both."
+---
+= Change the vendor or model of an FC switch
+
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You might need to to change the vendor of an FC switch from Cisco to Brocade or vice versa, change the switch model, or change both.  
+
+.About this task
+
+* This procedure applies when you are using NetApp validated switches.
+* You must perform the steps in this procedure on one Fabric at a time, for both Fabrics in the configuration. 
+
+.Steps
+
+. [[step_1,Step 1]]Check the health of the configuration.
+ .. Check that the MetroCluster is configured and in normal mode on each cluster: `*metrocluster show*`
++
+----
+cluster_A::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+ Local: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-cluster-disaster
+Remote: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-cluster-disaster
+----
+
+ .. Check that mirroring is enabled on each node: `*metrocluster node show*`
++
+----
+cluster_A::> metrocluster node show
+DR                           Configuration  DR
+Group Cluster Node           State          Mirroring Mode
+----- ------- -------------- -------------- --------- --------------------
+1     cluster_A
+              node_A_1       configured     enabled   normal
+      cluster_B
+              node_B_1       configured     enabled   normal
+2 entries were displayed.
+----
+
+ .. Check that the MetroCluster components are healthy: `*metrocluster check run*`
++
+----
+cluster_A::> metrocluster check run
+
+Last Checked On: 10/1/2014 16:03:37
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+4 entries were displayed.
+
+Command completed. Use the "metrocluster check show -instance" command or sub-commands in "metrocluster check" directory for detailed results.
+To check if the nodes are ready to do a switchover or switchback operation, run "metrocluster switchover -simulate" or "metrocluster switchback -simulate", respectively.
+----
+
+ .. Check that there are no health alerts: `*system health alert show*`
+. Configure the new switch before installation.
++
+Follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/task_reset_the_brocade_fc_switch_to_factory_defaults.html[Configure the FC switches].
+
+
+. Disconnect the connections from the old switch by removing the connections in the following order:
++
+.. If the local cluster interfaces are connected to a switch:
+... Disconnect the local cluster interfaces
+... Disconnect the local cluster ISLs
+.. Disconnect the MetroCluster IP interfaces.
+..  Disconnect the MetroCluster ISLs.
+
+. Power off the old switch, remove the cables, and physically replace the old switch with the new switch.
++
+
+. Cable the switches in the following order: 
++
+You must follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/task_rack_the_hardware_components_mcc_fabric_and_ip.html[Install and cable the MetroCluster components]. 
++
+.. Cable the ISLs to the remote site.
+..  Cable the MetroCluster IP interfaces.
+..  Cable the local cluster interfaces.
++
+If the local cluster interfaces are connected to a switch:
++
+... Cable the local cluster interfaces.
+... Cable the local cluster ISLs.
+
+. Power up the switch.
+
+. Verify that the MetroCluster configuration is healthy by repeating <<Step 1>>.
+
+. Repeat Step 1 to Step 7 for the second Fabric in the configuration. 
+
+// 2023 May 18, BURT 1491844
