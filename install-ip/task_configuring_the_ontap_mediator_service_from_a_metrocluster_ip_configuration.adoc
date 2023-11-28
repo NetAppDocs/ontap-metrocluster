@@ -83,14 +83,36 @@ NOTE: You will be prompted for the username and password for the Mediator admin 
       mailbox
            mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
 ....
-
-. If you want to configure MetroCluster automatic forced switchover, run the following command: `metrocluster modify -allow-automatic-forced-switchover true`
+.. Verify the state of the automatic unplanned switchover (AUSO) failure domain:
 +
-Before you enable this feature, review link:concept-risks-limitations-automatic-switchover.html[Risks and limitations of using MetroCluster automatic forced switchover].
+`metrocluster show`
++
+NOTE: The following example output applies to ONTAP 9.13.1 and later. For ONTAP 9.12.1 and earlier, the AUSO failure domain state should be `auso-on-cluster-disaster`.
++
+----
+cluster_A::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+Local: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+Remote: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+----
+
+. Optionally, configure MetroCluster automatic forced switchover.  
++
+You can only use the following command in advanced privilege level.
++
+IMPORTANT: Before using this command, review the link:concept-risks-limitations-automatic-switchover.html[Risks and limitations of using MetroCluster automatic forced switchover].
++
+`metrocluster modify -allow-auto-forced-switchover true`
 +
 .Example
 ....
-cluster_A::*> metrocluster modify -allow-automatic-forced-switchover true
+cluster_A::*> metrocluster modify -allow-auto-forced-switchover true
 ....
 
+// 2023 Sep 11, GH issue 322
 // BURT 1448684, 03 FEB 2022

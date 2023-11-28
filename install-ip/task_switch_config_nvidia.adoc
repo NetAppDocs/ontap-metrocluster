@@ -123,7 +123,11 @@ Use these steps if you want to reset the switch completely by applying the Cumul
 
 * You must be connected to the switch with a serial console connection.
 * The Cumulus switch software image is accessible through HTTP.
++
+NOTE: For more information about installing Cumulus Linux, see link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-nvidia-sn2100/configure-overview-sn2100-cluster.html#initial-configuration-overview[Overview of installation and configuration for NVIDIA SN2100 switches^]
+
 * You must have the root password for `sudo` access to the commands.
+
 
 .Steps
 
@@ -338,5 +342,51 @@ Running Step 24: Final reboot of the switch
 ... The switch will reboot if all steps applied successfully ...
 ----
 
+== Disable unused ISL ports and port channels
 
+NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. 
+
+. Identify the unused ISL ports and port channels using the RCF file banner:
++
+NOTE: If the port is in breakout mode, the port name you specify in the command might be different than the name stated in the RCF banner. You can also use the RCF cabling files to find the port name. 
++ 
+`net show interface`
+
+
+. Disable the unused ISL ports and port channels using the RCF file.
++
+----
+cumulus@mcc1-integrity-a1:mgmt:~$ sudo python3 SN2100_v2.0_IP_Switch-A1.py runCmd
+[sudo] password for cumulus:
+    Running cumulus version  : 5.4.0
+    Running RCF file version : v2.0
+Help for runCmd:
+    To run a command execute the RCF script as follows:
+    sudo python3 <script> runCmd <option-1> <option-2> <option-x>
+    Depending on the command more or less options are required. Example to 'up' port 'swp1'
+        sudo python3 SN2100_v2.0_IP_Switch-A1.py runCmd swp1 up
+    Available commands:
+        UP / DOWN the switchport
+            sudo python3 SN2100_v2.0_IP_Switch-A1.py runCmd <switchport> state <up | down>
+        Set the switch port speed
+            sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> speed <10 | 25 | 40 | 100 | AN>
+        Set the fec mode on the switch port
+            sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> fec <default | auto | rs | baser | off>
+        Set the [localISL | remoteISL] to 'UP' or 'DOWN' state
+            sudo python3 SN2100_v2.0_Switch-A1.py runCmd [localISL | remoteISL] state [up | down]
+        Set the option on the port to support DAC cables. This option does not support port ranges.
+            You must reload the switch after changing this option for the required ports. This will disrupt traffic.
+            This setting requires Cumulus 5.4 or a later 5.x release.
+            sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> DacOption [enable | disable]
+cumulus@mcc1-integrity-a1:mgmt:~$
+----
++
+The following example command disables port "swp14": 
++
+`sudo python3 SN2100_v2.0_Switch-A1.py runCmd swp14 state down`
++
+Repeat this step for each identified unused port or port channel.
+
+// 25 July 2023, BURT 1524708, 1540349, GH issue 296
+// 2023-06-14, GH issue #257 
 //BURT 1404891 10/07/2022
