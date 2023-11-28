@@ -132,12 +132,6 @@ mcc1A::> metrocluster operation show
      Errors: -
 ----
 
-. Power up each controller module on the disaster site.
-. After nodes are booted, verify that the root aggregates are mirrored.
-+
-If both plexes are present, any resynchronization will start automatically. If one plex has failed, that plex must be destroyed and the mirror recreated using the following command to reestablish the mirror relationship.
-+
-`storage aggregate mirror -aggregate <aggregate-name>`
 
 == Verifying that your system is ready for a switchback
 
@@ -145,6 +139,12 @@ If your system is already in the switchover state, you can use the `-simulate` o
 
 .Steps
 
+. Power up each controller module on the disaster site.
+. After nodes are booted, verify that the root aggregates are mirrored.
++
+If both plexes are present, any resynchronization will start automatically. If one plex has failed, that plex must be destroyed and the mirror recreated using the following command to reestablish the mirror relationship.
++
+`storage aggregate mirror -aggregate <aggregate-name>`
 . Simulate the switchback operation:
 .. From either surviving node's prompt, change to the advanced privilege level:
 +
@@ -418,5 +418,6 @@ You need to respond with `y` when prompted to continue into advanced mode and se
 +
 `run local aggr status -r`
 
+// 2023 Nov 28, ONTAPDOC-1471
 // BURT 1448684, 12 JAN 2022
 // BURT 1485050, 21-06-2022
