@@ -41,7 +41,6 @@ When a node detects a site failure requiring a switchover, it takes steps to con
 
 A MAUSO is only initiated in the following scenarios:
 
-NOTE: To initiate a MAUSO for additional scenarios not described here, see link:concept-risks-limitations-automatic-switchover.html[Risks and limitations of using MetroCluster automatic forced switchover].
 
 * Both SyncMirror mirroring and DR mirroring of each node's nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
 * None of the nodes at the surviving site are in takeover state.
@@ -50,12 +49,15 @@ NOTE: To initiate a MAUSO for additional scenarios not described here, see link:
 NOTE: Beginning with ONTAP 9.13.1, you can change the behavior to initiate a MAUSO either on failure of the cluster *or* a HA pair. For a HA pair, both nodes must fail at the same time.
 * Beginning with ONTAP 9.13.1, if the above conditions are met and a fan or hardware failure initiates an environmental shutdown, for example, a power supply unit, NVRAM battery, or Service Processor heartbeat failure, or high or low temperature. 
 
+You can initiate a MAUSO for additional scenarios that are not listed above. For more information, see link:concept-risks-limitations-automatic-switchover.html[Risks and limitations of using MetroCluster automatic forced switchover].
 
 A MAUSO is *not* initiated in the following shutdown scenarios:
 
 * You initiate a shutdown. For example, when you:
 ** halt the nodes
 ** reboot the nodes
+
+*Related information* 
 
 link:../manage/concept_understanding_mcc_data_protection_and_disaster_recovery.html#mediator-assisted-automatic-unplanned-switchover-in-metrocluster-ip-configurations[Learn more about MAUSO in MetroCluster IP configurations].
 
