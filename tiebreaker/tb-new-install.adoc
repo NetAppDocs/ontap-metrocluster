@@ -11,22 +11,34 @@ summary:
 [.lead]
 Perform a new installation or upgrade the Tiebreaker software. 
 
-.Before you begin
+.About this task
 
-* 
-* 
+* Your storage system must be running ONTAP 9.12.1 or later.
+
+* You must have installed OpenJDK by using the yum install `java-x.x.x-openjdk` command. For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19. The outputs in the example show JRE 1.8.0. (JRE 8).
+
+* You can install MetroCluster Tiebreaker as a non-root user with sufficient administrative privileges to perform the Tiebreaker installation, create tables, users, and set the user password etc
 
 .Steps
 
-. If you have an existing version of Tiebreaker installed, verify the software version that you are running:
+. If you are performing a new installation, download the MetroCluster Tiebreaker 1.6 software.
++
+https://mysupport.netapp.com/site/[NetApp Support Site^]
+
+. Download the `MetroCluster_Tiebreaker_RPM_GPG` key:
++
+https://mysupport.netapp.com/site/[NetApp Support Site^]
+
+. If you are performing an upgrade, verify the version of Tiebreaker you are running:
 +
 `version show`
+. Log in to the host as the root user.
 
 . Install or upgrade the Tiebreaker software.
 +
 [role="tabbed-block"]
 ====
-.Perform a new software installation 
+.Install Tiebreaker 1.6 
 --
 Use the following steps for a new installation of Tiebreaker 1.6. 
 
@@ -229,6 +241,7 @@ The Private key is:
 -----END PRIVATE KEY-----
 ----
 
+. Verify the successful installation:
 --
 .Upgrade from Tiebreaker 1.5 to 1.6
 --
@@ -432,6 +445,8 @@ The Private key is:
 -----END PRIVATE KEY-----
 
 ----
+
+. Verify the successful upgrade:
 
 --
 .Upgrade from Tiebreaker 1.4 to 1.6
@@ -639,12 +654,7 @@ The Private key is:
 <private_key_id>
 -----END PRIVATE KEY-----
 ----
+
+. Verify the successful upgrade:
 ====
 
-. Verify the successful installation or upgrade by running the following commands:
-+
-----
-[root@mcctb ~]# netapp-metrocluster-tiebreaker-software-cli
-NetApp MetroCluster Tiebreaker :> version show
-NetApp MetroCluster Tiebreaker 1.6:
-----
