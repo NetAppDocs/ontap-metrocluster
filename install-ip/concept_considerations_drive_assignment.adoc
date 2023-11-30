@@ -9,10 +9,14 @@ summary: Beginning with ONTAP 9.4, MetroCluster IP configurations support new in
 :imagesdir: ../media/
 
 [.lead]
-Beginning with ONTAP 9.4, MetroCluster IP configurations support new installations using ADP (Advanced Drive Partitioning). In most configurations, partitioning and disk assignment are performed automatically during the initial configuration of the MetroCluster sites.
+Beginning with ONTAP 9.4, MetroCluster IP configurations support new installations using ADP (Advanced Drive Partitioning). 
 
-ONTAP 9.4 and later includes the following changes for ADP support:
+You should be aware of the following considerations when using ADP with MetroCluster IP configurations: 
 
+* ONTAP 9.4 and later is required to use ADP with MetroCluster IP configurations.
+* ADPv2 is supported in MetroCluster IP configurations. 
+* The root aggregate must be located in Partition 3 for all nodes on both sites. 
+* Partitioning and disk assignment are performed automatically during the initial configuration of the MetroCluster sites. 
 * Pool 0 disk assignments are done at the factory.
 * The unmirrored root is created at the factory.
 * Data partition assignment is done at the customer site during the setup procedure.
@@ -34,7 +38,7 @@ NOTE: When upgrading from ONTAP 9.4 to 9.5, the system recognizes the existing d
 
 == Automatic partitioning
 
-ADP is performed automatically during initial configuration of the platform.
+ADP is performed automatically during initial configuration of the system. 
 
 NOTE: Beginning with ONTAP 9.5, automatic assignment of disks must be enabled with the `storage disk option modify -autoassign on` command.
  
@@ -571,6 +575,7 @@ Minimum supported drives (per site) (active/passive HA configuration)
 
 |===
 
+// 2023 Nov 08, BURT 1572945
 // 22 Sep 2023, BURT 1575272
 // 2023 July 06, ONTAPDOC-1161
 //BURT 1484617 June 15th 2022
