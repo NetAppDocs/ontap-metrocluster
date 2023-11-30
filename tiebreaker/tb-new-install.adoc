@@ -15,13 +15,13 @@ Perform a new installation or upgrade the Tiebreaker software.
 
 * Your storage system must be running ONTAP 9.12.1 or later.
 
-* You must have installed OpenJDK by using the yum install `java-x.x.x-openjdk` command. For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19. The outputs in the example show JRE 1.8.0. (JRE 8).
+* You must have installed OpenJDK by using the `yum install java-x.x.x-openjdk` command. For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19. The outputs in the example show JRE 1.8.0. (JRE 8).
 
 * You can install MetroCluster Tiebreaker as a non-root user with sufficient administrative privileges to perform the Tiebreaker installation, create tables, users, and set the user password etc
 
 .Steps
 
-. If you are performing a new installation, download the MetroCluster Tiebreaker 1.6 software.
+. Download the MetroCluster Tiebreaker 1.6 software.
 +
 https://mysupport.netapp.com/site/[NetApp Support Site^]
 
@@ -29,9 +29,6 @@ https://mysupport.netapp.com/site/[NetApp Support Site^]
 +
 https://mysupport.netapp.com/site/[NetApp Support Site^]
 
-. If you are performing an upgrade, verify the version of Tiebreaker you are running:
-+
-`version show`
 . Log in to the host as the root user.
 
 . Install or upgrade the Tiebreaker software.
@@ -241,13 +238,31 @@ The Private key is:
 -----END PRIVATE KEY-----
 ----
 
-. Verify the successful installation:
+. Verify the successful installation by running the following command in the `root` directory:
++
+[source,cli]
+# netapp-metrocluster-tiebreaker-software-cli
++
+A successful installation displays the following prompt:
++
+----
+NetApp MetroCluster Tiebreaker :>
+----
 --
 .Upgrade from Tiebreaker 1.5 to 1.6
 --
 Use the following steps to upgrade the Tiebreaker 1.5 software version to Tiebreaker 1.6.
 
 .Steps
+
+. Verify that you are running Tiebreaker 1.5:
++
+----
+[root@mcctb ~] # netapp-metrocluster-tiebreaker-software-cli
+NetApp MetroCluster Tiebreaker :> version show
+NetApp MetroCluster Tiebreaker 1.5: Sun Mar 13 09:59:02 IST 2022
+NetApp MetroCluster Tiebreaker :> exit
+----
 
 . Run the following command from the `root` directory to upgrade the software:
 +
@@ -455,6 +470,15 @@ The Private key is:
 Use the following steps to upgrade the Tiebreaker 1.4 software version to Tiebreaker 1.6.
 
 .Steps
+
+. Verify that you are running Tiebreaker 1.4:
++
+----
+[root@mcctb ~] # netapp-metrocluster-tiebreaker-software-cli
+NetApp MetroCluster Tiebreaker :> version show
+NetApp MetroCluster Tiebreaker 1.5: Sun Mar 13 09:59:02 IST 2022
+NetApp MetroCluster Tiebreaker :> exit
+----
 
 . Run the following command from the `root` directory to upgrade the software:
 +
