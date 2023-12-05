@@ -12,7 +12,27 @@ summary: You can configure the IP switches to use SNMPv3 for health monitoring.
 [.lead]
 In MetroCluster IP configurations, you can configure SNMPv3 to monitor the health of IP switches.
 
-== Step 1: Configure the SNMPv3 user on MetroCluster IP switches
+== Step 1: Configure the SNMPv3 user in ONTAP
+
+Use the following steps to configure the SNMPv3 user in ONTAP. 
+
+.  Configure the SNMPv3 user in ONTAP:
++
+`security login create -user-or-group-name <user_name> -application snmp -authentication-method usm -remote-switch-ipaddress <ip_address>`
+. Configure switch health monitoring to monitor the switch using the new SNMPv3 user:
++
+`system switch ethernet modify -device <device_id> -snmp-version SNMPv3 -community-or-username <user_name>`
+. Verify that the device serial number that will be monitored with the newly created SNMPv3 user is correct:
++
+.. Display the switch health monitoring polling time period:
++
+`system switch ethernet polling-interval show`
++
+.. Run the following command after the polling time period has elapsed:
++
+`system switch ethernet show-all -instance -device <device_serial_number>`
+
+== Step 2: Configure the SNMPv3 user on MetroCluster IP switches
 
 Use the following steps to configure the SNMPv3 user on the MetroCluster IP switches. 
 
@@ -71,22 +91,3 @@ net commit
 --
 ==== 
 
-== Step 2: Configure the SNMPv3 user in ONTAP
-
-Use the following steps to configure the SNMPv3 user in ONTAP. 
-
-.  Configure the SNMPv3 user in ONTAP:
-+
-`security login create -user-or-group-name <user_name> -application snmp -authentication-method usm -remote-switch-ipaddress <ip_address>`
-. Configure switch health monitoring to monitor the switch using the new SNMPv3 user:
-+
-`system switch ethernet modify -device <device_id> -snmp-version SNMPv3 -community-or-username <user_name>`
-. Verify that the device serial number that will be monitored with the newly created SNMPv3 user is correct:
-+
-.. Display the switch health monitoring polling time period:
-+
-`system switch ethernet polling-interval show`
-+
-.. Run the following command after the polling time period has elapsed:
-+
-`system switch ethernet show-all -instance -device <device_serial_number>`
