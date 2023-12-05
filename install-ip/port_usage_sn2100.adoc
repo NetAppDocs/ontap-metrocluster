@@ -12,37 +12,31 @@ summary: The port usage in a MetroCluster IP configuration depends on the switch
 The port usage in a MetroCluster IP configuration depends on the switch model and platform type.
 
 == Supported configurations
-The following platforms are currently supported:
 
-
-* FAS500f / AFF C250 / AFF A250
-* FAS8300 / AFF C400 / AFF A400
-* FAS8700
-* FAS9000 / AFF A700
-* AFF C800 / AFF A800
-* FAS9500 / AFF A900
-
-The following platforms and configurations are not currently supported:
+The following configurations are not currently supported:
 
 * MetroCluster FC-to-IP Transition
-* An eight-node MetroCluster configuration
 
 .Review these considerations before using the configuration tables
 
-If you cable multiple MetroCluster configurations then follow the respective table.
+* Connecting an eight-node or two four-node MetroCluster configurations requires ONTAP 9.14.1 or later and RCF file version 2.00 or later. 
+
+* If you cable multiple MetroCluster configurations then follow the respective table.
 For example:
 
-* If you cable two four-node MetroCluster configurations of type AFF A700, then connect the first MetroCluster shown as "MetroCluster 1", and the second MetroCluster shown as "MetroCluster 2" in the AFF A700 table.
+** If you cable two four-node MetroCluster configurations of type AFF A700, then connect the first MetroCluster shown as "MetroCluster 1", and the second MetroCluster shown as "MetroCluster 2" in the AFF A700 table.
 
 NOTE: Ports 13 and 14 can be used in native speed mode supporting 40 Gbps and 100 Gbps, or in breakout mode to support 4 × 25 Gbps or 4 × 10 Gbps. If they use native speed mode they are represented as ports 13 and 14. If they use breakout mode, either 4 × 25 Gbps or 4 × 10 Gbps, then they are represented as ports 13s0-3 and 14s0-3.
 
 The following sections describe the physical cabling outline.  You can also refer to the https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator] for detailed cabling information.
 
-== Switch port usage for FAS500f, AFF C250, or AFF A250 
-image::../media/mcc_ip_cabling_A250_C250_MSN2100.png[]
+== Cabling an AFF A150, ASA A150, FAS500f, AFF C250, ASA C250, AFF A250 or ASA A250 system to a NVIDIA SN2100 switch 
+image::../media/mcc_ip_cabling_aff_asa_a150_fas500f_A250_C250_MSN2100.png[]
 
-== Switch port usage for AFF C400, AFF A400, AFF A700, FAS9000, FAS8300, FAS8700, AFF A800, FAS9500, or AFF A900
-image::../media/mcc_ip_cabling_aff250_400_700_800_cseriesMSN2100.png[]
+== Cabling a FAS8300, AFF C400, ASA C400, AFF A400, ASA A400, FAS8700, FAS9000, AFF A700, AFF C800, ASA C800, AFF A800, ASA A800, FAS9500, AFF A900, or ASA A900 system to a NVIDIA SN2100 switch 
+image::../media/mcc_ip_cabling_fas8300_aff_asa_c400_a400_fas8700_fas9000_a700_a800_a900_fas9500_MSN2100.png[]
+
+*Note 1*: If you are using an X91440A adapter (40Gbps), then use either ports e4a and e4e or e4a and e8a. If you are using an X91153A adapter (100Gbps), then use either ports e4a and e4b or e4a and e8a.
 
 // 2023-05-15, GitHub issue #287
 // 2023-MAR-9, BURT 1533595 (new C-Series platforms)
