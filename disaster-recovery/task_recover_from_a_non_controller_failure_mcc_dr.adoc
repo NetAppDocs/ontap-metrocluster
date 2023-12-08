@@ -140,7 +140,19 @@ If your system is already in the switchover state, you can use the `-simulate` o
 .Steps
 
 . Power up each controller module on the disaster site.
-. After nodes are booted, verify that the root aggregates are mirrored.
++
+[role="tabbed-block"]
+====
+.If the nodes are powered off:
+--
+Power on the nodes.
+--
+.If the nodes are at the LOADER prompt:
+--
+Run the command: `boot_ontap`
+--
+====
+. After the nodes are booted, verify that the root aggregates are mirrored.
 +
 If both plexes are present, any resynchronization will start automatically. If one plex has failed, that plex must be destroyed and the mirror recreated using the following command to reestablish the mirror relationship.
 +
