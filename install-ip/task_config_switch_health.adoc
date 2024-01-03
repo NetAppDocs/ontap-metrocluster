@@ -68,13 +68,28 @@ snmp-server user admin1 network-admin auth-md5 "password" priv-des "password"
 .For Cisco IP switches
 --
 .Step
-. Run the following commands to configure the SNMPv3 user on Cisco IP switches:
+. Run the following commands to configure the SNMPv3 user on a Cisco IP switch:
 +
 ----
 IP_switch_A_1 # configure terminal
 IP_switch_A_1 (config) # snmp-server user <user_name>  auth [md5/sha/sha-256] <auth_password> priv (aes-128) <priv_password>
-IP_switch_A_1 (config) # show snmp user
 ----
+
+. Verify that the SNMPv3 user is configured on the switch:
++
+`IP_switch_A_1(config) # show snmp user <user_name>`
++
+The following example output shows that the user `admin` is configured for SNMPv3:
++
+----
+IP_switch_A_1(config)# show snmp user user1
+User                Auth      Priv(enforce) Groups              acl_filter
+ 
+____                ____      _____________ ______              __________
+ 
+admin               md5       aes-128(no)   network-admin
+----
+
 --
 .For NVIDIA IP switches
 --
