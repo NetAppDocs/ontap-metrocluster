@@ -44,6 +44,14 @@ IMPORTANT: You must use both the authentication and privacy protocols in the com
 --
 .Steps
 
+. If the 'network-admin' user group doesn't already exist, create it:
++
+`(IP_switch_1) (Config)# snmp-server group network-admin v3 auth read "Default"`
+
+. Confirm the 'network-admin' group has been created:
++
+`(IP_switch_1) (Config)# show snmp group`
+
 . Configure the SNMPv3 user on Broadcom IP switches:
 +
 ----
@@ -57,13 +65,6 @@ You must use quotation marks around the authentication and privacy passwords, as
 snmp-server user admin1 network-admin auth-md5 "password" priv-des "password"
 ----
 
-. If the 'network-admin' user group doesn't exist, create it by running the following command:
-+
-`(IP_switch_1) (Config)# snmp-server group network-admin v3 auth read "Default`
-
-. Confirm the 'network-admin' group has been created:
-+
-`(IP_switch_1) (Config)# show snmp group`
 --
 .For Cisco IP switches
 --
