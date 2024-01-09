@@ -4,12 +4,12 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, add, remove, change, isl, ports, nondisruptively
 summary: 'You might need to add, remove, or change ISL ports. You can convert dedicated ISL ports to shared ISL ports, or change the speed of ISL ports on a switch. ISLs traveling greater distances might require lower speeds to improve quality. You also might need to increase the speed of ISL ports to take advantage of system upgrades and add ISLs to a Cisco IP switch if you are adding or upgrading hardware.'
 ---
-= Adding, removing, or changing ISL ports nondisruptively
+= Add, remove, or change ISL ports nondisruptively on Cisco IP switches
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-You might need to add, remove, or change ISL ports. You can convert dedicated ISL ports to shared ISL ports, or change the speed of ISL ports on a switch. ISLs traveling greater distances might require lower speeds to improve quality. You also might need to increase the speed of ISL ports to take advantage of system upgrades and add ISLs to a Cisco IP switch if you are adding or upgrading hardware.
+You might need to add, remove, or change ISL ports on Cisco IP switches. You can convert dedicated ISL ports to shared ISL ports, or change the speed of ISL ports on a Cisco IP switch. ISLs traveling greater distances might require lower speeds to improve quality. If you are adding or upgrading hardware, you might need to increase the speed of ISL ports to take advantage of system upgrades and add ISLs to a Cisco IP switch.
 
 .About this task
 
@@ -18,6 +18,10 @@ If you are converting dedicated ISL ports to shared ISL ports, ensure the new po
 You must complete all the steps on both switches to ensure ISL connectivity.
 
 The following procedure assumes you are replacing a 10-Gb ISL connected at switch port Eth1/24/1 with two 100-Gb ISLs that are connected to switch ports 17 and 18.
+
+.Before you begin
+
+Refer to the *Switches* section of the link:https://hwu.netapp.com/[NetApp Hardware Universe^] to verify the supported transceivers.
 
 .Steps
 . Disable the ISL ports of the ISLs on both switches in the fabric that you want to change.
@@ -116,3 +120,4 @@ Eth1/18       10         eth     access    up      none                       10
 . Repeat the procedure for fabric 2.
 
 // BURT 1448684, 17 JAN 2022
+// 2023-11-09, MCC GitHub issue #339
