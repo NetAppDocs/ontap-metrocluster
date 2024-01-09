@@ -2906,18 +2906,20 @@ a|
 48
 |===
 
-== Cisco 9132T port usage in MetroCluster 4-node and 8-node configurations running ONTAP 9.1 and later
+== Cisco 9132T port usage in MetroCluster 4-node and 8-node configurations running ONTAP 9.4 and later
 
-The following tables show the port usage on a Cisco 9132T switch. The tables show the maximum supported configurations with four and eight controller modules in two DR groups. 
+The following table shows the port usage on a Cisco 9132T switch. The table shows the maximum supported configurations with four and eight controller modules in two DR groups. 
+
+NOTE: For 8-node configurations, you must perform the zoning manually because RCFs are not provided.
 
 |===
-6+^h| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
-6+^h| MetroCluster 1 or DR Group 1
-3+^h|
+7+^h| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+7+^h| MetroCluster 1 or DR Group 1
+4+^h|
 2+^h| 4-node
 h| 8-node
-h| Component h| Port h| Connects to FC_switch... h| 9132T (1x LEM) h| 9132T (2x LEM) h| 9132T (2x LEM) 
-.8+a|
+2+^h| Component h| Port h| Connects to FC_switch... h| 9132T (1x LEM) h| 9132T (2x LEM) h| 9132T (2x LEM) 
+2.8+a|
 controller_x_1
 a|
 FC-VI port a
@@ -2999,7 +3001,7 @@ a|
 LEM1-6
 a|
 LEM1-4
-.8+a|
+2.8+a|
 controller_x_2
 a|
 FC-VI port a
@@ -3081,8 +3083,8 @@ a|
 LEM1-12
 a|
 LEM1-8
-6+^h| MetroCluster 2 or DR Group 2
-.8+a|
+7+^h| MetroCluster 2 or DR Group 2
+2.8+a|
 controller_x_3
 a|
 FC-VI port a
@@ -3149,7 +3151,7 @@ a|
 |
 a|
 LEM2-4
-.8+a|
+2.8+a|
 controller_x_4
 a|
 FC-VI-1 port a
@@ -3215,12 +3217,6 @@ a|
 |
 a|
 LEM2-8
-|===
-
-For 8-node configurations, you must perform the zoning manually because RCFs are not provided.
-
-|===
-7+^h| Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
 7+^h| MetroCluster 1 or DR Group 1
 4+^h|
 2+^h| 4-node
@@ -3406,6 +3402,8 @@ LEM2-12
 * In 8-node configurations, you can cable additional bridges to ports LEM2-13 through LEM2-16 in 9132T switches with 2x LEMs.
 * Only one (1) bridge stack is supported using 9132T switches with 1x LEM Module.
 ====
+
+== Cisco 9132T port usage for ISLs in four and eight-node configurations in a MetroCluster configuration running ONTAP 9.1 or later
 
 The following table shows ISL port usage for a Cisco 9132T switch.
 
