@@ -100,7 +100,7 @@ The following table shows the state (online or offline) of an unmirrored aggrega
 
 |===
 
-h| Type of switchover h| State
+h| Type of switchover h| MetroCluster IP state h| MetroCluster FC state
 
 a|
 Negotiated switchover (NSO)
@@ -109,10 +109,20 @@ a|
 Online
 
 a|
+
+* Mirrored aggregates: Online 
+* Unmirrored aggregates: Offline
+
+a|
 Automatic unplanned switchover (AUSO)
 
 a|
 Online
+
+a| 
+
+* Mirrored aggregates: Online 
+* Unmirrored aggregates: Offline
 
 a|
 Unplanned switchover (USO)
@@ -122,7 +132,15 @@ a|
 * If storage is not available: Offline
 * If storage is available: Online
 
+a| 
+
+* Mirrored aggregates: Online
+* Unmirrored aggregates: Offline
+
+a| 
 |===
+
+Learn more about <<Differences in switchover between MetroCluster FC and IP configurations>>.
 
 NOTE: After a switchover, if the unmirrored aggregate is at the DR partner node and there is an inter-switch link (ISL) failure, then that local node might fail.
 
