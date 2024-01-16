@@ -684,6 +684,11 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ....
 
+. Verify that all nodes in the cluster are healthy:
++
+`cluster show` 
++
+The output should show that all nodes are reporting the 'health' field as `true`.
 
 . Confirm that takeover is possible and the nodes are connected by running the following command on both clusters: 
 +
@@ -700,12 +705,26 @@ Node_IP_1      Node_IP_2              true      Connected to Node_IP_2
 Node_IP_2      Node_IP_1              true      Connected to Node_IP_1
 ---- 
 
+. Confirm that all disks attached to the newly-joined MetroCluster IP nodes are present:
++
+`disk show`
+
+. Verify that all nodes are in `normal` mode:
++
+`metrocluster node show`
+
+. Verify the health of the MetroCluster configuration by running the following commands:
++
+.. `metrocluster check run`
+.. `metrocluster check show`
+.. `metrocluster interconnect mirror show`
+.. `metrocluster interconnect adapter show`
+
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
 .. Display the volumes to identify the MDV volumes:
 +
 NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
-
 The following example shows the MDV volumes in the volume show output:
 +
 ....
