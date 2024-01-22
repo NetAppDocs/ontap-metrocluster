@@ -225,9 +225,6 @@ NOTE: Perform this step for all plexes that have disks that are remote to Cluste
 
 . Persistently offline the switchports according to the switch type.
 +
-NOTE: This step is only required for MetroCluster FC configurations. Skip this step if your configuration is a MetroCluster IP configuration or a stretched MetroCluster configuration with FC backend switches.
-
-+
 [cols="25,75"]
 |===
 
@@ -317,7 +314,6 @@ The following equipment must be turned off in the order shown:
 
 == Relocating the powered-off site of the MetroCluster
 
-[.lead]
 After the site is powered off, you can begin maintenance work. The procedure is the same whether the MetroCluster components are relocated within the same data center or relocated to a different data center.
 
 * The hardware should be cabled in the same way as the previous site.
@@ -331,7 +327,7 @@ After the site is powered off, you can begin maintenance work. The procedure is 
 
 . Configure the ISL ports and verify the intersite connectivity.
 
-.. Power on the FC.
+.. Power on the FC switches.
 +
 NOTE: Do *not* power up any other equipment.
 
@@ -499,7 +495,6 @@ switch_A_1# copy running-config startup-config
 
 == Powering on the MetroCluster configuration and returning to normal operation
 
-[.lead]
 After maintenance has been completed or the site has been moved, you must power on the site and reestablish the MetroCluster configuration.
 
 .About this task
@@ -546,7 +541,7 @@ Enable the ports based on whether you are using Brocade or Cisco switches as sho
 h| Switch type h| Command
 
 a|
-If the FC Switches are Brocade switches...
+For Brocade FC switches...
 a|
 
 .. Enter the `portcfgpersistentenable _port_` command to persistently enable the ports. This must be done on both switches at the surviving site.
@@ -590,7 +585,7 @@ switch_A_1:admin> switchshow
  switch_A_1:admin>
 ----
 a|
-If the FC Switches are Cisco switches...
+For Cisco FC switches...
 a|
 
 .. Use the `interface` command to enable the ports.
