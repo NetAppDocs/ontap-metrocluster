@@ -223,7 +223,7 @@ storage aggregate plex offline -aggregate Node_B_1_aggr0 -plex plex0
 +
 NOTE: Perform this step for all plexes that have disks that are remote to Cluster_A.
 
-. Persistently offline the switchports according to the switch type.
+. Persistently offline the switch ports according to the switch type.
 +
 [cols="25,75"]
 |===
@@ -233,7 +233,7 @@ h| Switch type h| Action
 a|
 For Brocade FC switches...
 a|
-.. Use the `portcfgpersistentdisable _port_` command to persistently disable the ports as shown in the following example. This must be done on both switches at the surviving site.
+.. Use the `portcfgpersistentdisable <port>` command to persistently disable the ports as shown in the following example. This must be done on both switches at the surviving site.
 +
 ----
 
@@ -297,18 +297,12 @@ a|
 +
 |===
 
-. Halt the nodes.
-+
-Run the following command on both nodes:
-+ 
-`node halt -inhibit-takeover true -skip-lif-migration true -node <node-name>`
-
 . Power off the site.
 +
 The following equipment must be turned off in the order shown:
 +
 ** MetroCluster FC switches
-** Storage controllers
+** Storage controllers - the storage controllers should currently be at the `LOADER` prompt, you must power them off completely.
 ** Storage shelves
 ** ATTO FibreBridges (if present)
 
@@ -342,7 +336,7 @@ h| Switch type h| Command
 a|
 For Brocade FC switches...
 a|
-.. Use the `portcfgpersistentenable _port number_` command to persistently enable the port. This must be done on both switches at the surviving site.
+.. Use the `portcfgpersistentenable <port number>` command to persistently enable the port. This must be done on both switches at the surviving site.
 +
 The following example shows ports 14 and 15 being enabled on Switch_A_1.
 +
@@ -425,7 +419,7 @@ h| Switch type h| Command
 a|
 For Brocade FC switches...
 a|
-.. Enter the `portcfgpersistentdisable _port number_` command to persistently disable the port.
+.. Enter the `portcfgpersistentdisable <port_number>` command to persistently disable the port.
 +
 This must be done on both switches at the surviving site. The following example shows ports 14 and 15 being disabled on Switch_A_1:
 +
@@ -544,7 +538,7 @@ a|
 For Brocade FC switches...
 a|
 
-.. Enter the `portcfgpersistentenable _port_` command to persistently enable the ports. This must be done on both switches at the surviving site.
+.. Enter the `portcfgpersistentenable <port>` command to persistently enable the ports. This must be done on both switches at the surviving site.
 +
 The following example shows ports 14 and 15 being enabled on Switch_A_1:
 +
