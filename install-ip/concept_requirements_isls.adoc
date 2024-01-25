@@ -17,7 +17,7 @@ The following requirements must be met for the ISLs on all MetroCluster IP confi
 * You must use the same number of ISLs in both fabrics.
 * ISLs on one fabric must all be the same speed and length.
 * ISLs in both fabrics must be the same speed and length.
-* The maximum supported difference in distance between fabric 1 and fabric 2 is 20 km.
+* The maximum supported difference in distance between fabric 1 and fabric 2 is 20km or 0.2ms.
 * The ISLs on one fabric must have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they must all use WDM.
 * ISL speed must be least 10Gbps.
 * There must be least one 10Gbps ISL port per fabric.
@@ -121,6 +121,11 @@ All ISLs on one MetroCluster IP switch must be the same speed. Using a mix of IS
 
 For optimum performance, you should use at least one 40Gbps ISL or multiple 10Gbps ISLs per network. Do not use a single 10Gbps ISL per network for FAS9000, AFF A700 or higher platforms.
 
-The maximum throughput of shared ISLs (for example, 240Gbps divided between six 40Gbps ISLs) is optimal for performance. When using multiple ISLs, statistical load-balancing can impact the maximum throughput. Uneven balancing can reduce throughput to that of a single ISL.
+When using multiple ISLs, statistical load-balancing can impact the maximum throughput. Uneven balancing can reduce throughput to that of a single ISL. 
+
+NOTE: NetApp recommends that you configure a small number of high bandwidth ISLs, rather than a high number of low bandwidth ISLs. For example, configuring one 40Gbps ISL is recommended instead of four 10Gbps ISLs.
+
+
+
 
 // BURT 1451528, 03 July 2023

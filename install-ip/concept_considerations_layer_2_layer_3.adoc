@@ -31,14 +31,14 @@ For example, the MetroCluster switches can connect using one 40Gbps ISL to the i
 * No other traffic can be configured with a higher priority than class of service (COS) five.
 * ECN (explicit congestion notifications) must be configured on all paths carrying end-to-end MetroCluster traffic.
 * ISLs carrying MetroCluster traffic must be native links between the switches. Link sharing services such as Multiprotocol Label Switching (MPLS) links are not supported.
+* The layer 2 VLANs must natively span the sites. VLAN overlay such as Virtual Extensible LAN (VXLAN) is not supported.
 * The number of intermediate switches is not limited. However, NetApp recommends that you keep the number of switches to the minimum required.
-* ISL port requirements:
-** The ISL port must be in `trunk` mode.
-** ISL ports must be configured as "LACP trunk".
-* The RCF configures the ISL ports:
-** VLANs that are specified as “MetroCluster VLAN” are allowed.
-** Native VLANs are not configured.
-** The default native VLAN is not allowed. 
+* ISLs on MetroCluster switches are configured with the following:
+** Switch port mode 'trunk' as part of an LACP port-channel
+** The MTU size is 9216 
+** No native VLAN is configured
+** Only VLANs carrying cross site MetroCluster traffic are allowed
+** The switch default VLAN is not allowed
 
 == Considerations for layer 2 networks
 
