@@ -141,7 +141,7 @@ You must configure the ingress policy. The ingress policy maps the traffic as cl
 
 *Example:*
 ----
-policy-map type qos MetroClusterIP_Ingress
+policy-map type qos MetroClusterIP_Node_Ingress
 class rdma
   set dscp 40
   set cos 5
@@ -208,7 +208,7 @@ spanning-tree bpduguard enable
 mtu 9216
 flowcontrol receive on
 flowcontrol send on
-service-policy type qos input MetroClusterIP_Ingress
+service-policy type qos input MetroClusterIP_Node_Ingress
 service-policy type queuing output MetroClusterIP_Node_Egress
 no shutdown
 ----
