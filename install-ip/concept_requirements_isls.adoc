@@ -9,11 +9,11 @@ summary: "This section contains the requirements for Inter-Switch Links (ISLs) c
 :imagesdir: ../media/
 
 [lead]
-You should consider the requirements for Inter-Switch Links (ISLs) carrying MetroCluster traffic on all MetroCluster IP configurations and network topologies. The requirements apply to all ISLs carrying MetroCluster traffic, regardless of whether the ISLs are direct or shared between customer switches.
+Inter-Switch Links (ISLs) carrying MetroCluster traffic on all MetroCluster IP configurations and network topologies have certain requirements. These requirements apply to all ISLs carrying MetroCluster traffic, regardless of whether the ISLs are direct or shared between customer switches.
 
 == Basic MetroCluster ISL requirements
 
-The following requirements must be met for the ISLs on all MetroCluster IP configurations:
+The following applies to ISLs on all MetroCluster IP configurations:
 
 * Both fabrics must have the same number of ISLs.
 * ISLs on one fabric must all be the same speed and length.
@@ -25,39 +25,38 @@ The following requirements must be met for the ISLs on all MetroCluster IP confi
 
 === Latency and packet loss limits in the ISLs
 
-The following requirements must be met for round-trip traffic between the MetroCluster IP switches at site_A and site_B, with the MetroCluster configuration in steady state operation:
+The following applies to round-trip traffic between the MetroCluster IP switches at site_A and site_B, with the MetroCluster configuration in steady state operation:
 
-* For specific information on round trip latency and maximum distance requirements for your configuration, refer to the link:https://hwu.netapp.com/[Hardware Universe.^]
-+
-As the distance between two MetroCluster sites increases, latency increases, usually in the range of 1 ms round-trip delay time per 100 km (62 miles). Latency also depends on the network service level agreement (SLA) in terms of the bandwidth of the ISL links, packet drop rate, and jitter on the network. Low bandwidth, high jitter, and random packet drops lead to different recovery mechanisms by the switches, or the TCP engine on the controller modules, for successful packet delivery. These recovery mechanisms can increase overall latency.
-+
-Any device that contributes to latency must be accounted for.
-+
-_The Hardware Universe_ provides the distance in km. You must account 1ms for every 100km. The maximum distance is defined by what is reached first – maximum RTT in ms or the distance in km. For example – if _The Hardware Universe_ lists a distance of 300km, translating to 3ms. Then your ISL can be no longer than 300km and the max RTT cannot exceed 3ms – whichever is reached first.
+* As the distance between two MetroCluster sites increases, latency increases, usually in the range of 1 ms round-trip delay time per 100 km (62 miles). Latency also depends on the network service level agreement (SLA) in terms of the bandwidth of the ISL links, packet drop rate, and jitter on the network. Low bandwidth, high jitter, and random packet drops lead to different recovery mechanisms by the switches, or the TCP engine on the controller modules, for successful packet delivery. These recovery mechanisms can increase overall latency. For specific information on round trip latency and maximum distance requirements for your configuration, refer to the link:https://hwu.netapp.com/[Hardware Universe.^]
+
+
+* Any device that contributes to latency must be accounted for.
+
+* _The Hardware Universe_ provides the distance in km. You must allocate 1ms for every 100km. The maximum distance is defined by what is reached first, either the maximum round-trip time (RTT) in ms, or the distance in km. For example – if _The Hardware Universe_ lists a distance of 300km, translating to 3ms, your ISL can be no further than 300km and the max RTT cannot exceed 3ms – whichever is reached first.
 
 * Packet loss must be less than, or equal to, 0.01%. The maximum packet loss is the sum of all loss on all links on the path between the MetroCluster nodes, and the loss on the local MetroCluster IP interfaces.
 
 * The supported jitter value is 3ms for round trip (or 1.5ms for one-way).
-* The network should allocate and maintain the SLA for the bandwidth required for MetroCluster traffic, accounting for microbursts and spikes in the traffic.
+* The network should allocate and maintain the SLA amount of bandwidth required for MetroCluster traffic, regardless of microbursts and spikes in the traffic.
 
-* If you are using ONTAP 9.7 or later, the network intermediate between the two sites must provide a minimum bandwidth of 4.5Gbps for the MetroCluster configuration.
+* If you are using ONTAP 9.7 or later, the intermediate network between the two sites must provide a minimum bandwidth of 4.5Gbps for the MetroCluster IP configuration.
 
 == Transceiver and cable considerations
 
-Any SFPs or QSFPs supported by the equipment vendor are supported for the MetroCluster ISLs. You can get SFPs and QSFPs from NetApp or the equipment vendor but they must be supported by the switch and switch firmware. 
+Any SFPs or QSFPs supported by the equipment vendor are supported for the MetroCluster ISLs. SFPs and QSFPs provided by NetApp or the equipment vendor must be supported by the switch and switch firmware. 
 
 To connect the controllers to the switches you must use the transceivers and cables provided by NetApp with the MetroCluster.
 
 == Using xWDM, TDM and external encryption devices
 
-When using xWDM/TDM devices or devices proving encryption (these might be the xWDM/TDM devices) in a MetroCluster IP configuration, your environment must meet the following requirements:
+When you use xWDM/TDM devices or devices providing encryption in a MetroCluster IP configuration your environment must meet the following requirements:
 
 * When connecting the MetroCluster IP switches to the xWDM/TDM, the external encryption devices or xWDM/TDM equipment must be certified by the vendor for the switch and firmware. The certification must cover the operating mode (such as trunking and encryption).
-* The overall end-to-end latency and jitter, including the encryption, cannot be above the maximum stated in the IMT or in this document.
+* The overall end-to-end latency and jitter, including the encryption, cannot be more than the maximum amount stated in the IMT and in this documentation.
 
 == Supported number of ISLs and breakout cables
 
-The supported number of ISLs that can be configured on a MetroCluster IP switch using the Reference Configuration File (RCF) configuration.
+The following table shows the supported number of ISLs that can be configured on a MetroCluster IP switch using the Reference Configuration File (RCF) configuration.
 
 |===
 
@@ -117,12 +116,11 @@ a| 8 ISLs using 10Gbps or 25Gbps
 
 *Note 2*: The same ports are used for native speed and breakout mode. You must choose to use ports in native speed mode or breakout mode when creating the RCF file.
 
+* All ISLs on one MetroCluster IP switch must be the same speed. Using a mix of ISL ports with different speeds concurrently is not supported.
 
-All ISLs on one MetroCluster IP switch must be the same speed. Using a mix of ISL ports with different speeds concurrently is not supported.
+* For optimum performance, you should use at least one 40Gbps ISL or multiple 10Gbps ISLs per network. Do not use a single 10Gbps ISL per network for FAS9000, AFF A700 or higher platforms.
 
-For optimum performance, you should use at least one 40Gbps ISL or multiple 10Gbps ISLs per network. Do not use a single 10Gbps ISL per network for FAS9000, AFF A700 or higher platforms.
-
-When using multiple ISLs, statistical load-balancing can impact the maximum throughput. Uneven balancing can reduce throughput to that of a single ISL. 
+* When using multiple ISLs, statistical load-balancing can impact the maximum throughput. Uneven balancing can reduce throughput to that of a single ISL. 
 
 NOTE: NetApp recommends that you configure a small number of high bandwidth ISLs, rather than a high number of low bandwidth ISLs. For example, configuring one 40Gbps ISL is recommended instead of four 10Gbps ISLs.
 
