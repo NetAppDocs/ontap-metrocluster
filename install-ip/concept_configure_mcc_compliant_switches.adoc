@@ -91,18 +91,20 @@ NOTE: Configuration thresholds can vary depending on the environment. You must e
 .Bandwidth allocation (switch ports connecting MetroCluster interfaces and ISL ports)
 * RDMA, COS 5 / DSCP 40: 60%
 * iSCSI, COS 4 / DSCP 32: 40%
-* Minimum capacity requirement per MetroCluster and network: 10Gbps
+* Minimum capacity requirement per MetroCluster configuration and network: 10Gbps
 
 NOTE: If you use rate limits, then the traffic should be *shaped* without introducing loss.
 
 == Examples for configuring switch ports connecting the MetroCluster controller
 
-The examples provided are valid for Cisco NX3232 or Cisco NX9336 switches. If other switches are used, these commands can be used as guidance, but the commands might be different. If a feature or its equivalent shown in the examples is not available on the switch, this means that the switch does not meet the minimum requirements and cannot be used to deploy a MetroCluster configuration. This is true for any switch that is connecting a MetroCluster configuration and for all switches on the path between those switches.
+The example commands provided are valid for Cisco NX3232 or Cisco NX9336 switches. Commands vary according to the switch type. 
 
-NOTE: The following examples might show the configuration for one network only.
+If a feature or its equivalent shown in the examples is not available on the switch, the switch does not meet the minimum requirements and cannot be used to deploy a MetroCluster configuration. This is true for any switch connecting to a MetroCluster configuration and for all intermediate switches switches.
+
+NOTE: The following examples might only show the configuration for one network.
 
 .Basic configuration
-A virtual LAN (VLAN) in each network must be configured. The example shows how to configure a VLAN in network 10.
+A virtual LAN (VLAN) in each network must be configured. The following example shows how to configure a VLAN in network 10.
 
 *Example:*
 
@@ -118,7 +120,7 @@ The load balancing policy should be set so that order is preserved.
 
 == Configuring classification
 
-You must configure the access and class maps which map the RDMA and iSCSI traffic to the appropriate classes.
+You must configure the access and class maps that map RDMA and iSCSI traffic to the appropriate classes.
 
 In the following example, all TCP traffic to and from the port 65200 is mapped to the storage (iSCSI) class. All TCP traffic to and from the port 10006 is mapped to the RDMA class. These policy-maps are used on switch ports connecting the MetroCluster interfaces.
 
@@ -137,7 +139,7 @@ class-map type qos match-all rdma
 match access-group name rdma
 ----
 
-You must configure the ingress policy. The ingress policy maps the traffic as classified to the different COS groups. In this example, the RDMA traffic is mapped to COS group 5 and iSCSI traffic is mapped to COS group 4. The ingress policy is used on switch ports connecting the MetroCluster interfaces and on the ISL ports carrying MetroCluster traffic.
+You must configure the ingress policy. The ingress policy maps the traffic as classified to different COS groups. In this example, the RDMA traffic is mapped to COS group 5 and iSCSI traffic is mapped to COS group 4. The ingress policy is used on switch ports connecting the MetroCluster interfaces and on the ISL ports carrying MetroCluster traffic.
 
 *Example:*
 ----
@@ -249,7 +251,7 @@ image::../media/mcc_ip_networking_with_intermediate_private_networks.gif[]
 
 In this topology, two separate MetroCluster configurations are sharing the same intermediate network. In the example, MetroCluster one switch_A_1 and MetroCluster two switch_A_1 both connect to the same intermediate switch. 
 
-NOTE: Both “MetroCluster one” or “MetroCluster two” can be one 8-node MetroCluster configuration or two 4-node MetroCluster configurations.
+NOTE: Both “MetroCluster one” or “MetroCluster two” can be one eight-node MetroCluster configuration or two four-node MetroCluster configurations.
 
 image::../media/mcc_ip_two_mccs_sharing_the_same_shared_network_sx.gif[]
 
