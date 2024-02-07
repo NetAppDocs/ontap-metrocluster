@@ -71,6 +71,8 @@ The following systems do not require VLAN configuration within ONTAP. The VLAN i
 * AFF A320
 * FAS9000 and AFF A700
 * AFF A800, ASA A800, AFF C800 and ASA C800
++
+NOTE: The systems listed above might be configured using VLANs 100 and below. However, some VLANs in this range might be reserved for other or future use.
 
 For all other systems, you must configure the VLAN when you create the MetroCluster interfaces in ONTAP. The following restrictions apply:
 
@@ -133,7 +135,7 @@ The following examples are for Cisco Nexus 3232C and 9336C-FX2 switches. Dependi
 
 .Configure the class map for the intermediate switch ISL port
 
-The following example shows the class map definitions depending on whether you need to classify traffic on ingress. This matches the traffic, based on DSCP and COS values, and assigns it to Q4 and Q5 respectively. 
+The following example shows the class map definitions depending on whether you need to classify or match traffic on ingress. 
 
 [role="tabbed-block"]
 ====
@@ -153,7 +155,7 @@ class-map type qos match-all storage
   match access-group name storage
 ----
 --
-.Do not classify traffic on ingress:
+.Match traffic on ingress:
 --
 ----
 class-map type qos match-any c5
@@ -167,7 +169,7 @@ class-map type qos match-any c4
 
 .Create an ingress policy map on the ISL port of the intermediate switch:
 
-The following examples show how to create an ingress policy map depending on whether you need to classify traffic on ingress. 
+The following examples show how to create an ingress policy map depending on whether you need to classify or match traffic on ingress. 
 
 [role="tabbed-block"]
 ====
@@ -187,7 +189,7 @@ policy-map type qos MetroClusterIP_ISL_Ingress_Classify
     set qos-group 0
 ----
 --
-.Do not match the traffic on ingress:
+.Match the traffic on ingress:
 --
 ----
 policy-map type qos MetroClusterIP_ISL_Ingress_Match
@@ -233,7 +235,7 @@ policy-map type queuing MetroClusterIP_ISL_Egress
 
 These settings must be applied on all switches and ISLs carrying MetroCluster traffic.
 
-In this example the Q4 and Q5 are configured with `random-detect threshold burst-optimized ecn`. Depending on your configuration, you might need to set the minimum and maximum thresholds, as shown in the following example:
+In this example, Q4 and Q5 are configured with `random-detect threshold burst-optimized ecn`. Depending on your configuration, you might need to set the minimum and maximum thresholds, as shown in the following example:
 
 -----
 class type queuing c-out-8q-q5
@@ -263,8 +265,6 @@ If your configuration has Broadcom switches, you must classify on the first ingr
 *	`class-map type qos match-all rdma`
 *	`class-map type qos match-all storage`
 *	`MetroClusterIP_ISL_Ingress_Classify`
-*	`class-map type qos match-any c5`
-*	`class-map type qos match-any c4`
 *	`MetroClusterIP_ISL_Ingress_Match`
 
 You assign `the MetroClusterIP_ISL_Ingress_Classify` policy map to the ISL ports on the intermediate switch connecting the Broadcom switch.
