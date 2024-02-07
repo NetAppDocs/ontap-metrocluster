@@ -2,7 +2,7 @@
 permalink: install-ip/concept_configure_mcc_compliant_switches.html
 sidebar: sidebar
 keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant, configuration
-summary: MetroCluster IP switches that are listed as supported switches in the link:https://hwu.netapp.com/[NetApp HardWare Universe^] and provided by NetApp are NetApp-validated. The following is an overview of how the various switch ports should be configured.
+summary: MetroCluster IP switches that are listed as supported switches in the NetApp Hardware Universe and provided by NetApp are NetApp-validated. 
 ---
 
 = Switch port configuration overview
@@ -99,7 +99,7 @@ NOTE: If you use rate limits, then the traffic should be *shaped* without introd
 
 The example commands provided are valid for Cisco NX3232 or Cisco NX9336 switches. Commands vary according to the switch type. 
 
-If a feature or its equivalent shown in the examples is not available on the switch, the switch does not meet the minimum requirements and cannot be used to deploy a MetroCluster configuration. This is true for any switch connecting to a MetroCluster configuration and for all intermediate switches switches.
+If a feature or its equivalent shown in the examples is not available on the switch, the switch does not meet the minimum requirements and cannot be used to deploy a MetroCluster configuration. This is true for any switch connecting to a MetroCluster configuration and for all intermediate switches.
 
 NOTE: The following examples might only show the configuration for one network.
 
@@ -224,11 +224,12 @@ fec off
 
 ==  Configuration of the ISL ports throughout the network
 
-A MetroCluster-compliant switch is regarded as an intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch must be configured the same way as the ISL ports on an intermediate switch. Refer to the section link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_considerations_layer_2.html#required-settings-on-intermediate-switches[Required settings on intermediate switches^] for guidance and examples. Note that some policy-maps are the same for switch ports connecting MetroCluster interfaces and ISLs carrying MetroCluster traffic. You can leverage the same policy-map for both port usages.
+A MetroCluster-compliant switch is regarded as an intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch must be configured the same way as the ISL ports on an intermediate switch. Refer to the section link:concept_considerations_layer_2_layer_3.html#required-settings-on-intermediate-switches[Required settings on intermediate switches^] for guidance and examples. 
+NOTE: Some policy maps are the same for switch ports connecting MetroCluster interfaces and ISLs carrying MetroCluster traffic. You can use the same policy map for both of these port usages.
 
 == Examples of MetroCluster network topologies
 
-Beginning with ONTAP 9.6, some additional network configurations are supported for MetroCluster IP configurations. This section provides some examples of the supported network configurations. Not all the supported topologies are listed.
+Beginning with ONTAP 9.6, some additional network configurations are supported for MetroCluster IP configurations. This section provides some examples of the supported network configurations. Not all of the supported topologies are listed.
 
 In either of these topologies, it is assumed that the ISL and intermediate network is configured according to the requirements mentioned previously. 
 
@@ -257,7 +258,7 @@ image::../media/mcc_ip_two_mccs_sharing_the_same_shared_network_sx.gif[]
 
 === Combination of a MetroCluster configuration using NetApp validated switches and a configuration using MetroCluster-compliant switches
 
-Two separate MetroCluster configurations share the same intermediate switch, where one MetroCluster is configured using NetApp validated switches in a shared Layer 2 configuration (MetroCluster one), and the other MetroCluster is configured using MetroCluster-compliant switches connecting directly to the intermediate switches (MetroCluster two).
+Two separate MetroCluster configurations share the same intermediate switch, where one MetroCluster is configured using NetApp validated switches in a shared layer 2 configuration (MetroCluster one), and the other MetroCluster is configured using MetroCluster-compliant switches connecting directly to the intermediate switches (MetroCluster two).
 
 image::../media/mcc_ip_unsupported_two_mccs_direct_to_shared_switches.png[]
 
