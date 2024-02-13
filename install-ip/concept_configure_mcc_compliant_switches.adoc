@@ -24,7 +24,7 @@ a|
 16
 a|
 0x10
-a|
+a| 
 CS2
 a|
 011 000
@@ -227,41 +227,6 @@ fec off
 A MetroCluster-compliant switch is regarded as an intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch must be configured the same way as the ISL ports on an intermediate switch. Refer to the section link:concept_considerations_layer_2_layer_3.html#required-settings-on-intermediate-switches[Required settings on intermediate switches^] for guidance and examples.
 
 NOTE: Some policy maps are the same for switch ports connecting MetroCluster interfaces and ISLs carrying MetroCluster traffic. You can use the same policy map for both of these port usages.
-
-== Examples of MetroCluster network topologies
-
-Beginning with ONTAP 9.6, some additional network configurations are supported for MetroCluster IP configurations. This section provides some examples of the supported network configurations. Not all of the supported topologies are listed.
-
-In either of these topologies, it is assumed that the ISL and intermediate network is configured according to the requirements mentioned previously. 
-
-NOTE: If you are sharing an ISL with non-MetroCluster traffic, you must make sure that the MetroCluster has at least the minimum required bandwidth available at all times.
-
-=== Shared network configuration with direct links
-
-In this topology, two distinct sites are connected by direct links. These links can be between xWDM and TDM devices or switches. The capacity of the ISLs is not dedicated to the MetroCluster traffic but is shared with other non-MetroCluster traffic.
-
-image::../media/mcc_ip_networking_with_shared_isls.gif[]
-
-=== Shared infrastructure with intermediate networks
-
-In this topology, the MetroCluster sites are not directly connected but MetroCluster and the host traffic travel through a network. 
-The network can consist of a series of xWDM and TDM and switches, but unlike the shared configuration with direct ISLs, the links are not direct between the sites. Depending on the infrastructure between the sites, any combination of network configurations is possible. 
-
-image::../media/mcc_ip_networking_with_intermediate_private_networks.gif[]
-
-=== Multiple MetroCluster configurations sharing an intermediate network
-
-In this topology, two separate MetroCluster configurations are sharing the same intermediate network. In the example, MetroCluster one switch_A_1 and MetroCluster two switch_A_1 both connect to the same intermediate switch. 
-
-NOTE: Both “MetroCluster one” or “MetroCluster two” can be one eight-node MetroCluster configuration or two four-node MetroCluster configurations.
-
-image::../media/mcc_ip_two_mccs_sharing_the_same_shared_network_sx.gif[]
-
-=== Combination of a MetroCluster configuration using NetApp validated switches and a configuration using MetroCluster-compliant switches
-
-Two separate MetroCluster configurations share the same intermediate switch, where one MetroCluster is configured using NetApp validated switches in a shared layer 2 configuration (MetroCluster one), and the other MetroCluster is configured using MetroCluster-compliant switches connecting directly to the intermediate switches (MetroCluster two).
-
-image::../media/mcc_ip_unsupported_two_mccs_direct_to_shared_switches.png[]
 
 
 // 2023-07-18, burt 1451528/ONTAPDOC-928
