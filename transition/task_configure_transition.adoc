@@ -586,7 +586,7 @@ Multiple data aggregates
 a|
 From any node's prompt, configure MetroCluster:
 
-`metrocluster configure _node-name_`
+`metrocluster configure <node-name>`
 
 NOTE: You must run `metrocluster configure` and *not* `metrocluster configure -refresh true`
 
@@ -602,7 +602,7 @@ You must respond with `y` when you are prompted to continue into advanced mode a
 
 .. Configure the MetroCluster with the `-allow-with-one-aggregate true` parameter:
 +
-`metrocluster configure -allow-with-one-aggregate true _node-name_`
+`metrocluster configure -allow-with-one-aggregate true -node-name <node-name>`
 
 .. Return to the admin privilege level:
 +
@@ -684,6 +684,11 @@ Do you want to continue? {y|n}: y
 cluster_A::>
 ....
 
+. Verify that all nodes in the cluster are healthy:
++
+`cluster show` 
++
+The output should display `true` for the `health` field for all nodes.
 
 . Confirm that takeover is possible and the nodes are connected by running the following command on both clusters: 
 +
@@ -700,12 +705,22 @@ Node_IP_1      Node_IP_2              true      Connected to Node_IP_2
 Node_IP_2      Node_IP_1              true      Connected to Node_IP_1
 ---- 
 
+. Confirm that all disks attached to the newly-joined MetroCluster IP nodes are present:
++
+`disk show`
+
+. Verify the health of the MetroCluster configuration by running the following commands:
++
+.. `metrocluster check run`
+.. `metrocluster check show`
+.. `metrocluster interconnect mirror show`
+.. `metrocluster interconnect adapter show`
+
 . Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
 .. Display the volumes to identify the MDV volumes:
 +
 NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
-
 The following example shows the MDV volumes in the volume show output:
 +
 ....
@@ -763,6 +778,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 +
 `set -privilege admin`
 
+// 2023 Jan 23, ONTAPDOC-729
 // 22 Jun 2023, GH issue 243
 // BURT 1448684, 21 JAN 2022
 // BURT 1438441, 28 MAR 2022
