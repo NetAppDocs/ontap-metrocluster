@@ -72,21 +72,6 @@ ____                ____      _____________ ______              __________
 admin               md5       aes-128(no)   network-admin
 ----
 
---
-.For NVIDIA IP switches
---
-The commands in this step apply to NVIDIA IP switches running Cumulus 4.4.3 firmware.
-
-.Step
-. Run the following commands to configure the SNMPv3 user on NVIDIA IP switches:
-+
-----
-net add snmp-server username <user_name> [auth-md5/auth-sha/auth-none] <auth_password> [encrypt-aes/encrypt-des] <priv_password>
-net pending
-net commit
-----
---
-==== 
 
 == Step 2: Configure the SNMPv3 user in ONTAP
 
@@ -107,3 +92,5 @@ Use the following steps to configure the SNMPv3 user in ONTAP.
 .. Run the following command after the polling time period has elapsed:
 +
 `system switch ethernet show-all -instance -device <device_serial_number>`
+
+// 2023 Feb 15, GH issue 333
