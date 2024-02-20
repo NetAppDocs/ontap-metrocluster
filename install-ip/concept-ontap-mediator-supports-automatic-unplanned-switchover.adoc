@@ -1,0 +1,45 @@
+---
+permalink: install-ip/concept-ontap-mediator-supports-automatic-unplanned-switchover.html
+sidebar: sidebar
+keywords: ontap, mediator, service, assist, metrocluster, ip, configuration, perform, automatic, unplan, switchover, physical, repository, status, information, configuring, configure, install, configuring, configure, forced
+summary:
+---
+= How the ONTAP Mediator supports automatic unplanned switchover
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+The ONTAP Mediator stores state information about the MetroCluster nodes in mailboxes located on the Mediator host. The MetroCluster nodes can use this information to monitor the state of their DR partners and implement a Mediator-assisted unplanned switchover (MAUSO) in the case of a disaster.
+
+When a node detects a site failure requiring a switchover, it takes steps to confirm that the switchover is appropriate and, if so, performs the switchover.
+
+By default, a MAUSO is initiated for the following scenarios:
+
+* Both SyncMirror mirroring and DR mirroring of each node's nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
+* None of the nodes at the surviving site are in takeover state.
+* If a site disaster occurs. A site disaster is a failure of all nodes at the same site.
+
+A MAUSO is not initiated in the following shutdown scenarios:
+
+* You initiate a shutdown. For example, when you:
+** Halt the nodes
+** Reboot the nodes
+
+Learn about the MAUSO features available with each ONTAP 9 release.
+
+== Features available beginning with ONTAP 9.13.1
+* A MAUSO is initiated if a default scenario occurs and a fan or hardware failure initiates an environmental shutdown. Examples of hardware failures include a power supply unit, NVRAM battery, or Service Processor heartbeat failure, or a high or low temperature.
+* You can change the behavior to initiate a MAUSO either on failure of the cluster or a HA pair. For a HA pair, both nodes must fail at the same time.
+* You can change the behavior to force a MAUSO even if NVRAM is not in sync at the time of the failure.
+
+== Features available beginning with ONTAP 9.12.1
+You can enable the MetroCluster automatic forced switchover feature in a MetroCluster IP configuration. 
+
+Switchover upon detection of a site failure happens automatically when you enable the MetroCluster automatic forced switchover feature. You can use this feature to supplement the MetroCluster IP automatic switchover capability.
+
+.Risks and limitations of using MetroCluster automatic forced switchover
+When you allow a MetroCluster IP configuration to operate in automatic forced switchover mode, the following known issue might lead to data loss:
+
+* The nonvolatile memory in the storage controllers is not mirrored to the remote disaster recovery (DR) partner on the partner site.
+
+CAUTION: You might encounter scenarios that are not mentioned. NetApp is not responsible for any data corruption, data loss, or other damage that might arise from enabling the MetroCluster automatic forced switchover feature. Do not use the MetroCluster automatic forced switchover feature if the risks and limitations are not acceptable to you.
