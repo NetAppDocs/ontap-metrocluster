@@ -27,11 +27,16 @@ image::../media/mcc_dr_groups_4_node.gif[]
 
 == Removing the DR group nodes from each cluster
 
+.Before you begin
+
 * You must perform this step on both clusters.
 * The `metrocluster remove-dr-group` command is supported only on ONTAP 9.8 and later.
 
+.Steps
+
 . Prepare for the removal of the DR group, if you haven't already.
  .. Move all data volumes to another DR group.
+ .. If the DR group to be removed contains load-sharing mirror volumes, they cannot be moved.  Re-create all load-sharing mirror volumes in another DR group and then delete the load-sharing mirror volumes in the DR group to be removed.
  .. Move all MDV_CRS metadata volumes to another DR group by following the link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations] procedure.
  .. Delete all MDV_aud metadata volumes that might exist in the DR group to be removed.
  .. Delete all data aggregates in the DR group to be removed as shown in the following example:
@@ -168,3 +173,4 @@ You must perform this step on each cluster.
 
 // 2022 SEPT 26 BURT 1501656
 // 2022-NOV-15 GitHub issue 232, 234 
+// 2024-02-13, GitHub issue 233
