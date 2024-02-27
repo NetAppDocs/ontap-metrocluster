@@ -479,7 +479,20 @@ setenv bootarg.mcc.local_config_id 4068741260
 setenv bootarg.mcc.dr_partner 4068741256
 ----
 
-. If the original systems were configured for end-to-end encryption, at each of the replacement nodes' LOADER prompt, set the following bootarg:
+. Verify if the original systems were configured for end-to-end encryption:
++
+`metrocluster node show -fields is-encryption-enabled`
++
+If encryption is enabled, the following output is displayed: 
++
+----
+1 mcc-ip-a400-01-a1a2-siteA mcc-ip-a400-01-a1 true
+1 mcc-ip-a400-01-a1a2-siteA mcc-ip-a400-01-a2 true
+1 mcc-ip-a400-01-b1b2-siteB mcc-ip-a400-01-b1 true
+1 mcc-ip-a400-01-b1b2-siteB mcc-ip-a400-01-b2 true
+4 entries were displayed.
+----
+.. If the original systems were configured for end-to-end encryption, at each of the replacement nodes' LOADER prompt, set the following bootarg:
 +
 `setenv bootarg.mccip.encryption_enabled 1` 
 
