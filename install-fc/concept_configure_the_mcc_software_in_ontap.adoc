@@ -2544,11 +2544,13 @@ You must perform some special configuration steps before monitoring the componen
 
 These tasks apply only to systems with FC-to-SAS bridges.
 
+Beginning in Fabric OS 9.0.1, SNMPv2 is not supported for health monitoring on Brocade switches, you must use SNMPv3 instead. If you are using SNMPv3, you must configure SNMPv3 in ONTAP before proceeding to the following section. For more details, see <<Configuring SNMPv3 in a MetroCluster configuration>>.
+
 [NOTE]
 ====
 * You should place bridges and a node management LIF in a dedicated network to avoid interference from other sources.
 * If you use a dedicated network for Health Monitoring, then each node must have a node management LIF in that dedicated network.
-====
+==== 
 
 ==== Configuring the MetroCluster FC switches for health monitoring
 
@@ -2560,12 +2562,23 @@ NOTE: Beginning with ONTAP 9.8, the `storage switch` command is replaced with `s
 
 . Add a switch with an IP address to each MetroCluster node:
 +
+The command you run depends on whether you are using SNMPv2 or SNMPv3.
++
+[role="tabbed-block"]
+====
+.Add a switch using SNMPv3:
+--
+`storage switch add -address <ip_adddress> -snmp-version SNMPv3 -snmp-community-or-username <SNMP_user_configured_on_the_switch>`
+--
+.Add a switch using SNMPv2:
+--
 `storage switch add -address ipaddress`
+--
+==== 
 +
 This command must be repeated on all four switches in the MetroCluster configuration.
 +
 NOTE: Brocade 7840 FC switches and all alerts are supported in health monitoring, except NoISLPresent_Alert.
-
 +
 The following example shows the command to add a switch with IP address 10.10.10.10:
 +
@@ -2680,7 +2693,6 @@ check the status of the running metrocluster check operation, use the command,
 +
 ----
 cluster_A::> metrocluster check show
-Last Checked On: 9/13/2017 20:41:37
 
 Component           Result
 ------------------- ---------
@@ -2689,7 +2701,9 @@ lifs                ok
 config-replication  ok
 aggregates          ok
 clusters            ok
-5 entries were displayed.
+connections         ok
+volumes             ok
+7 entries were displayed.
 ----
 
 . Display more detailed results from the most recent `metrocluster check run` command:
@@ -2903,6 +2917,7 @@ You can provide additional protection for the cluster configuration backup files
 +
 The https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[Cluster Management with the CLI] contains additional information under the section _Managing configuration backups_.
 
+// 2024 Feb 22, GH issue 366
 // BURT 1448684, 12 JAN 2022
 // 2030-FEB-14, GH issue 138
 // 2023-MAR-20, internal GH issue 221

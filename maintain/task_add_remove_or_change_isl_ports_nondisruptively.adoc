@@ -4,12 +4,12 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, add, remove, change, isl, ports, nondisruptively
 summary: 'You might need to add, remove, or change ISL ports. You can convert dedicated ISL ports to shared ISL ports, or change the speed of ISL ports on a switch. ISLs traveling greater distances might require lower speeds to improve quality. You also might need to increase the speed of ISL ports to take advantage of system upgrades and add ISLs to a Cisco IP switch if you are adding or upgrading hardware.'
 ---
-= Adding, removing, or changing ISL ports nondisruptively
+= Add, remove, or change ISL ports nondisruptively on Cisco IP switches
 :icons: font
-:imagesdir: ../media/
+:imagesdir: ../media/ 
 
 [.lead]
-You might need to add, remove, or change ISL ports. You can convert dedicated ISL ports to shared ISL ports, or change the speed of ISL ports on a switch. ISLs traveling greater distances might require lower speeds to improve quality. You also might need to increase the speed of ISL ports to take advantage of system upgrades and add ISLs to a Cisco IP switch if you are adding or upgrading hardware.
+You might need to add, remove, or change ISL ports on Cisco IP switches. You can convert dedicated ISL ports to shared ISL ports, or change the speed of ISL ports on a Cisco IP switch.
 
 .About this task
 
@@ -19,13 +19,19 @@ You must complete all the steps on both switches to ensure ISL connectivity.
 
 The following procedure assumes you are replacing a 10-Gb ISL connected at switch port Eth1/24/1 with two 100-Gb ISLs that are connected to switch ports 17 and 18.
 
+NOTE: If you are using a Cisco 9336C-FX2 switch in a shared configuration connecting NS224 shelves, changing the ISLs might require a new RCF file. You do not require a new RCF file if your current and new ISL speed is 40Gbps and 100Gbps. All other changes to ISL speed requires a new RCF file. For example, changing the ISL speed from 40Gbps to 100Gbps does not require a new RCF file, but changing the ISL speed from 10Gbps to 40Gbps requires a new RCF file.
+
+.Before you begin
+
+Refer to the *Switches* section of the link:https://hwu.netapp.com/[NetApp Hardware Universe^] to verify the supported transceivers.
+
 .Steps
 . Disable the ISL ports of the ISLs on both switches in the fabric that you want to change.
 +
 --
 NOTE: You only need to disable the current ISL ports if you are moving them to a different port, or the speed of the ISL is changing. If you are adding an ISL port with the same speed as the existing ISLs, go to Step 3.
 --
-
+  
 +
 You must enter only one configuration command for each line and press Ctrl-Z after you have entered all the commands, as shown in the following example:
 +
@@ -47,7 +53,8 @@ switch_B_1#
 . Remove the existing cables and transceivers.
 . Change the ISL port as required.
 +
-
+NOTE: If you are using Cisco 9336C-FX2 switches in a shared configuration connecting NS224 shelves, and you need to upgrade the RCF file and apply the new configuration for the new ISL ports, follow the steps to link:task_upgrade_rcf_files_on_mcc_ip_switches.html[upgrade the RCF files on MetroCluster IP switches.]
++
 [cols="30,70"]
 |===
 
@@ -89,30 +96,30 @@ switch_B_1#
 switch_B_1# copy running-config startup-config
 ----
 
-. Verify that the ISLs are established between both switches:
+. Verify that the ISLs and port channels for the ISLs are established between both switches:
 +
-`switch_A_1# show int eth1/17,eth1/18 brief`
+`switch_A_1# show int brief`
 +
 You should see the ISL interfaces in the command output as shown in the following example:
 +
 ----
-switch_A_1# show int eth1/17,eth1/18 brief
+Switch_A_1# show interface brief
 --------------------------------------------------------------------------------
-Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
-Interface                                                                                                        Ch #
+Ethernet        VLAN    Type Mode   Status  Reason                 Speed     Port
+Interface                                                                    Ch #
 --------------------------------------------------------------------------------
-Eth1/17       10         eth     access    up      none                       100G(D) 10
-Eth1/18       10         eth     access    up      none                       100G(D) 10
+Eth1/17         1       eth  access down    XCVR not inserted        auto(D) --
+Eth1/18         1       eth  access down    XCVR not inserted        auto(D) --
 
-switch_B_1# show int eth1/17,eth1/18 brief
---------------------------------------------------------------------------------
-Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
-Interface                                                                                                        Ch #
---------------------------------------------------------------------------------
-Eth1/17       10         eth     access    up      none                       100G(D) 10
-Eth1/18       10         eth     access    up      none                       100G(D) 10
+------------------------------------------------------------------------------------------
+Port-channel VLAN    Type Mode   Status  Reason                              Speed   Protocol
+Interface
+------------------------------------------------------------------------------------------
+Po10         1       eth  trunk  up      none                                a-100G(D)  lacp
+Po11         1       eth  trunk  up      none                                a-100G(D)  lacp
 ----
 
 . Repeat the procedure for fabric 2.
 
 // BURT 1448684, 17 JAN 2022
+// 2023-11-09, MCC GitHub issue #339

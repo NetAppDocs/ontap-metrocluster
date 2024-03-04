@@ -9,11 +9,11 @@ summary: 'You might need to upgrade an RCF file on a MetroCluster IP switch. For
 :imagesdir: ../media/
 
 [.lead]
-You might need to upgrade an RCF file on a MetroCluster IP switch. For example, an ONTAP upgrade or a switch firmware upgrade both require a new RCF file.
+You might need to upgrade an RCF file on a MetroCluster IP switch. For example, if the RCF file version that you are running on the switches is not supported by the ONTAP version, the switch firmware version, or both.
 
-== Ensure that the RCF file is supported
+== Verify that the RCF file is supported
 
-If you are changing the ONTAP version running on the switches, you should ensure that you have an RCF file that is supported for that version.  If you use the RCF generator, the correct RCF file will be generated for you.
+If you are changing the ONTAP version or the switch firmware version, you should verify that you have an RCF file that is supported for that version. If you use the RCF generator, the correct RCF file will be generated for you.
 
 .Steps
 
@@ -52,7 +52,9 @@ If you are installing new switch firmware, you must install the switch firmware 
 
 .About this task
 
-This procedure disrupts traffic on the switch where the RCF file is upgraded. Traffic will resume once the new RCF file is applied.
+* This procedure disrupts traffic on the switch where the RCF file is upgraded. Traffic will resume once the new RCF file is applied.
+
+* Perform the steps on one switch at a time, in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2.
 
 .Steps
 . Verify the health of the configuration.
@@ -75,8 +77,6 @@ After approximately five minutes, the following results are displayed:
 ----
 -----------
 ::*> metrocluster check show
-
-Last Checked On: 4/7/2019 21:15:05
 
 Component           Result
 ------------------- ---------
@@ -103,19 +103,21 @@ Follow the steps for your switch vendor:
 * link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
 +
 * link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
++
+* link:../install-ip/task_switch_config_nvidia.html[Resetting the NVIDIA IP SN2100 switch to factory defaults]
 
 . Download and install the IP RCF file, depending on your switch vendor.
-
 +
-NOTE: Update the switches in the following order:  Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2
-
 * link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom IP RCF files]
-
++
 * link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
 +
-
+* link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Downloading and installing the NVIDIA IP RCF files]
++
 NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switchport mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
 
-
+// 2024 Feb 22, GH issue 366
+// 2023 Feb 21, GH issue 361
+// 2023 Nov 28, ONTAPDOC-1493
 // GitHub issue 135, July 4th 2022
 // GH issue 213, 2022-Oct-06

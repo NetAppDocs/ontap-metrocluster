@@ -35,6 +35,9 @@ NOTE: If you refresh both DR groups, the platform combination might not be suppo
 
 .Steps
 
+. Verify that you have a default broadcast domain created on the old nodes. 
++
+When you add new nodes to an existing cluster without a default broadcast domain, node management LIFs are created for the new nodes using universal unique identifiers (UUIDs) instead of the expected names. For more information, see the Knowledge Base article https://kb.netapp.com/onprem/ontap/os/Node_management_LIFs_on_newly-added_nodes_generated_with_UUID_names[Node management LIFs on newly-added nodes generated with UUID names^].
 . Gather information from the old nodes.
 +
 At this stage, the four-node configuration appears as shown in the following image:
@@ -98,7 +101,7 @@ a|
 Refer to the product documentation.
 |===
 
-. Perform all of the steps in link:../upgrade/task_expand_a_four_node_mcc_ip_configuration.html[Expanding a MetroCluster IP configuration] to add the new nodes and storage to the configuration.
+. Perform all of the steps in link:../upgrade/task_expand_a_four_node_mcc_ip_configuration.html[Expanding a MetroCluster IP configuration^] to add the new nodes and storage to the configuration.
 +
 When the expansion procedure is complete, the temporary configuration appears as shown in the following images:
 +
@@ -127,14 +130,14 @@ Node_IP_2      Node_IP_1              true      Connected to Node_IP_1
 
 . Move the CRS volumes.
 +
-Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations].
+Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations^].
+//ONTAPDOC-1711
+. Move the data from the old nodes to the new nodes by using the following procedures:
 
-. Move the data from the old nodes to the new nodes by using the following procedures in link:https://docs.netapp.com/us-en/ontap-systems-upgrade/index.html[AFF and FAS System Upgrade Documentation^]
-
-.. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-AFE432F6-60AD-4A79-86C0-C7D12957FA63.html[Creating an aggregate and moving volumes to the new nodes^].
+.. Perform all the steps in https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-create-aggregate-move-volumes.html[Create an aggregate and move volumes to the new nodes^].
 +
 NOTE: You might choose to mirror the aggregate when or after it is created.
- .. Perform all the steps in http://docs.netapp.com/platstor/topic/com.netapp.doc.hw-upgrade-controller/GUID-95CA9262-327D-431D-81AA-C73DEFF3DEE2.html[Moving non-SAN data LIFs and cluster management LIFs to the new nodes].
+ .. Perform all the steps in https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-move-lifs-to-new-nodes.html[Move non-SAN data LIFs and cluster-management LIFs to the new nodes^].
 
 . Modify the IP address for the cluster peer of the transitioned nodes for each cluster:
 .. Identify the cluster_A peer by using the `cluster peer show` command:
@@ -282,6 +285,7 @@ Refer to the product documentation.
 `system node autosupport invoke -node * -type all -message MAINT=end`
 .. Repeat the command on the partner cluster.
 
+// 2023 SEP 1, ONTAPDOC-836
 // 22 Jun 2023, GH issue 243
 // BURT 1374268, 21 APR 2021
 // BURT 1448684, 02 FEB 2022
