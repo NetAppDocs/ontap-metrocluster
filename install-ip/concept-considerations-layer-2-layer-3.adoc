@@ -61,7 +61,7 @@ The intermediate customer-provided switches must meet the following requirements
 
 .VLAN configuration in ONTAP 
 
-You can only specify the VLAN during interface creation. After the MetroCluster interfaces are created, the VLAN ID cannot not be changed. You can configure other VLANs during interface creation but they must be within the range 10/20 or within the range 101 to 4096 (or the number supported by the switch vendor, whichever is the lower number).
+You can only specify the VLAN during interface creation. After the MetroCluster interfaces are created, the VLAN ID cannot not be changed. You can configure other VLANs during interface creation but they must be within the range 10 to 20 or within the range 101 to 4096 (or the number supported by the switch vendor, whichever is the lower number).
 
 NOTE: Some switch vendors might reserve the use of certain VLANs. 
 
@@ -70,7 +70,7 @@ The following systems do not require VLAN configuration within ONTAP. The VLAN i
 * FAS8200 and AFF A300
 * AFF A320
 * FAS9000 and AFF A700
-* AFF A800, ASA A800, AFF C800 and ASA C800
+* AFF A800, ASA A800, AFF C800, and ASA C800
 +
 NOTE: The systems listed above might be configured using VLANs 100 and below. However, some VLANs in this range might be reserved for other or future use.
 
@@ -78,7 +78,7 @@ For all other systems, you must configure the VLAN when you create the MetroClus
 
 * The default VLAN is 10 and 20
 * If you are running ONTAP 9.7 or earlier, you can only use the default VLAN 10 and 20.
-* If you are running ONTAP 9.8 and later, you can use the default VLAN 10 and 20, and a VLAN over 100 (101 and higher) can also be used.
+* If you are running ONTAP 9.8 or later, you can use the default VLAN 10 and 20, and a VLAN over 100 (101 and higher) can also be used.
 
 == Considerations for layer 3 networks
 
@@ -88,8 +88,8 @@ image::../media/mcc_layer3_backend.png[]
 
 The MetroCluster environment is configured and cabled as a standard MetroCluster IP configuration as described in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_parts_of_an_ip_mcc_configuration_mcc_ip.html[Configure the MetroCluster hardware components]. When you perform the installation and cabling procedure, you must perform the steps specific to a layer 3 configuration. The following applies to layer 3 configurations:
 
-* MetroCluster switches can be connected directly to the router or to one or more intervening switches.
-* MetroCluster IP interfaces can be connected directly to the router or to one of the intervening switches.
+* You can connect MetroCluster switches directly to the router or to one or more intervening switches.
+* You can connect MetroCluster IP interfaces directly to the router or to one of the intervening switches.
 * The VLAN must be extended to the gateway device.
 * You use the `-gateway parameter` to configure the MetroCluster IP interface address with an IP gateway address.
 * The VLAN IDs for the MetroCluster VLANs must be the same at each site. However, the subnets can be different. 
@@ -131,7 +131,7 @@ The `MetroClusterIP_ISL_Ingress` policy maps the incoming tagged traffic to the 
 
 * You must configure the intermediate switches with matching QoS access-maps, class-maps, and policy-maps along the path between the MetroCluster IP switches. The intermediate switches map RDMA traffic to COS5 and storage traffic to COS4.
 
-The following examples are for Cisco Nexus 3232C and 9336C-FX2 switches. Depending on your switch vendor and model, you must make sure that your intermediate switches have an appropriate configuration.
+The following examples are for Cisco Nexus 3232C and 9336C-FX2 switches. Depending on your switch vendor and model, you must verify that your intermediate switches have an appropriate configuration.
 
 .Configure the class map for the intermediate switch ISL port
 
