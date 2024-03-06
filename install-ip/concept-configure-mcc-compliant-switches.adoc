@@ -2,7 +2,7 @@
 permalink: install-ip/concept-configure-mcc-compliant-switches.html
 sidebar: sidebar
 keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant, configuration
-summary: You should know how the various switch ports should be configured.
+summary: Learn about the various switch port configurations.
 ---
 
 = Switch port configuration examples
@@ -10,7 +10,7 @@ summary: You should know how the various switch ports should be configured.
 :imagesdir: ../media/
 
 [.lead]
-You should know how the various switch ports should be configured.
+Learn about the various switch port configurations. 
 
 NOTE: The following examples use decimal values and follow the table that applies to Cisco switches. Depending on the switch vendor, you might require different values for DSCP. Refer to the corresponding table for your switch vendor to confirm the correct value.
 
@@ -53,7 +53,7 @@ CS5
 
 |===
 
-.Switchport connecting a MetroCluster interface
+.Switch port connecting a MetroCluster interface
 
 * Classification for remote direct memory access (RDMA) traffic: 
 ** Match : TCP port 10006, source, destination, or both
@@ -93,7 +93,7 @@ NOTE: Configuration thresholds can vary depending on the environment. You must e
 * iSCSI, COS 4 / DSCP 32: 40%
 * Minimum capacity requirement per MetroCluster configuration and network: 10Gbps
 
-NOTE: If you use rate limits, then the traffic should be *shaped* without introducing loss.
+NOTE: If you use rate limits, the traffic should be *shaped* without introducing loss.
 
 == Examples for configuring switch ports connecting the MetroCluster controller
 
@@ -118,9 +118,9 @@ The load balancing policy should be set so that order is preserved.
 # port-channel load-balance src-dst ip-l4port-vlan
 ----
 
-== Configuring classification
+== Examples for configuring classification
 
-You must configure the access and class maps that map RDMA and iSCSI traffic to the appropriate classes.
+You must configure access and class maps to map RDMA and iSCSI traffic to the appropriate classes.
 
 In the following example, all TCP traffic to and from the port 65200 is mapped to the storage (iSCSI) class. All TCP traffic to and from the port 10006 is mapped to the RDMA class. These policy-maps are used on switch ports connecting the MetroCluster interfaces.
 
@@ -139,7 +139,7 @@ class-map type qos match-all rdma
 match access-group name rdma
 ----
 
-You must configure the ingress policy. The ingress policy maps the traffic as classified to different COS groups. In this example, the RDMA traffic is mapped to COS group 5 and iSCSI traffic is mapped to COS group 4. The ingress policy is used on switch ports connecting the MetroCluster interfaces and on the ISL ports carrying MetroCluster traffic.
+You must configure an ingress policy. An ingress policy maps the traffic as classified to different COS groups. In this example, the RDMA traffic is mapped to COS group 5 and iSCSI traffic is mapped to COS group 4. The ingress policy is used on switch ports connecting the MetroCluster interfaces and on the ISL ports carrying MetroCluster traffic.
 
 *Example:*
 ----
@@ -179,16 +179,16 @@ class type queuing c-out-8q-q-default
   random-detect threshold burst-optimized ecn
 ----
 
-== Configuring the node ports 
+== Examples for configuring the node ports 
 
-You might need to configure the node port in breakout mode. In this example, ports 25 and 26 are configured in 4 x 25Gbps breakout mode.
+You might need to configure a node port in breakout mode. In the following example, ports 25 and 26 are configured in 4 x 25Gbps breakout mode.
 
 *Example:*
 ----
 interface breakout module 1 port 25-26 map 25g-4x
 ----
 
-You might need to configure the MetroCluster interface port speed. The example shows how to configure the speed to *auto* or into 40Gbps mode
+You might need to configure the MetroCluster interface port speed. The following example shows how to configure the speed to *auto* or into 40Gbps mode:
 
 *Example:*
 ----
@@ -197,7 +197,7 @@ You might need to configure the MetroCluster interface port speed. The example s
 	speed 40000
 ----
 
-The following example shows a switch port configured to connect a MetroCluster interface. It is an access mode port in VLAN 10, with MTU of 9216 and is operating in native speed. It has symmetric (send and receive) flow control (pause) enabled and the MetroCluster ingress and egress policies assigned.
+The following example shows a switch port configured to connect a MetroCluster interface. It is an access mode port in VLAN 10, with an MTU of 9216 and is operating in native speed. It has symmetric (send and receive) flow control (pause) enabled and the MetroCluster ingress and egress policies assigned.
 
 *Example:*
 ----
@@ -215,16 +215,16 @@ service-policy type queuing output MetroClusterIP_Node_Egress
 no shutdown
 ----
 
-On 25Gbps ports, the Forward Error Correction (FEC) setting might need to be set to "off" as shown in the example.
+On 25Gbps ports, you  might need to set the Forward Error Correction (FEC) setting to "off", as shown in the following example.
 
 *Example:*
 ----
 fec off
 ----
 
-==  Configuration of the ISL ports throughout the network
+==  Examples of configuration of ISL ports throughout the network
 
-A MetroCluster-compliant switch is regarded as an intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch must be configured the same way as the ISL ports on an intermediate switch. Refer to the section link:concept-considerations-layer-2-layer-3.html#required-settings-on-intermediate-switches[Required settings on intermediate switches^] for guidance and examples.
+A MetroCluster-compliant switch is regarded as an intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch must be configured the same way as the ISL ports on an intermediate switch. Refer to link:concept-considerations-layer-2-layer-3.html#required-settings-on-intermediate-switches[Required settings on intermediate switches^] for guidance and examples.
 
 NOTE: Some policy maps are the same for switch ports connecting MetroCluster interfaces and ISLs carrying MetroCluster traffic. You can use the same policy map for both of these port usages.
 
