@@ -33,7 +33,7 @@ For example, MetroCluster switches can connect using one 40Gbps ISL to the inter
 * Network monitoring should be configured on the intermediate network to monitor the ISLs for utilization, errors (drops, link flaps, corruption, and so on), and failures.
 * The MTU size must be set to 9216 on all ports carrying MetroCluster end-to-end traffic.
 * No other traffic can be configured with a higher priority than class of service (COS) 5.
-* ECN (explicit congestion notifications) must be configured on all paths carrying end-to-end MetroCluster traffic.
+* Explicit congestion notification (ECN) must be configured on all paths carrying end-to-end MetroCluster traffic.
 * ISLs carrying MetroCluster traffic must be native links between the switches. 
 +
 Link sharing services such as Multiprotocol Label Switching (MPLS) links are not supported.
@@ -249,7 +249,7 @@ class type queuing c-out-8q-q4
 NOTE: Minimum and maximum values vary depending on the switch and your requirements.
 
 .Example 1: Cisco
-If your configuration has Cisco switches, you do not need to classify on the first ingress port of the intermediate switch. You then configure the following:
+If your configuration has Cisco switches, you do not need to classify on the first ingress port of the intermediate switch. You then configure the following class and policy maps:
 
 *	`class-map type qos match-any c5`
 *	`class-map type qos match-any c4`
@@ -258,7 +258,7 @@ If your configuration has Cisco switches, you do not need to classify on the fir
 You assign the `MetroClusterIP_ISL_Ingress_Match` policy map to the ISL ports carrying MetroCluster traffic.
 
 .Example 2: Broadcom
-If your configuration has Broadcom switches, you must classify on the first ingress port of the intermediate switch. You then configure the following:
+If your configuration has Broadcom switches, you must classify on the first ingress port of the intermediate switch. You then configure the following class and policy maps:
 
 *	`ip access-list rdma`
 *	`ip access-list storage`
