@@ -34,12 +34,12 @@ Learn about the MAUSO features available with each ONTAP 9 release.
 
 |ONTAP 9.13.1
 |* A MAUSO is initiated if a <<default_scenarios,default scenario>> occurs and a fan or hardware failure initiates an environmental shutdown. Examples of hardware failures include a power supply unit, NVRAM battery, or Service Processor heartbeat failure, or a high or low temperature.
-* In an eight-node configuration, you can change the behavior to initiate a MAUSO either on failure of the cluster or a HA pair. For a HA pair, both nodes must fail at the same time.
-* You can change the behavior to force a MAUSO even if NVRAM is not in sync at the time of the failure.
 * The default value for the failure domain is set to "auso-on-dr-group" in a MetroCluster IP configuration. For ONTAP 9.12.1 and earlier, the default value is set to "auso-on-cluster-disaster".
 +
-In an eight-node MetroCluster IP configuration, "auso-on-dr-group" triggers a switchover if both nodes in a HA pair in one DR group fail. Optionally, you can change the failure domain setting to the "auso-on-cluster-disaster" domain using the `metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster` command to trigger a switchover only if there are HA node pair failures in both DR groups.
-
+In an eight-node MetroCluster IP configuration, "auso-on-dr-group" triggers a MAUSO either on failure of the cluster or a HA pair in one DR group. For a HA pair, both nodes must fail at the same time.
++
+Optionally, you can change the failure domain setting to the "auso-on-cluster-disaster" domain using the `metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster` command to trigger a MAUSO only if there are HA node pair failures in both DR groups.
+* You can change the behavior to force a MAUSO even if NVRAM is not in sync at the time of the failure.
 
 | [[mauso-9-12-1]] ONTAP 9.12.1
 |You can enable the MetroCluster automatic forced switchover feature in a MetroCluster IP configuration by using the `metrocluster modify -allow-auto-forced-switchover true` command. 
