@@ -9,7 +9,7 @@ summary: The various MetroCluster configurations have key differences in the req
 :imagesdir: ../media/
 
 [.lead]
-Beginning with ONTAP 9.7, you can use either the ONTAP Mediator-assisted automatic unplanned switchover (MAUSO) in the MetroCluster IP configuration or you can use the MetroCluster Tiebreaker software. Only one of the two services can be used with the MetroCluster IP configuration.
+Beginning with ONTAP 9.7, you can use either the ONTAP Mediator-assisted automatic unplanned switchover (MAUSO) in the MetroCluster IP configuration or you can use the MetroCluster Tiebreaker software. It is not required to use the MAUSO or Tiebreaker software; however, if you choose to not use either of these services, you must link:../disaster-recovery/concept_dr_workflow.html[perform a manual recovery] if a disaster occurs.
 
 The different MetroCluster configurations perform automatic switchover under different circumstances:
 
@@ -21,7 +21,7 @@ In these configurations, AUSO is initiated if controllers fail but the storage (
 +
 In these configurations, MAUSO is initiated in the same circumstances as AUSO, as described above, and also after a complete site failure (controllers, storage, and switches).
 +
-NOTE: MAUSO is initiated only if nonvolatile cache mirroring (_DR mirroring_) and SyncMirror plex mirroring is in sync at the time of the failure.
+link:concept-ontap-mediator-supports-automatic-unplanned-switchover.html[Learn about how the ONTAP Mediator supports automatic unplanned switchover].
 
 * *MetroCluster IP or FC configurations using the Tiebreaker software in active mode*
 +
@@ -59,7 +59,8 @@ A MAUSO is *not* initiated in the following shutdown scenarios:
 
 
 
-// 2023 JULY 5, ontap-metrocluster-issue-303
+// 2024 FEB 21, ontap-metrocluster-issue-365
+// 2024 FEB 20, ONTAPDOC-1168
 // 2023 APR 19, BURT 1532596
 // 2022 JAN 24, BURT 1442346 
 // 2022 FEB 11, BURT 1456187 
