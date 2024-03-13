@@ -33,30 +33,6 @@ Before using the Tiebreaker software, review the link:../tiebreaker/concept_over
 
 You cannot use any third-party applications or appliances that can trigger a switchover in combination with ONTAP Mediator. In addition, monitoring a MetroCluster configuration with MetroCluster Tiebreaker software is not supported when using ONTAP Mediator.
 
-== How the ONTAP Mediator supports automatic unplanned switchover
-
-The ONTAP Mediator stores state information about the MetroCluster nodes in mailboxes located on the Mediator host. The MetroCluster nodes can use this information to monitor the state of their DR partners and implement a MAUSO in the case of a disaster.
-
-When a node detects a site failure requiring a switchover, it takes steps to confirm that the switchover is appropriate and, if so, performs the switchover.
-
-A MAUSO is only initiated in the following scenarios:
-
-
-* Both SyncMirror mirroring and DR mirroring of each node's nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
-* None of the nodes at the surviving site are in takeover state.
-* If a site disaster occurs. A site disaster is a failure of *all* nodes at the same site.
-+
-NOTE: Beginning with ONTAP 9.13.1, you can change the behavior to initiate a MAUSO either on failure of the cluster *or* a HA pair. For a HA pair, both nodes must fail at the same time.
-* Beginning with ONTAP 9.13.1, if the above conditions are met and a fan or hardware failure initiates an environmental shutdown, for example, a power supply unit, NVRAM battery, or Service Processor heartbeat failure, or high or low temperature. 
-
-You can initiate a MAUSO for additional scenarios that are not listed above. For more information, see link:concept-risks-limitations-automatic-switchover.html[Risks and limitations of using MetroCluster automatic forced switchover].
-
-A MAUSO is *not* initiated in the following shutdown scenarios:
-
-* You initiate a shutdown. For example, when you:
-** halt the nodes
-** reboot the nodes
-
 
 
 // 2024 FEB 21, ontap-metrocluster-issue-365
