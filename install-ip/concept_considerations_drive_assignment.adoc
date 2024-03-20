@@ -47,6 +47,8 @@ You must set the ha-config state to `mccip` before automatic provisioning to mak
 A maximum of 96 drives can be automatically partitioned during installation. You can add extra drives after the initial installation.
 //BURT 1440058
 
+NOTE: If you are using a mixture of internal and external disks, you first initialize the MetroCluster with the internal disks only using ADP. You then manually connect the external shelf after you complete your installation or set up task. For both the internal and external drives, you must populate the partially fully shelves as described in <<populate-partially-full-shelves, How to populate partially-full shelves>>.
+
 == How shelf-by-shelf automatic assignment works
 
 If there are four external shelves per site, each shelf is assigned to a different node and different pool, as shown in the following example:
@@ -59,8 +61,6 @@ If there are four external shelves per site, each shelf is assigned to a differe
 * All of the disks on site_B-shelf_4 are automatically assigned to pool 1 of node_A_2
 * All of the disks on site_A-shelf_2 are automatically assigned to pool 1 of node_B_1
 * All of the disks on site_A-shelf_4 are automatically assigned to pool 1 of node_B_2
-
-If you are using a mixture of internal and external disks, automatic assign cannot happen. In this scenario, you initialize the MetroCluster with the internal disks only and then manually connect the external shelf after you complete your installation or set up task. You must distribute the drives in the partially full shelves as described in <<populate-partially-full-shelves, How to populate partially-full shelves>>.
 
 [[populate-partially-full-shelves]]
 == How to populate partially-full shelves
