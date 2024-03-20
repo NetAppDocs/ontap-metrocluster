@@ -60,6 +60,9 @@ If there are four external shelves per site, each shelf is assigned to a differe
 * All of the disks on site_A-shelf_2 are automatically assigned to pool 1 of node_B_1
 * All of the disks on site_A-shelf_4 are automatically assigned to pool 1 of node_B_2
 
+If you are using a mixture of internal and external disks, automatic assign cannot happen. In this scenario, you initialize the MetroCluster with the internal disks only and then manually connect the external shelf after you complete your installation or set up task. You must distribute the drives in the partially full shelves as described in <<populate-partially-full-shelves, How to populate partially-full shelves>>.
+
+[[populate-partially-full-shelves]]
 == How to populate partially-full shelves
 
 If your configuration is using shelves that are not fully populated (have empty drive bays) you must distribute the drives evenly throughout the shelf, depending on the disk assignment policy. The disk assignment policy depends on how many shelves are at each MetroCluster site.
@@ -599,6 +602,7 @@ Minimum supported drives (per site) (active/passive HA configuration)
 
 |===
 
+// 2024 MAR 20, ONTAPDOC-1572
 // 2023 Nov 08, BURT 1572945
 // 22 Sep 2023, BURT 1575272
 // 2023 July 06, ONTAPDOC-1161
