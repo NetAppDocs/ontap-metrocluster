@@ -20,7 +20,7 @@ The following applies to ISLs on all MetroCluster IP configurations:
 * ISLs in both fabrics must be the same speed and length.
 * The maximum supported difference in distance between fabric 1 and fabric 2 is 20km or 0.2ms.
 * The ISLs on one fabric must have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they must all use WDM.
-* ISL speed must be least 10Gbps.
+* The ISL speed must be least 10Gbps.
 * There must be least one 10Gbps ISL port per fabric.
 
 === Latency and packet loss limits in the ISLs
@@ -32,7 +32,7 @@ The following applies to round-trip traffic between the MetroCluster IP switches
 
 * Any device that contributes to latency must be accounted for.
 
-* _The Hardware Universe_ provides the distance in km. You must allocate 1ms for every 100km. The maximum distance is defined by what is reached first, either the maximum round-trip time (RTT) in ms, or the distance in km. For example – if _The Hardware Universe_ lists a distance of 300km, translating to 3ms, your ISL can be no further than 300km and the max RTT cannot exceed 3ms – whichever is reached first.
+* The link:https://hwu.netapp.com/[Hardware Universe.^] provides the distance in km. You must allocate 1ms for every 100km. The maximum distance is defined by what is reached first, either the maximum round-trip time (RTT) in ms, or the distance in km. For example – if _The Hardware Universe_ lists a distance of 300km, translating to 3ms, your ISL can be no further than 300km and the max RTT cannot exceed 3ms – whichever is reached first.
 
 * Packet loss must be less than, or equal to, 0.01%. The maximum packet loss is the sum of all loss on all links on the path between the MetroCluster nodes, and the loss on the local MetroCluster IP interfaces.
 
