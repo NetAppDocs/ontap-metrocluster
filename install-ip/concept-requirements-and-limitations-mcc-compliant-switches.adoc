@@ -1,0 +1,50 @@
+---
+permalink: install-ip/concept-requirement-and-limitations-mcc-compliant-switches.html
+sidebar: sidebar
+keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant, limitations
+summary: Beginning with ONTAP 9.7, MetroCluster IP configurations can use MetroCluster-compliant switches. These are switches that are not NetApp-validated but are compliant with NetApp specifications. This topic outlines the general requirements and limitations of MetroCluster-compliant switches.
+---
+
+= Requirements and limitations when using MetroCluster-compliant switches
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Beginning with ONTAP 9.7, MetroCluster IP configurations can use MetroCluster-compliant switches. These are switches that are not NetApp-validated but are compliant with NetApp specifications. However, NetApp does not provide troubleshooting or configuration support services for any non-validated switch. You should be aware of the general requirements and limitations when using MetroCluster-compliant switches.
+
+== General requirements for MetroCluster-compliant switches
+
+The switch connecting the MetroCluster IP interfaces must meet the following general requirements:
+
+* The switches must support quality of service (QoS) and traffic classification.
+* The switches must support explicit congestion notification (ECN).
+* The switches must support a load-balancing policy to preserve order along the path.
+* The switches must support L2 Flow Control (L2FC).
+* The switch port must provide a dedicated rate and must not be overallocated.
+* The cables and transceivers connecting the nodes to the switches must be provided by NetApp. These cables must be supported by the switch vendor. If you are using optical cabling, the transceiver in the switch might not be provided by NetApp. You must verify that it is compatible with the transceiver in the controller.
+
+* The switches connecting the MetroCluster nodes can carry non-MetroCluster traffic.
+* Only platforms that provide dedicated ports for switchless cluster interconnects can be used with a MetroCluster-compliant switch. Platforms such as the FAS2750 and AFF A220 cannot be used because MetroCluster traffic and MetroCluster interconnect traffic share the same network ports.
+* The MetroCluster-compliant switch must not be used for local cluster connections.
+* The MetroCluster IP interface can be connected to any switch port that can be configured to meet the requirements.
+* Four IP switches are required, two for each switch fabric. If you use directors, then you can use a single director at each side, but the MetroCluster IP interfaces must connect to two different blades in two different failure domains on that director.
+* The MetroCluster interfaces from one node must connect to two network switches or blades. The MetroCluster interfaces from one node cannot be connected to the same network or switch or blade.
+* The network must meet the requirements outlined in the following sections:
+** link:concept-requirements-isls.html[Considerations for ISLs]
+** link:concept-considerations-layer-2-layer-3.html[Considerations when deploying MetroCluster in shared layer 2 or layer 3 networks]
+* The maximum transmission unit (MTU) of 9216 must be configured on all switches that carry MetroCluster IP traffic.
+* Reverting to ONTAP 9.6 or earlier is not supported.
+
+Any intermediate switches that you use between the switches connecting the MetroCluster IP interfaces at both sites must meet the requirements and must be configured as outlined in link:concept-considerations-layer-2-layer-3.html[Considerations when deploying MetroCluster in shared layer 2 or layer 3 networks].
+
+== Limitations when using MetroCluster-compliant switches
+
+You cannot use any configuration or feature that requires that local cluster connections are connected to a switch. For example, you cannot use the following configurations and procedures with a MetroCluster-compliant switch:
+
+* Eight-node MetroCluster configurations
+* Transitioning from MetroCluster FC to MetroCluster IP configurations
+* Refreshing a four-node MetroCluster IP configuration
+* Platforms sharing a physical interface for local cluster and MetroCluster traffic. Refer to link:concept-network-speeds-and-switchport-modes.html[Platform-specific network speeds and switch port modes for MetroCluster-compliant switches] for supported speeds.
+
+
+// 2023-07-18, burt 1451528/ONTAPDOC-928
