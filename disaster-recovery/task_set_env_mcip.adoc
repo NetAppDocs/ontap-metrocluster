@@ -447,6 +447,10 @@ The following example shows the commands for setting the values on node_A_2 when
 setenv bootarg.mcc.lun_part true
 ----
 
+. If the original systems were configured for end-to-end encryption, at each of the replacement nodes' LOADER prompt, set the following bootarg:
++
+`setenv bootarg.mccip.encryption_enabled 1`
+ 
 . If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, set the original system ID (*not* the system ID of the replacement controller module) and the system ID of the DR partner of the node:
 +
 `setenv bootarg.mcc.local_config_id original-sysID`
@@ -478,22 +482,5 @@ The following example shows the commands for setting the system IDs on node_A_2:
 setenv bootarg.mcc.local_config_id 4068741260
 setenv bootarg.mcc.dr_partner 4068741256
 ----
-
-. Verify if the original systems were configured for end-to-end encryption by running the following command from the surviving site:
-+
-`metrocluster node show -fields is-encryption-enabled`
-+
-If encryption is enabled, the following output is displayed: 
-+
-----
-1 cluster_A node_A_1 true
-1 cluster_A node_A_2 true
-1 cluster_B node_B_1 true
-1 cluster_B node_B_2 true
-4 entries were displayed.
-----
-.. If the original systems were configured for end-to-end encryption, at each of the replacement nodes' LOADER prompt, set the following bootarg:
-+
-`setenv bootarg.mccip.encryption_enabled 1` 
 
 // 2024 Feb 23, ONTAPDOC-1675
