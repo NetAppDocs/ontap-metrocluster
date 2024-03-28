@@ -1,0 +1,232 @@
+---
+permalink: install-ip/concept-configure-mcc-compliant-switches.html
+sidebar: sidebar
+keywords: metrocluster ip, metrocluster-compliant switches, metrocluster-compliant, requirements, compliant, configuration
+summary: Learn about the various switch port configurations.
+---
+
+= Switch port configuration examples
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Learn about the various switch port configurations. 
+
+NOTE: The following examples use decimal values and follow the table that applies to Cisco switches. Depending on the switch vendor, you might require different values for DSCP. Refer to the corresponding table for your switch vendor to confirm the correct value.
+
+|===
+
+h| DSCP value h| Decimal h| Hex h| Meaning
+
+a|
+101 000
+a|
+16
+a|
+0x10
+a| 
+CS2
+a|
+011 000
+a|
+24
+a|
+0x18
+a|
+CS3
+a|
+100 000
+a|
+32
+a|
+0x20
+a|
+CS4
+a|
+101 000
+a|
+40
+a|
+0x28
+a|
+CS5
+
+|===
+
+.Switch port connecting a MetroCluster interface
+
+* Classification for remote direct memory access (RDMA) traffic: 
+** Match : TCP port 10006, source, destination, or both
+** Optional match: COS 5
+** Optional match: DSCP 40
+** Set DSCP 40
+** Set COS 5
+** Optional : rate shaping to 20Gbps
+* Classification for iSCSI traffic: 
+** Match : TCP port 62500, source, destination, or both
+** Optional match: COS 4
+** Optional match: DSCP 32
+** Set DSCP 32
+** Set COS 4
+* L2FlowControl (pause), RX and TX
+
+.ISL ports
+
+* Classification:
+** Match COS 5 or DSCP 40
+*** Set DSCP 40
+*** Set COS 5
+** Match COS 4 or DSCP 32
+*** Set DSCP 32
+*** Set COS 4
+* Egress queuing
+** COS group 4 has a minimum configuration threshold of 2000 and a maximum threshold of 3000 
+** COS group 5 has a minimum configuration threshold of 3500 and a maximum threshold of 6500.
++
+NOTE: Configuration thresholds can vary depending on the environment. You must evaluate the configuration thresholds based on your individual environment.
++
+** ECN enabled for Q4 and Q5
+** RED enabled for Q4 and Q5
+
+.Bandwidth allocation (switch ports connecting MetroCluster interfaces and ISL ports)
+* RDMA, COS 5 / DSCP 40: 60%
+* iSCSI, COS 4 / DSCP 32: 40%
+* Minimum capacity requirement per MetroCluster configuration and network: 10Gbps
+
+NOTE: If you use rate limits, the traffic should be *shaped* without introducing loss.
+
+== Examples for configuring switch ports connecting the MetroCluster controller
+
+The example commands provided are valid for Cisco NX3232 or Cisco NX9336 switches. Commands vary according to the switch type. 
+
+If a feature or its equivalent shown in the examples is not available on the switch, the switch does not meet the minimum requirements and cannot be used to deploy a MetroCluster configuration. This is true for any switch connecting to a MetroCluster configuration and for all intermediate switches.
+
+NOTE: The following examples might only show the configuration for one network.
+
+.Basic configuration
+A virtual LAN (VLAN) in each network must be configured. The following example shows how to configure a VLAN in network 10.
+
+*Example:*
+
+----
+# vlan 10
+The load balancing policy should be set so that order is preserved.
+----
+
+*Example:*
+----
+# port-channel load-balance src-dst ip-l4port-vlan
+----
+
+== Examples for configuring classification
+
+You must configure access and class maps to map RDMA and iSCSI traffic to the appropriate classes.
+
+In the following example, all TCP traffic to and from the port 65200 is mapped to the storage (iSCSI) class. All TCP traffic to and from the port 10006 is mapped to the RDMA class. These policy-maps are used on switch ports connecting the MetroCluster interfaces.
+
+*Example:*
+----
+ip access-list storage
+  10 permit tcp any eq 65200 any
+  20 permit tcp any any eq 65200
+ip access-list rdma
+  10 permit tcp any eq 10006 any
+  20 permit tcp any any eq 10006
+
+class-map type qos match-all storage
+  match access-group name storage
+class-map type qos match-all rdma
+match access-group name rdma
+----
+
+You must configure an ingress policy. An ingress policy maps the traffic as classified to different COS groups. In this example, the RDMA traffic is mapped to COS group 5 and iSCSI traffic is mapped to COS group 4. The ingress policy is used on switch ports connecting the MetroCluster interfaces and on the ISL ports carrying MetroCluster traffic.
+
+*Example:*
+----
+policy-map type qos MetroClusterIP_Node_Ingress
+class rdma
+  set dscp 40
+  set cos 5
+  set qos-group 5
+class storage
+  set dscp 32
+  set cos 4
+  set qos-group 4
+----
+
+NetApp recommends that you shape traffic on switch ports connecting a MetroCluster interface, as shown in the following example:
+
+*Example:*
+----
+policy-map type queuing MetroClusterIP_Node_Egress
+class type queuing c-out-8q-q7
+  priority level 1
+class type queuing c-out-8q-q6
+  priority level 2
+class type queuing c-out-8q-q5
+  priority level 3
+  shape min 0 gbps max 20 gbps
+class type queuing c-out-8q-q4
+  priority level 4
+class type queuing c-out-8q-q3
+  priority level 5
+class type queuing c-out-8q-q2
+  priority level 6
+class type queuing c-out-8q-q1
+  priority level 7
+class type queuing c-out-8q-q-default
+  bandwidth remaining percent 100
+  random-detect threshold burst-optimized ecn
+----
+
+== Examples for configuring the node ports 
+
+You might need to configure a node port in breakout mode. In the following example, ports 25 and 26 are configured in 4 x 25Gbps breakout mode.
+
+*Example:*
+----
+interface breakout module 1 port 25-26 map 25g-4x
+----
+
+You might need to configure the MetroCluster interface port speed. The following example shows how to configure the speed to *auto* or into 40Gbps mode:
+
+*Example:*
+----
+	speed auto
+
+	speed 40000
+----
+
+The following example shows a switch port configured to connect a MetroCluster interface. It is an access mode port in VLAN 10, with an MTU of 9216 and is operating in native speed. It has symmetric (send and receive) flow control (pause) enabled and the MetroCluster ingress and egress policies assigned.
+
+*Example:*
+----
+interface eth1/9
+description MetroCluster-IP Node Port
+speed auto
+switchport access vlan 10
+spanning-tree port type edge
+spanning-tree bpduguard enable
+mtu 9216
+flowcontrol receive on
+flowcontrol send on
+service-policy type qos input MetroClusterIP_Node_Ingress
+service-policy type queuing output MetroClusterIP_Node_Egress
+no shutdown
+----
+
+On 25Gbps ports, you  might need to set the Forward Error Correction (FEC) setting to "off", as shown in the following example.
+
+*Example:*
+----
+fec off
+----
+
+==  Examples of configuration of ISL ports throughout the network
+
+A MetroCluster-compliant switch is regarded as an intermediate switch, even it directly connects the MetroCluster interfaces. The ISL ports carrying MetroCluster traffic on the MetroCluster-compliant switch must be configured the same way as the ISL ports on an intermediate switch. Refer to link:concept-considerations-layer-2-layer-3.html#required-settings-on-intermediate-switches[Required settings on intermediate switches] for guidance and examples.
+
+NOTE: Some policy maps are the same for switch ports connecting MetroCluster interfaces and ISLs carrying MetroCluster traffic. You can use the same policy map for both of these port usages.
+
+
+// 2023-07-18, burt 1451528/ONTAPDOC-928
