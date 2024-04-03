@@ -60,7 +60,7 @@ metrocluster modify -is-encryption-enabled true -dr-group-id <dr_group_id>
 *Example*
 +
 ----
-Cluster_1::*> metrocluster modify -is-encryption-enabled true -dr-group-id 1         
+cluster_A::*> metrocluster modify -is-encryption-enabled true -dr-group-id 1         
 [Job 244] Job succeeded: Modify is successful.
 ----
 
@@ -72,19 +72,22 @@ metrocluster node show -fields is-encryption-enabled
 *Example*
 +
 ----
-site_A::*> metrocluster node show -fields is-encryption-enabled,configuration-state    (metrocluster node show)  (metrocluster node show)
-dr-group-id cluster    node     configuration-state is-encryption-enabled
------------ -------------------------- ------------------ ------------------- ---------------------
-1           cluster_A  node_A_1 configured          true                 
-1           cluster_A  node_A_2 configured          true                 
-1           cluster_B  node_B_1 configured          true                 
-1           cluster_B  node_B_2 configured          true                 
-4 entries were displayed
+cluster_A::*> metrocluster node show -fields is-encryption-enabled
+
+dr-group-id cluster    node      configuration-state is-encryption-enabled
+----------- ---------- --------  ------------------- -----------------
+1           cluster_A  node_A_1  configured          true                 
+1           cluster_A  node_A_2  configured          true                 
+1           cluster_B  node_B_1  configured          true                 
+1           cluster_B  node_B_2  configured          true
+4 entries were displayed.
 ----
+
 
 == Disable end-to-end encryption
 
-Run the following steps to disable end-to-end encryption.
+Perform the following steps to disable end-to-end encryption.
+
 .Steps
 
 . Verify the health of the MetroCluster configuration.
@@ -135,7 +138,7 @@ metrocluster modify -is-encryption-enabled false -dr-group-id <dr_group_id>
 *Example*
 +
 ----
-Cluster_1::*> metrocluster modify -is-encryption-enabled false -dr-group-id 1         
+cluster_A::*> metrocluster modify -is-encryption-enabled false -dr-group-id 1         
 [Job 244] Job succeeded: Modify is successful.
 ----
 
@@ -147,12 +150,13 @@ metrocluster node show -fields is-encryption-enabled
 *Example*
 +
 ----
-site_A::*> metrocluster node show -fields is-encryption-enabled,configuration-state    (metrocluster node show)  (metrocluster node show)
-dr-group-id cluster    node     configuration-state is-encryption-enabled
------------ -------------------------- ------------------ ------------------- ---------------------
-1           cluster_A  node_A_1 configured          false                 
-1           cluster_A  node_A_2 configured          false                
-1           cluster_B  node_B_1 configured          false                
-1           cluster_B  node_B_2 configured          false                
-4 entries were displayed
+cluster_A::*> metrocluster node show -fields is-encryption-enabled 
+
+dr-group-id cluster    node      configuration-state is-encryption-enabled
+----------- ---------- --------  ------------------- -----------------
+1           cluster_A  node_A_1  configured          false                
+1           cluster_A  node_A_2  configured          false                
+1           cluster_B  node_B_1  configured          false                
+1           cluster_B  node_B_2  configured          false
+4 entries were displayed.
 ----
