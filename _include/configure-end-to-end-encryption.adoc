@@ -1,0 +1,158 @@
+[.lead]
+Beginning with ONTAP 9.15.1, you can configure end-to-end encryption on AFF A400, FAS8300, or FAS8700 systems to encrypt backend traffic between controllers in MetroCluster IP configurations. 
+
+.About this task
+
+* End-to-end encryption is only supported in MetroCluster IP configurations running ONTAP 9.15.1 or later on AFF A400, FAS8300, or FAS8700 systems. 
+* You must be a cluster administrator to perform this task.
+* Before you can configure end-to-end encryption, you must link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/configure-external-key-management-concept.html[Configure external key management^].
+
+== Enable end-to-end encryption
+
+Run the following steps to enable end-to-end encryption. 
+
+.Steps
+
+. Verify the health of the MetroCluster configuration.
+.. Verify that the MetroCluster components are healthy:
++
+`metrocluster check run`
++
+----
+cluster_A::*> metrocluster check run
+
+----
++
+The operation runs in the background.
+
+.. After the `metrocluster check run` operation completes, run `metrocluster check show` to view the results.
++
+After approximately five minutes, the following results are displayed:
++
+----
+-----------
+::*> metrocluster check show
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          warning
+clusters            ok
+connections         not-applicable
+volumes             ok
+7 entries were displayed.
+----
+
+.. Check the status of the running MetroCluster check operation:
++
+`metrocluster operation history show -job-id 38`
+.. Verify that there are no health alerts:
++
+`system health alert show`
+
+. Enable end-to-end encryption for each DR group:
++
+[source,cli]
+metrocluster modify -is-encryption-enabled true -dr-group-id <dr_group_id>
++
+*Example*
++
+----
+Cluster_1::*> metrocluster modify -is-encryption-enabled true -dr-group-id 1         
+[Job 244] Job succeeded: Modify is successful.
+----
+
+. Verify that end-to-end encryption is enabled:
++
+[source,cli]
+metrocluster node show -fields is-encryption-enabled
++
+*Example*
++
+----
+site_A::*> metrocluster node show -fields is-encryption-enabled,configuration-state    (metrocluster node show)  (metrocluster node show)
+dr-group-id cluster    node     configuration-state is-encryption-enabled
+----------- -------------------------- ------------------ ------------------- ---------------------
+1           cluster_A  node_A_1 configured          true                 
+1           cluster_A  node_A_2 configured          true                 
+1           cluster_B  node_B_1 configured          true                 
+1           cluster_B  node_B_2 configured          true                 
+4 entries were displayed
+----
+
+== Disable end-to-end encryption
+
+Run the following steps to disable end-to-end encryption.
+.Steps
+
+. Verify the health of the MetroCluster configuration.
+.. Verify that the MetroCluster components are healthy:
++
+`metrocluster check run`
++
+----
+cluster_A::*> metrocluster check run
+
+----
++
+The operation runs in the background.
+
+.. After the `metrocluster check run` operation completes, run `metrocluster check show` to view the results.
++
+After approximately five minutes, the following results are displayed:
++
+----
+-----------
+::*> metrocluster check show
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          warning
+clusters            ok
+connections         not-applicable
+volumes             ok
+7 entries were displayed.
+----
+
+.. Check the status of the running MetroCluster check operation:
++
+`metrocluster operation history show -job-id 38`
+.. Verify that there are no health alerts:
++
+`system health alert show`
+
+
+. Disable end-to-end encryption on each DR group:
++
+[source,cli]
+metrocluster modify -is-encryption-enabled false -dr-group-id <dr_group_id>
++
+*Example*
++
+----
+Cluster_1::*> metrocluster modify -is-encryption-enabled false -dr-group-id 1         
+[Job 244] Job succeeded: Modify is successful.
+----
+
+. Verify that end-to-end encryption is disabled:
++
+[source,cli]
+metrocluster node show -fields is-encryption-enabled
++
+*Example*
++
+----
+site_A::*> metrocluster node show -fields is-encryption-enabled,configuration-state    (metrocluster node show)  (metrocluster node show)
+dr-group-id cluster    node     configuration-state is-encryption-enabled
+----------- -------------------------- ------------------ ------------------- ---------------------
+1           cluster_A  node_A_1 configured          false                 
+1           cluster_A  node_A_2 configured          false                
+1           cluster_B  node_B_1 configured          false                
+1           cluster_B  node_B_2 configured          false                
+4 entries were displayed
+----
