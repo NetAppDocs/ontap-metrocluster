@@ -47,7 +47,14 @@ You must set the ha-config state to `mccip` before automatic provisioning to mak
 A maximum of 96 drives can be automatically partitioned during installation. You can add extra drives after the initial installation.
 //BURT 1440058
 
-NOTE: If you are using one internal and one external drive, you first initialize the MetroCluster with the internal drive only using ADP. You then manually connect the external shelf after you complete your installation or setup task. For both the internal and external drive, you must populate the partially fully shelves as described in <<populate-partially-full-shelves, How to populate partially-full shelves>>.
+[NOTE]
+====
+If you are using internal and external drives, you first initialize the MetroCluster with the internal drive only using ADP. You then manually connect the external shelf after you complete your installation or setup task. 
+
+You must ensure that the internal shelves have the recommended minimum number of drives as outlined in <<adp-disk-assign,ADP and disk assignment differences by system>>. 
+
+For both the internal and external drives, you must populate the partially fully shelves as described in <<populate-partially-full-shelves, How to populate partially-full shelves>>.
+====
 
 == How shelf-by-shelf automatic assignment works
 
@@ -170,6 +177,7 @@ link:concept_required_mcc_ip_components_and_naming_guidelines_mcc_ip.html[Requir
 
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management^]
 
+[[adp-disk-assign]]
 == ADP and disk assignment differences by system in MetroCluster IP configurations
 
 The operation of Advanced Drive Partitioning (ADP) and automatic disk assignment in MetroCluster IP configurations varies depending on the system model.
