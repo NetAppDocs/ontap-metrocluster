@@ -120,19 +120,20 @@ If you upgrade or downgrade a switch, apply the latest supported RCF file for th
 . Run the port show command to view information about the network ports:
 +
 `*network port show*`
+
+.. Modify all cluster LIFs to disable auto-revert:
++
+[source,asciidoc]
+----
+network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert false
+----
+
 . [[existing_step4]]Disconnect the connections from the old switch. 
 +
 NOTE: You only disconnect connections that are not using the same port in the old and new configurations. If you are using new switches, you must disconnect all connections.
 +
 Remove the connections in the following order:
 +
-.. Modify all cluster LIFs to disable auto-revert:
-+
-[source,asciidoc]
-----
-net int modify -vserver <vserver_name> -lif <lif_name> -auto-revert false
-----
-
 .. Disconnect the local cluster interfaces
 .. Disconnect the local cluster ISLs
 .. Disconnect the MetroCluster IP interfaces
@@ -183,6 +184,13 @@ If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs.
 +
 ... Use the link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-bes-53248/migrate-to-2n-switched.html[Migrate to a switched NetApp cluster environment] procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration] or the RCF cabling files to connect the local cluster interface.
 
+.. Modify all cluster LIFs to re-enable auto-revert:
++
+[source,asciidoc]
+----
+network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true
+----
+
 . Power up the switch or switches.
 +
 If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second network is updated.
@@ -203,4 +211,5 @@ If you are reconfiguring a MetroCluster IP configuration that does not connect N
 
 // 2022 Apr 13, BURT 1536708
 // 2022 May 04, Issue 235
-// 2023-12-14, ONTAPDOC-1502
+// 2023 Dec 14, ONTAPDOC-1502
+// 2024 Apr 04, ONTAPDOC-1875
