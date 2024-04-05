@@ -95,7 +95,7 @@ cluster_A::*> metrocluster operation show
 
 . If you have a MetroCluster IP configuration running ONTAP 9.6 or later, wait for the disaster site plexes to come online and the healing operations to automatically complete.
 +
-In MetroCluster IP configurations running earlier versions of ONTAP, the disaster site nodes do not automatically boot to ONTAP and the plexes remain offline. 
+In MetroCluster IP configurations running ONTAP 9.5 or earlier, the disaster site nodes do not automatically boot to ONTAP and the plexes remain offline. 
 . Move any volumes and LUNs that belong to unmirrored aggregates offline.
 .. Move the volumes offline.
 +
@@ -228,13 +228,12 @@ NOTE: Perform this step for all plexes that have disks that are remote to Cluste
 
 . Halt the nodes.
 +
-Run the following command on both nodes:
 + 
 `node halt -inhibit-takeover true -skip-lif-migration true -node <node-name>`
 
 . Power off the equipment at the disaster site.
 +
-The following equipment must be turned off in the order shown:
+You must power off the following equipment in the order shown:
 +
 ** MetroCluster IP switches
 ** Storage controllers
@@ -289,7 +288,7 @@ Switches should be powered on first. They might have been powered on during the 
 +
 If auto boot is enabled, press `Ctrl+C` to stop the controllers from automatically booting. 
 
-. Power on the shelves and allow enough time for them to power on completely.
+. Power on the shelves, allowing enough time for them to power on completely.
 .. Verify that the shelves and disks on the bridges are clearly visible.
 +
 You can use a command such as `sastargets` on the ATTO command-line interface (CLI).
