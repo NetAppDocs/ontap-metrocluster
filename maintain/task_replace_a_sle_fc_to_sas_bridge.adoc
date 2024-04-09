@@ -213,23 +213,7 @@ Device  D       4       Disabled        12Gb    5001086000a1c70c
  +
 `storage bridge show`
 . Properly ground yourself.
-. Power down the ATTO bridge.
-+
-
-[cols="35,65"]
-|===
-
-h| If you are using a... h| Then...
-
-a|
-FibreBridge 7600N or 7500N bridge
-a|
-Remove the power cables connected to the bridge.
-a|
-FibreBridge 6500N bridge
-a|
-Turn off the power switch of the bridge.
-|===
+. Power down the ATTO bridge and remove the power cables connected to the bridge.
 
 . Disconnect the cables that are connected to the old bridge.
 +
@@ -309,7 +293,6 @@ The supported FC data rate depends on your model bridge.
 
   *** The FibreBridge 7600 bridge supports up to 32, 16, or 8 Gbps.
   *** The FibreBridge 7500 bridge supports up to 16, 8, or 4 Gbps.
-  *** The FibreBridge 6500 bridge supports up to 8, 4, or 2 Gbps.
 +
 NOTE: The FCDataRate speed you select is limited to the maximum speed supported by both the bridge and the switch to which the bridge port connects. Cabling distances must not exceed the limitations of the SFPs and other hardware.
 +
@@ -318,7 +301,7 @@ If using the CLI, you must run the following command:
 +
 `set FCDataRate _port-number port-speed_`
 
- .. If you are configuring a FibreBridge 7500N or 6500N bridge, configure the connection mode that the port uses to ptp.
+ .. If you are configuring a FibreBridge 7500N, configure the connection mode that the port uses to ptp.
 +
 NOTE: The FCConnMode setting is not required when configuring a FibreBridge 7600N bridge.
 +
@@ -372,7 +355,7 @@ If the new bridge is the same type as the partner bridge upgrade to the same fir
 
 . [[step17-reconnect-newbridge]] Reconnect the SAS and FC cables to the same ports on the new bridge.
 +
-If the new bridge is a FibreBridge 7600N or 7500N, you must replace the cables connecting the bridge to the top or bottom of the shelf stack. The FibreBridge 6500N bridge used SAS cables; the FibreBridge 7600N and 7500N bridges require mini-SAS cables for these connections.
+You must replace the cables connecting the bridge to the top or bottom of the shelf stack. The FibreBridge 7600N and 7500N bridges require mini-SAS cables for these connections.
 +
 NOTE: Wait at least 10 seconds before connecting the port. The SAS cable connectors are keyed; when oriented correctly into a SAS port, the connector clicks into place and the disk shelf SAS port LNK LED illuminates green. For disk shelves, you insert a SAS cable connector with the pull tab oriented down (on the underside of the connector). For controllers, the orientation of SAS ports can vary depending on the platform model; therefore, the correct orientation of the SAS cable connector varies.
 
@@ -656,7 +639,6 @@ The supported FC data rate depends on your model bridge.
 
   *** The FibreBridge 7600 bridge supports up to 32, 16, or 8 Gbps.
   *** The FibreBridge 7500 bridge supports up to 16, 8, or 4 Gbps.
-  *** The FibreBridge 6500 bridge supports up to 8, 4, or 2 Gbps.
 +
 
 NOTE: The FCDataRate speed you select is limited to the maximum speed supported by both the bridge and the FC port of the controller module or switch to which the bridge port connects. Cabling distances must not exceed the limitations of the SFPs and other hardware.
