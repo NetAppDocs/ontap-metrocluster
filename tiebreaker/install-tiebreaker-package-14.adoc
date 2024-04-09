@@ -34,46 +34,30 @@ Select the correct procedure from below depending on whether you're performing a
 --
 
 .. Run the following command:
-`rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm`
+`rpm -ivh NetApp-MetroCluster-Tiebreaker-Software-1.4-1.x86_64.rpm`
 +
 The system displays the following output for a successful installation:
 +
-----    
+----  
 
 Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
 Updating / installing...
    1:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
-Enter the absolute path for Java : /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
-Verifying if Java exists...
-Found Java. Proceeding with the installation.
-Enter host user account to use for the installation:
-mcctbuser1
-User account mcctbuser1 found. Proceeding with the installation
-Enter database user name:
-root
-Please enter database password for root
+Post installation start Fri Apr  5 02:28:09 EDT 2024
+Enter MetroCluster Tiebreaker user password:
+
+Please enter mysql root password when prompted
 Enter password:
-Sealed          false
-Do you wish to auto unseal vault(y/n)?y
-Enter the key1:
-Enter the key2:
-Enter the key3:
-Success! Uploaded policy: mcctb-policy
-Error enabling approle auth: Error making API request.
-URL: POST http://127.0.0.1:8200/v1/sys/auth/approle
-Code: 400. Errors:
-* path is already in use at approle/
-Success! Enabled the kv secrets engine at: mcctb/
-Success! Data written to: auth/approle/role/mcctb-app
-Password updated successfully in the vault.
 Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
 Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
 Created symlink /etc/systemd/system/multi-user.target.wants/netapp-metrocluster-tiebreaker-software.service → /etc/systemd/system/netapp-metrocluster-tiebreaker-software.service.
 Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
-Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
- 
+Enabled autostart of NetApp MetroCluster Tiebreaker software daemon during boot
+Created symbolic link for NetApp MetroCluster Tiebreaker software CLI
+Post installation end Fri Apr  5 02:28:22 EDT 2024
+Successfully installed NetApp MetroCluster Tiebreaker software version 1.4.
 ----
 
 --
@@ -91,7 +75,7 @@ Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
 .. Upgrade the Tiebreaker software.
 +
 ----
-[root@mcctb ~]# rpm -Uvh NetApp-MetroCluster-Tiebreaker-Software-1.5-1.x86_64.rpm
+[root@mcctb ~]# rpm -Uvh NetApp-MetroCluster-Tiebreaker-Software-1.4-1.x86_64.rpm
 ----
 +
 The system displays the following output for a successful upgrade:
@@ -100,39 +84,22 @@ The system displays the following output for a successful upgrade:
 
 Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
+Upgrading NetApp MetroCluster Tiebreaker software....
+Stopping NetApp MetroCluster Tiebreaker software services before upgrade.
 Updating / installing...
    1:NetApp-MetroCluster-Tiebreaker-So################################# [ 50%]
-
-Enter the absolute path for Java : /usr/lib/jvm/java-19-openjdk-19.0.0.0.36-2.rolling.el8.x86_64/bin/java
-Verifying if Java exists...
-Found Java. Proceeding with the installation.
-Enter host user account to use for the installation:
-mcctbuser1
-User account mcctbuser1 found. Proceeding with the installation
-Sealed          false
-Do you wish to auto unseal vault(y/n)?y
-Enter the key1:
-Enter the key2:
-Enter the key3:
-Success! Uploaded policy: mcctb-policy
-Error enabling approle auth: Error making API request.
-URL: POST http://127.0.0.1:8200/v1/sys/auth/approle
-Code: 400. Errors:
-* path is already in use at approle/
-Success! Enabled the kv secrets engine at: mcctb/
-Success! Data written to: auth/approle/role/mcctb-app
-Enter database user name : root
-Please enter database password for root
-Enter password:
-Password updated successfully in the database.
-Password updated successfully in the vault.
+Post installation start Mon Apr  8 06:29:51 EDT 2024
 Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
 Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
 Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
-Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.5.
+Enabled autostart of NetApp MetroCluster Tiebreaker software daemon during boot
+Created symbolic link for NetApp MetroCluster Tiebreaker software CLI
+Post upgrade end Mon Apr  8 06:29:51 EDT 2024
+Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.4.
 Cleaning up / removing...
    2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
+   
 ----
 
 --
