@@ -84,6 +84,7 @@ The fabric-attached MetroCluster FC configuration requires one pair of FC-to-SAS
 NOTE: FibreBridge 6500N bridges are not supported in configurations running ONTAP 9.8 and later.
 
 * FibreBridge 7600N or 7500N bridges support up to four SAS stacks.
+// * FibreBridge 6500N bridges support only one SAS stack.
 * Each stack can use different models of IOM.
 +
 A mix of IOM12 modules and IOM3 modules is not supported within the same storage stack. A mix of IOM12 modules and IOM6 modules is supported within the same storage stack if your system is running a supported version of ONTAP.
@@ -156,6 +157,8 @@ Number of the stack group to which the bridge pair connects.
 +
 The stack group can contain no more than 10 storage shelves.
 
+// * FibreBridge 6500N bridges support only a single stack in the stack group.
+
 a|
 1, 2, etc.
 a|
@@ -172,3 +175,5 @@ Example bridge names for one stack group on each site:
 * bridge_A_1b
 * bridge_B_1a
 * bridge_B_1b
+
+// 2024 APR 8, ONTAPDOC-1710
