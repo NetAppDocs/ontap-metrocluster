@@ -2,30 +2,30 @@
 permalink: maintain/task_power_on_and_power_off_a_data_center.html
 sidebar: sidebar
 keywords: metrocluster, maintain, service, power, off, on, data, center, relocate, reconfigure, maintenance
-summary: 'You must know how to power off and power on a data center for the purpose of site maintenance or to relocate a site to another location.'
+summary: 'If you need to perform site maintenance or relocate a single site in a MetroCluster IP configuration, you must know how to power off and power on the site.'
 ---
 = Power off and power on a single site in a MetroCluster IP configuration
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-If you need to perform site maintenance or relocate a single MetroCluster site, you must know how to power off and power on the site. 
+If you need to perform site maintenance or relocate a single site in a MetroCluster IP configuration, you must know how to power off and power on the site. 
 
-If a site needs to be relocated and reconfigured (if you need to expand from a four-node to an eight-node cluster, for example), these tasks cannot be completed at the same time. This procedure only covers the steps that are required to perform site maintenance or to relocate a site without changing its configuration.
+If you need to relocate and reconfigure a site (for example, if you need to expand from a four-node to an eight-node cluster), you cannot complete these tasks at the same time. This procedure only covers the steps that are required to perform site maintenance or to relocate a site without changing its configuration.
 
 The following diagram shows a MetroCluster configuration.  Cluster_B is powered off for maintenance.
 
 image::power-on-off-data-center.gif[]
 
 
-== Powering off a MetroCluster site
+== Power off a MetroCluster site
 
 You must power off a site and all of the equipment before site maintenance or relocation can begin.
 //GH issue 83 04/02/2022
 
 .About this task
 
-All the commands in the following steps are issued from the site to remain powered on.
+All the commands in the following steps are issued from the site that remains powered on.
 
 .Steps
 
@@ -63,7 +63,7 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
-. From the site you want to remain up implement the switchover:
+. From the site you want to remain up, implement the switchover:
 +
 `metrocluster switchover`
 +
@@ -121,7 +121,7 @@ You should move the following plexes offline:
 --
 * Non-mirrored plexes residing on disks located at the disaster site.
 +
-If you do not move the non-mirrored plexes at the disaster site offline, an outage might result when the disaster site is later powered off.
+If you do not move the non-mirrored plexes at the disaster site offline, an outage might occur when the disaster site is later powered off.
 +
 * Mirrored plexes residing on disks located at the disaster site for aggregate mirroring.
 After they are moved offline, the plexes are inaccessible.
@@ -226,7 +226,7 @@ NOTE: Perform this step for all plexes that have disks that are remote to Cluste
 
 . Persistently offline the ISL switch ports according to the switch type.
 
-. Halt the nodes.
+. Halt the nodes by running the following command on each node.
 +
 + 
 `node halt -inhibit-takeover true -skip-lif-migration true -node <node-name>`
@@ -248,7 +248,7 @@ After the site is powered off, you can begin maintenance work. The procedure is 
 
 .Steps
 
-. Make sure that the cabling for all components is carefully recorded so that it can be correctly reconnected at the new location.
+. Verify that the cabling for all components is carefully recorded so that it can be correctly reconnected at the new location.
 
 . Physically relocate all the hardware, storage controllers, IP switches, FibreBridges, and storage shelves.
 
@@ -260,7 +260,7 @@ NOTE: Do *not* power up any other equipment.
 
 . Use tools on the switches (as they are available) to verify the intersite connectivity.
 +
-NOTE: You should only proceed if the links are properly configured and stable.
+NOTE: You should only proceed if the links are correctly configured and stable.
 
 . Disable the links again if they are found to be stable.
 
@@ -276,7 +276,7 @@ All the commands in the following steps are issued from the site that you power 
 
 . Power on the switches.
 +
-Switches should be powered on first. They might have been powered on during the previous step if the site was relocated.
+You should power on the switches first. They might have been powered on during the previous step if the site was relocated.
 
 .. Reconfigure the Inter-Switch Link (ISL) if required or if this was not completed as part of the relocation.
 
@@ -291,7 +291,7 @@ If auto boot is enabled, press `Ctrl+C` to stop the controllers from automatical
 . Power on the shelves, allowing enough time for them to power on completely.
 .. Verify that the shelves and disks on the bridges are clearly visible.
 +
-You can use a command such as `sastargets` on the ATTO command-line interface (CLI).
+You can use a command such as `sastargets` on the ATTO CLI.
 
 . Verify that the local storage is visible from the node in Maintenance mode:
 +
