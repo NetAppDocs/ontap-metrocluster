@@ -12,9 +12,29 @@ summary: 'You might need to upgrade an RCF file on a Cisco IP switch. For exampl
 You might need to upgrade an RCF file on a Cisco IP switch. For example, an ONTAP upgrade or a switch firmware upgrade both require a new RCF file.
 
 .About this task
-Beginning with RcfFileGenerator version 1.4a, there is a new option to change (upgrade, downgrade, or replace) the switch configuration on Cisco IP switches without the need to perform a 'write erase'.
 
+* Beginning with RcfFileGenerator version 1.4a, there is a new option to change (upgrade, downgrade, or replace) the switch configuration on Cisco IP switches without the need to perform a 'write erase'.
 
+* The Cisco 9336C-FX2 switch has two different switch storage types that are named differently in the RCF. Use the following table to determine the correct Cisco 9336C-FX2 storage type for your configuration:
++
+[cols=3*,options="header"]
+|===
+| If you are connecting the following storage...
+| Choose the Cisco 9336C-FX2 storage type...
+| Sample RCF file banner/MOTD 
+a|
+  * Directly connected SAS shelves
+  * Directly connected NVMe shelves
+  * NVMe shelves connected to dedicated storage switches
+a| 9336C-FX2 – Direct Storage only a| `* Switch    : NX9336C (direct storage, L2 Networks, direct ISL)`
+a|
+  * Directly connected SAS shelves
+  * NVMe shelves connected to the MetroCluster IP switches
+
+NOTE: At least one Ethernet connected NVMe shelf is required
+a| 9336C-FX2 – SAS and Ethernet storage a| `* Switch    : NX9336C (SAS and Ethernet storage, L2 Networks, direct ISL)`
+
+|===
 
 .Before you begin
 
@@ -162,8 +182,6 @@ Use this procedure if the configuration meets the requirements.
 +
 NOTE: You must use the CleanUpFiles from the same version as the RCF file and for the exact same configuration. Using any CleanUpFile will not work and might require a full reset of the switch.
 +
-NOTE: The storage type might be different -- SAS storage or direct storage.
-+
 NOTE: The ONTAP version the RCF file is created for is not relevant. Only the RCF file version is important.
 +
 NOTE: The RCF file (even it is the same version) might list fewer or more platforms. Make sure that your platform is listed.
@@ -280,7 +298,7 @@ If you find that any of the above items are configured, you might not be able to
 IP_switch_A_1# copy bootflash:NX9336_v1.90-X2_Switch-A1.txt running-config
 ----
 +
-NOTE: Some warning messages appear while applying the configuration. Error messages are not expected.
+NOTE: Some warning messages appear while applying the configuration. Error messages are generally not expected. However, if you are logged in using SSH, you might receive the following error: `Error: Can't disable/re-enable ssh:Current user is logged in through ssh`
 
 .. After the configuration is applied, verify that the cluster and MetroCluster ports are coming online with one of the following commands, `show interface brief`, `show cdp neighbors`, or `show lldp neighbors`
 +
@@ -299,6 +317,8 @@ IP_switch_A_1# copy running-config startup-config
 IP_switch_A_1# reload
 ----
 
+// 2024 Mar 13, ONTAPDOC-1529
+// 2024 Feb 28, ONTAPDOC-1669
 // BURT 1464507 Mar 2022
 // Issue 199, 22 Aug 2022
 // 2022-NOV-21, GH issue 223

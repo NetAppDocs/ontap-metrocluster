@@ -9,7 +9,7 @@ summary: The various MetroCluster configurations have key differences in the req
 :imagesdir: ../media/
 
 [.lead]
-Beginning with ONTAP 9.7, you can use either the ONTAP Mediator-assisted automatic unplanned switchover (MAUSO) in the MetroCluster IP configuration or you can use the MetroCluster Tiebreaker software. Only one of the two services can be used with the MetroCluster IP configuration.
+Beginning with ONTAP 9.7, you can use either the ONTAP Mediator-assisted automatic unplanned switchover (MAUSO) in the MetroCluster IP configuration or you can use the MetroCluster Tiebreaker software. It is not required to use the MAUSO or Tiebreaker software; however, if you choose to not use either of these services, you must link:../disaster-recovery/concept_dr_workflow.html[perform a manual recovery] if a disaster occurs.
 
 The different MetroCluster configurations perform automatic switchover under different circumstances:
 
@@ -21,7 +21,7 @@ In these configurations, AUSO is initiated if controllers fail but the storage (
 +
 In these configurations, MAUSO is initiated in the same circumstances as AUSO, as described above, and also after a complete site failure (controllers, storage, and switches).
 +
-NOTE: MAUSO is initiated only if nonvolatile cache mirroring (_DR mirroring_) and SyncMirror plex mirroring is in sync at the time of the failure.
+link:concept-ontap-mediator-supports-automatic-unplanned-switchover.html[Learn about how the ONTAP Mediator supports automatic unplanned switchover].
 
 * *MetroCluster IP or FC configurations using the Tiebreaker software in active mode*
 +
@@ -33,35 +33,10 @@ Before using the Tiebreaker software, review the link:../tiebreaker/concept_over
 
 You cannot use any third-party applications or appliances that can trigger a switchover in combination with ONTAP Mediator. In addition, monitoring a MetroCluster configuration with MetroCluster Tiebreaker software is not supported when using ONTAP Mediator.
 
-== How the ONTAP Mediator supports automatic unplanned switchover
-
-The ONTAP Mediator stores state information about the MetroCluster nodes in mailboxes located on the Mediator host. The MetroCluster nodes can use this information to monitor the state of their DR partners and implement a MAUSO in the case of a disaster.
-
-When a node detects a site failure requiring a switchover, it takes steps to confirm that the switchover is appropriate and, if so, performs the switchover.
-
-A MAUSO is only initiated in the following scenarios:
 
 
-* Both SyncMirror mirroring and DR mirroring of each node's nonvolatile cache is operating and the caches and mirrors are synchronized at the time of the failure.
-* None of the nodes at the surviving site are in takeover state.
-* If a site disaster occurs. A site disaster is a failure of *all* nodes at the same site.
-+
-NOTE: Beginning with ONTAP 9.13.1, you can change the behavior to initiate a MAUSO either on failure of the cluster *or* a HA pair. For a HA pair, both nodes must fail at the same time.
-* Beginning with ONTAP 9.13.1, if the above conditions are met and a fan or hardware failure initiates an environmental shutdown, for example, a power supply unit, NVRAM battery, or Service Processor heartbeat failure, or high or low temperature. 
-
-You can initiate a MAUSO for additional scenarios that are not listed above. For more information, see link:concept-risks-limitations-automatic-switchover.html[Risks and limitations of using MetroCluster automatic forced switchover].
-
-A MAUSO is *not* initiated in the following shutdown scenarios:
-
-* You initiate a shutdown. For example, when you:
-** halt the nodes
-** reboot the nodes
-
-*Related information* 
-
-link:../manage/concept_understanding_mcc_data_protection_and_disaster_recovery.html#mediator-assisted-automatic-unplanned-switchover-in-metrocluster-ip-configurations[Learn more about MAUSO in MetroCluster IP configurations].
-
-// 2023 JULY 5, ontap-metrocluster-issue-303
+// 2024 FEB 21, ontap-metrocluster-issue-365
+// 2024 FEB 20, ONTAPDOC-1168
 // 2023 APR 19, BURT 1532596
 // 2022 JAN 24, BURT 1442346 
 // 2022 FEB 11, BURT 1456187 
