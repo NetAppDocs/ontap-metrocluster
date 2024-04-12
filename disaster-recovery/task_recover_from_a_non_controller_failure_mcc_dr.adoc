@@ -17,9 +17,11 @@ After the equipment at the disaster site has undergone any required maintenance 
 * The overall MetroCluster configuration must be in switchover.
 * In a fabric-attached MetroCluster configuration, the ISL must be up and operating between the MetroCluster sites.
 
-== Healing the configuration in a MetroCluster FC configuration
+== Healing the configuration in a MetroCluster configuration
 
-Following a switchover, you must perform the healing operations in specific order to restore MetroCluster functionality.
+In MetroCluster FC configurations, you perform the healing operations in a specific order to restore MetroCluster functionality following a switchover.
+
+In MetroCluster IP configurations, healing operations should start automatically following a switchover. If they do not, you can perform the healing operations manually.  
 
 .Before you begin
 
@@ -132,12 +134,6 @@ mcc1A::> metrocluster operation show
      Errors: -
 ----
 
-. Power up each controller module on the disaster site.
-. After nodes are booted, verify that the root aggregates are mirrored.
-+
-If both plexes are present, any resynchronization will start automatically. If one plex has failed, that plex must be destroyed and the mirror recreated using the following command to reestablish the mirror relationship.
-+
-`storage aggregate mirror -aggregate <aggregate-name>`
 
 == Verifying that your system is ready for a switchback
 
@@ -145,6 +141,24 @@ If your system is already in the switchover state, you can use the `-simulate` o
 
 .Steps
 
+. Power up each controller module on the disaster site.
++
+[role="tabbed-block"]
+====
+.If the nodes are powered off:
+--
+Power on the nodes.
+--
+.If the nodes are at the LOADER prompt:
+--
+Run the command: `boot_ontap`
+--
+====
+. After the node boot completes, verify that the root aggregates are mirrored.
++
+If both plexes are present, any resynchronization will start automatically. If a plex fails, destroy it and reestablish the mirror relationship by using the following command to recreate the mirror:
++
+`storage aggregate mirror -aggregate <aggregate-name>`
 . Simulate the switchback operation:
 .. From either surviving node's prompt, change to the advanced privilege level:
 +
@@ -418,5 +432,6 @@ You need to respond with `y` when prompted to continue into advanced mode and se
 +
 `run local aggr status -r`
 
+// 2023 Nov 28, ONTAPDOC-1471
 // BURT 1448684, 12 JAN 2022
 // BURT 1485050, 21-06-2022

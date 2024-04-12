@@ -13,7 +13,8 @@ When you configure a Brocade FC switch, you can install the switch configuration
 
 .About this task
 
-These steps must be repeated on each of the Brocade FC switches in the MetroCluster fabric configuration.
+* You must repeat these steps on each of the Brocade FC switches in the MetroCluster fabric configuration.
+* If you use an xWDM configuration, you might require additional settings on the ISLs. See the xWDM vendor documentation for more information.
 
 .Steps
 
@@ -95,7 +96,6 @@ FC_switch_A_1:admin> portcfgspeed port number port speed
 By default, all the ports are configured to operate at 16 Gbps. You might change the port speed for the following reasons:
 +
 ** The interconnect switch ports speed should be changed when an 8-Gbps FC-VI adapter is used and the switch port speed should set to 8 Gbps.
-** The switch ports speed should be changed when an 8-Gbps HBA adapter is used for ATTO FibreBridge 6500N.
 ** The ISL ports' speed must be changed when the ISL is not capable of running at 16 Gbps.
 
 . Calculate the ISL distance.
@@ -254,5 +254,7 @@ Both outputs should show the same configuration information and zoning informati
 FC_switch_A_1:admin> trunkshow
 ----
 
+// 2024 APR 8, ONTAPDOC-1710
+// 2023 FEB 21, ONTAPDOC-1495
 // BURT 1448684, 03 FEB 2022
 // 2022-NOV-23, BURT 1499346
