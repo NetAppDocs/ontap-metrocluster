@@ -51,6 +51,11 @@ volumes             ok
 +
 `system health alert show`
 
+. Verify that external key management is configured on both clusters: 
++
+[source,cli]
+security key-manager external show-status
+
 . Enable end-to-end encryption for each DR group:
 +
 [source,cli]
@@ -130,6 +135,10 @@ volumes             ok
 +
 `system health alert show`
 
+. Verify that external key management is configured on both clusters: 
++
+[source,cli]
+security key-manager external show-status
 
 . Disable end-to-end encryption on each DR group:
 +
@@ -163,3 +172,5 @@ dr-group-id cluster    node      configuration-state is-encryption-enabled
 1           cluster_B  node_B_2  configured          false
 4 entries were displayed.
 ----
+
+// 2024 Apr 15, ONTAPDOC-1655 (ONTAP 9.15.1)
