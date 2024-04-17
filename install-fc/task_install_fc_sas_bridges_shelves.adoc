@@ -1,5 +1,5 @@
 ---
-permalink: install-fc/task_fb_new_install.html
+permalink: install-fc/task_install_fc_sas_bridges_shelves.html
 sidebar: sidebar
 keywords: install, installing, fc-to-sas, fc, sas, bridges, disk, shelves, atto, fibrebridge
 summary: "You install and cable ATTO FibreBridge bridges and SAS disk shelves when adding new storage to the configuration."
@@ -121,7 +121,7 @@ If you are using an ONTAP version prior to 9.5, or otherwise plan to use out-of-
 
 .About this task
 
-Unlike the ATTO FibreBridge 7500N and 6500N bridges, the FibreBridge 7600N bridge is shipped with all IP port protocols and services disabled.
+Unlike the ATTO FibreBridge 7500N bridges, the FibreBridge 7600N bridge is shipped with all IP port protocols and services disabled.
 
 Beginning with ONTAP 9.5, _in-band management_ of the bridges is supported. This means the bridges can be configured and monitored from the ONTAP CLI via the FC connection to the bridge. Physical access to the bridge via the bridge Ethernet ports is not required and the bridge user interfaces are not required.
 
@@ -273,9 +273,8 @@ In systems running ONTAP 9.5 or later, in-band management can be used to access 
 
 The supported FC data rate depends on your model bridge.
 
-* The FibreBridge 7600 bridge supports up to 32, 16, or 8 Gbps.
-* The FibreBridge 7500 bridge supports up to 16, 8, or 4 Gbps.
-* The FibreBridge 6500 bridge supports up to 8, 4, or 2 Gbps.
+* The FibreBridge 7600N bridge supports up to 32, 16, or 8 Gbps.
+* The FibreBridge 7500N bridge supports up to 16, 8, or 4 Gbps.
 
 NOTE: The FCDataRate speed you select is limited to the maximum speed supported by both the bridge and the FC port of the controller module to which the bridge port connects. Cabling distances must not exceed the limitations of the SFPs and other hardware.
 
@@ -284,7 +283,7 @@ If using the CLI, you must run the following command:
 `set FCDataRate _port-number_ _port-speed_`
 --
 
-.. If you are configuring a FibreBridge 7500N or 6500N bridge, configure the connection mode that the port uses to ptp.
+.. If you are configuring a FibreBridge 7500N bridge, configure the connection mode that the port uses to "ptp".
 +
 NOTE: The FCConnMode setting is not required when configuring a FibreBridge 7600N bridge.
 +
@@ -392,8 +391,6 @@ You must use the correct FC-to-SAS bridges for cabling your disk shelves.
 
 * <<cabling_fb_7600N_7500N_with_iom6_iom3,Cabling a FibreBridge 7600N or 7500N bridge with disk shelves using IOM6 or IOM3 modules>>
 
-* <<cabling_fb_6500N_with_iom6_iom3,Cabling a FibreBridge 6500N bridge with disk shelves using IOM6 or IOM3 modules>>
-
 [cabling_fb_7600N_7500N_with_iom12]
 ==== Cabling a FibreBridge 7600N or 7500N bridge with disk shelves using IOM12 modules
 
@@ -465,35 +462,6 @@ The following illustration shows four stacks connected to a pair of FibreBridge 
 +
 image::../media/mcc_cabling_bridge_and_sas_stack_with_7500n_four_stacks.gif[]
 
-[cabling_fb_6500N_with_iom6_iom3]
-==== Cabling a FibreBridge 6500N bridge with disk shelves using IOM6 or IOM3 modules
-
-After configuring the bridge, you can start cabling your new system. The FibreBridge 6500N bridge uses QSFP connectors.
-
-.About this task
-
-Wait at least 10 seconds before connecting the port. The SAS cable connectors are keyed; when oriented correctly into a SAS port, the connector clicks into place and the disk shelf SAS port LNK LED illuminates green. For disk shelves, you insert a SAS cable connector with the pull tab oriented down (on the underside of the connector).
-
-The FibreBridge 6500N bridge does not support disk shelves that use IOM12.
-
-.Steps
-
-. Daisy-chain the disk shelves in each stack.
-+
-For information about daisy-chaining disk shelves, see the _Installation and Service Guide_ for your disk shelf model.
-
-. For each stack of disk shelves, cable the IOM A square port of the first shelf to the SAS port A on FibreBridge A.
-. For each stack of disk shelves, cable the IOM B circle port of the last shelf to the SAS port A on FibreBridge B.
-+
-Each bridge has one path to its stack of disk shelves: bridge A connects to the A-side of the stack through the first shelf, and bridge B connects to the B-side of the stack through the last shelf.
-+
-NOTE: The SAS port B bridge is disabled.
-+
-
-The following illustration shows a set of bridges cabled to a stack of four disk shelves:
-+
-image::../media/mcc_cabling_bridge_and_sas_stack.gif[]
-
 === Verifying bridge connectivity and cabling the bridge FC ports
 
 You should verify that each bridge can detect all of the disk drives, and then cable each bridge to the local FC switches.
@@ -529,7 +497,7 @@ View the connected devices:
 
 `sastargets`
 |===
-
++
 The output shows the devices (disks and disk shelves) that the bridge is connected to. Output lines are sequentially numbered so that you can quickly count the devices. For example, the following output shows that 10 disks are connected:
 +
 ----
@@ -636,4 +604,5 @@ The following command secures bridge_A_1:
 +
 `cluster_A> storage bridge run-cli -bridge bridge_A_1 -command firmwarerestart`
 
+// 2024 APR 8, ONTAPDOC-1710
 // BURT 1448684, 20 JAN 2022
