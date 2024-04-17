@@ -184,13 +184,6 @@ If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs.
 +
 ... Use the link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-bes-53248/migrate-to-2n-switched.html[Migrate to a switched NetApp cluster environment] procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration] or the RCF cabling files to connect the local cluster interface.
 
-.. Modify all cluster LIFs to re-enable auto-revert:
-+
-[source,asciidoc]
-----
-network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true
-----
-
 . Power up the switch or switches.
 +
 If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second network is updated.
@@ -200,6 +193,13 @@ If the new switch is the same, power up the new switch. If you are upgrading or 
 If you are upgrading or downgrading the switches in the first network, you might see some alerts related to local clustering.
 +
 NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for the second network.
+
+. Modify all cluster LIFs to re-enable auto-revert:
++
+[source,asciidoc]
+----
+network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true
+----
 
 . Optionally, move the NS224 shelves.
 +
