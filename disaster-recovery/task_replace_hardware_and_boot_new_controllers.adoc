@@ -519,4 +519,26 @@ a|
 
 . Repeat these steps on the other replacement node.
 
+== Verifying end-to-end encryption
+
+You should verify if the original systems were configured for end-to-end encryption.
+
+.Step
+
+. Run the following command from the surviving site:
++
+`metrocluster node show -fields is-encryption-enabled`
++
+If encryption is enabled, the following output is displayed: 
++
+----
+1 cluster_A node_A_1 true
+1 cluster_A node_A_2 true
+1 cluster_B node_B_1 true
+1 cluster_B node_B_2 true
+4 entries were displayed.
+----
++
+NOTE: End-to-end encryption is only supported on AFF A400, FAS8300, or FAS8700 systems.
+
 // BURT 1448684, 12 JAN 2022
