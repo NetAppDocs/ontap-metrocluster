@@ -28,8 +28,8 @@ The following shows default and valid VLAN assignments depending on if the platf
 --
 Default VLAN:
 
-* When not specifying the vlan-ip parameter, then the interfaces will be created with VLAN 10 for the "A" port and VLAN 20 for the "B" ports
-* The VLAN specified must match the VLAN selected in the RCF file
+* When the `vlan-ip` parameter is not specified, the interfaces are created with VLAN 10 for the "A" port and VLAN 20 for the "B" ports.
+* The VLAN specified must match the VLAN selected in the RCF.
 
 Valid VLAN ranges:
 
@@ -40,12 +40,13 @@ Valid VLAN ranges:
 --
 Default VLAN: 
 
-* Not applicable. The interface does not require a VLAN to be specified on the MetroCluster interface. The switch port will define the VLAN to be used.
+* Not applicable. The interface does not require a VLAN to be specified on the MetroCluster interface. The switch port defines the VLAN that is used.
 
 Valid VLAN ranges:
 
-** All VLANs not explicitly excluded when generating the RCF file
-** Default excluded VLANs are 1, 30-34, 50-59 (subject to change)
+* All VLANs not explicitly excluded when generating the RCF
+* Default excluded VLANs: 1, 30-34, and 50-59 
+
 --
 ====
 
@@ -55,12 +56,11 @@ Valid VLAN ranges:
 * If both of the DR groups cannot be configured using the same VLAN, then you must upgrade the DR group that doesn't support the `vlan-id` parameter to a VLAN that is supported by the other DR group.
 * You cannot change the specified `vlan-id` on platforms that support the parameter after the interface has been created.
 +
-For example, you have a four-node MetroCluster configuration with FAS8200 nodes  configured using VLAN 80 and 81 and you want to refresh it to a AFF A900. The AFF A900 does not support VLAN 80 and 81. In this scenario, you change the current RCF file to a VLAN that is supported, such as 110 and 120. You can use the same procedure to upgrade the RCF, and use the new VLAN IDs. 
+For example, you have a four-node MetroCluster configuration with FAS8200 nodes  configured using VLAN 80 and 81 and you want to refresh to an AFF A900 system. AFF A900 does not support VLAN 80 and 81. In this scenario, you change the current RCF file to a VLAN that is supported, such as 110 and 120. You can use the same procedure to upgrade the RCF, and use the new VLAN IDs. 
 +
-You *must* upgrade one network at a time, in the following order: Switch-A1, Switch-B1, Switch-A2, Switch-B2
+You *must* upgrade one network at a time, in the following order: Switch-A1, Switch-B1, Switch-A2, Switch-B2.
 
 NOTE: When you change the VLAN in a shared layer 2 and layer 3 network, the ISL configurations in your network also need to be updated to the allow the new VLANs.
-
 
 The following platform models can be added to the existing MetroCluster configuration if the VLANs used are 10/20 or greater than 100. If any other VLANs are used, then these platforms cannot be added
 to the existing configuration as the MetroCluster interface cannot be configured.
