@@ -2,7 +2,7 @@
 permalink: tiebreaker/install-dependencies-14.html
 sidebar: sidebar
 keywords: install, tiebreaker, software, monitor, capabilities, capability, cluster, storage, environment, snmp, notification, event, node, connectivity, issue, site, disaster, system, install, upgrade, upgrading, software, dependencies, dependency, package, ntp, requirements, requirements for tiebreaker, tiebreaker requirements, mysql, mariadb, autostart, database
-summary: The Tiebreaker software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters.
+summary: The Tiebreaker 1.4 software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters.
 ---
 = Install MetroCluster Tiebreaker 1.4 dependencies
 :icons: font
@@ -12,9 +12,8 @@ summary: The Tiebreaker software provides monitoring capabilities for a clustere
 Depending on your host Linux operating system, install a MySQL or MariaDB server before installing or upgrading the Tiebreaker software.
 
 .Steps
-. Install JDK.
-+
-<<install-java-1-8,Install JDK>>
+. <<install-java-1-8,Install JDK>>.
+
 
 . Install MySQL or MariaDB server:
 +
@@ -28,17 +27,14 @@ a|
 Red Hat Enterprise Linux 7/CentOS 7
 a|
 
-Install MySQL
-
 <<install-mysql-redhat, Installing MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7>>
 
 a|
 Red Hat Enterprise Linux 8
 a|
 
-Install MariaDB
-
 <<install-mariadb, Installing MariaDB server on Red Hat Enterprise Linux 8>>
+
 
 |===
 
@@ -88,9 +84,9 @@ Complete!
 ----
 
 [[install-mysql-redhat]]
-== Installing MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7
+== Install MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7
 
-You must install MySQL Server 5.5.30 or later and 5.6.x version on your host system before installing or upgrading the Tiebreaker software.
+You must install MySQL Server 5.5.30 or later and 5.6.x version on your host system before installing or upgrading the Tiebreaker software.  For Red Hat Enterprise Linux 8, <<install-mariadb, Install the MariaDB server>>. 
 
 .Steps
 . Log in as a root user.
@@ -379,7 +375,7 @@ mysql>
 +
 If the MySQL login is working, the output will end at the `mysql>` prompt.
 
-=== Enabling the MySQL autostart setting
+=== Enable the MySQL autostart setting
 
 You should verify that the autostart feature is turned on for the MySQL daemon. Turning on the MySQL daemon automatically restarts MySQL if the system on which the MetroCluster Tiebreaker software resides reboots. If the MySQL daemon is not running, the Tiebreaker software continues running, but it cannot be restarted and configuration changes cannot be made.
 
@@ -399,9 +395,9 @@ mysqld.service     enabled
 If MySQL is not enabled to autostart when booted, see the MySQL documentation to enable the autostart feature for your installation.
 
 [[install-mariadb]]
-== Installing MariaDB server on Red Hat Enterprise Linux 8 
+== Install MariaDB server on Red Hat Enterprise Linux 8 
 
-You must install MariaDB server on your host system before installing or upgrading the Tiebreaker software.
+You must install MariaDB server on your host system before installing or upgrading the Tiebreaker software.  For Red Hat Enterprise Linux 7 or CentOS 7, <<install-mysql-redhat, Install MySQL Server>>.
 
 .Before you begin
 
@@ -564,7 +560,7 @@ Thanks for using MariaDB!
 
 ----
 
-=== Enabling the autostart setting for the MariaDB server
+=== Enable the autostart setting for the MariaDB server
 
 You should verify that the autostart feature is turned on for the MariaDB server. If you do not enable the autostart feature, and the system on which the MetroCluster Tiebreaker software resides has to reboot, then the Tiebreaker software continues running, but the MariaDB service cannot be restarted and configuration changes cannot be made.
 
