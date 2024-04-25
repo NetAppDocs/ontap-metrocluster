@@ -47,6 +47,10 @@ Any SFPs or QSFPs supported by the equipment vendor are supported for the MetroC
 
 When connecting the controllers to the switches and the local cluster ISLs, you must use the transceivers and cables provided by NetApp with the MetroCluster.
 
+When you use a QSFP-SFP adapter, whether you configure the port in breakout or native speed mode depends on the switch model and firmware. For example, using a QSFP-SFP adapter with Cisco 9336C switches running NX-OS firmware 9.x or 10.x requires that you configure the port in native speed mode. 
+
+NOTE: If you configure an RCF, verify that you select the correct speed mode or use a port with an appropriate speed mode.  
+
 == Using xWDM, TDM, and external encryption devices
 
 When you use xWDM/TDM devices or devices providing encryption in a MetroCluster IP configuration your environment must meet the following requirements:
@@ -122,4 +126,5 @@ a| 8 ISLs using 10Gbps or 25Gbps
 
 NOTE: NetApp recommends that you configure a small number of high bandwidth ISLs, rather than a high number of low bandwidth ISLs. For example, configuring one 40Gbps ISL instead of four 10Gbps ISLs is preferred. When using multiple ISLs, statistical load-balancing can impact the maximum throughput. Uneven balancing can reduce throughput to that of a single ISL. 
 
+// 2024 Apr 2024, ONTAPDOC-1837
 // 2024 Mar 04, ONTAPDOC-928 (ISL rework)
