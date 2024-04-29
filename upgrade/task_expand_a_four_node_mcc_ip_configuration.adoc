@@ -528,14 +528,6 @@ cluster_A::>
 +
 `metrocluster configuration-settings interface create -cluster-name`
 +
-include::../_include/models_supporting_vlan-id.adoc[]
-
-+
---
-NOTE: You can configure the MetroCluster IP interfaces from either cluster.
---
-
-+
 ----
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_1-new -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
 [Job 260] Job succeeded: Interface Create is successful.
@@ -561,6 +553,24 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_2-new -home-port e1b -address 172.17.27.13 -netmask 255.255.255.0
 [Job 267] Job succeeded: Interface Create is successful.
 ----
++
+NOTE: You can configure the MetroCluster IP interfaces from either cluster.
++
+include::../_include/models_supporting_vlan-id.adoc[]
+
+*Important considerations:*
+
+* When you expand a four-node MetroCluster configuration to an eight-node MetroCluster configuration, both of the DR groups use the same VLANs. 
+* If both of the DR groups cannot be configured using the same VLAN, you must upgrade the DR group that doesn't support the `vlan-id` parameter to a VLAN that is supported by the other DR group.
+* You cannot change the specified `vlan-id` on platforms that support the parameter after the interface has been created.
++
+For example, you have a four-node MetroCluster configuration with FAS8200 nodes  configured using VLAN 80 and 81 and you want to refresh to an AFF A900 system. AFF A900 does not support VLAN 80 and 81. In this scenario, you change the current RCF file to a VLAN that is supported, such as 110 and 120. You can use the same procedure to upgrade the RCF, and use the new VLAN IDs. 
++
+You *must* upgrade one network at a time, in the following order: Switch-A1, Switch-B1, Switch-A2, Switch-B2.
++
+NOTE: When you change the VLAN in a shared layer 2 and layer 3 network, the ISL configurations in your network also need to be updated to the allow the new VLANs.
+
+
 
 [Arabic, start=6]
 . Verify the MetroCluster IP interfaces are created:
