@@ -134,12 +134,12 @@ NOTE: For more information about installing Cumulus Linux, see link:https://docs
 
 . From the Cumulus console download and queue the switch software installation with the command `onie-install -a -i` followed by the file path to the switch software:
 +
-In this example the firmware file `cumulus-linux-4.4.2-mlx-amd64.bin` is copied from the HTTP server '50.50.50.50' to the local switch.
+In this example the firmware file `cumulus-linux-4.4.3-mlx-amd64.bin` is copied from the HTTP server '50.50.50.50' to the local switch.
 +
 ----
-cumulus@IP_switch_A_1:mgmt:~$ sudo onie-install -a -i http://50.50.50.50/switchsoftware/cumulus-linux-4.4.2-mlx-amd64.bin
-Fetching installer: http://50.50.50.50/switchsoftware/cumulus-linux-4.4.2-mlx-amd64.bin
-Downloading URL: http://50.50.50.50/switchsoftware/cumulus-linux-4.4.2-mlx-amd64.bin
+cumulus@IP_switch_A_1:mgmt:~$ sudo onie-install -a -i http://50.50.50.50/switchsoftware/cumulus-linux-4.4.3-mlx-amd64.bin
+Fetching installer: http://50.50.50.50/switchsoftware/cumulus-linux-4.4.3-mlx-amd64.bin
+Downloading URL: http://50.50.50.50/switchsoftware/cumulus-linux-4.4.3-mlx-amd64.bin
 ######################################################################### 100.0%
 Success: HTTP download complete.
 tar: ./sysroot.tar: time stamp 2021-01-30 17:00:58 is 53895092.604407122 s in the future
@@ -205,7 +205,7 @@ Changing password for cumulus.
 Current password:
 New password:
 Retype new password:
-Linux cumulus 4.19.0-cl-1-amd64 #1 SMP Cumulus 4.19.206-1+cl4.4.2u1 (2021-12-18) x86_64
+Linux cumulus 4.19.0-cl-1-amd64 #1 SMP Cumulus 4.19.206-1+cl4.4.3u1 (2021-12-18) x86_64
 
 Welcome to NVIDIA Cumulus (R) Linux (R)
 
@@ -376,8 +376,12 @@ cumulus@IP_switch_A_1:mgmt:~$ sudo python3 SN2100_v2.00_Switch-A1.py runCmd swp7
     Completion: SUCCESS
 cumulus@IP_switch_A_1:mgmt:~$
 ----
+
+. Reboot the switch after changing the DAC option on the switch ports:
 +
-NOTE: Reload the switch after changing the DAC option. You can change the option for multiple switch ports and you only need to reload the switch once.
+`sudo reboot`
++
+NOTE: When you change the option for multiple switch ports you only need to reboot the switch once.
 
 == Disable unused ISL ports and port channels
 
