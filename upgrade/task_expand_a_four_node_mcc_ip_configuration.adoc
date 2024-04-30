@@ -450,16 +450,6 @@ You must create cluster peering LIFs, create the MetroCluster interfaces on the 
 
 * The home port used in the examples are platform-specific. You should use the appropriate home port specific to MetroCluster IP node platform.
 
-* When you expand a four-node MetroCluster configuration to an eight-node MetroCluster configuration, both of the DR groups use the same VLANs. 
-* If both of the DR groups cannot be configured using the same VLAN, you must upgrade the DR group that doesn't support the `-vlan-id` parameter to a VLAN that is supported by the other DR group.
-* You cannot change the specified `-vlan-id` on platforms that support the parameter after the interface has been created.
-+
-For example, you have a four-node MetroCluster configuration on a FAS8200 system  configured using VLAN 80 and 81 and you want to refresh to an AFF A900 system. AFF A900 does not support VLAN 80 and 81. In this scenario, you change the current RCF file to a VLAN that is supported, such as 110 and 120. You can use the same procedure to upgrade the RCF, and use the new VLAN IDs from the RCF. 
-+
-You *must* upgrade one network at a time, in the following order: Switch-A1, Switch-B1, Switch-A2, Switch-B2.
-+
-NOTE: When you change the VLAN in a shared layer 2 or layer 3 network, the ISL configurations in your network also need to be updated to the allow the new VLANs.
-
 .Steps
 
 . On the new MetroCluster IP nodes, configure the intercluster LIFs using the following procedures:
@@ -536,6 +526,8 @@ cluster_A::>
 
 . Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes:
 +
+NOTE: You can configure the MetroCluster IP interfaces from either cluster.
++
 `metrocluster configuration-settings interface create -cluster-name`
 +
 ----
@@ -564,9 +556,19 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [Job 267] Job succeeded: Interface Create is successful.
 ----
 +
-NOTE: You can configure the MetroCluster IP interfaces from either cluster.
-+
 include::../_include/models_supporting_vlan-id.adoc[]
+
+When you expand a four-node MetroCluster configuration to an eight-node MetroCluster configuration, both of the DR groups use the same VLANs.
+
+If both of the DR groups cannot be configured using the same VLAN, you must upgrade the DR group that doesn't support the vlan-id parameter to a VLAN that is supported by the other DR group.
+
+You cannot change the specified `-vlan-id` on platforms that support the parameter after the interface has been created.
+
+For example, you have a four-node MetroCluster configuration on a FAS8200 system  configured using VLAN 80 and 81 and you want to refresh to an AFF A900 system. AFF A900 does not support VLAN 80 and 81. In this scenario, you change the current RCF file to a VLAN that is supported, such as 110 and 120. You can use the same procedure to upgrade the RCF, and use the new VLAN IDs from the RCF. 
+
+You *must* upgrade one network at a time, in the following order: Switch-A1, Switch-B1, Switch-A2, Switch-B2.
+
+NOTE: When you change the VLAN in a shared layer 2 or layer 3 network, the ISL configurations in your network also need to be updated to the allow the new VLANs.
 
 
 
