@@ -649,9 +649,7 @@ You must configure the MetroCluster IP interfaces that are used for replication 
 
 .About this task
 
---
-NOTE: You must choose the MetroCluster IP addresses carefully because you cannot change them after initial configuration.
---
+NOTE: If you are running ONTAP 9.10.1 and later, choose the MetroCluster IP addresses carefully because you cannot change them after initial configuration.
 
 * You must create two interfaces for each node. The interfaces must be associated with the VLANs defined in the MetroCluster RCF file.
 
@@ -660,6 +658,8 @@ NOTE: You must choose the MetroCluster IP addresses carefully because you cannot
 [NOTE]
 ====
 * Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:../install-ip/concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
+
+On platform models that support VLANs for the MetroCluster IP interface, you can include the -vlan-id parameter if you don’t want to use the default VLAN IDs.
 ====
 +
 include::../_include/models_supporting_vlan-id.adoc[]
@@ -728,7 +728,7 @@ a|
 10.1.2/24
 |===
 
-* The physical ports used by the MetroCluster IP interfaces depends on the platform model, as shown in the following table.
+* The physical ports used by the MetroCluster IP interfaces depends on the platform model. This procedure uses the ports for an AFF A700 or a FAS9000 system (e5a and e5b) as an example. You must configure the interfaces on the correct ports for your platform model, as shown in the following table:
 +
 |===
 h| Platform model h| MetroCluster IP port h| Note
@@ -782,8 +782,6 @@ a| e1b
 
 |===
 
-The port usage in the following examples is for an AFF A700 or a FAS9000 system.
-
 .Steps
 
 . Confirm that each node has disk automatic assignment enabled:
@@ -823,6 +821,8 @@ cluster_B
 ----
 
 . Create the interfaces on node_A_1.
++
+NOTE: The port usage in the following example is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model.
 
 .. Configure the interface on port "e5a" on "node_A_1":
 +
@@ -852,10 +852,12 @@ cluster_A::>
 NOTE: You can verify that these interfaces are present using the `metrocluster configuration-settings interface show` command.
 
 . Create the interfaces on node_A_2.
++
+NOTE: The port usage in the following example is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model.
 
 .. Configure the interface on port "e5a" on "node_A_2":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node <node_name> -home-port e5a -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5a -address <ip_address> -netmask <netmask>`
 +
 The following example shows the creation of the interface on port "e5a" on "node_A_2" with IP address "10.1.1.2":
 +
@@ -875,7 +877,7 @@ cluster_A::>
 +
 .. Configure the interface on port "e5b" on "node_A_2":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node <node_name> -home-port e5b -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5b -address <ip_address> -netmask <netmask>`
 +
 The following example shows the creation of the interface on port "e5b" on "node_A_2" with IP address "10.1.2.2":
 +
@@ -894,6 +896,8 @@ cluster_A::>
 ----
 
 . Create the interfaces on "node_B_1".
++
+NOTE: The port usage in the following example is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model.
 
 .. Configure the interface on port "e5a" on "node_B_1":
 +
@@ -919,6 +923,8 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 // ontap-metrocluster issue 105 2021.11.21
 . Create the interfaces on "node_B_2".
 +
+NOTE: The port usage in the following example is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model.
+
 .. Configure the interface on port e5a on node_B_2:
 +
 `metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5a -address <ip_address> -netmask <netmask>`
