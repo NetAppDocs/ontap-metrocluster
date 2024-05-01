@@ -32,7 +32,7 @@ link:concept_considerations_drive_assignment.html[Considerations for automatic d
 
 . Disable automatic drive assignment:
 +
-`storage disk option modify -node _node_name_ -autoassign off`
+`storage disk option modify -node <node_name> -autoassign off`
 +
 . You need to issue this command on all nodes in the MetroCluster IP configuration.
 
@@ -222,7 +222,7 @@ cluster01
 
 . Create a failover group for the dedicated ports:
 +
-`network interface failover-groups create -vserver _system_SVM_ -failover-group _failover_group_ -targets _physical_or_logical_ports_`
+`network interface failover-groups create -vserver <system_svm> -failover-group <failover_group> -targets <physical_or_logical_ports>`
 +
 The following example assigns ports "e0e" and" e0f" to failover group "intercluster01" on system "SVMcluster01":
 +
@@ -268,12 +268,12 @@ h| ONTAP version h| Command
 a|
 9.6 and later
 a|
-`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_`
+`network interface create -vserver <system_svm> -lif <lif_name> -service-policy default-intercluster -home-node <node_name> -home-port <port_name> -address <port_ip_address> -netmask <netmask_address> -failover-group <failover_group>`
 
 a|
 9.5 and earlier
 a|
-`network interface create -vserver _system_SVM_ -lif _LIF_name_ -role intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_`
+`network interface create -vserver <system_svm> -lif <lif_name> -role intercluster -home-node <node_name> -home-port <port_name> -address <port_ip_address> -netmask <netmask_address> -failover-group <failover_group>`
 
 |===
 For complete command syntax, see the man page.
@@ -396,12 +396,12 @@ cluster01-02
 h| *In ONTAP 9.6 and later:*
 
 a|
-`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
+`network interface create -vserver <system_svm> -lif <lif_name> -service-policy default-intercluster -home-node <node_name> -home-port <port_name> -address <port_ip_address> -netmask <netmask>`
 
 h| *In ONTAP 9.5 and earlier:*
 
 a|
-`network interface create -vserver _system_SVM_ -lif _LIF_name_ -role intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
+`network interface create -vserver <system_svm> -lif <lif_name> -role intercluster -home-node <node_name> -home-port <port_name> -address <port_ip_address> -netmask <netmask>`
 |===
 For complete command syntax, see the man page.
 +
@@ -498,7 +498,7 @@ You can use the cluster peer create command to create a peer relationship betwee
 
 . On the destination cluster, create a peer relationship with the source cluster:
 +
-`cluster peer create -generate-passphrase -offer-expiration _MM/DD/YYYY HH:MM:SS|1...7days|1...168hours_ -peer-addrs _peer_LIF_IPs_ -ipspace _ipspace_`
+`cluster peer create -generate-passphrase -offer-expiration <MM/DD/YYYY HH:MM:SS|1...7days|1...168hours> -peer-addrs <peer_lif_ip_addresses> -ipspace <ipspace>`
 
 +
 If you specify both `-generate-passphrase` and `-peer-addrs`, only the cluster whose intercluster LIFs are specified in `-peer-addrs` can use the generated password.
@@ -521,7 +521,7 @@ Warning: make a note of the passphrase - it cannot be displayed again.
 
 . On the source cluster, authenticate the source cluster to the destination cluster:
 +
-`cluster peer create -peer-addrs _peer_LIF_IPs_ -ipspace _ipspace_`
+`cluster peer create -peer-addrs <peer_lif_ip_addresses> -ipspace <ipspace>`
 +
 For complete command syntax, see the man page.
 +
@@ -626,7 +626,7 @@ cluster_B                  node_B_1      ready for DR group create
 
 . Create the DR group:
 +
-`metrocluster configuration-settings dr-group create -partner-cluster _partner-cluster-name_ -local-node _local-node-name_ -remote-node _remote-node-name_`
+`metrocluster configuration-settings dr-group create -partner-cluster <partner_cluster_name> -local-node <local_node_name> -remote-node <remote_node_name>`
 +
 This command is issued only once. It does not need to be repeated on the partner cluster. In the command, you specify the name of the remote cluster and the name of one local node and one node on the partner cluster.
 +
@@ -823,23 +823,10 @@ cluster_B
 ----
 
 . Create the interfaces on node_A_1.
-+
-
---
-[NOTE]
-====
-* The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-
-* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
-// 22 APR 2021, BURT 1180776
-
-* On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
-====
---
 
 .. Configure the interface on port "e5a" on "node_A_1":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node _node-name_ -home-port e5a -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5a -address <ip_address> -netmask <netmask>`
 +
 The following example shows the creation of the interface on port "e5a" on "node_A_1" with IP address "10.1.1.1":
 +
@@ -851,7 +838,7 @@ cluster_A::>
 
 .. Configure the interface on port "e5b" on "node_A_1":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node _node-name_ -home-port e5b -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5b -address <ip_address> -netmask <netmask>`
 +
 The following example shows the creation of the interface on port "e5b" on "node_A_1" with IP address "10.1.2.1":
 +
@@ -865,21 +852,10 @@ cluster_A::>
 NOTE: You can verify that these interfaces are present using the `metrocluster configuration-settings interface show` command.
 
 . Create the interfaces on node_A_2.
-+
---
-[NOTE]
-====
-* The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-
-* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
-// 22 APR 2021, BURT 1180776
-* On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
-====
---
 
 .. Configure the interface on port "e5a" on "node_A_2":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node _node-name_ -home-port e5a -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node <node_name> -home-port e5a -address _ip-address_ -netmask _netmask_`
 +
 The following example shows the creation of the interface on port "e5a" on "node_A_2" with IP address "10.1.1.2":
 +
@@ -899,7 +875,7 @@ cluster_A::>
 +
 .. Configure the interface on port "e5b" on "node_A_2":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node _node-name_ -home-port e5b -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node <node_name> -home-port e5b -address _ip-address_ -netmask _netmask_`
 +
 The following example shows the creation of the interface on port "e5b" on "node_A_2" with IP address "10.1.2.2":
 +
@@ -918,22 +894,10 @@ cluster_A::>
 ----
 
 . Create the interfaces on "node_B_1".
-+
-
---
-[NOTE]
-====
-
-* The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
-// 22 APR 2021, BURT 1180776
-* On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
-====
---
 
 .. Configure the interface on port "e5a" on "node_B_1":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node _node-name_ -home-port e5a -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5a -address <ip_address> -netmask <netmask>`
 +
 The following example shows the creation of the interface on port "e5a" on "node_B_1" with IP address "10.1.1.3":
 +
@@ -944,7 +908,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 
 .. Configure the interface on port "e5b" on "node_B_1":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node _node-name_ -home-port e5a -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5a -address <ip_address> -netmask <netmask>`
 +
 The following example shows the creation of the interface on port "e5b" on "node_B_1" with IP address "10.1.2.3":
 +
@@ -955,20 +919,9 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 // ontap-metrocluster issue 105 2021.11.21
 . Create the interfaces on "node_B_2".
 +
---
-[NOTE]
-====
-* The port usage in the following examples is for an AFF A700 or a FAS9000 system (e5a and e5b). You must configure the interfaces on the correct ports for your platform model, as given above.
-* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
-// 22 APR 2021, BURT 1180776
-
-* On platform models that support VLANs for the MetroCluster IP interface, you can include the `-vlan-id` parameter if you don’t want to use the default VLAN IDs.
-====
---
-
 .. Configure the interface on port e5a on node_B_2:
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node _node-name_ -home-port e5a -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5a -address <ip_address> -netmask <netmask>`
 +
 The following example shows the creation of the interface on port "e5a" on "node_B_2" with IP address "10.1.1.4":
 +
@@ -979,7 +932,7 @@ cluster_B::>metrocluster configuration-settings interface create -cluster-name c
 
 .. Configure the interface on port "e5b" on "node_B_2":
 +
-`metrocluster configuration-settings interface create -cluster-name _cluster-name_ -home-node _node-name_ -home-port e5b -address _ip-address_ -netmask _netmask_`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5a -address <ip_address> -netmask <netmask>`
 +
 The following example shows the creation of the interface on port "e5b" on "node_B_2" with IP address "10.1.2.4":
 +
@@ -1437,9 +1390,9 @@ cluster_A::>
 
 .. Assign ownership of remote drives (0m) to pool 1 of the first node (for example, node_A_1):
 +
-`disk assign -disk _disk-id_ -pool 1 -owner _owner-node-name_`
+`disk assign -disk <disk-id> -pool 1 -owner <owner_node_name>`
 +
-`disk-id` must identify a drive on a remote shelf of `owner-node-name`.
+`disk-id` must identify a drive on a remote shelf of `owner_node_name`.
 
 .. Confirm that the drives were assigned to pool 1:
 +
@@ -1525,9 +1478,9 @@ cluster_A::>
 
 .. Select a remote disk (0m) and assign ownership of the disk to pool 1 of the first node (for example, "node_A_1"):
 +
-`disk assign -disk _disk-id_ -pool 1 -owner _owner-node-name_`
+`disk assign -disk <disk_id> -pool 1 -owner <owner_node_name>`
 +
-The `disk-id` must identify a disk on a remote shelf of `owner-node-name`.
+The `disk-id` must identify a disk on a remote shelf of `owner_node_name`.
 +
 The ONTAP disk auto-assignment feature assigns all disks on the remote shelf that contains the specified disk.
 
@@ -1591,7 +1544,7 @@ link:concept_considerations_drive_assignment.html[Considerations for automatic d
 
 . Enable automatic drive assignment:
 +
-`storage disk option modify -node _node_name_ -autoassign on`
+`storage disk option modify -node <node_name> -autoassign on`
 +
 You must issue this command on all nodes in the MetroCluster IP configuration.
 
@@ -1603,7 +1556,7 @@ You must mirror the root aggregates to provide data protection.
 
 By default, the root aggregate is created as RAID-DP type aggregate. You can change the root aggregate from RAID-DP to RAID4 type aggregate. The following command modifies the root aggregate for RAID4 type aggregate:
 
-`storage aggregate modify –aggregate _aggr_name_ -raidtype raid4`
+`storage aggregate modify –aggregate <aggr_name> -raidtype raid4`
 
 NOTE: On non-ADP systems, the RAID type of the aggregate can be modified from the default RAID-DP to RAID4 before or after the aggregate is mirrored.
 
@@ -1611,7 +1564,7 @@ NOTE: On non-ADP systems, the RAID type of the aggregate can be modified from th
 
 . Mirror the root aggregate:
 +
-`storage aggregate mirror _aggr_name_`
+`storage aggregate mirror <aggr_name>`
 +
 The following command mirrors the root aggregate for "controller_A_1":
 +
@@ -1648,7 +1601,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk 
 
 . Display a list of available spares:
 +
-`storage disk show -spare -owner node_name`
+`storage disk show -spare -owner <node_name>`
 
 . Create the aggregate:
 +
@@ -1684,7 +1637,7 @@ cluster_A::> storage aggregate create aggr1_node_A_1 -diskcount 10 -node node_A_
 
 . Verify the RAID group and drives of your new aggregate:
 +
-`storage aggregate show-status -aggregate _aggregate-name_`
+`storage aggregate show-status -aggregate <aggregate-name>`
 
 == Implementing the MetroCluster configuration
 
@@ -1721,7 +1674,7 @@ Multiple data aggregates
 a|
 From any node's prompt, configure MetroCluster:
 
-`metrocluster configure _node-name_`
+`metrocluster configure <node_name>`
 a|
 A single mirrored data aggregate
 
@@ -1734,7 +1687,7 @@ You need to respond with `y` when you are prompted to continue into advanced mod
 
 .. Configure the MetroCluster with the `-allow-with-one-aggregate true` parameter:
 +
-`metrocluster configure -allow-with-one-aggregate true _node-name_`
+`metrocluster configure -allow-with-one-aggregate true <node_name>`
 
 .. Return to the admin privilege level:
 +
@@ -1823,7 +1776,7 @@ Remote: cluster_A         Configuration state configured
 
 . To avoid possible issues with nonvolatile memory mirroring, reboot each of the four nodes:
 +
-`node reboot -node _node-name_ -inhibit-takeover true`
+`node reboot -node <node_name> -inhibit-takeover true`
 
 . Issue the `metrocluster show` command on both clusters to again verify the configuration.
 //BURT 1393238
@@ -1868,7 +1821,7 @@ https://docs.netapp.com/platstor/index.jsp[ONTAP Hardware Systems Documentation^
 
 . Manually assign all disks on the new shelf to the appropriate node:
 +
-`disk assign -disk _disk-id_ -owner _owner-node-name_`
+`disk assign -disk <disk_id> -owner <owner_node_name>`
 
 . Create the aggregate:
 +
@@ -1904,7 +1857,7 @@ controller_A_1::> storage aggregate create aggr1_controller_A_1 -diskcount 10 -n
 
 . Verify the RAID group and drives of your new aggregate:
 +
-`storage aggregate show-status -aggregate _aggregate-name_`
+`storage aggregate show-status -aggregate <aggregate_name>`
 
 . Disable unmirrored aggregate deployment:
 +
@@ -1982,7 +1935,7 @@ The following example shows the `metrocluster check aggregate show` command outp
 ----
 cluster_A::> metrocluster check aggregate show
 
-Last Checked On: 8/5/2014 00:42:58
+
 
 Node                  Aggregate                  Check                      Result
 ---------------       --------------------       ---------------------      ---------
@@ -2019,7 +1972,7 @@ controller_A_2        controller_A_2_aggr0
 The following example shows the metrocluster check cluster show command output for a healthy four-node MetroCluster configuration. It indicates that the clusters are ready to perform a negotiated switchover if necessary.
 +
 ----
-Last Checked On: 9/13/2017 20:47:04
+
 
 Cluster               Check                           Result
 --------------------- ------------------------------- ---------
