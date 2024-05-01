@@ -97,7 +97,7 @@ This task must be performed on each MetroCluster site.
 . To prevent automatic support case generation, send an Autosupport message to indicate the upgrade is underway.
 .. Issue the following command:
 +
-`system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading _old-model_ to _new-model"_`
+`system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading <old-model> to <new-model>`
 +
 This example specifies a 10 hour maintenance window. You might want to allow additional time, depending on your plan.
 +
@@ -116,7 +116,7 @@ You must verify the health and connectivity of the MetroCluster configuration pr
 . Verify the operation of the MetroCluster configuration in ONTAP:
 .. Check whether the system is multipathed:
 +
-`node run -node _node-name_ sysconfig -a`
+`node run -node <node-name> sysconfig -a`
 
 .. Check for any health alerts on both clusters:
 +
@@ -281,11 +281,9 @@ In these steps, you clear the configuration on the nodes and clear the mailbox r
 .Steps
 
 . Rack the new controllers.
-. Cable the new MetroCluster IP nodes to the IP switches as shown in the _MetroCluster installation and configuration._
-+
-link:../install-ip/using_rcf_generator.html[Cabling the IP switches]
+. Cable the new MetroCluster IP nodes to the IP switches as shown in link:../install-ip/using_rcf_generator.html[Cabling the IP switches].
 
-. Configure the MetroCluster IP nodes using the following sections of the _MetroCluster installation and configuration._
+. Configure the MetroCluster IP nodes using the following procedures:
 .. link:../install-ip/task_sw_config_gather_info.html[Gathering required information]
 .. link:../install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module]
 .. link:../install-ip/task_sw_config_verify_haconfig.html[Verifying the ha-config state of components]
@@ -329,7 +327,7 @@ Component           Result
 nodes               ok
 lifs                ok
 config-replication  ok
-aggregates          warning
+aggregates          ok
 clusters            ok
 connections         not-applicable
 volumes             ok
@@ -346,9 +344,11 @@ volumes             ok
 +
 Follow the steps for your switch vendor:
 +
-* link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults^]
+* link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
 +
-* link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults^]
+* link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
++
+* link:../install-ip/task_switch_config_nvidia.html[Reset the NVIDIA IP SN2100 switch to factory defaults]
 
 . Download and install the IP RCF file, depending on your switch vendor.
 
@@ -359,8 +359,9 @@ NOTE: Update the switches in the following order:  Switch_A_1, Switch_B_1, Switc
 
 * link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
 +
-
-NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switchport mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
+* link:..install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCF files]
++
+NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switch port mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
 
 == Joining the new nodes to the clusters
 
@@ -569,7 +570,6 @@ For example, you have a four-node MetroCluster configuration on a FAS8200 system
 You *must* upgrade one network at a time, in the following order: Switch-A1, Switch-B1, Switch-A2, Switch-B2.
 +
 NOTE: When you change the VLAN in a shared layer 2 or layer 3 network, the ISL configurations in your network also need to be updated to the allow the new VLANs.
-
 
 
 [Arabic, start=6]
@@ -902,10 +902,9 @@ cluster_A::*> metrocluster configure -refresh true
 
 . Create mirrored data aggregates on each of the new MetroCluster nodes:
 +
-`storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true`
+`storage aggregate create -aggregate <aggregate-name> -node <node-name> -diskcount <no-of-disks> -mirror true`
 +
 NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
-
 +
 The following example shows the creation of an aggregate on node_A_1-new.
 +
@@ -976,7 +975,6 @@ cluster_A::*>
 +
 NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
-
 The following example shows the MDV volumes in the `volume show` output:
 +
 ----
@@ -1002,7 +1000,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 `set -privilege advanced`
 .. Move the MDV volumes, one at a time:
 +
-`volume move start -volume _mdv-volume_ -destination-aggregate _aggr-on-new-node_ -vserver _vserver-name_`
+`volume move start -volume <mdv-volume> -destination-aggregate <aggr-on-new-node> -vserver <svm-name>`
 +
 The following example shows the command and output for moving "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" to aggregate "data_a3" on "node_A_3".
 +
@@ -1018,7 +1016,7 @@ Warning: You are about to modify the system volume
 
 .. Use the volume show command to check that the MDV volume has been successfully moved:
 +
-`volume show _mdv-name_`
+`volume show <mdv-name>`
 +
 The following output shows that the MDV volume has been successfully moved.
 +
@@ -1049,10 +1047,10 @@ node_A_4-new      false
 
 .. Set epsilon to false on the old node (node_A_1-old):
 +
-`cluster modify -node _old-node_ -epsilon false*`
+`cluster modify -node <old-node> -epsilon false*`
 .. Set epsilon to true on the new node (node_A_3-new):
 +
-`cluster modify -node _new-node_ -epsilon true`
+`cluster modify -node <new-node> -epsilon true`
 .. Verify that epsilon has moved to the correct node:
 +
 `cluster show -fields epsilon`
