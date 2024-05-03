@@ -508,11 +508,7 @@ You should power on the switches first. They might have been powered on during t
 
 .. Verify the ISL.
 
-. Disable the ISLs on the FC switches.
-
-. Power on the storage controllers and wait until you see the `LOADER` prompt. The controllers must not be fully booted. 
-+
-If auto boot is enabled, press `Ctrl+C` to stop the controllers from automatically booting. 
+. Disable the ISLs on the FC switches. 
 
 . Power on the shelves and allow enough time for them to power on completely.
 
@@ -606,13 +602,17 @@ switch_A_1#
 +
 |===
 
-. Verify that the storage is visible from the surviving site. Bring the offline plexes back online. This restarts the resync operations and reestablishes the SyncMirror.
+. Verify storage.
+.. Verify that the storage is visible from the surviving site. Bring the offline plexes back online to restart the resync operation and reestablish the SyncMirror.
+.. Verify that the local storage is visible from the node in Maintenance mode:
++
+`disk show -v`
 
 . Reestablish the MetroCluster configuration.
 +
 Follow the instructions in link:../disaster-recovery/task_recover_from_a_non_controller_failure_mcc_dr.html#verifying-that-your-system-is-ready-for-a-switchback[Verifying that your system is ready for a switchback] to perform healing and switchback operations according to your MetroCluster configuration.
 
-
+// 2024 May 03, ONTAPDOC-1854
 // BURT 1382414, 09 DEC 2021
 // GH issue 184, July 11th 2022
 // GH issue #60, July 11th 2022
