@@ -8,7 +8,7 @@ summary: "This section contains the requirements for Inter-Switch Links (ISLs) c
 :icons: font
 :imagesdir: ../media/
 
-[lead]
+[.lead]
 Inter-Switch Links (ISLs) carrying MetroCluster traffic on all MetroCluster IP configurations and network topologies have certain requirements. These requirements apply to all ISLs carrying MetroCluster traffic, regardless of whether the ISLs are direct or shared between customer switches.
 
 == General MetroCluster ISL requirements
@@ -19,7 +19,7 @@ The following applies to ISLs on all MetroCluster IP configurations:
 * ISLs on one fabric must all be the same speed and length.
 * ISLs in both fabrics must be the same speed and length.
 * The maximum supported difference in distance between fabric 1 and fabric 2 is 20km or 0.2ms.
-* The ISLs on one fabric must have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they must all use WDM.
+* The ISLs must have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they must all use WDM.
 * The ISL speed must be least 10Gbps.
 * There must be least one 10Gbps ISL port per fabric.
 
@@ -46,6 +46,10 @@ The following applies to round-trip traffic between the MetroCluster IP switches
 Any SFPs or QSFPs supported by the equipment vendor are supported for the MetroCluster ISLs. SFPs and QSFPs provided by NetApp or the equipment vendor must be supported by the switch and switch firmware. 
 
 When connecting the controllers to the switches and the local cluster ISLs, you must use the transceivers and cables provided by NetApp with the MetroCluster.
+
+When you use a QSFP-SFP adapter, whether you configure the port in breakout or native speed mode depends on the switch model and firmware. For example, using a QSFP-SFP adapter with Cisco 9336C switches running NX-OS firmware 9.x or 10.x requires that you configure the port in native speed mode. 
+
+NOTE: If you configure an RCF, verify that you select the correct speed mode or use a port with an appropriate speed mode.  
 
 == Using xWDM, TDM, and external encryption devices
 
@@ -122,4 +126,5 @@ a| 8 ISLs using 10Gbps or 25Gbps
 
 NOTE: NetApp recommends that you configure a small number of high bandwidth ISLs, rather than a high number of low bandwidth ISLs. For example, configuring one 40Gbps ISL instead of four 10Gbps ISLs is preferred. When using multiple ISLs, statistical load-balancing can impact the maximum throughput. Uneven balancing can reduce throughput to that of a single ISL. 
 
+// 2024 Apr 2024, ONTAPDOC-1837
 // 2024 Mar 04, ONTAPDOC-928 (ISL rework)
