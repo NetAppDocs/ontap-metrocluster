@@ -2,29 +2,28 @@
 permalink: tiebreaker/install_tiebreaker_package.html
 sidebar: sidebar
 keywords: install, tiebreaker, software, monitor, capabilities, capability, cluster, storage, environment, snmp, notification, event, node, connectivity, issue, site, disaster, system, install, upgrade, upgrading, software, dependencies, dependency, package, ntp, requirements, requirements for tiebreaker, tiebreaker requirements, mysql, mariadb, autostart, database
-summary: The Tiebreaker software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters.
+summary: Perform a new installation or upgrade to Tiebreaker 1.5 on your host Linux operating system to monitor MetroCluster configurations. 
 ---
-= Installing or upgrading the software package
+= Install or upgrade to Tiebreaker 1.5
 
 :icons: font
 :imagesdir: ../media/
 
-[lead]
-You must install or upgrade the MetroCluster Tiebreaker software on your local computer to monitor MetroCluster configurations.
+[.lead]
+Perform a new installation or upgrade to Tiebreaker 1.5 on your host Linux operating system to monitor MetroCluster configurations. 
 
 .About this task
-* Your storage system must be running ONTAP 8.3.x or later.
-* You must have installed OpenJDK by using the `yum install java-x.x.x-openjdk` command. For systems running Tiebreaker 1.4 and earlier, run JRE 8. For systems running Tiebreaker 1.5 and later, run OpenJDK 17, 18, or 19. The outputs in the example show JRE 1.8.0. (JRE 8).
+* Your storage system must be running a supported version of ONTAP. See the link:install_prepare.html#software-requirements[Software requirements] table for more details.
+* You must have installed OpenJDK by using the `yum install java-x.x.x-openjdk` command. Tiebreaker 1.5 and later supports OpenJDK 17, 18, or 19. 
 * You can install MetroCluster Tiebreaker as a non-root user with sufficient administrative privileges to perform the Tiebreaker installation, create tables and users, and set the user password.
 
 .Steps
-. Download the MetroCluster Tiebreaker software. This example uses version 1.5.
+. Download the MetroCluster Tiebreaker software and the MetroCluster_Tiebreaker_RPM_GPG key.
 +
-https://mysupport.netapp.com/site/[NetApp Support Site^]
+NOTE: The MetroCluster_Tiebreaker_RPM_GPG key is available to download from the same page that you download the software package for Tiebreaker 1.5 on the NetApp Support Site. 
++
+https://mysupport.netapp.com/site/products/all/details/metrocluster-tiebreaker/downloads-tab[MetroCluster Tiebreaker (Downloads) - NetApp Support Site^]
 
-. Download the `MetroCluster_Tiebreaker_RPM_GPG` key:
-+
-https://mysupport.netapp.com/site/[NetApp Support Site^]
 
 . Log in to the host as the root user.
 
@@ -86,13 +85,14 @@ NOTE: You must only proceed with installation after you have successfully verifi
 +
 NOTE: You can only upgrade to Tiebreaker version 1.5 when you are upgrading from Tiebreaker version 1.4. Upgrading from earlier versions to Tiebreaker 1.5 is not supported.
 +
-Select the correct procedure from below depending on whether you're performing a new installation or upgrading an existing installation.
+Select the correct procedure depending on whether you're performing a new installation or upgrading an existing installation.
 +
 [role="tabbed-block"]
 ====
 
 .Perform a new installation
 --
+
 .. Retrieve and record the absolute path for Java:
 +
 ----
@@ -108,7 +108,6 @@ The system displays the following output for a successful installation:
 NOTE: When prompted during the installation, provide the non-root user that you previously created and assigned to the `mcctbgrp` group.
 +
 ----    
-
 Verifying...                          ################################# [100%]
 Preparing...                          ################################# [100%]
 Updating / installing...
@@ -142,7 +141,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/netapp-metrocluster-
 Attempting to start NetApp MetroCluster Tiebreaker software services
 Started NetApp MetroCluster Tiebreaker software services
 Successfully installed NetApp MetroCluster Tiebreaker software version 1.5.
- 
+
 ----
 --
 
@@ -223,6 +222,7 @@ Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.5.
 Cleaning up / removing...
    2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
 ----
+
 --
 ====
 +
@@ -235,3 +235,4 @@ NOTE: If you enter the wrong MySQL root password, the Tiebreaker software indica
 https://mysupport.netapp.com/site/[NetApp Support^]
 
 
+// 2024 Apr 23, ONTAPDOC-1752, ONTAPDOC-1753 

@@ -13,7 +13,7 @@ You can hot-add (nondisruptively add) an entire stack, including the bridges, to
 
 .About this task
 
-* This procedure can be used to add a stack using either FibreBridge 7500N or 6500N bridges.
+* This procedure can be used to add a stack using FibreBridge 7600N or 7500N bridges.
 * This procedure is written with the assumption that you are using the recommended bridge management interfaces: the ATTO ExpressNAV GUI and the ATTO QuickNAV utility.
 ** You use the ATTO ExpressNAV GUI to configure and manage a bridge, and to update the bridge firmware. You use the ATTO QuickNAV utility to configure the bridge Ethernet management 1 port.
 ** You can use other management interfaces, if needed. These options include using a serial port or Telnet to configure and manage a bridge, and to configure the Ethernet management 1 port, and using FTP to update the bridge firmware. If you choose any of these management interfaces, your system must meet the applicable requirements in link:reference_requirements_for_using_other_interfaces_to_configure_and_manage_fibrebridge_bridges.html[Other bridge management interfaces]
@@ -195,9 +195,8 @@ In systems running ONTAP 9.5 or later, in-band management can be used to access 
 +
 The supported FC data rate depends on your model bridge.
 
-  *** The FibreBridge 7600 bridge supports up to 32, 16, or 8 Gbps.
-  *** The FibreBridge 7500 bridge supports up to 16, 8, or 4 Gbps.
-  *** The FibreBridge 6500 bridge supports up to 8, 4, or 2 Gbps.
+  *** The FibreBridge 7600N bridge supports up to 32, 16, or 8 Gbps.
+  *** The FibreBridge 7500N bridge supports up to 16, 8, or 4 Gbps.
 +
 NOTE: The FCDataRate speed you select is limited to the maximum speed supported by both the bridge and the switch to which the bridge port connects. Cabling distances must not exceed the limitations of the SFPs and other hardware.
 +
@@ -205,7 +204,7 @@ If using the CLI, you must run the following command:
 +
 `set FCDataRate _port-number port-speed_`
 
- .. If you are configuring a FibreBridge 7500N or 6500N bridge, configure the connection mode that the port uses to ptp.
+ .. If you are configuring a FibreBridge 7500N bridge, configure the connection mode that the port uses to "ptp".
 +
 NOTE: The FCConnMode setting is not required when configuring a FibreBridge 7600N bridge.
 +
@@ -1070,7 +1069,7 @@ NOTE: Additional bridges can be cabled to ports 36 - 39 in G620, G630, G620-1, a
 
 |===
 
-12+^h| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+12+^h| Configurations using FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
 12+^h| DR GROUP 1
 2+h|  2+h| Brocade 6505 2+h| Brocade 6510, Brocade DCX 8510-8 2+h| Brocade 6520 2+h| Brocade G620, brocade G620-1, Brocade G630, Brocade G630-1 2+h| Brocade G720
 h| Component h| Port h| Switch 1 h| Switch 2 h| Switch 1 h| Switch 2 h| Switch 1 h| Switch 2 h| Switch 1 h| Switch 2 h| Switch 1 h| Switch 2
@@ -1267,7 +1266,7 @@ NOTE: Additional bridges can be cabled to ports 12 - 17, 20 and 21 in G620, G630
 
 |===
 
-10+^h| Configurations using FibreBridge 6500N bridges or FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
+10+^h| Configurations using FibreBridge 7500N or 7600N using one FC port (FC1 or FC2) only
 10+^h| DR GROUP 2
 2+h|  2+h| Brocade G720 2+h| Brocade G620, Brocade G620-1, Brocade G630, Brocade G630-1 2+h| Brocade 6510, Brocade DCX 8510-8 2+h| Brocade 6520
 
@@ -1485,4 +1484,5 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 link:concept_in_band_management_of_the_fc_to_sas_bridges.html[In-band management of the FC-to-SAS bridges]
 
+// 2024 APR 8, ONTAPDOC-1710
 // BURT 1448684, 17 JAN 2022

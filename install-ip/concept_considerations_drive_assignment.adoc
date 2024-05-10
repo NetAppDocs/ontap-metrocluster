@@ -42,10 +42,19 @@ ADP is performed automatically during initial configuration of the system.
 
 NOTE: Beginning with ONTAP 9.5, automatic assignment of disks must be enabled with the `storage disk option modify -autoassign on` command.
  
-You must set the ha-config state to `mccip` before automatic provisioning to make sure that the correct partition sizes are selected to allow for appropriate root volume size. For more information, see link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_verify_haconfig.html[Verifying the ha-config state of components].
+You must set the ha-config state to `mccip` before automatic provisioning to make sure that the correct partition sizes are selected to allow for appropriate root volume size. For more information, see link:task_sw_config_verify_haconfig.html[Verifying the ha-config state of components].
 
 A maximum of 96 drives can be automatically partitioned during installation. You can add extra drives after the initial installation.
 //BURT 1440058
+
+[NOTE]
+====
+If you are using internal and external drives, you first initialize the MetroCluster with only the internal drives using ADP. You then manually connect the external shelf after you complete your installation or setup task. 
+
+You must ensure that the internal shelves have the recommended minimum number of drives as outlined in <<adp-disk-assign,ADP and disk assignment differences by system>>. 
+
+For both the internal and external drives, you must populate the partially full shelves as described in <<populate-partially-full-shelves, How to populate partially-full shelves>>.
+====
 
 == How shelf-by-shelf automatic assignment works
 
@@ -60,6 +69,7 @@ If there are four external shelves per site, each shelf is assigned to a differe
 * All of the disks on site_A-shelf_2 are automatically assigned to pool 1 of node_B_1
 * All of the disks on site_A-shelf_4 are automatically assigned to pool 1 of node_B_2
 
+[[populate-partially-full-shelves]]
 == How to populate partially-full shelves
 
 If your configuration is using shelves that are not fully populated (have empty drive bays) you must distribute the drives evenly throughout the shelf, depending on the disk assignment policy. The disk assignment policy depends on how many shelves are at each MetroCluster site.
@@ -67,7 +77,6 @@ If your configuration is using shelves that are not fully populated (have empty 
 If you are using a single shelf at each site (or just the internal shelf on an AFF A800 system), disks are assigned using a quarter-shelf policy. If the shelf is not fully populated,  install the drives equally on all quarters.
 
 The following table shows an example of how to place 24 disks in a 48 drive internal shelf. The ownership for the drives is also shown.
-
 
 |===
 
@@ -90,7 +99,32 @@ Quarter 4: Bays 36-47
 a|
 Bays 36-41
 |===
-If you are using two shelves at each site, disks are assigned using a half-shelf policy. If the shelves are not fully populated, install the drives equally from either end of the shelf.
+
+The following table shows an example of how to place 16 disks in a 24 drive internal shelf.
+
+|===
+
+h| The 24 drive bays are divided into four quarters: h| Install four drives in the first four bays in each quarter...
+
+a|
+Quarter 1: Bays 0-5
+a|
+Bays 0-3
+a|
+Quarter 2: Bays 6-11
+a|
+Bays 6-9
+a|
+Quarter 3: Bays 12-17
+a|
+Bays 12-15
+a|
+Quarter 4: Bays 18-23
+a|
+Bays 18-21
+|===
+
+If you are using two external shelves at each site, disks are assigned using a half-shelf policy. If the shelves are not fully populated, install the drives equally from either end of the shelf. 
 
 For example, if you are installing 12 drives in a 24-drive shelf, install drives in bays 0-5 and 18-23.
 
@@ -143,6 +177,7 @@ link:concept_required_mcc_ip_components_and_naming_guidelines_mcc_ip.html[Requir
 
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management^]
 
+[[adp-disk-assign]]
 == ADP and disk assignment differences by system in MetroCluster IP configurations
 
 The operation of Advanced Drive Partitioning (ADP) and automatic disk assignment in MetroCluster IP configurations varies depending on the system model.
@@ -575,7 +610,7 @@ Minimum supported drives (per site) (active/passive HA configuration)
 
 |===
 
-
+// 2024 MAR 20, ONTAPDOC-1572
 // 2024 MAR 7, ONTAPDOC-1716
 // 2024 Mar 07, GH 360
 // 2023 Nov 08, BURT 1572945
