@@ -4,14 +4,14 @@ sidebar: sidebar
 keywords: hardware, component, replace, individual, replacement, installation, guide, replacing, controller, booting, new
 summary: If hardware components have to be replaced, you must replace them using their individual hardware replacement and installation guides.
 ---
-= Replacing hardware and booting new controllers
+= Replace hardware and booting new controllers
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 If hardware components have to be replaced, you must replace them using their individual hardware replacement and installation guides.
 
-== Replacing hardware at the disaster site
+== Replace hardware at the disaster site
 
 .Before you begin
 
@@ -109,7 +109,7 @@ a| link:http://docs.netapp.com/platstor/index.jsp[ONTAP Hardware Systems Documen
 * link:../install-ip/using_rcf_generator.html[MetroCluster IP configuration]
 * link:../install-fc/task_fmc_mcc_transition_cable_the_new_mcc_controllers_to_the_exist_fc_fabrics.html[MetroCluster fabric-attached configuration]
 
-== Determining the system IDs and VLAN IDs of the old controller modules
+== Determine the system IDs and VLAN IDs of the old controller modules
 
 After you have replaced all hardware at the disaster site, you must determine the system IDs of the replaced controller modules. You need the old system IDs when you reassign disks to the new controller modules. If the systems are AFF A220, AFF A250, AFF A400, AFF A800, FAS2750, FAS500f, FAS8300, or FAS8700 models, you must also determine the VLAN IDs used by the MetroCluster IP interfaces.
 
@@ -266,7 +266,7 @@ Node_A_2 Node_A_1 HA      enabled  online
 12 entries were displayed.
 ----
 
-== Isolating replacement drives from the surviving site (MetroCluster IP configurations)
+== Isolate replacement drives from the surviving site (MetroCluster IP configurations)
 
 You must isolate any replacement drives by taking down the MetroCluster iSCSI initiator connections from the surviving nodes.
 
@@ -299,13 +299,13 @@ site_B::*> storage iscsi-initiator disconnect -node node_B_2 -label *
 +
 `set -privilege admin`
 
-== Clearing the configuration on a controller module
+== Clear the configuration on a controller module
 
 // include reference
 include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 // end include reference
 
-== Netbooting the new controller modules
+== Netboot the new controller modules
 
 If the new controller modules have a different version of ONTAP from the version on the surviving controller modules, you must netboot the new controller modules.
 
@@ -323,7 +323,7 @@ include::../_include/netboot_steps.adoc[]
 . From the Boot menu, select *option 5* to enter Maintenance mode.
 . If you have a four-node MetroCluster configuration, repeat this procedure on the other new controller module.
 
-== Determining the system IDs of the replacement controller modules
+== Determine the system IDs of the replacement controller modules
 
 After you have replaced all hardware at the disaster site, you must determine the system ID of the newly installed storage controller module or modules.
 
@@ -437,7 +437,7 @@ In the following example, the new local system ID is 1574774991:
  ...
 ----
 
-== Verifying the ha-config state of components
+== Verify the ha-config state of components
 
 In a MetroCluster configuration, the ha-config state of the controller module and chassis components must be set to "mcc" or "mcc-2n" so they boot up properly.
 
@@ -518,5 +518,27 @@ a|
 |===
 
 . Repeat these steps on the other replacement node.
+
+== Determine if end-to-end encryption was enabled on the original systems
+
+You should verify if the original systems were configured for end-to-end encryption.
+
+.Step
+
+. Run the following command from the surviving site:
++
+`metrocluster node show -fields is-encryption-enabled`
++
+If encryption is enabled, the following output is displayed: 
++
+----
+1 cluster_A node_A_1 true
+1 cluster_A node_A_2 true
+1 cluster_B node_B_1 true
+1 cluster_B node_B_2 true
+4 entries were displayed.
+----
++
+NOTE: Refer to link:../install-ip/task-configure-end-to-end-encryption.html[Configure end-to-end encryption] for supported systems.
 
 // BURT 1448684, 12 JAN 2022

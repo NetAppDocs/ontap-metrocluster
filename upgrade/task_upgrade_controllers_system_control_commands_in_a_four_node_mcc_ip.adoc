@@ -43,6 +43,8 @@ https://hwu.netapp.com[NetApp Hardware Universe^]
 +
 NOTE: Performing an upgrade using aggregate relocation (ARL) with “systems controller replace” commands” is not supported for a four-node MetroCluster IP configuration.
 
+* If it is configured on your system, link:../maintain/task-configure-encryption.html#disable-end-to-end-encryption[Disable end-to-end encryption] before performing the upgrade. 
+
 * You must use the automated NSO controller upgrade procedure to upgrade the controllers at both sites in sequence.
 * This automated NSO based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster disaster recovery (DR) site. You can only initiate a controller replacement at one site at a time.
 * To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The operation guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
@@ -876,11 +878,16 @@ Manually configure ONTAP Mediator which was automatically removed before you sta
 
 . Use the steps in link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[Configure the ONTAP Mediator service from a MetroCluster IP configuration]. 
 
-=== Restoring Tiebreaker monitoring
+=== Restore Tiebreaker monitoring
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
 . Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations].
+
+
+=== Configure end-to-end encryption
+
+If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
 
 // 2023 AUG 24, ONTAPDOC-1030
 // 2023 JULY 5, ONTAPDOC-1083
