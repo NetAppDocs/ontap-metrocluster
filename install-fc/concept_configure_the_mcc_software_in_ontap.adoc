@@ -2513,9 +2513,19 @@ node_A_1 SVM 4 snmpv3user     snmp        usm                   10.10.10.13
 
 . Configure SNMPv3 on the switches from the switch prompt:
 +
+[role="tabbed-block"]
+====
+.Brocade switches
+--
 `snmpconfig --set snmpv3`
+--
+.Cisco switches
+--
+`snmp-server user <user_name>  auth [md5/sha/sha-256] <auth_password> priv (aes-128) <priv_password>`
+--
+====
 +
-If you require RO access, after "User (ro):" specify the "snmpv3user" as shown in the example:
+If you require RO access, after "User (ro):" specify the "snmpv3user". The following example uses Brocade switches:
 +
 ----
 Switch-A1:admin> snmpconfig --set snmpv3
@@ -2913,10 +2923,11 @@ You can provide additional protection for the cluster configuration backup files
 
 . Set the URL of the remote destination for the configuration backup files:
 +
-`system configuration backup settings modify _URL-of-destination_`
+`system configuration backup settings modify _URL-of-destination_` 
 +
 The https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[Cluster Management with the CLI] contains additional information under the section _Managing configuration backups_.
 
+// 2024 May 15, GH issue 333, ONTAPDOC-1866
 // 2024 Feb 22, GH issue 366
 // BURT 1448684, 12 JAN 2022
 // 2030-FEB-14, GH issue 138
