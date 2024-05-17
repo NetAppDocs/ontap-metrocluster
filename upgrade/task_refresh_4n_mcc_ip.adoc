@@ -60,6 +60,9 @@ If the maintenance is completed before the time has elapsed, you can invoke an A
 `system node autosupport invoke -node * -type all -message MAINT=end`
 
 .. Repeat the command on the partner cluster.
+
+. If end-to-end encryption is enabled, follow the steps to link:../maintain/task-configure-encryption.html#disable-end-to-end-encryption[Disable end-to-end encryption].
+
 . Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
 +
 [cols=2*]
@@ -132,6 +135,7 @@ Node_IP_2      Node_IP_1              true      Connected to Node_IP_1
 +
 Perform the steps in link:../maintain/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations^].
 //ONTAPDOC-1711
+
 . Move the data from the old nodes to the new nodes by using the following procedures:
 
 .. Perform all the steps in https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-create-aggregate-move-volumes.html[Create an aggregate and move volumes to the new nodes^].
@@ -256,6 +260,8 @@ image::../media/mcc_dr_group_c5.png[]
 .. Display the results of the MetroCluster check:
 +
 `metrocluster check show`
+
+. If you disabled end-to-end encryption before adding the new nodes, you can re-enable it by following the steps in link:../maintain/task-configure-encryption.html#enable-end-to-end-encryption[Enable end-to-end encryption].
 
 . Restore monitoring if necessary, using the procedure for your configuration.
 +
