@@ -13,6 +13,17 @@ The HA state for all components should be `mccip`.
 `ha-config modify controller mccip`
 +
 `ha-config modify chassis mccip`
+
+. Run the following commands to verify and modify the Ethernet ports connected to NS224 shelves.
++
+`storage port show`
++
+`storage port modify -p <port> -m storage` 
++
+Disks from the shelves attached to the Ethernet ports are reported in the `sysconfig -v` output. 
++
+Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] for information on the storage ports for the system you are upgrading to.
+
 .	Halt the node: `halt`
 +
 The node should stop at the `LOADER>` prompt.

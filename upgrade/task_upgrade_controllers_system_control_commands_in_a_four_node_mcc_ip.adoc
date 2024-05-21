@@ -15,28 +15,47 @@ You can use this guided automated MetroCluster switchover operation to perform a
 
 This procedure supports the following controller upgrades on systems running ONTAP 9.13.1 and later.
 
-|===
-h|Old controller h|Replacement controller
-|AFF A300 
-|AFF A900
-|FAS8200
-|FAS9500
-|===
-
-NOTE: You can perform the controller upgrades listed in the above table on systems running ONTAP 9.12.1 or 9.11.1 using the manual upgrade procedure described link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[here].
+<new_table_needed>
 
 For more information on platform upgrade combinations, review the MetroCluster IP upgrade table in  link:concept_choosing_controller_upgrade_mcc.html#supported-metrocluster-ip-controller-upgrades[Choose a controller upgrade procedure].
 
 Refer to link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosing_an_upgrade_method_mcc.html[Choosing an upgrade or refresh method] for additional procedures.
+
+== Set the required bootarg on the existing system
+
+NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
+
+If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node on your existing system. 
+
+.Steps
+
+. Halt one node at each site and allow its HA partner to perform a storage takeover of the node:
+
+. At the `LOADER` prompt of the halted node, enter the following: 
++
+`setenv hw.cxgbe.toe_keepalive_disable 1` 
++
+`saveenv` 
++
+`printenv hw.cxgbe.toe_keepalive_disable`  
+
+. Boot the node:
++
+`boot_ontap`
+    
+. Perform a giveback when the node comes back to waiting for giveback prompt. 
+
+. Repeat the steps on each node in the DR group that is being upgraded.
 
 == About this task
 
 * You can use this procedure only for controller upgrade.
 +
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
-* This procedure applies to controller modules in a four-node MetroCluster IP configuration running ONTAP 9.13.1 or later.
+
+* The MetroCluster IP switches (switch type, vendor, and model) and firmware version must be supported on the existing and new controllers you are upgrading. 
 +
-https://hwu.netapp.com[NetApp Hardware Universe^]
+Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] or the link:https://imt.netapp.com/matrix/[IMT] for supported switches and firmware versions. 
 
 * The MetroCluster systems must be running the same ONTAP version at both sites. 
 * You can use this procedure to upgrade controllers in a four-node MetroCluster IP configuration using NSO based automated switchover and switchback. 
@@ -176,6 +195,17 @@ You should gather the output of the following commands for each node:
  ** `volume show`
  ** `storage aggregate show`
  ** `system node run -node _node-name_ sysconfig -a`
+ ** `aggr show -r` 
+ ** `disk show`  
+ ** `system node run <node-name> disk show` 
+ ** `set diagnostic; volume efficiency show -fields compression, compression-algorithm, storage-efficiency-mode -volume  *` 
+ ** `node show -node  * -fields is-capacity-optimized` 
+ ** `node show -node  * -fields  is-cbse-default` 
+ ** `node show -node * -fields  is-qat-supported` 
+ ** `vol show -fields type` 
+ ** `run local aggr options data_aggr` 
+ ** `run * version` 
+ ** `vol show -fields type , space-guarantee` 
 
 . If the MetroCluster nodes are in a SAN configuration, collect the relevant information.
 +
@@ -315,6 +345,8 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 +
 This step must be performed on both nodes.
 
+. Power off the nodes and shelves at the site where the controller is being upgraded. 
+
 === Setting up the new controllers
 
 You must rack and cable the new controllers.
@@ -329,6 +361,12 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Install the controller modules in the rack or cabinet.
 +
+Installing the new controllers separately does not apply when you upgrade integrated systems with disks and controllers in the same chassis to new controllers by swapping the PCMs and I/O cards, for example, from an AFF A900 to an AFF A90. 
++
+PCMs of the new controllers and I/O cards must be swapped after powering off the old controllers. 
++
+<image_needed>
++ 
 https://docs.netapp.com/us-en/ontap-systems/index.html[ONTAP Hardware Systems Documentation^]
 
 . If the new controller modules did not come with FC-VI cards of their own and if FC-VI cards from old controllers are compatible on new controllers, swap FC-VI cards and install those in correct slots.
@@ -791,6 +829,11 @@ If either node is in takeover mode, perform a giveback using the `storage failov
 +
 `network port broadcast-domain show`
 
+.. If a new broadcast domain is created for the data ports on the newly upgraded controllers, delete the broadcast domain:
++
+NOTE: Only delete the the new broadcast domain. Do not delete any of the broadcast domains that existed before starting the upgrade.
++
+`broadcast-domain delete -broadcast-domain <broadcast_domain_name>`
 .. Add any ports to a broadcast domain as needed.
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Adding or removing ports from a broadcast domain^]
