@@ -13,19 +13,15 @@ You can use this guided automated MetroCluster switchover operation to perform a
 
 == Supported platform combinations
 
-This procedure supports the following controller upgrades on systems running ONTAP 9.13.1 and later.
-
-<new_table_needed>
-
-For more information on platform upgrade combinations, review the MetroCluster IP upgrade table in  link:concept_choosing_controller_upgrade_mcc.html#supported-metrocluster-ip-controller-upgrades[Choose a controller upgrade procedure].
+For more information on supported platform upgrade combinations, review the MetroCluster IP upgrade table in  link:concept_choosing_controller_upgrade_mcc.html#supported-metrocluster-ip-controller-upgrades[Choose a controller upgrade procedure].
 
 Refer to link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosing_an_upgrade_method_mcc.html[Choosing an upgrade or refresh method] for additional procedures.
 
 == Set the required bootarg on the existing system
 
-NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
-
 If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node on your existing system. 
+
+NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
 
 .Steps
 
@@ -43,7 +39,7 @@ If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps
 +
 `boot_ontap`
     
-. Perform a giveback when the node comes back to waiting for giveback prompt. 
+. When the node boots, perform a giveback at the prompt: 
 
 . Repeat the steps on each node in the DR group that is being upgraded.
 
@@ -197,8 +193,7 @@ You should gather the output of the following commands for each node:
  ** `system node run -node _node-name_ sysconfig -a`
  ** `aggr show -r` 
  ** `disk show`  
- ** `system node run <node-name> disk show` 
- ** `set diagnostic; volume efficiency show -fields compression, compression-algorithm, storage-efficiency-mode -volume  *` 
+ ** `system node run <node-name> disk show`  
  ** `node show -node  * -fields is-capacity-optimized` 
  ** `node show -node  * -fields  is-cbse-default` 
  ** `node show -node * -fields  is-qat-supported` 
@@ -206,6 +201,9 @@ You should gather the output of the following commands for each node:
  ** `run local aggr options data_aggr` 
  ** `run * version` 
  ** `vol show -fields type , space-guarantee` 
+ ** `vserver fcp initiator show` 
+ ** `storage disk show`
+ ** `metrocluster configuration-settings interface show` 
 
 . If the MetroCluster nodes are in a SAN configuration, collect the relevant information.
 +
@@ -345,7 +343,13 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 +
 This step must be performed on both nodes.
 
+. Verify the nodes are at the LOADER prompt and collect and preserve the current environment variables.
+
 . Power off the nodes and shelves at the site where the controller is being upgraded. 
+
+== Configuring the new controllers 
+
+You must rack and install the controllers, perform required setup in Maintenance mode, boot the controllers, and verify the LIF configuration on the controllers. 
 
 === Setting up the new controllers
 
@@ -360,12 +364,6 @@ The rack space depends on the platform model of the controller modules, the swit
 . Properly ground yourself.
 
 . Install the controller modules in the rack or cabinet.
-+
-Installing the new controllers separately does not apply when you upgrade integrated systems with disks and controllers in the same chassis to new controllers by swapping the PCMs and I/O cards, for example, from an AFF A900 to an AFF A90. 
-+
-PCMs of the new controllers and I/O cards must be swapped after powering off the old controllers. 
-+
-<image_needed>
 + 
 https://docs.netapp.com/us-en/ontap-systems/index.html[ONTAP Hardware Systems Documentation^]
 
