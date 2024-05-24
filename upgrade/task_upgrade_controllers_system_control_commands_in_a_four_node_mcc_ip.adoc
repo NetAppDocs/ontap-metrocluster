@@ -49,7 +49,7 @@ NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K sy
 +
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
 
-* The MetroCluster IP switches (switch type, vendor, and model) and firmware version must be supported on the existing and new controllers you are upgrading. 
+* The MetroCluster IP switches (switch type, vendor, and model) and the firmware version must be supported on the existing and new controllers you are upgrading. 
 +
 Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] or the link:https://imt.netapp.com/matrix/[IMT] for supported switches and firmware versions. 
 
@@ -193,13 +193,8 @@ You should gather the output of the following commands for each node:
  ** `system node run -node _node-name_ sysconfig -a`
  ** `aggr show -r` 
  ** `disk show`  
- ** `system node run <node-name> disk show`  
- ** `node show -node  * -fields is-capacity-optimized` 
- ** `node show -node  * -fields  is-cbse-default` 
- ** `node show -node * -fields  is-qat-supported` 
+ ** `system node run <node-name> disk show`   
  ** `vol show -fields type` 
- ** `run local aggr options data_aggr` 
- ** `run * version` 
  ** `vol show -fields type , space-guarantee` 
  ** `vserver fcp initiator show` 
  ** `storage disk show`
@@ -345,6 +340,10 @@ This step must be performed on both nodes.
 
 . Verify the nodes are at the LOADER prompt and collect and preserve the current environment variables.
 
+. Gather the bootarg values: 
++
+`printenv`
+
 . Power off the nodes and shelves at the site where the controller is being upgraded. 
 
 == Configuring the new controllers 
@@ -364,8 +363,12 @@ The rack space depends on the platform model of the controller modules, the swit
 . Properly ground yourself.
 
 . Install the controller modules in the rack or cabinet.
-+ 
-https://docs.netapp.com/us-en/ontap-systems/index.html[ONTAP Hardware Systems Documentation^]
++
+Installing the new controllers separately is not required for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers. 
++
+The following example image is for representation only. 
++
+image::../media/a90_a70_pcm_swap.png[]
 
 . If the new controller modules did not come with FC-VI cards of their own and if FC-VI cards from old controllers are compatible on new controllers, swap FC-VI cards and install those in correct slots.
 +
