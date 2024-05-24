@@ -151,20 +151,18 @@ The switches at site_A will be upgraded when the controllers on site_A are upgra
 
 . Prepare the IP switches for the application of the new RCF files.
 +
-Follow the steps in the section for your switch vendor from the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
-
-
- ** link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_nvidia.html[Resetting the NVIDIA IP SN2100 switch to factory defaults]
+Follow the steps in the section for your switch vendor: 
+ ** link:../install-ip/task_switch_config_broadcom.html[Reset the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_cisco.html[Reset the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_nvidia.html[Reset the NVIDIA IP SN2100 switch to factory defaults]
 
 . Download and install the RCF files.
 +
 Follow the steps in the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
 
- ** link:../install-ip/task_switch_config_broadcom.html[Downloading and installing the Broadcom RCF files]
- ** link:../install-ip/task_switch_config_cisco.html[Downloading and installing the Cisco IP RCF files]
- ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Downloading and installing the NVIDIA IP RCF files]
+ ** link:../install-ip/task_switch_config_broadcom.html[Download and install the Broadcom RCF files]
+ ** link:../install-ip/task_switch_config_cisco.html[Download and install the Cisco IP RCF files]
+ ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCF files]
 
 === Map ports from the old nodes to the new nodes
 
@@ -790,7 +788,7 @@ You must move data LIFs to a common port, remove VLANs and interface groups on t
 
 * These steps are performed on the old controllers (node_B_1-old, node_B_2-old).
 
-* See the information you gathered in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Mapping ports from the old nodes to the new nodes].
+* See the information you gathered in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Map ports from the old nodes to the new nodes].
 
 .Steps
 
@@ -851,7 +849,7 @@ For example:
 network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 ----
 
-.. Remove VLAN and interface group ports from broadcast domain::
+.. Remove VLAN and interface group ports from broadcast domain:
 +
 `network port broadcast-domain remove-ports -ipspace <ipspace> -broadcast-domain <broadcast-domain-name> -ports <nodename:portname,nodename:portnamee>,..`
 
@@ -891,7 +889,7 @@ https://docs.netapp.com/platstor/index.jsp[ONTAP Hardware Systems Documentation^
 
 . Cable the controllers to the IP switches as described in link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
 
-** link:[Cabling the IP switches]
+** link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
 
 . Power up the new nodes and boot them to Maintenance mode.
 
@@ -982,16 +980,19 @@ Follow the steps in the procedure for your switch vendor:
 +
 link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
 
- ** link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_broadcom.html[Reset the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_cisco.html[Reset the Cisco IP switch to factory defaults]
+** link:../install-ip/task_switch_config_nvidia.html[Reset the NVIDIA IP SN2100 switch to factory defaults] 
 
 . Download and install the RCF files.
 +
 Follow the steps in the section for your switch vendor from the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
 
-** link:../install-ip/task_switch_config_broadcom.html[Downloading and installing the Broadcom RCF files]
+** link:../install-ip/task_switch_config_broadcom.html[Download and install the Broadcom RCF files]
 
-** link:../install-ip/task_switch_config_cisco.html[Downloading and installing the Cisco IP RCF files]
+** link:../install-ip/task_switch_config_cisco.html[Download and install the Cisco IP RCF files]
+
+** link:../install-ip/task_switch_config_nvidia.html[Download and install the NVIDIA IP SN2100 switch RCF files]
 
 === Set the MetroCluster IP bootarg variables
 
@@ -1402,7 +1403,7 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 
 .. Override the port configuration to ensure proper LIF placement:
 +
-`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>"`
+`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>`
 +
 When entering the network interface modify command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the network `interface modify` using autocomplete and then enclose it in the `vserver config override` command.
 
