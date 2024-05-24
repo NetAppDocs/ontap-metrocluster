@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controller, ip, configuration, switchover, switchback, workflow, nodes, tiebreaker, verify, bootrage, root, aggregate, disks
 summary: 'You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
-= Upgrade controllers in the same chassis using switchover and switchback in a MetroCluster IP configuration  (ONTAP 9.10.1 or later)
+= Upgrade controllers from AFF A700/FAS9000 to AFF A900/FAS9500 in a MetroCluster IP configuration using switchover and switchback  (ONTAP 9.10.1 or later)
 
 :icons: font
 :imagesdir: ../media/
@@ -13,6 +13,9 @@ summary: 'You can use the MetroCluster switchover operation to provide nondisrup
 You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
 .About this task
+
+* To upgrade AFF A700 controller modules to AFF A900, the controllers must be running ONTAP 9.10.1 or later.
+* To upgrade FAS9000 controller modules to FAS9500, the controllers must be running ONTAP 9.10.1P3 or later.
 
 
 * All controllers in the configuration should be upgraded during the same maintenance period.
@@ -40,22 +43,6 @@ Operating the MetroCluster configuration with an AFF A700 and an AFF A900, or a 
    **** node_B_1-A900
    **** node_B_2-A900
 
-== Supported upgrades
-
-This procedure supports the following upgrades: 
-
-[cols=3*,options="header"]
-|===
-| Existing system
-| New system
-| Minimum ONTAP version
-| AFF A700 | AFF A900 | ONTAP 9.10.1
-| FAS9000 | FAS9500 | ONTAP 9.10.1P3
-| <existing_platform> | AFF A70 | ONTAP 9.15.1
-| <existing_platform> | AFF A90 | ONTAP 9.15.1
-|
-|===
-
 == Workflow for upgrading controllers in a MetroCluster IP configuration
 
 You can use the workflow diagram to help you plan the upgrade tasks.
@@ -66,12 +53,9 @@ image::../media/workflow_ip_upgrade.png[]
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
-=== Clear the slots on the controller
-
-==== Clear slot 7 on the AFF A700 or FAS9000 controller
+=== Clear slot 7 on the AFF A700 or FAS9000 controller
 
 The MetroCluster configuration on an AFF A900 or FAS9500 uses one of each of the ports on the DR cards located in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700 or FAS9000, you must move them to other slots for all the nodes of the cluster.
-
 
 === Update the MetroCluster switch RCF files before upgrading controllers
 
@@ -400,8 +384,7 @@ The operation can take several minutes to complete.
 +
 Automatic healing of aggregates after negotiated switchover is disabled during controller upgrade. Nodes at site_B are halted and stopped at the `LOADER` prompt.
 
-== Remove the controller module and NVS
-=== Remove AFF A700 or FAS9000 platform controller module and NVS
+== Remove AFF A700 or FAS9000 platform controller module and NVS
 .About this task
 If you are not already grounded, properly ground yourself.
 
@@ -451,9 +434,8 @@ image::../media/drw_a900_move-remove_NVRAM_module.png[remove module]
 .	If you are using add-on modules used as coredump devices on the AFF A700 or FAS9000 NVS, do not transfer them to the AFF A900 or FAS9500 NVS.
 Do not transfer any parts from the AFF A700 or FAS9000 controller module and NVS to the AFF A900 or FAS9500 module.
 
-== Install the NVS and controller modules
-
-You must install the NVS and controller module that you received in the upgrade kit on both nodes at site_B. Do not move the coredump device from the AFF A700 or FAS9000 NVS module to the AFF A900 or FAS9500 NVS module.
+== Install the AFF A900 or FAS9500 NVS and controller modules
+You must install the AFF A900 or FAS9500 NVS and controller module that you received in the upgrade kit on both nodes at site_B. Do not move the coredump device from the AFF A700 or FAS9000 NVS module to the AFF A900 or FAS9500 NVS module.
 
 .About this task
 If you are not already grounded, properly ground yourself.
@@ -646,6 +628,7 @@ After you run the command, wait until the node stops at the LOADER prompt.
 
 . Verify the changes you made:
 +
+
 |===
 
 h| If you have this type of HBA... h| Use this command...
