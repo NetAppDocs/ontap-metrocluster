@@ -55,11 +55,7 @@ The following example names are used in this procedure:
   *** node_B_1-new
   *** node_B_2-new
 
-== Prepare for the upgrade
-
-To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
-
-=== Set the required bootarg on the existing system
+== Set the required bootarg on the existing system
 
 If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node on your existing system. 
 
@@ -85,7 +81,9 @@ NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K sy
 
 . Repeat the steps on each node in the DR group that is being upgraded.
 
-=== Perform system prechecks
+== Prepare for the upgrade
+
+To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
 
 Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must <<man_reconfig_mediator,manually reconfigure ONTAP Mediator>>.
 
@@ -184,15 +182,15 @@ dr-group-id cluster    node          node-systemid dr-partner-systemid
 You should gather the output of the following commands for each node:
 
  ** `network interface show -role cluster,node-mgmt`
- ** `network port show -node _node-name_ -type physical`
- ** `network port vlan show -node _node-name_`
- ** `network port ifgrp show -node _node_name_ -instance`
+ ** `network port show -node <node-name> -type physical`
+ ** `network port vlan show -node <node-name>`
+ ** `network port ifgrp show -node <node-name> -instance`
  ** `network port broadcast-domain show`
  ** `network port reachability show -detail`
  ** `network ipspace show`
  ** `volume show`
  ** `storage aggregate show`
- ** `system node run -node _node-name_ sysconfig -a`
+ ** `system node run -node <node-name> sysconfig -a`
  ** `aggr show -r` 
  ** `disk show`  
  ** `system node run <node-name> disk show`   
@@ -234,7 +232,7 @@ You will need the passphrase later in the upgrade procedure.
 +
 `system controller replace resume`
 
-=== Removing the existing configuration from the Tiebreaker or other monitoring software
+=== Remove the existing configuration from the Tiebreaker or other monitoring software
 
 If the existing configuration is monitored with the MetroCluster Tiebreaker configuration or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the Tiebreaker or other software prior to replacing the old controller.
 
@@ -248,7 +246,7 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker conf
 Refer to the documentation for the application.
 
 
-== Replacing the old controllers and booting up the new controllers
+== Replace the old controllers and booting up the new controllers
 
 After you gather information and resume the operation, the automation  proceeds with the switchover operation.
 
@@ -260,7 +258,7 @@ The automation operation initiates the switchover operations. After these operat
 
 Before initiating switchover, the automation operation pauses so you can manually verify that all LIFs are "`up`" at site B. If necessary, bring any LIFs that are "`down`" to "`up`" and resume the automation operation by using the `system controller replace resume` command.
 
-=== Preparing the network configuration of the old controllers
+=== Prepare the network configuration of the old controllers
 
 To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
 
@@ -291,7 +289,7 @@ For port usage for platform models, see the link:https://hwu.netapp.com/[NetApp 
 
 .. Modify all data LIFS to use the common port as the home port:
 +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
 +
 In the following example, this is "`e0d`".
 +
@@ -302,14 +300,14 @@ network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
 . Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
 +
-`broadcast-domain remove-ports -broadcast-domain _broadcast-domain-name_ -ports _node-name:port-id_`
+`broadcast-domain remove-ports -broadcast-domain <broadcast-domain-name>-ports <node-name:port-id>`
 +
 Repeat this step for all VLAN and physical ports.
 
 . Remove any VLAN ports using cluster ports as member ports and interface groups using cluster ports as member ports.
 .. Delete VLAN ports:
 +
-`network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
+`network port vlan delete -node <node-name> -vlan-name <portid-vlandid>`
 +
 For example:
 +
@@ -319,7 +317,7 @@ network port vlan delete -node node1 -vlan-name e1c-80
 
 .. Remove physical ports from the interface groups:
 +
-`network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
+`network port ifgrp remove-port -node <node-name> -ifgrp <interface-group-name> -port <portid>`
 +
 For example:
 +
@@ -329,14 +327,14 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 
 .. Remove VLAN and interface group ports from broadcast domain:
 +
-`network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
+`network port broadcast-domain remove-ports -ipspace <ipspace> -broadcast-domain <broadcast-domain-name>-ports <nodename:portname,nodename:portname>,..`
 .. Modify interface group ports to use other physical ports as member as needed.:
 +
-`ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
+`ifgrp add-port -node <node-name> -ifgrp <interface-group-name> -port <port-id>`
 
 . Halt the nodes:
 +
-`halt -inhibit-takeover true -node _node-name_`
+`halt -inhibit-takeover true -node <node-name>`
 +
 This step must be performed on both nodes.
 
@@ -348,11 +346,11 @@ This step must be performed on both nodes.
 
 . Power off the nodes and shelves at the site where the controller is being upgraded. 
 
-== Configuring the new controllers 
+== Configure the new controllers 
 
 You must rack and install the controllers, perform required setup in Maintenance mode, boot the controllers, and verify the LIF configuration on the controllers. 
 
-=== Setting up the new controllers
+=== Set up the new controllers
 
 You must rack and cable the new controllers.
 
@@ -366,9 +364,9 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Install the controller modules in the rack or cabinet.
 +
-Installing the new controllers separately is not required for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers. 
+Installing the new controllers separately is not required for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers, as shown in the image below.
 +
-The following example image is for representation only. 
+The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
 +
 image::../media/a90_a70_pcm_swap.png[]
 
@@ -384,7 +382,7 @@ https://docs.netapp.com/us-en/ontap-systems/index.html[ONTAP Hardware Systems Do
 
 . Power up the new nodes and press Ctrl-C when prompted to display the LOADER prompt.
 
-=== Netbooting the new controllers
+=== Netboot the new controllers
 
 After you install the new nodes, you need to netboot to ensure the new nodes are running the same version of ONTAP as the original nodes. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must put a copy of the ONTAP 9 boot image onto a web server that the system can access.
 
@@ -440,13 +438,13 @@ The node must be rebooted to start using the newly installed software. Do you wa
 
 
 
-=== Clearing the configuration on a controller module
+=== Clear the configuration on a controller module
 
 // include reference
 include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 // end include reference
 
-=== Restoring the HBA configuration
+=== Restore the HBA configuration
 
 Depending on the presence and configuration of HBA cards in the controller module, you need to configure them correctly for your site's usage.
 
@@ -465,19 +463,19 @@ h| If you have this type of HBA and desired mode... h| Use this command...
 a|
 CNA FC
 a|
-`ucadmin modify -m fc -t initiator _adapter-name_`
+`ucadmin modify -m fc -t initiator <adapter-name>`
 a|
 CNA Ethernet
 a|
-`ucadmin modify -mode cna _adapter-name_`
+`ucadmin modify -mode cna <adapter-name>`
 a|
 FC target
 a|
-`fcadmin config -t target _adapter-name_`
+`fcadmin config -t target <adapter-name>`
 a|
 FC initiator
 a|
-`fcadmin config -t initiator _adapter-name_`
+`fcadmin config -t initiator <adapter-name>`
 |===
 . Exit Maintenance mode:
 +
@@ -623,7 +621,7 @@ setenv bootarg.mcc.dr_partner 537403323
 `setenv bootarg.kmip.kmip.init.interface`
 
 
-=== Reassigning root aggregate disks
+=== Reassign root aggregate disks
 
 Reassign the root aggregate disks to the new controller module, using the `sysids` gathered earlier
 
@@ -732,7 +730,7 @@ aggr0_node_b_1-root        online      raid_dp, aggr    root, nosnap=on,
 
 . Repeat the above steps on the partner node (node_B_2-new).
 
-=== Booting up the new controllers
+=== Boot up the new controllers
 You must reboot the controllers from the boot menu to update the controller flash image. Additional steps are required if encryption is configured.
 
 You can reconfigure VLANs and interface groups. If required, manually modify the ports for the cluster LIFs and broadcast domain details before resuming the operation by using the `system controller replace resume` command.
@@ -878,7 +876,7 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 a|
 External key management
 a|
-`security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag _node-name_`
+`security key-manager external restore -vserver <svm-name> -node <node-name> -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag <node-name>`
 
 For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys^].
 
@@ -894,7 +892,7 @@ Verify that the new nodes (site_B) are in *Waiting for switchback state* from si
 +
 `system controller replace resume`
 
-== Completing the upgrade
+== Complete the upgrade
 
 The automation operation runs verification system checks and then pauses so you can verify the network reachability. After verification, the resource regain phase is initiated and the automation operation executes switchback at site A and pauses at the post upgrade checks. After you resume the automation operation, it performs the post upgrade checks and if no errors are detected, marks the upgrade as complete.
 
