@@ -17,39 +17,13 @@ For more information on supported platform upgrade combinations, review the Metr
 
 Refer to link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosing_an_upgrade_method_mcc.html[Choosing an upgrade or refresh method] for additional procedures.
 
-== Set the required bootarg on the existing system
-
-If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node on your existing system. 
-
-NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
-
-.Steps
-
-. Halt one node at each site and allow its HA partner to perform a storage takeover of the node:
-
-. At the `LOADER` prompt of the halted node, enter the following: 
-+
-`setenv hw.cxgbe.toe_keepalive_disable 1` 
-+
-`saveenv` 
-+
-`printenv hw.cxgbe.toe_keepalive_disable`  
-
-. Boot the node:
-+
-`boot_ontap`
-    
-. When the node boots, perform a giveback at the prompt: 
-
-. Repeat the steps on each node in the DR group that is being upgraded.
-
 == About this task
 
 * You can use this procedure only for controller upgrade.
 +
 Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
 
-* The MetroCluster IP switches (switch type, vendor, and model) and the firmware version must be supported on the existing and new controllers you are upgrading. 
+* The MetroCluster IP switches (switch type, vendor, and model) and the firmware version must be supported on the existing and new controllers. 
 +
 Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] or the link:https://imt.netapp.com/matrix/[IMT] for supported switches and firmware versions. 
 
@@ -84,6 +58,34 @@ The following example names are used in this procedure:
 == Prepare for the upgrade
 
 To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
+
+=== Set the required bootarg on the existing system
+
+If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node on your existing system. 
+
+NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
+
+.Steps
+
+. Halt one node at each site and allow its HA partner to perform a storage takeover of the node:
+
+. At the `LOADER` prompt of the halted node, enter the following: 
++
+`setenv hw.cxgbe.toe_keepalive_disable 1` 
++
+`saveenv` 
++
+`printenv hw.cxgbe.toe_keepalive_disable`  
+
+. Boot the node:
++
+`boot_ontap`
+    
+. When the node boots, perform a giveback at the prompt: 
+
+. Repeat the steps on each node in the DR group that is being upgraded.
+
+=== Perform system prechecks
 
 Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must <<man_reconfig_mediator,manually reconfigure ONTAP Mediator>>.
 
