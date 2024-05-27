@@ -1009,9 +1009,9 @@ In this task, you will use the UUIDs and system IDs identified earlier in the up
 
 . If the nodes being upgraded are AFF A400, FAS8300, or FAS8700 models, set the following bootargs at the LOADER prompt:
 +
-`setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
-`setenv bootarg.mcc.port_b_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
 NOTE: If the interfaces are using the default VLANs, the vlan-id is not necessary.
 
@@ -1046,9 +1046,9 @@ setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,
 
 . If the nodes being upgraded are not systems listed in the previous step, at the LOADER prompt for each of the surviving nodes, set the following bootargs with local_IP/mask:
 +
-`setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address_`
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address>`
 +
-`setenv bootarg.mcc.port_b_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address_`
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address>`
 +
 The following commands set the values for node_B_1-new:
 +
@@ -1066,15 +1066,15 @@ setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,
 
 . At the new nodes' LOADER prompt, set the UUIDs:
 +
-`setenv bootarg.mgwd.partner_cluster_uuid _partner-cluster-UUID_`
+`setenv bootarg.mgwd.partner_cluster_uuid <partner-cluster-UUID>`
 +
-`setenv bootarg.mgwd.cluster_uuid _local-cluster-UUID_`
+`setenv bootarg.mgwd.cluster_uuid <local-cluster-UUID>`
 +
-`setenv bootarg.mcc.pri_partner_uuid _DR-partner-node-UUID_`
+`setenv bootarg.mcc.pri_partner_uuid <DR-partner-node-UUID>`
 +
-`setenv bootarg.mcc.aux_partner_uuid _DR-aux-partner-node-UUID_`
+`setenv bootarg.mcc.aux_partner_uuid <DR-aux-partner-node-UUID>`
 +
-`setenv bootarg.mcc_iscsi.node_uuid _local-node-UUID_`
+`setenv bootarg.mcc_iscsi.node_uuid <local-node-UUID>`
 
 
 .. Set the UUIDs on node_B_1-new.
@@ -1107,9 +1107,9 @@ setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 
 . Set the following variables:
 +
-`setenv bootarg.mcc.local_config_id _original-sys-id_`
+`setenv bootarg.mcc.local_config_id <original-sys-id>`
 +
-`setenv bootarg.mcc.dr_partner _dr-partner-sys-id_`
+`setenv bootarg.mcc.dr_partner <dr-partner-sys-id>`
 +
 NOTE: The `setenv bootarg.mcc.local_config_id` variable must be set to the sys-id of the *original* controller module, node_B_1-old.
 
@@ -1198,7 +1198,7 @@ a|
 
 . Reassign the root aggregate disks on the drive shelves to the new controllers:
 +
-`disk reassign -s old-sysid -d new-sysid`
+`disk reassign -s <old-sysid> -d <new-sysid>`
 +
 The following example shows reassignment of drives in a non-ADP configuration:
 +
@@ -1253,20 +1253,20 @@ You must boot the new controllers, taking care to ensure that the bootarg variab
 `halt`
 . If external key manager is configured, set the related bootargs:
 +
-`setenv bootarg.kmip.init.ipaddr _ip-address_`
+`setenv bootarg.kmip.init.ipaddr <ip-address>`
 +
-`setenv bootarg.kmip.init.netmask _netmask_`
+`setenv bootarg.kmip.init.netmask <netmask>`
 +
-`setenv bootarg.kmip.init.gateway _gateway-address_`
+`setenv bootarg.kmip.init.gateway <gateway-addres>`
 +
-`setenv bootarg.kmip.init.interface _interface-id_`
+`setenv bootarg.kmip.init.interface <interface-id>`
 . Check if the partner-sysid is the current:
 +
 `printenv partner-sysid`
 +
 If the partner-sysid is not correct, set it:
 +
-`setenv partner-sysid _partner-sysID_`
+`setenv partner-sysid <partner-sysID>`
 
 . Display the ONTAP boot menu:
 +
@@ -1315,7 +1315,7 @@ Use the steps in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchov
 +
 If the partner-sysid is not correct, set it:
 +
-`setenv partner-sysid _partner-sysID_`
+`setenv partner-sysid <partner-sysID>`
 
 . If root encryption is used, select the boot menu option again for your key management configuration.
 +
@@ -1391,7 +1391,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EA
 
 Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the beginning of the upgrade procedure.
 
-.About this tsak
+.About this task
 
 * This task is performed on site_B.
 * See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Mapping ports from the old nodes to the new nodes].
@@ -1415,7 +1415,7 @@ When entering the network interface modify command within the `vserver config ov
 `set -privilege admin`
 . Revert the interfaces to their home node:
 +
-`network interface revert * -vserver <vserver-name>`
+`network interface revert * -vserver <svm-name>`
 +
 Perform this step on all SVMs as required.
 
