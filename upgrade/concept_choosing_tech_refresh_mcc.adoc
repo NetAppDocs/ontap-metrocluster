@@ -11,26 +11,29 @@ summary: 'The refresh procedure you use depends on the platform model, scope of 
 [.lead]
 The system refresh procedure you use depends on the platform model, and type of MetroCluster configuration.
 Refresh procedures apply to the controllers and the storage shelves.
-In the refresh procedures, new controllers and shelves are added to the MetroCluster configuration,
-creating a second DR group, and then data is nondisruptively migrated to the new nodes.
-The original controllers are then retired.
+In the refresh procedures, new controllers and shelves are added to the MetroCluster configuration, creating a second DR group, and then data is nondisruptively migrated to the new nodes. The original controllers are then retired.
 
-=== Supported MetroCluster FC tech refresh combinations
-
-image::../media/metrocluster_fc_tech_refresh_914.png[]
+== Supported MetroCluster FC tech refresh combinations
 
 * You must complete the tech refresh procedure before adding a new load.
 * All nodes in the MetroCluster configuration must be running the same ONTAP version. For example, if you have an eight-node configuration, all eight nodes must be running the same ONTAP version. 
 * Do not exceed any object limits of the 'lower' of the platforms in the combination. Apply the lower object limit of the two platforms.
 * If the target platform limits are lower then the MetroCluster limits, you must reconfigure the MetroCluster to be at, or below, the target platform limits before you add the new nodes. 
-* Refer to the link:https://hwu.netapp.com[Hardware universe^] for platform limits. 
+* Refer to the link:https://hwu.netapp.com[Hardware universe^] for platform limits.
 
+.Supported AFF and FAS MetroCluster FC tech refresh combinations
 
-=== Supported MetroCluster IP tech refresh combinations
+The following table shows the supported platform combinations for refreshing an AFF or FAS system in a MetroCluster FC configuration:
 
-image::../media/metrocluster_techref_ip_914.png[MetroCluster IP tech refresh combinations]
+image::../media/metrocluster_fc_tech_refresh.png[]
 
-*Note 1:* This combination requires ONTAP 9.13.1 or later. 
+.Supported ASA MetroCluster FC tech refresh combinations
+
+The following table shows the supported platform combinations for refreshing an ASA system in a MetroCluster FC configuration:
+
+image::../media/metrocluster_fc_tech_refresh_asa.png[]
+
+== Supported MetroCluster IP tech refresh combinations
 
 * You must complete the tech refresh procedure before adding a new load.
 * All nodes in the MetroCluster configuration must be running the same ONTAP version. For example, if you have an eight-node configuration, all eight nodes must be running the same ONTAP version. 
@@ -38,6 +41,23 @@ image::../media/metrocluster_techref_ip_914.png[MetroCluster IP tech refresh com
 * If the target platform limits are lower than the MetroCluster limits, you must reconfigure the MetroCluster to be at, or below, the target platform limits before you add the new nodes. 											
 * Refer to the link:https://hwu.netapp.com[Hardware universe^] for platform limits. 
 
+.Supported AFF and FAS MetroCluster IP tech refresh combinations
+
+The following table shows the supported platform combinations for refreshing an AFF or FAS system in a MetroCluster IP configuration:
+
+image::../media/metrocluster_techref_ip.png[MetroCluster IP tech refresh combinations]
+
+*Note 1:* This combination requires ONTAP 9.13.1 or later. 
+
+.Supported ASA MetroCluster IP tech refresh combinations
+
+The following table shows the supported platform combinations for refreshing an ASA system in a MetroCluster IP configuration:
+
+image::../media/metrocluster_techref_ip_asa.png[MetroCluster IP ASA tech refresh combinations]
+
+== Choose a refresh procedure
+
+Choose the refresh procedure for your configuration from the following table:
 
 [%header,cols="2,1,1,2"]
 |===
