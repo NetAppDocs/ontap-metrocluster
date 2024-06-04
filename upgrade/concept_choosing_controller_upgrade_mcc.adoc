@@ -18,7 +18,7 @@ In an upgrade procedure, the controllers are replaced with a new controller mode
 * In an ARL-based controller upgrade procedure, the aggregate relocation operations are used to nondisruptively move data from the old configuration to the new, upgraded configuration.
 
 
-== Choosing a procedure that uses the switchover and switchback process
+== Supported controller upgrades
 
 Select your Current platform from the FC or IP table below. If the intersection of the Current platform row and Target platform column is blank, the upgrade is not supported.
 
@@ -96,10 +96,20 @@ For more information, review the link:https://mysupport.netapp.com/site/bugs-onl
 
 The following table shows the supported platform combinations for upgrading an ASA system in a MetroCluster FC configuration:
 
-image::../media/metrocluster_fc_upgrade_table_asa.png[]
+[cols=3*,options="header"]
+|===
+| Source MetroCluster FC platform
+| Destination MetroCluster FC platform
+| Supported?
+.2+| ASA A400 | ASA A400 | Yes | ASA A900 | No
+.2+| ASA A900 | ASA A400 | No | ASA A900 | Yes (see Note 1)
+|===
 
 * Note 1: Controller upgrades are supported on systems running ONTAP 9.14.1 or later.
 
+== Choose a controller upgrade procedure 
+
+After reviewing the supported upgrade combinations, choose the correct controller upgrade procedure for your configuration. 
 
 [cols="2,1,1,2"]
 |===
