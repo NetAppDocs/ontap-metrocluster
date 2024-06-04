@@ -1,0 +1,585 @@
+---
+permalink: tiebreaker/install-dependencies-14.html
+sidebar: sidebar
+keywords: install, tiebreaker, software, monitor, capabilities, capability, cluster, storage, environment, snmp, notification, event, node, connectivity, issue, site, disaster, system, install, upgrade, upgrading, software, dependencies, dependency, package, ntp, requirements, requirements for tiebreaker, tiebreaker requirements, mysql, mariadb, autostart, database
+summary: The Tiebreaker 1.4 software provides monitoring capabilities for a clustered storage environment. It also sends SNMP notifications in the event of node connectivity issues and site disasters.
+---
+= Install MetroCluster Tiebreaker 1.4 dependencies
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Depending on your host Linux operating system, install a MySQL or MariaDB server before installing or upgrading the Tiebreaker software.
+
+.Steps
+. <<install-java-1-8,Install JDK>>.
+
+
+. Install MySQL or MariaDB server:
++
+
+[cols="30,70"]
+|===
+
+h| If the Linux host is h| Then...
+
+a|
+Red Hat Enterprise Linux 7/CentOS 7
+a|
+
+<<install-mysql-redhat, Install MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7>>
+
+a|
+Red Hat Enterprise Linux 8
+a|
+
+<<install-mariadb, Install MariaDB server on Red Hat Enterprise Linux 8>>
+
+
+|===
+
+[[install-java-1-8]]
+== Install JDK
+
+You must install JDK on your host system before installing or upgrading the Tiebreaker software. Tiebreaker 1.4 and earlier supports JDK 1.8.0. (JRE 8). 
+
+.Steps
+. Log in as a "root" user.
++
+----
+
+login as: root
+root@mcctb's password:
+Last login: Fri Jan  8 21:33:00 2017 from host.domain.com
+----
+
+. Install JDK 1.8.0:
++
+`yum install java-1.8.0-openjdk.x86_64`
++
+----
+[root@mcctb ~]# yum install java-1.8.0-openjdk.x86_64
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+... shortened....
+Dependencies Resolved
+
+=======================================================================
+Package               Arch   Version                 Repository    Size
+=======================================================================
+Installing:
+ java-1.8.0-openjdk  x86_64  1:1.8.0.144-0.b01.el7_4 updates      238 k
+ ..
+ ..
+Transaction Summary
+=======================================================================
+Install  1 Package  (+ 4 Dependent packages)
+
+Total download size: 34 M
+Is this ok [y/d/N]: y
+
+Installed:
+java-1.8.0-openjdk.x86_64 1:1.8.0.144-0.b01.el7_4
+Complete!
+----
+
+[[install-mysql-redhat]]
+== Install MySQL Server 5.5.30 or later and 5.6.x versions on Red Hat Enterprise Linux 7 or CentOS 7
+
+You must install MySQL Server 5.5.30 or later and 5.6.x version on your host system before installing or upgrading the Tiebreaker software.  For Red Hat Enterprise Linux 8, <<install-mariadb, Install the MariaDB server>>. 
+
+.Steps
+. Log in as a root user.
++
+----
+
+login as: root
+root@mcctb's password:
+Last login: Fri Jan  8 21:33:00 2016 from host.domain.com
+----
+
+. Add the MySQL repository to your host system:
++
+`[root@mcctb ~]# yum localinstall \https://dev.mysql.com/get/mysql57-community-release-el6-11.noarch.rpm`
++
+[subs="verbatim,quotes"]
+----
+Loaded plugins: product-id, refresh-packagekit, security, subscription-manager
+Setting up Local Package Process
+Examining /var/tmp/yum-root-LLUw0r/mysql-community-release-el6-5.noarch.rpm: mysql-community-release-el6-5.noarch
+Marking /var/tmp/yum-root-LLUw0r/mysql-community-release-el6-5.noarch.rpm to be installed
+Resolving Dependencies
+--> Running transaction check
+---> Package mysql-community-release.noarch 0:el6-5 will be installed
+--> Finished Dependency Resolution
+Dependencies Resolved
+================================================================================
+Package               Arch   Version
+                                    Repository                             Size
+================================================================================
+Installing:
+mysql-community-release
+                       noarch el6-5 /mysql-community-release-el6-5.noarch 4.3 k
+Transaction Summary
+================================================================================
+Install       1 Package(s)
+Total size: 4.3 k
+Installed size: 4.3 k
+*Is this ok [y/N]: y*
+Downloading Packages:
+Running rpm_check_debug
+Running Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing : mysql-community-release-el6-5.noarch                         1/1
+  Verifying  : mysql-community-release-el6-5.noarch                         1/1
+Installed:
+  mysql-community-release.noarch 0:el6-5
+Complete!
+----
+
+. Disable the MySQL 57 repository:
++
+`[root@mcctb ~]# yum-config-manager --disable mysql57-community`
+
+. Enable the MySQL 56 repository:
++
+`[root@mcctb ~]# yum-config-manager --enable mysql56-community`
+
+. Enable the repository:
++
+`[root@mcctb ~]# yum repolist enabled | grep "mysql.*-community.*"`
++
+----
+
+mysql-connectors-community           MySQL Connectors Community            21
+mysql-tools-community                MySQL Tools Community                 35
+mysql56-community                    MySQL 5.6 Community Server           231
+----
+
+. Install the MySQL Community server:
++
+`[root@mcctb ~]# yum install mysql-community-server`
++
+[subs="verbatim,quotes"]
+----
+Loaded plugins: product-id, refresh-packagekit, security, subscription-manager
+This system is not registered to Red Hat Subscription Management. You can use subscription-manager
+to register.
+Setting up Install Process
+Resolving Dependencies
+--> Running transaction check
+ .....Output truncated.....
+---> Package mysql-community-libs-compat.x86_64 0:5.6.29-2.el6 will be obsoleting
+--> Finished Dependency Resolution
+Dependencies Resolved
+==============================================================================
+Package                          Arch   Version       Repository          Size
+==============================================================================
+Installing:
+ mysql-community-client         x86_64  5.6.29-2.el6  mysql56-community  18  M
+     replacing  mysql.x86_64 5.1.71-1.el6
+ mysql-community-libs           x86_64  5.6.29-2.el6  mysql56-community  1.9 M
+     replacing  mysql-libs.x86_64 5.1.71-1.el6
+ mysql-community-libs-compat    x86_64  5.6.29-2.el6  mysql56-community  1.6 M
+     replacing  mysql-libs.x86_64 5.1.71-1.el6
+ mysql-community-server         x86_64  5.6.29-2.el6  mysql56-community  53  M
+     replacing  mysql-server.x86_64 5.1.71-1.el6
+Installing for dependencies:
+mysql-community-common          x86_64  5.6.29-2.el6  mysql56-community   308 k
+
+Transaction Summary
+===============================================================================
+Install       5 Package(s)
+Total download size: 74 M
+*Is this ok [y/N]: y*
+Downloading Packages:
+(1/5): mysql-community-client-5.6.29-2.el6.x86_64.rpm       |  18 MB     00:28
+(2/5): mysql-community-common-5.6.29-2.el6.x86_64.rpm       | 308 kB     00:01
+(3/5): mysql-community-libs-5.6.29-2.el6.x86_64.rpm         | 1.9 MB     00:05
+(4/5): mysql-community-libs-compat-5.6.29-2.el6.x86_64.rpm  | 1.6 MB     00:05
+(5/5): mysql-community-server-5.6.29-2.el6.x86_64.rpm       |  53 MB     03:42
+ -------------------------------------------------------------------------------
+Total                                              289 kB/s |  74 MB     04:24
+warning: rpmts_HdrFromFdno: Header V3 DSA/SHA1 Signature, key ID <key_id> NOKEY
+Retrieving key from file:/etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+Importing GPG key 0x5072E1F5:
+ Userid : MySQL Release Engineering <mysql-build@oss.oracle.com>
+Package: mysql-community-release-el6-5.noarch
+         (@/mysql-community-release-el6-5.noarch)
+ From   : file:/etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
+*Is this ok [y/N]: y*
+Running rpm_check_debug
+Running Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing : mysql-community-common-5.6.29-2.el6.x86_64
+....Output truncated....
+1.el6.x86_64                                                               7/8
+  Verifying  : mysql-5.1.71-1.el6.x86_64                       	           8/8
+Installed:
+  mysql-community-client.x86_64 0:5.6.29-2.el6
+  mysql-community-libs.x86_64 0:5.6.29-2.el6
+  mysql-community-libs-compat.x86_64 0:5.6.29-2.el6
+  mysql-community-server.x86_64 0:5.6.29-2.el6
+
+Dependency Installed:
+  mysql-community-common.x86_64 0:5.6.29-2.el6
+
+Replaced:
+  mysql.x86_64 0:5.1.71-1.el6 mysql-libs.x86_64 0:5.1.71-1.el6
+  mysql-server.x86_64 0:5.1.71-1.el6
+Complete!
+ 
+----
+
+. Start MySQL server:
++
+`[root@mcctb ~]# service mysqld start`
++
+----
+
+Initializing MySQL database:  2016-04-05 19:44:38 0 [Warning] TIMESTAMP
+with implicit DEFAULT value is deprecated. Please use
+--explicit_defaults_for_timestamp server option (see documentation
+for more details).
+2016-04-05 19:44:38 0 [Note] /usr/sbin/mysqld (mysqld 5.6.29)
+        starting as process 2487 ...
+2016-04-05 19:44:38 2487 [Note] InnoDB: Using atomics to ref count
+        buffer pool pages
+2016-04-05 19:44:38 2487 [Note] InnoDB: The InnoDB memory heap is disabled
+....Output truncated....
+2016-04-05 19:44:42 2509 [Note] InnoDB: Shutdown completed; log sequence
+       number 1625987
+
+PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER!
+To do so, start the server, then issue the following commands:
+
+  /usr/bin/mysqladmin -u root password 'new-password'
+  /usr/bin/mysqladmin -u root -h mcctb password 'new-password'
+
+Alternatively, you can run:
+  /usr/bin/mysql_secure_installation
+
+which will also give you the option of removing the test
+databases and anonymous user created by default.  This is
+strongly recommended for production servers.
+.....Output truncated.....
+WARNING: Default config file /etc/my.cnf exists on the system
+This file will be read by default by the MySQL server
+If you do not want to use this, either remove it, or use the
+--defaults-file argument to mysqld_safe when starting the server
+
+                                                           [  OK  ]
+Starting mysqld:                                           [  OK  ]
+----
+
+. Confirm that MySQL server is running:
++
+`[root@mcctb ~]# service mysqld status`
++
+----
+
+mysqld (pid  2739) is running...
+----
+
+. Configure security and password settings:
++
+`[root@mcctb ~]# mysql_secure_installation`
++
+[subs="verbatim,quotes"]
+----
+NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
+       SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+ In order to log into MySQL to secure it, we'll need the current
+ password for the root user.  If you've just installed MySQL, and
+ you haven't set the root password yet, the password will be blank,
+ so you should just press enter here.
+
+ *Enter current password for root (enter for none):*   <== on default install
+                                                         hit enter here
+ OK, successfully used password, moving on...
+
+ Setting the root password ensures that nobody can log into the MySQL
+ root user without the proper authorization.
+
+ *Set root password? [Y/n] y*
+ *New password:*
+ *Re-enter new password:*
+ Password updated successfully!
+ Reloading privilege tables..
+  ... Success!
+
+ By default, a MySQL installation has an anonymous user, allowing anyone
+ to log into MySQL without having to have a user account created for
+ them.  This is intended only for testing, and to make the installation
+ go a bit smoother.  You should remove them before moving into a
+ production environment.
+
+ *Remove anonymous users? [Y/n] y*
+  ... Success!
+
+ Normally, root should only be allowed to connect from 'localhost'.  This
+ ensures that someone cannot guess at the root password from the network.
+
+ *Disallow root login remotely? [Y/n] y*
+  ... Success!
+
+ By default, MySQL comes with a database named 'test' that anyone can
+ access.  This is also intended only for testing, and should be removed
+ before moving into a production environment.
+
+ *Remove test database and access to it? [Y/n] y*
+  - Dropping test database...
+ ERROR 1008 (HY000) at line 1: Can't drop database 'test';
+ database doesn't exist
+  ... Failed!  Not critical, keep moving...
+  - Removing privileges on test database...
+  ... Success!
+
+ Reloading the privilege tables will ensure that all changes made so far
+ will take effect immediately.
+
+ *Reload privilege tables now? [Y/n] y*
+  ... Success!
+
+ All done!  If you've completed all of the above steps, your MySQL
+ installation should now be secure.
+
+ Thanks for using MySQL!
+
+ Cleaning up...
+----
+
+. Verify that the MySQL login is working:
++
+`[root@mcctb ~]# mysql -u root –p`
++
+[subs="verbatim,quotes"]
+----
+*Enter password: <configured_password>*
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 17
+Server version: 5.6.29 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+mysql>
+----
++
+When the MySQL login is working as expected, the output ends at the `mysql>` prompt.
+
+=== Enable the MySQL autostart setting
+
+You should verify that the autostart feature is turned on for the MySQL daemon. Turning on the MySQL daemon automatically restarts MySQL if the system on which the MetroCluster Tiebreaker software resides reboots. If the MySQL daemon is not running, the Tiebreaker software continues running, but it cannot be restarted and configuration changes cannot be made.
+
+.Step
+
+. Verify that MySQL is enabled to autostart when booted:
++
+`[root@mcctb ~]# systemctl list-unit-files mysqld.service`
++
+----
+UNIT FILE          State
+------------------ ----------
+mysqld.service     enabled
+
+----
++
+If MySQL is not enabled to autostart when booted, see the MySQL documentation to enable the autostart feature for your installation.
+
+[[install-mariadb]]
+== Install MariaDB server on Red Hat Enterprise Linux 8 
+
+You must install MariaDB server on your host system before installing or upgrading the Tiebreaker software.  For Red Hat Enterprise Linux 7 or CentOS 7, <<install-mysql-redhat, Install MySQL Server>>.
+
+.Before you begin
+
+Your host system must be running on Red Hat Enterprise Linux (RHEL) 8.
+
+.Steps
+. Log in as a `root` user.
++
+----
+
+login as: root
+root@mcctb's password:
+Last login: Fri Jan  8 21:33:00 2017 from host.domain.com
+----
+
+. Install the MariaDB server:
++
+`[root@mcctb ~]# yum install mariadb-server.x86_64`
++
+[subs="verbatim,quotes"]
+----
+
+[root@mcctb ~]# yum install mariadb-server.x86_64
+Loaded plugins: fastestmirror, langpacks
+ ...
+ ...
+
+===========================================================================
+ Package                      Arch   Version         Repository        Size
+===========================================================================
+Installing:
+mariadb-server               x86_64   1:5.5.56-2.el7   base            11 M
+Installing for dependencies:
+
+Transaction Summary
+===========================================================================
+Install  1 Package  (+8 Dependent packages)
+Upgrade             ( 1 Dependent package)
+
+Total download size: 22 M
+*Is this ok [y/d/N]: y*
+
+Downloading packages:
+No Presto metadata available for base warning:
+/var/cache/yum/x86_64/7/base/packages/mariadb-libs-5.5.56-2.el7.x86_64.rpm:
+Header V3 RSA/SHA256 Signature,
+key ID f4a80eb5: NOKEY] 1.4 MB/s | 3.3 MB  00:00:13 ETA
+Public key for mariadb-libs-5.5.56-2.el7.x86_64.rpm is not installed
+(1/10): mariadb-libs-5.5.56-2.el7.x86_64.rpm  | 757 kB  00:00:01
+..
+..
+(10/10): perl-Net-Daemon-0.48-5.el7.noarch.rpm|  51 kB  00:00:01
+-----------------------------------------------------------------------------------------
+Installed:
+  mariadb-server.x86_64 1:5.5.56-2.el7
+
+Dependency Installed:
+mariadb.x86_64 1:5.5.56-2.el7
+perl-Compress-Raw-Bzip2.x86_64 0:2.061-3.el7
+perl-Compress-Raw-Zlib.x86_64 1:2.061-4.el7
+perl-DBD-MySQL.x86_64 0:4.023-5.el7
+perl-DBI.x86_64 0:1.627-4.el7
+perl-IO-Compress.noarch 0:2.061-2.el7
+perl-Net-Daemon.noarch 0:0.48-5.el7
+perl-PlRPC.noarch 0:0.2020-14.el7
+
+Dependency Updated:
+  mariadb-libs.x86_64 1:5.5.56-2.el7
+Complete!
+----
+
+. Start MariaDB server:
++
+`[root@mcctb ~]# systemctl start mariadb`
+
+
+. Verify that the MariaDB server has started:
++
+`[root@mcctb ~]# systemctl status mariadb`
++
+----
+[root@mcctb ~]# systemctl status mariadb
+mariadb.service - MariaDB database server
+...
+Nov 08 21:28:59 mcctb systemd[1]: Starting MariaDB database server...
+...
+Nov 08 21:29:01 mcctb systemd[1]: Started MariaDB database server.
+----
+
+. Configure the security and password settings:
++
+NOTE: When you are prompted for the root password, leave it empty and press enter to continue to configure the security and password settings. 
++
+`[root@mcctb ~]# mysql_secure_installation`
++
+[subs="quotes"]
+----
+root@localhost systemd]# mysql_secure_installation
+
+ NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB
+      SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+In order to log into MariaDB to secure it, we'll need the current
+password for the root user.  If you've just installed MariaDB, and
+you haven't set the root password yet, the password will be blank,
+so you should just press enter here.
+
+Enter current password for root (enter for none):
+OK, successfully used password, moving on...
+
+Setting the root password ensures that nobody can log into the MariaDB
+root user without the proper authorisation.
+
+*Set root password? [Y/n] y*
+*New password:*
+*Re-enter new password:*
+Password updated successfully!
+Reloading privilege tables..
+ ... Success!
+
+
+By default, a MariaDB installation has an anonymous user, allowing anyone
+to log into MariaDB without having to have a user account created for
+them.  This is intended only for testing, and to make the installation
+go a bit smoother.  You should remove them before moving into a
+production environment.
+
+*Remove anonymous users? [Y/n] y*
+ ... Success!
+
+Normally, root should only be allowed to connect from 'localhost'.  This
+ensures that someone cannot guess at the root password from the network.
+
+*Disallow root login remotely? [Y/n] y*
+ ... Success!
+
+By default, MariaDB comes with a database named 'test' that anyone can
+access.  This is also intended only for testing, and should be removed
+before moving into a production environment.
+
+*Remove test database and access to it? [Y/n] y*
+ - Dropping test database...
+  ... Success!
+ - Removing privileges on test database...
+   ... Success!
+
+Reloading the privilege tables will ensure that all changes made so far
+will take effect immediately.
+
+*Reload privilege tables now? [Y/n]*
+
+  ... Success!
+
+Cleaning up...
+
+All done!  If you've completed all of the above steps, your MariaDB
+installation should now be secure.
+
+Thanks for using MariaDB!
+
+----
+
+=== Enable the autostart setting for the MariaDB server
+
+You should verify that the autostart feature is turned on for the MariaDB server. If you do not enable the autostart feature, and the system on which the MetroCluster Tiebreaker software resides has to reboot, then the Tiebreaker software continues running, but the MariaDB service cannot be restarted and configuration changes cannot be made.
+
+.Steps
+
+. Enable the autostart service:
++
+`[root@mcctb ~]# systemctl enable mariadb.service`
+
+. Verify that MariaDB is enabled to autostart when booted:
++
+`[root@mcctb ~]# systemctl list-unit-files mariadb.service`
++
+----
+UNIT FILE          State
+------------------ ----------
+mariadb.service    enabled
+
+----
+
+// 2024 Mar 12, ONTAPDOC-1752, ONTAPDOC-1753
+

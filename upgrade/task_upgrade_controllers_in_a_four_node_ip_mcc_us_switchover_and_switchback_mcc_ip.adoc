@@ -34,6 +34,8 @@ Operating the MetroCluster configuration with different controller types is not 
 +
 For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe].
 
+* If it is enabled on your system, link:../maintain/task-configure-encryption.html#disable-end-to-end-encryption[Disable end-to-end encryption] before performing the controller upgrade. 
+
 * You will reuse the IP addresses, netmasks, and gateways of the original platforms on the new platforms.
 * The following example names are used in this procedure:
  ** site_A
@@ -674,7 +676,7 @@ h| If you are using... h| Use this procedure...
 a|
 Tiebreaker
 a|
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-34C97A45-0BFF-46DD-B104-2AB2805A983D.html[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration Guide_
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#removing-metrocluster-configurations[Removing MetroCluster Configurations] 
 a|
 Mediator
 a|
@@ -1519,6 +1521,10 @@ After completing the upgrade, you should send an AutoSupport message indicating 
  +
 `system node autosupport invoke -node * -type all -message MAINT=end`
  .. Repeat the command on the partner cluster.
+
+== Configure end-to-end encryption
+
+If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
 
 // BURT 1448684, 02 FEB 2022
 // 2023-11-09, ONTAPDOC-919
