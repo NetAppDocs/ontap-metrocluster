@@ -34,6 +34,10 @@ Any configuration or feature that requires that the local cluster connections ar
  ** Transitioning from MetroCluster FC to MetroCluster IP configurations
  ** Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
 
+* The BES-53248 switch requires all ports in a four-port group to operate at the same speed. To connect a mix of AFF 150, ASA A150, FAS2750, AFF A220 and FAS500f, AFF C250, ASA C250, AFF A250, and ASA A250 platforms, switch ports that are located in separate four-port groups must be used. If you require this type of configuration, the following applies:
+**  In the https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP], drop-down fields for "MetroCluster 1" and "MetroCluster 2" are only populated after you select a platform for MetroCluster 3 or "MetroCluster 4".  Refer to link:../install-ip/using_rcf_generator.html[Using the port tables with the RcfFileGenerator tool or multiple MetroCluster configurations] for more information on how to use the port tables.
+** If both MetroCluster configurations are using the same the platform, NetApp recommends that you select the group "MetroCluster 3" for one configuration and the group "MetroCluster 4" for the other configuration. If the platforms are different, then you must select "MetroCluster 3" or "MetroCluster 4" for the first configuration, and select "MetroCluster 1" or "MetroCluster 2" for the second configuration.
+
 .Notes referenced in the tables:
 
 * *Note 1*: Using these ports requires an additional license.
@@ -42,9 +46,6 @@ Any configuration or feature that requires that the local cluster connections ar
 +
 Features that require a switched cluster are not supported in this configuration, including the MetroCluster FC to IP transition and tech refresh procedures.
 
-* *Note 3*: The BES-53248 switch requires all ports in a four-port group to operate at the same speed. To connect a mix of AFF 150, ASA A150, FAS2750, AFF A220 and FAS500f, AFF C250, ASA C250, AFF A250, and ASA A250 platforms, switch ports that are located in separate four-port groups must be used. If you require this type of configuration, the following applies:
-**  In the https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP], drop-down fields for "MetroCluster 1" and "MetroCluster 2" are only populated after you select a platform for MetroCluster 3 or "MetroCluster 4".  Refer to link:../install-ip/using_rcf_generator.html[Using the port tables with the RcfFileGenerator tool or multiple MetroCluster configurations] for more information on how to use the port tables.
-** If both MetroCluster configurations are using the same the platform, NetApp recommends that you select the group "MetroCluster 3" for one configuration and the group "MetroCluster 4" for the other configuration. If the platforms are different, then you must select "MetroCluster 3" or "MetroCluster 4" for the first configuration, and select "MetroCluster 1" or "MetroCluster 2" for the second configuration.
 
 == Choose the correct cabling table for your configuration
 
