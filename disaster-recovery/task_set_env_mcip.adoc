@@ -301,14 +301,9 @@ setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,
 ....
 --
 
-. If the disaster site nodes are not systems that use VLAN IDs, at the LOADER prompt for each of the disaster nodes, set the following bootargs with local_IP/mask,gateway:
+. If the disaster site nodes are not systems that use VLAN IDs, at the LOADER prompt for each of the disaster nodes, set the following bootargs with local_IP/mask,gateway: 
 +
-....
-setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address
-
-
-setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address
-....
+The bootargs you set depend on the system model.
 +
 [NOTE]
 ====
@@ -316,14 +311,37 @@ setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,HA-partner-
 * If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer 3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
 ====
 +
-The following commands set the values for node_A_1. In this example, the  _gateway-IP-address_ and  _vlan-id_ values are not used.
+[role="tabbed-block"]
+====
+.AFF A90, AFF A70, or AFF A1K systems
+--
+Set the following bootarg:
 
-+
+----
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+----
+--
+.All other systems
+--
+Set the following bootargs:
+
+....
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address
+
+
+setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address
+....
+
+The following commands set the values for node_A_1. In this example, the  _gateway-IP-address_ and  _vlan-id_ values are not used.
 ....
 setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
 
 setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
 ....
+--
+====
+
+
 
 . From the surviving site, gather the UUIDs for the disaster site:
 +
