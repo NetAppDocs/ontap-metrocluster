@@ -85,6 +85,9 @@ NOTE: The systems in this table require ONTAP 9.15.1 or later.
 
 image::../media/mcc_ip_cabling_a70_a90_a1k_to_cisco_9336c_shared_switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
 
+For a switch-attached cluster, the identical cluster ports on the AFF A90 or AFF A70 nodes should be on the same switch. For example, e1a on node1 and e1a on node2 should be attached to one cluster switch. Similarly, the second cluster port from both nodes should be attached to the second cluster switch. Cross connection of shared cluster-HA ports, where e1a from node1 is connected to IP_Switch_x_1 and e1a from node2 is connected to IP_Switch_x_2, prevents HA communication failure.
+
+
 [[tables_not_connecting_ns224]]
 === Controllers not connecting to switch-attached NS224 shelves
 
