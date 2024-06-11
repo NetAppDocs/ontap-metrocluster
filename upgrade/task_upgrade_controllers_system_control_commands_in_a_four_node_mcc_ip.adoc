@@ -17,6 +17,8 @@ You can use this guided automated MetroCluster switchover operation to perform a
 
 The following table shows the supported platform combinations for upgrading an AFF or FAS system in a MetroCluster IP configuration:
 
+NOTE: The source platform must be running ONTAP 9.15.1 or later to upgrade to an AFF A70, AFF A90, or AFF A1K system. 
+
 image::../media/mcc_ip_system_controller_replace_aff_fas.png[]
 
 * Note 1: Controller upgrades are supported on systems running ONTAP 9.13.1 or later.
@@ -69,7 +71,7 @@ The following example names are used in this procedure:
 
 == Set the required bootarg on the existing system
 
-If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node on your existing system. 
+If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node in the DR group that is being upgraded.
 
 NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
 
@@ -372,17 +374,19 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Properly ground yourself.
 
+. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF 800 to an AFF A90 system, you must remove the controller module from the chassis when you replace the controller module or replace a component inside the controller module.
++
+On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This ensures that the drives are firmly seated against the chassis midplane.
++
+image::../media/drw_a800_drive_seated.png[Shows removing controller module from chassis]
+
 . Install the controller modules in the rack or cabinet.
 +
-Installing the new controllers separately is not required for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers, as shown in the image below.
+Installing the new controllers separately is not applicable for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers, as shown in the image below.
 +
 The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
 +
-image::../media/a90_a70_pcm_swap.png[]
-
-. If the new controller modules did not come with FC-VI cards of their own and if FC-VI cards from old controllers are compatible on new controllers, swap FC-VI cards and install those in correct slots.
-+
-See the link:https://hwu.netapp.com[NetApp Hardware Universe^] for slot info for FC-VI cards.
+image::../media/a90_a70_pcm_swap.png[Shows controller module swap]
 
 . Cable the controllers' power, serial console and management connections as described in the _MetroCluster Installation and Configuration Guides_.
 +
@@ -417,10 +421,6 @@ You do not need to extract the ontap-version_image.tgz file.
 `ifconfig e0M -addr=ip_addr -mask=netmask` `-gw=gateway`
 
 . Perform the netboot.
-** If the platform is an 80xx series system, use this command:
-+
-`netboot \http://web_server_ip/path_to_web-accessible_directory/netboot/kernel`
-** If the platform is any other system, use the following command:
 +
 `netboot \http://web_server_ip/path_to_web-accessible_directory/ontap-version_image.tgz`
 
@@ -550,8 +550,24 @@ The following example sets the values for node_B_2 using VLAN 120 for the first 
 setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13,120
 setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13,130
 ----
-
-
++
+The following example sets the values for node_B_1 using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
+----
++
+The following example sets the values for node_B_2 using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
+----
 
 . At the new nodes' `LOADER` prompt, set the UUIDs:
 +
@@ -589,6 +605,12 @@ setenv bootarg.mcc.pri_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
 setenv bootarg.mcc.aux_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
 setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 ----
+
+. Determine whether the original systems were configured for Advanced Drive Partitioning (ADP) by running the following command from the site that is up:
++
+`disk show`
++ 
+If ADP is configured, the "container type" column displays "shared" in the `disk show` output. If "container type" has any other value, ADP is not in use.
 
 . If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, enable ADP:
 +
@@ -668,6 +690,8 @@ a|
 `disk show -a`
 +
 The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration.
++
+CAUTION: Before you proceed with disk reassignement, you must verify that the pool0 and pool1 disks belonging to the node's root aggregate are displayed in the `disk show` output. In the following example output, pool0 and pool1 disks owned by node_B_1-old are listed.
 +
 ----
 *> disk show -a

@@ -63,7 +63,7 @@ image::../media/workflow_ip_upgrade.png[]
 
 == Set the required bootarg on the existing system
 
-If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node on your existing system. 
+If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg and reboot each node in the DR group that is being upgraded.
 
 NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
 
@@ -398,35 +398,12 @@ After you install the new nodes, you need to netboot to ensure the new nodes are
  .. Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the `ontap-version_image.tgz` file on a web-accessible directory.
  .. Change to the web-accessible directory and verify that the files you need are available.
 +
-
-[cols="1,3"]
-|===
-
-h| If the platform model is... h| Then...
-
-a|
-8000 series systems
-a|
-Extract the contents of the `__ontap-version___image.tgz` file to the target directory:
-
-`tar -zxvf __ontap-version___image.tgz`
-
-NOTE: If you are extracting the contents on Windows, use 7-Zip or WinRAR to extract the netboot image. Your directory listing should contain a netboot folder with a kernel file:netboot/kernel
-
 Your directory listing should contain a netboot folder with a kernel file:
-
-`netboot/kernel`
-
-a|
-All other systems
-a|
-Your directory listing should contain a netboot folder with a kernel file:
-
++
 `_ontap-version_image.tgz`
-
++
 You do not need to extract the `_ontap-version_image.tgz` file.
 
-|===
 
 .. At the LOADER prompt, configure the netboot connection for a management LIF:
 +
@@ -451,20 +428,7 @@ Configure the manual connection:
 
 ..  Perform the netboot.
 +
-
-|===
-
-h| If the platform model is... h| Then...
-
-a|
-FAS/AFF8000 series systems
-a|
-`netboot http://_web_server_ip/path_to_web-accessible_directory_/netboot/kernel`
-a|
-All other systems
-a|
 `netboot \http://_web_server_ip/path_to_web-accessible_directory/ontap-version_image.tgz`
-|===
 
 .. From the boot menu, select option **(7) Install new software first** to download and install the new software image to the boot device.
 +
@@ -1101,7 +1065,7 @@ setenv bootarg.mcc.aux_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
 setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 ----
 
-. If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, enable ADP:
+. If the original systems were configured with partioned disks for Advanced Drive Partioning (ADP), at each of the replacement nodes' LOADER prompt, enable ADP:
 +
 `setenv bootarg.mcc.adp_enabled true`
 
