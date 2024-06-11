@@ -445,7 +445,7 @@ Disregard the following message:
 .. Be sure to enter `n` to skip the backup recovery when you see a prompt similar to the following:
 +
 ----
-Do you want to restore the backup configuration now? {y|n} **n**
+Do you want to restore the backup configuration now? {y|n} n
 ----
 
 .. Reboot by entering `*y*` when you see a prompt similar to the following:
@@ -850,13 +850,25 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Properly ground yourself.
 
+. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF 800 to an AFF A90 system, you must remove the controller module from the chassis when you replace the controller module or replace a component inside the controller module.
++
+On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This ensures that the drives are firmly seated against the chassis midplane.
++
+image::../media/drw_a800_drive_seated.png[Shows removing controller module from chassis]
+
 . Install the controller modules in the rack or cabinet.
 +
-https://docs.netapp.com/platstor/index.jsp[ONTAP Hardware Systems Documentation^]
+Installing the new controllers separately is not applicable for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers, as shown in the image below.
++
+The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
++
+image::../media/a90_a70_pcm_swap.png[Shows controller module swap]
 
-. Cable the controllers to the IP switches as described in link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
-
-** link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
+. Cable the controllers' power, serial console and management connections as described in link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
++
+Do not connect any other cables that were disconnected from old controllers at this time.
++
+https://docs.netapp.com/us-en/ontap-systems/index.html[ONTAP Hardware Systems Documentation^]
 
 . Power up the new nodes and boot them to Maintenance mode.
 
