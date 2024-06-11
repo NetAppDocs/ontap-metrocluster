@@ -1065,6 +1065,12 @@ setenv bootarg.mcc.aux_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
 setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 ----
 
+. Determine whether the original systems were configured for Advanced Drive Partitioning (ADP) by running the following command from the site that is up:
++
+`disk show`
++ 
+The "container type" column displays "shared" in the `disk show` output if ADP is configured. If "container type" has any other value, ADP is not configured on the system.
+
 . If the original systems were configured with partioned disks for Advanced Drive Partioning (ADP), at each of the replacement nodes' LOADER prompt, enable ADP:
 +
 `setenv bootarg.mcc.adp_enabled true`
@@ -1125,6 +1131,8 @@ NOTE: Root aggregate disks are the only disks that must be reassigned during the
 +
 `disk show -a`
 +
+CAUTION: Before you proceed with disk reassignement, you must verify that the pool0 and pool1 disks belonging to the node's root aggregate are displayed in the `disk show` output. In the following example output, pool0 and pool1 disks owned by node_B_1-old are listed.
+
 The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (537403322). This example does not show drives owned by other nodes in the MetroCluster configuration.
 +
 ----
