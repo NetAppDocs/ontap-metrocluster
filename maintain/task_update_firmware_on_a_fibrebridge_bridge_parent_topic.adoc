@@ -57,13 +57,45 @@ You can enter the commands in the remaining steps from the console of either con
 +
 You must respond with "`y`" when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
-. Update the bridge firmware:
+. Update the bridge firmware.
 +
-`storage bridge firmware update -bridge name -uri _URL-of-firmware-package_`
+The steps you follow depend on whether credentials are required for the URI:
 +
+[role="tabbed-block"]
+====
+.If credentials are not required:
+--
+Run the following command to update the bridge firmware:
+
+[source,cli]
+system bridge firmware update -bridge <name> -uri <URL-of-firmware-package>
+
+.Example
+
 ----
 cluster_A> storage bridge firmware update -bridge bridge_A_1a -uri http://192.168.132.97/firmware.ZBD
 ----
+--
+.If credentials are required:
+--
+Run the following command to update the bridge firmware and specify the required user name:
+
+[source,cli]
+system bridge firmware update -bridge <name> -uri <URL-of-firmware-package> -username <name>
+
+Enter the password when prompted, as shown in the following example:
+
+----
+cluster_A> storage bridge firmware update -bridge bridge_A_1a -uri http://192.168.132.97/firmware.ZBD -username abc
+
+(storage bridge)
+
+Enter the password:
+
+[Job 70] Job is queued: System bridge firmware update job.
+----
+--
+====
 
 . Return to the admin privilege level:
 +
