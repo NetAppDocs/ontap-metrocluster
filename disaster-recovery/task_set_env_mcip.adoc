@@ -202,7 +202,46 @@ a|
 +
 The required addresses are the DR Partner addresses shown in the *Destination Network Address* column.
 +
-The following output shows the IP addresses for a configuration with AFF A700 and FAS9000 systems with the MetroCluster IP interfaces on ports e5a and e5b. The interfaces vary depending on platform type.
+The command output varies depending on your platform model. 
++
+[role="tabbed-block"]
+====
+.AFF A90, AFF A70, or AFF A1K systems
+--
+The AFF A70, AFF A90, and AFF A1K have separate ports for HA and DR. The following shows example output for these platform models.
+
+----
+cluster_B::*> metrocluster configuration-settings connection show
+DR                    Source          Destination
+DR                    Source          Destination
+Group Cluster Node    Network Address Network Address Partner Type Config State
+----- ------- ------- --------------- --------------- ------------ ------------
+1     cluster_B
+              node_B_1
+                 Home Port: e5a
+                      172.17.26.13    172.17.26.10    DR Partner   completed
+                 Home Port: e5a
+                      172.17.26.13    172.17.26.11    DR Auxiliary completed
+                 Home Port: e5b
+                      172.17.27.13    172.17.27.10    DR Partner   completed
+                 Home Port: e5b
+                      172.17.27.13    172.17.27.11    DR Auxiliary completed
+              node_B_2
+                 Home Port: e5a
+                      172.17.26.12    172.17.26.11    DR Partner   completed
+                 Home Port: e5a
+                      172.17.26.12    172.17.26.10    DR Auxiliary completed
+                 Home Port: e5b
+                      172.17.27.12    172.17.27.11    DR Partner   completed
+                 Home Port: e5b
+                      172.17.27.12    172.17.27.10    DR Auxiliary completed
+12 entries were displayed.
+----
+
+--
+.All other systems
+--
+The following output shows the IP addresses for a configuration with AFF A700 and FAS9000 systems with the MetroCluster IP interfaces on ports e5a and e5b. The output can vary depending on platform type. For example, on AFF A70, AFF A90, and AFF A1K systems, 
 +
 ----
 cluster_B::*> metrocluster configuration-settings connection show
@@ -239,6 +278,9 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
                       172.17.27.12    172.17.27.10    DR Auxiliary completed
 12 entries were displayed.
 ----
+--
+====
+
 
 . If you need to determine the VLAN ID or gateway address for the interface, determine the VLAN IDs from the surviving site:
 +
@@ -268,47 +310,12 @@ Group Cluster Node     Network Address Netmask         Gateway         State
 
 . If the disaster site nodes use VLAN IDs (see the list above), at the LOADER prompt for each of the disaster site nodes, set the following bootargs:
 +
---
-....
-setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
-
-setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
-....
-
+The bootarg vaulues you set depends on the platform model.
++
 [NOTE]
 ====
 * If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
 * If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
-====
-
-** If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
-** If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[layer 3 backend connections], the value for _gateway-IP-address_ is *0* (zero).
-+
-The following commands set the values for node_A_1 using VLAN 120 for the first network and VLAN 130 for the second network:
-
-....
-setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
-
-setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
-....
-
-The following example shows the commands for node_A_1 without a VLAN ID:
-
-....
-setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
-
-setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
-....
---
-
-. If the disaster site nodes are not systems that use VLAN IDs, at the LOADER prompt for each of the disaster nodes, set the following bootargs with local_IP/mask,gateway: 
-+
-The bootargs you set depend on the system model.
-+
-[NOTE]
-====
-* If the interfaces are using the default VLANs, or the platform model does not require a VLAN (see the list above), the _vlan-id_ is not necessary.
-* If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer 3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
 ====
 +
 [role="tabbed-block"]
@@ -319,6 +326,65 @@ Set the following bootarg:
 
 ----
 setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+----
+
+The following commands set the values for node_A_1 using VLAN 120 for the first network and VLAN 130 for the second network:
+
+....
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,0,172.17.26.11,172.17.26.13,172.17.26.12,120
+
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,0,172.17.27.11,172.17.27.13,172.17.27.12,130
+....
+
+--
+.All other systems
+--
+
+....
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+
+setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+....
+
+The following commands set the values for node_A_1 using VLAN 120 for the first network and VLAN 130 for the second network:
+
+....
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
+
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
+....
+
+--
+====
+
+. If the disaster site nodes are *not* systems that use VLAN IDs, at the LOADER prompt for each of the disaster nodes, set the following bootargs with local_IP/mask,gateway: 
++
+The bootargs you set depend on the system model.
++
+[NOTE]
+====
+* If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer 3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
+====
++
+[role="tabbed-block"]
+====
+.AFF A90, AFF A70, or AFF A1K systems
+--
+Set the following bootarg:
+
+----
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address
+
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address
+----
+
+The following example shows the commands for node_A_1 without a VLAN ID:
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,0,172.17.26.11,172.17.26.13,172.17.26.12
+
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,0,172.17.27.11,172.17.27.13,172.17.27.12
 ----
 --
 .All other systems
@@ -340,8 +406,6 @@ setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,
 ....
 --
 ====
-
-
 
 . From the surviving site, gather the UUIDs for the disaster site:
 +
