@@ -170,23 +170,32 @@ node_A_1
 * e5b: 172.17.27.10
 
 |===
+The following table lists the platform models that use VLAN IDs on the MetroCluster IP interfaces. These models might require additional steps if you are not using the default VLAN IDs.
 
 
-.Platforms that do not use VLAN IDs:
+|===
 
-Certain platforms use a VLAN for the MetroCluster IP interface. By default, each of the two ports use a different VLAN: 10 and 20.
+2+h| Platform models that use VLAN IDs with the MetroCluster IP interfaces
 
-If supported, you can also specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `vlan-id` parameter
+a|
 
-* FAS8200 and AFF A300
+* AFF A70
+* AFF A90 
+* AFF A1K
+* AFF A220
+* AFF A250
+* AFF A400
 
-* AFF A320
+// BURT 1374801, 14 SEP 2021
 
-* FAS9000 and AFF A700
+a|
 
-* AFF C800, ASA C800, AFF A800 and ASA A800
-+
-All other platforms support the vlan-id parameter.
+* FAS500f
+* FAS2750
+* FAS8300
+* FAS8700
+
+|===
 
 .Steps
 
@@ -235,8 +244,8 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 --
 .All other systems
 --
-The following output shows the IP addresses for a configuration with AFF A700 and FAS9000 systems with the MetroCluster IP interfaces on ports e5a and e5b. The interfaces can vary depending on platform type. 
-
+The following output shows the IP addresses for a configuration with AFF A700 and FAS9000 systems with the MetroCluster IP interfaces on ports e5a and e5b. The interfaces can vary depending on platform type.
++
 ----
 cluster_B::*> metrocluster configuration-settings connection show
 DR                    Source          Destination
@@ -280,7 +289,7 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 +
 `metrocluster configuration-settings interface show`
 +
-** You need the VLAN ID if the platform models use VLAN IDs (see the list above), and if you are not using the default VLAN IDs.
+** You need the VLAN ID if the platform models use VLAN IDs (see the list above) and if you are not using the default VLAN IDs.
 
 ** You need the gateway address if you are using link:../install-ip/concept_considerations_layer_3.html[Layer 3 wide-area networks].
 +
@@ -302,7 +311,7 @@ Group Cluster Node     Network Address Netmask         Gateway         State
                           172.17.27.10  255.255.255.0  -            completed
 ----
 
-. If the disaster site nodes use VLAN IDs, at the LOADER prompt for each of the disaster site nodes, set the following bootargs:
+. If the disaster site nodes use VLAN IDs (see the list above), at the LOADER prompt for each of the disaster site nodes, set the following bootargs:
 +
 The bootarg vaulues you set depends on the platform model.
 +
