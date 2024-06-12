@@ -173,26 +173,21 @@ node_A_1
 The following table lists the platform models that use VLAN IDs on the MetroCluster IP interfaces. These models might require additional steps if you are not using the default VLAN IDs.
 
 
-|===
+.Platforms that do not use VLAN IDs:
 
-2+h| Platform models that use VLAN IDs with the MetroCluster IP interfaces
+Certain platforms use a VLAN for the MetroCluster IP interface. By default, each of the two ports use a different VLAN: 10 and 20.
 
-a|
+If supported, you can also specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `vlan-id` parameter
 
-* AFF A220
-* AFF A250
-* AFF A400
+* FAS8200 and AFF A300
 
-// BURT 1374801, 14 SEP 2021
+* AFF A320
 
-a|
+* FAS9000 and AFF A700
 
-* FAS500f
-* FAS2750
-* FAS8300
-* FAS8700
-
-|===
+* AFF C800, ASA C800, AFF A800 and ASA A800
++
+All other platforms support the vlan-id parameter.
 
 .Steps
 
@@ -241,8 +236,8 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 --
 .All other systems
 --
-The following output shows the IP addresses for a configuration with AFF A700 and FAS9000 systems with the MetroCluster IP interfaces on ports e5a and e5b. The output can vary depending on platform type. For example, on AFF A70, AFF A90, and AFF A1K systems, 
-+
+The following output shows the IP addresses for a configuration with AFF A700 and FAS9000 systems with the MetroCluster IP interfaces on ports e5a and e5b. The output can vary depending on platform type. For example, on AFF A70, AFF A90, and AFF A1K systems. 
+
 ----
 cluster_B::*> metrocluster configuration-settings connection show
 DR                    Source          Destination
@@ -308,7 +303,7 @@ Group Cluster Node     Network Address Netmask         Gateway         State
                           172.17.27.10  255.255.255.0  -            completed
 ----
 
-. If the disaster site nodes use VLAN IDs (see the list above), at the LOADER prompt for each of the disaster site nodes, set the following bootargs:
+. If the disaster site nodes use VLAN IDs, at the LOADER prompt for each of the disaster site nodes, set the following bootargs:
 +
 The bootarg vaulues you set depends on the platform model.
 +
