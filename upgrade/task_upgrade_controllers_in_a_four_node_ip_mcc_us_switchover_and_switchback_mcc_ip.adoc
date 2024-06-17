@@ -939,7 +939,53 @@ a|
 
 === Set the HA state on the new controllers and chassis
 
-include::../_include/set_the_ha_state.adoc[]
+You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
+
+.Steps
+
+. In Maintenance mode, display the HA state of the controller module and chassis:
++
+`ha-config show`
++
+The HA state for all components should be `mccip`.
+
+. If the displayed system state of the controller or chassis is not correct, set the HA state:
++
+`ha-config modify controller mccip`
++
+`ha-config modify chassis mccip`
+
+. Verify and modify the Ethernet ports connected to NS224 shelves or storage switches.
++
+.. Verify the Ethernet ports connected to NS224 shelves or storage switches:
++
+`storage port show`
++
+.. Set all Ethernet ports connected to Ethernet shelves or storage switches, including shared switches for storage and cluster, to `storage` mode:
++ 
+`storage port modify -p <port> -m storage` 
++
+NOTE: This must be set on all affected ports for a successful upgrade.
++
+Disks from the shelves attached to the Ethernet ports are reported in the `sysconfig -v` output. 
++
+Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] for information on the storage ports for the system you are upgrading to.
+
+.. Verify that `storage` mode is set and confirm the ports are in the online state:
++
+`storage port show`
+
+. Halt the node: `halt`
++
+The node should stop at the `LOADER>` prompt.
+
+.	On each node, check the system date, time, and time zone: `show date`
+.	If necessary, set the date in UTC or GMT: `set date <mm/dd/yyyy>`
+.	Check the time by using the following command at the boot environment prompt: `show time`
+.	If necessary, set the time in UTC or GMT: `set time <hh:mm:ss>`
+
+.	Save the settings: `saveenv`
+.	Gather environment variables: `printenv`
 
 === Update the switch RCFs to accommodate the new platforms
 
@@ -965,7 +1011,7 @@ link:../install-ip/concept_considerations_differences.html[MetroCluster IP insta
 
 . Download and install the RCF files.
 +
-Follow the steps in the section for your switch vendor from the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
+Follow the steps in the section for your switch vendor:
 
 ** link:../install-ip/task_switch_config_broadcom.html[Download and install the Broadcom RCF files]
 
@@ -1544,5 +1590,6 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 
 If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
 
+// 2024 Jun 17, ONTAPDOC-1735
 // BURT 1448684, 02 FEB 2022
 // 2023-11-09, ONTAPDOC-919
