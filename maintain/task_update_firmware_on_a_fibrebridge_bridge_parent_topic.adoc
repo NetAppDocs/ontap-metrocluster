@@ -30,7 +30,7 @@ In the IMT, you can use the Storage Solution field to select your MetroCluster s
 
 NOTE: This procedure is nondisruptive and takes approximately 30 minutes to complete.
 
-NOTE: Beginning with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
+NOTE: Beginning with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `system bridge` command, but if you are running a version earlier than ONTAP 9.8, the `storage bridge` command should be used.
 
 .Steps
 
@@ -73,7 +73,7 @@ system bridge firmware update -bridge <name> -uri <URL-of-firmware-package>
 .Example
 
 ----
-cluster_A> storage bridge firmware update -bridge bridge_A_1a -uri http://192.168.132.97/firmware.ZBD
+cluster_A> system bridge firmware update -bridge bridge_A_1a -uri http://192.168.132.97/firmware.ZBD
 ----
 --
 .If credentials are required:
@@ -88,9 +88,9 @@ Enter the password when prompted in the output, as shown in the following exampl
 .Example
 
 ----
-cluster_A> storage bridge firmware update -bridge bridge_A_1a -uri http://192.168.132.97/firmware.ZBD -username abc
+cluster_A> system bridge firmware update -bridge bridge_A_1a -uri http://192.168.132.97/firmware.ZBD -username abc
 
-(storage bridge)
+(system bridge)
 
 Enter the password:
 
@@ -107,10 +107,10 @@ Enter the password:
 +
 `job show -name "_job-name_"`
 +
-The following example shows that the job "`storage bridge firmware update`" is still running:
+The following example shows that the job "`system bridge firmware update`" is still running:
 +
 ----
-cluster_A> job show -name "storage bridge firmware update"
+cluster_A> job show -name "system bridge firmware update"
 Owning
 
 Job ID Name                 Vserver    Node           State
@@ -119,22 +119,22 @@ Job ID Name                 Vserver    Node           State
                             cluster_A
                                        node_A_1
                                                       Running
-Description: Storage bridge firmware update job
+Description: System bridge firmware update job
 ----
 +
 After approximately 10 minutes, the new firmware is fully installed and the job state will be Success:
 +
 ----
-cluster_A> job show -name "storage bridge firmware update"
+cluster_A> job show -name "system bridge firmware update"
 
                             Owning
 Job ID Name                 Vserver    Node           State
 ------ -------------------- ---------- -------------- ----------
-2246   Storage bridge firmware update
+2246   System bridge firmware update
                             cluster_A
                                        node_A_1
                                                       Success
-Description: Storage bridge firmware update job
+Description: System bridge firmware update job
 ----
 
 . Complete the steps according to whether in-band management is enabled and which version of ONTAP your system is running:
@@ -156,13 +156,13 @@ Ready.
 
 ... Reboot the bridge by running the `firmwarerestart` command from the bridge.
 ** If you are running ONTAP 9.5 or later, in-band management is supported and the command can be issued from the cluster prompt:
-... Run the `storage bridge run-cli -name _bridge-name_ -command FlashImages` command.
+... Run the `system bridge run-cli -name _bridge-name_ -command FlashImages` command.
 +
 NOTE: The example shows that primary flash image shows the new firmware image, while the secondary flash image shows the old image.
 +
 
 ----
-cluster_A> storage bridge run-cli -name ATTO_7500N_IB_1 -command FlashImages
+cluster_A> system bridge run-cli -name ATTO_7500N_IB_1 -command FlashImages
 
 [Job 2257]
 
@@ -178,7 +178,7 @@ Ready.
 
 ... If necessary, restart the bridge:
 +
-`storage bridge run-cli -name ATTO_7500N_IB_1 -command FirmwareRestart`
+`system bridge run-cli -name ATTO_7500N_IB_1 -command FirmwareRestart`
 +
 NOTE: Beginning with ATTO firmware version 2.95 the bridge will restart automatically and this step is not required.
 
@@ -199,10 +199,10 @@ System Storage Configuration: Quad-Path HA
 
 . Verify that the FibreBridge firmware was updated:
 +
-`storage bridge show -fields fw-version,symbolic-name`
+`system bridge show -fields fw-version,symbolic-name`
 +
 ----
-cluster_A> storage bridge show -fields fw-version,symbolic-name
+cluster_A> system bridge show -fields fw-version,symbolic-name
 name fw-version symbolic-name
 ----------------- ----------------- -------------
 ATTO_20000010affeaffe 3.10 A06X bridge_A_1a
