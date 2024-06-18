@@ -1,0 +1,204 @@
+Beginning with ONTAP 9.15.1, you can configure end-to-end encryption to encrypt back-end traffic, such as NVlog and storage replication data, between the sites in a MetroCluster IP configuration.
+
+.About this task 
+
+* You must be a cluster administrator to perform this task.
+* Before you can configure end-to-end encryption, you must link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/configure-external-key-management-concept.html[Configure external key management^].
+* Review the supported systems and minimum ONTAP release required to configure end-to-end encryption in a MetroCluster IP configuration:
++
+|===
+
+h| Minimum ONTAP release h| Supported systems
+
+a|
+ONTAP 9.15.1
+ 
+
+a|
+* AFF A400
+* FAS8300
+* FAS8700 
+
+|===
+
+
+== Enable end-to-end encryption
+
+Perform the following steps to enable end-to-end encryption. 
+
+.Steps
+
+. Verify the health of the MetroCluster configuration.
+.. Verify that the MetroCluster components are healthy:
++
+[source,cli]
+metrocluster check run
++
+----
+cluster_A::*> metrocluster check run
+----
++
+The operation runs in the background.
+
+.. After the `metrocluster check run` operation completes, run:
++
+[source,cli]
+metrocluster check show 
++
+After approximately five minutes, the following results are displayed:
++
+----
+cluster_A:::*> metrocluster check show
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+clusters            ok
+connections         not-applicable
+volumes             ok
+7 entries were displayed.
+----
+
+.. Check the status of the running MetroCluster check operation:
++
+[source,cli]
+metrocluster operation history show -job-id <id>
+.. Verify that there are no health alerts:
++
+[source,cli]
+system health alert show
+
+. Verify that external key management is configured on both clusters: 
++
+[source,cli]
+security key-manager external show-status
+
+. Enable end-to-end encryption for each DR group:
++
+[source,cli]
+metrocluster modify -is-encryption-enabled true -dr-group-id <dr_group_id>
++
+*Example*
++
+----
+cluster_A::*> metrocluster modify -is-encryption-enabled true -dr-group-id 1  
+Warning: Enabling encryption for a DR Group will secure NVLog and Storage
+         replication data sent between MetroCluster nodes and have an impact on
+         performance. Do you want to continue? {y|n}: y
+[Job 244] Job succeeded: Modify is successful.
+----
++
+Repeat this step for each DR group in the configuration.
+
+. Verify that end-to-end encryption is enabled:
++
+[source,cli]
+metrocluster node show -fields is-encryption-enabled
++
+*Example*
++
+----
+cluster_A::*> metrocluster node show -fields is-encryption-enabled
+
+dr-group-id cluster    node      configuration-state is-encryption-enabled
+----------- ---------- --------  ------------------- -----------------
+1           cluster_A  node_A_1  configured          true                 
+1           cluster_A  node_A_2  configured          true                 
+1           cluster_B  node_B_1  configured          true                 
+1           cluster_B  node_B_2  configured          true
+4 entries were displayed.
+----
+
+
+== Disable end-to-end encryption
+
+Perform the following steps to disable end-to-end encryption.
+
+.Steps
+
+. Verify the health of the MetroCluster configuration.
+.. Verify that the MetroCluster components are healthy:
++
+[source,cli]
+metrocluster check run
++
+----
+cluster_A::*> metrocluster check run
+
+----
++
+The operation runs in the background.
+
+.. After the `metrocluster check run` operation completes, run:
++
+[source,cli]
+metrocluster check show
++
+After approximately five minutes, the following results are displayed:
++
+----
+cluster_A:::*> metrocluster check show
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+clusters            ok
+connections         not-applicable
+volumes             ok
+7 entries were displayed.
+----
+
+.. Check the status of the running MetroCluster check operation:
++
+[source,cli]
+metrocluster operation history show -job-id <id>
+.. Verify that there are no health alerts:
++
+[source,cli]
+system health alert show
+
+. Verify that external key management is configured on both clusters: 
++
+[source,cli]
+security key-manager external show-status
+
+. Disable end-to-end encryption on each DR group:
++
+[source,cli]
+metrocluster modify -is-encryption-enabled false -dr-group-id <dr_group_id>
++
+*Example*
++
+----
+cluster_A::*> metrocluster modify -is-encryption-enabled false -dr-group-id 1         
+[Job 244] Job succeeded: Modify is successful.
+----
++
+Repeat this step for each DR group in the configuration.
+
+. Verify that end-to-end encryption is disabled:
++
+[source,cli]
+metrocluster node show -fields is-encryption-enabled
++
+*Example*
++
+----
+cluster_A::*> metrocluster node show -fields is-encryption-enabled 
+
+dr-group-id cluster    node      configuration-state is-encryption-enabled
+----------- ---------- --------  ------------------- -----------------
+1           cluster_A  node_A_1  configured          false                
+1           cluster_A  node_A_2  configured          false                
+1           cluster_B  node_B_1  configured          false                
+1           cluster_B  node_B_2  configured          false
+4 entries were displayed.
+----
+
+// 2024 Apr 15, ONTAPDOC-1655 (ONTAP 9.15.1)

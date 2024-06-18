@@ -234,8 +234,8 @@ NOTE: Perform this step for all plexes that have disks that are remote to Cluste
 +
 You must power off the following equipment in the order shown:
 +
+** Storage controllers - the storage controllers should currently be at the `LOADER` prompt, you must power them off completely.
 ** MetroCluster IP switches
-** Storage controllers
 ** Storage shelves
 
 == Relocating the powered-off site of the MetroCluster
@@ -288,11 +288,10 @@ You should power on the switches first. They might have been powered on during t
 If auto boot is enabled, press `Ctrl+C` to stop the controllers from automatically booting. 
 
 . Power on the shelves, allowing enough time for them to power on completely.
-.. Verify that the shelves and disks on the bridges are clearly visible.
-+
-You can use a command such as `sastargets` on the ATTO CLI.
 
-. Verify that the local storage is visible from the node in Maintenance mode:
+. Verify that the storage is visible.
+.. Verify that the storage is visible from the surviving site. Bring the offline plexes back online to restart the resync operation and reestablish the SyncMirror.
+.. Verify that the local storage is visible from the node in Maintenance mode:
 +
 `disk show -v`
 
@@ -300,7 +299,7 @@ You can use a command such as `sastargets` on the ATTO CLI.
 +
 Follow the instructions in link:../disaster-recovery/task_recover_from_a_non_controller_failure_mcc_dr.html#verifying-that-your-system-is-ready-for-a-switchback[Verifying that your system is ready for a switchback] to perform healing and switchback operations according to your MetroCluster configuration.
 
-
+// 2024 May 03, ONTAPDOC-1854
 // BURT 1382414, 09 DEC 2021
 // GH issue 184, July 11th 2022
 // GH issue #60, July 11th 2022
