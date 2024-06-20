@@ -39,7 +39,7 @@ Other components in the configuration, such as storage shelves or switches, cann
 
 * The MetroCluster IP switches (switch type, vendor, and model) and the firmware version must be supported on the existing and new controllers. 
 +
-Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] or the link:https://imt.netapp.com/matrix/[IMT] for supported switches and firmware versions. 
+Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] or the link:https://imt.netapp.com/matrix/[IMT^] for supported switches and firmware versions. 
 
 * The MetroCluster systems must be running the same ONTAP version at both sites. 
 * You can use this procedure to upgrade controllers in a four-node MetroCluster IP configuration using NSO based automated switchover and switchback. 
@@ -262,7 +262,7 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker conf
 Refer to the documentation for the application.
 
 
-== Replace the old controllers and booting up the new controllers
+== Replace the old controllers and boot up the new controllers
 
 After you gather information and resume the operation, the automation  proceeds with the switchover operation.
 
@@ -341,7 +341,7 @@ For example:
 network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 ----
 
-.. Remove VLAN and interface group ports from broadcast domain:
+.. Remove VLAN and interface group ports from the broadcast domain:
 +
 `network port broadcast-domain remove-ports -ipspace <ipspace> -broadcast-domain <broadcast-domain-name>-ports <nodename:portname,nodename:portname>,..`
 .. Modify interface group ports to use other physical ports as member as needed.:
@@ -354,7 +354,7 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 +
 This step must be performed on both nodes.
 
-. Verify the nodes are at the LOADER prompt and collect and preserve the current environment variables.
+. Verify the nodes are at the `LOADER` prompt and collect and preserve the current environment variables.
 
 . Gather the bootarg values: 
 +
@@ -388,7 +388,7 @@ The following example image is for representation only, the controller modules a
 +
 image::../media/a90_a70_pcm_swap.png[Shows controller module swap]
 
-. Cable the controllers' power, serial console and management connections as described in link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
+. Cable the controllers' power, serial console, and management connections as described in link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
 +
 Do not connect any other cables that were disconnected from old controllers at this time.
 +
@@ -554,7 +554,7 @@ Disks from the shelves attached to the Ethernet ports are reported in the `sysco
 +
 Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] for information on the storage ports for the system you are upgrading to.
 
-.. Verify that `storage` mode is set and confirm the ports are in the online state:
+.. Verify that `storage` mode is set and confirm that the ports are in the online state:
 +
 `storage port show`
 
