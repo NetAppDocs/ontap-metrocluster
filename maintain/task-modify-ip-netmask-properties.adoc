@@ -15,14 +15,36 @@ You might need to update these properties, for example, if a duplicate IP addres
 
 You can only change one interface at a time. There will be traffic disruption on that interface until the other interfaces are updated and connections are reestablished.
 
+== Modify the IP address, netmask, and gateway
+
+The procedure you follow depends on whether you are using ONTAP System Manager or the CLI.
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+Use System Manager to modify the IP address, netmask, and gateway properties.
+
+.Step
+
+Update the IP address, netmask, and gateway for each node and interface.
+--
+.CLI
+--
+
+Use the CLI to modify the IP address, netmask, and gateway properties.
+
+.About this task
+
 Use the `metrocluster configuration-settings interface modify` command to change any MetroCluster IP interface property.
+
+Use the `metrocluster configuration-settings interface show`, `metrocluster connection` check and `metrocluster connection show` commands to verify that all connectivity is working in all interfaces.
 
 NOTE: These commands change the configuration on a particular node for a particular port. To restore complete network connectivity, similar commands are needed on other ports. Similarly, network switches also need to update their  configuration.
 For example, if the gateway is updated, ideally it is changed on both nodes of an HA pair, since they are same. Plus the switch connected to those nodes also needs to update its gateway.
 
-Use the `metrocluster configuration-settings interface show`, `metrocluster connection` check and `metrocluster connection show` commands to verify that all connectivity is working in all interfaces.
+.Steps
 
-== Modify the IP address, netmask, and gateway
 . Update the IP address, netmask, and gateway for a single node and interface:
 `metrocluster configuration-settings interface modify`
 +
@@ -119,6 +141,6 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
                  Home Port: e0b-20
                       192.168.20.100  192.168.21.250  DR Auxiliary completed
 ----
-
+====
 
 // 2024-Mar-07, ISL rework (ONTAPDOC-928), copied from install-ip
