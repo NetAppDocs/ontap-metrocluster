@@ -541,6 +541,13 @@ The HA state for all components should be `mccip`.
 + 
 `storage port modify -p <port> -m storage` 
 +
+Example:
++
+----
+storage port modify -p e5b -m storage
+Changing NVMe-oF port e5b to storage mode
+----
++
 NOTE: This must be set on all affected ports for a successful upgrade.
 +
 Disks from the shelves attached to the Ethernet ports are reported in the `sysconfig -v` output. 
@@ -657,7 +664,20 @@ setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 +
 `disk show`
 + 
-The "container type" column displays "shared" in the `disk show` output if ADP is configured. If "container type" has any other value, ADP is not configured on the system.
+The "container type" column displays "shared" in the `disk show` output if ADP is configured. If "container type" has any other value, ADP is not configured on the system. The following example output shows a system configured with ADP:
++
+----
+::> disk show
+                    Usable               Disk    Container   Container
+Disk                Size       Shelf Bay Type    Type        Name      Owner
+
+Info: This cluster has partitioned disks. To get a complete list of spare disk
+      capacity use "storage aggregate show-spare-disks".
+----------------    ---------- ----- --- ------- ----------- --------- --------
+1.11.0              894.0GB    11    0   SSD      shared     testaggr  node_A_1
+1.11.1              894.0GB    11    1   SSD      shared     testaggr  node_A_1
+1.11.2              894.0GB    11    2   SSD      shared     testaggr  node_A_1
+----
 
 . If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, enable ADP:
 +
