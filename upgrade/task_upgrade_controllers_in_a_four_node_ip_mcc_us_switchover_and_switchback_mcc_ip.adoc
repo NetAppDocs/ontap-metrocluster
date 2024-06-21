@@ -54,18 +54,11 @@ The following example names are used in this procedure:
   *** node_B_1-new
   *** node_B_2-new
 
-
-== Workflow for upgrading controllers in an MetroCluster IP configuration
-
-You can use the workflow diagram to help you plan the upgrade tasks.
-
-image::../media/workflow_ip_upgrade.png[]
-
 == Set the required bootarg on the existing system
 
 If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg.
 
-NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
+CAUTION: If you are upgrading to an AFF A70, AFF A90, or AFF A1K system you *must* complete this task before performing the upgrade. This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task and go directly to <<prepare_so_sb_upgrade,Prepare for the upgrade>>.
 
 .Steps
 
@@ -89,10 +82,17 @@ NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K sy
 
 . Repeat the steps on each node in the DR group that is being upgraded.
 
+[[prepare_so_sb_upgrade]]
 == Prepare for the upgrade
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
+
+=== Workflow for upgrading controllers in an MetroCluster IP configuration
+
+You can use the workflow diagram to help you plan the upgrade tasks.
+
+image::../media/workflow_ip_upgrade.png[] 
 === Update the MetroCluster switch RCF files before upgrading controllers
 
 Depending on the old platform models, or if switch configuration is not on the minimum version, or if you want to change VLAN IDs used by the back-end MetroCluster connections, you must update the switch RCF files before you begin the platform upgrade procedure.
@@ -524,6 +524,7 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
  .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
+[[gather_info_so_sb]]
 === Gather information before the upgrade
 
 Before upgrading, you must gather information for each of the nodes, and, if necessary, adjust the network broadcast domains, remove any VLANs and interface groups, and gather encryption information.
@@ -850,19 +851,33 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Properly ground yourself.
 
-. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF 800 to an AFF A90 system, you must remove the controller module from the chassis when you replace the controller module or replace a component inside the controller module.
+. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF 800 to an AFF A90 system, you must remove the controller module from the chassis when you replace the controller module. For all other upgrades, skip to <<ip_upgrades_so_sb_4,Step 4>>.
 +
-On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This ensures that the drives are firmly seated against the chassis midplane.
+On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This confirms that the drives are firmly seated against the chassis midplane.
 +
 image::../media/drw_a800_drive_seated.png[Shows removing controller module from chassis]
 
-. Install the controller modules in the rack or cabinet.
+[[ip_upgrades_so_sb_4]]
+. Install the controller modules.
 +
+NOTE: The installation steps you follow depend on whether your upgrade requires replacement of the controller modules, such as an upgrade from an AFF 800 to an AFF A90 system. 
++
+[role="tabbed-block"]
+====
+.Replacing controller modules
+--
 Installing the new controllers separately is not applicable for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers, as shown in the image below.
-+
+
 The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
-+
+
 image::../media/a90_a70_pcm_swap.png[Shows controller module swap]
+
+-- 
+.All other upgrades
+--
+Install the controller modules in the rack or cabinet.
+--
+====
 
 . Cable the controllers' power, serial console, and management connections as described in link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
 +
@@ -1032,7 +1047,7 @@ Certain MetroCluster IP bootarg values must be configured on the new controller 
 
 .About this task
 
-In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Gathering information before the upgrade].
+In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in <<gather_info_so_sb,Gather information before the upgrade>>.
 
 .Steps
 

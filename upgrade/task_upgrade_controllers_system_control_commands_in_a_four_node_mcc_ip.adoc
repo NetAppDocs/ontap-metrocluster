@@ -73,7 +73,7 @@ The following example names are used in this procedure:
 
 If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg.
 
-NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task.
+CAUTION: If you are upgrading to an AFF A70, AFF A90, or AFF A1K system you *must* complete this task before performing the upgrade. This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task and go directly to <<prepare_system_replace_upgrade,Prepare for the upgrade>>.
 
 .Steps
 
@@ -97,6 +97,7 @@ NOTE: This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K sy
 
 . Repeat the steps on each node in the DR group that is being upgraded.
 
+[[prepare_system_replace_upgrade]]
 == Prepare for the upgrade
 
 To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
@@ -281,7 +282,7 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 .About this task
 
 * This task must be performed on each of the old nodes.
-* You will use the information gathered in <<Prepare for the upgrade>>.
+* You will use the information gathered in <<prepare_system_replace_upgrade,Prepare for the upgrade>>.
 
 .Steps
 
@@ -374,20 +375,32 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Properly ground yourself.
 
-. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF 800 to an AFF A90 system, you must remove the controller module from the chassis when you replace the controller module or replace a component inside the controller module.
+. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF 800 to an AFF A90 system, you must remove the controller module from the chassis when you replace the controller module. For all other upgrades, skip to <<ip_upgrades_replace_4,Step 4>>.
 +
-On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This ensures that the drives are firmly seated against the chassis midplane.
+On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This confirms that the drives are firmly seated against the chassis midplane.
 +
 image::../media/drw_a800_drive_seated.png[Shows removing controller module from chassis]
 
-. Install the controller modules in the rack or cabinet.
+[[ip_upgrades_replace_4]]
+. Install the controller modules.
 +
+NOTE: The installation steps you follow depend on whether your upgrade requires replacement of the controller modules, such as an upgrade from an AFF 800 to an AFF A90 system. 
++
+[role="tabbed-block"]
+====
+.Upgrades that require controller module replacement
+--
 Installing the new controllers separately is not applicable for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers, as shown in the image below.
-+
-The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
-+
-image::../media/a90_a70_pcm_swap.png[Shows controller module swap]
 
+The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
+
+image::../media/a90_a70_pcm_swap.png[Shows controller module swap]
+-- 
+.All other upgrades
+--
+Install the controller modules in the rack or cabinet.
+--
+====
 . Cable the controllers' power, serial console, and management connections as described in link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
 +
 Do not connect any other cables that were disconnected from old controllers at this time.
@@ -544,7 +557,7 @@ The HA state for all components should be `mccip`.
 Example:
 +
 ----
-storage port modify -p e5b -m storage
+*> storage port modify -p e5b -m storage
 Changing NVMe-oF port e5b to storage mode
 ----
 +
@@ -581,7 +594,7 @@ Certain MetroCluster IP bootarg values must be configured on the new controller 
 
 .About this task
 
-In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Gathering information before the upgrade].
+In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in <<gather_info_system_replace, Gather information before the upgrade>>.
 
 .Steps
 
@@ -728,7 +741,7 @@ Reassign the root aggregate disks to the new controller module, using the `sysid
 
 This task is performed in Maintenance mode.
 
-The old system IDs were identified in <<Gather information before the upgrade>>.
+The old system IDs were identified in <<gather_info_system_replace,Gather information before the upgrade>>.
 
 The examples in this procedure use controllers with the following system IDs:
 
