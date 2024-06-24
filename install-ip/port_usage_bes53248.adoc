@@ -34,6 +34,10 @@ Any configuration or feature that requires that the local cluster connections ar
  ** Transitioning from MetroCluster FC to MetroCluster IP configurations
  ** Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
 
+* The BES-53248 switch requires all ports in a four-port group to operate at the same speed. To connect a mix of AFF 150, ASA A150, FAS2750, AFF A220 and FAS500f, AFF C250, ASA C250, AFF A250, and ASA A250 platforms, switch ports that are located in separate four-port groups must be used. If you require this type of configuration, the following applies:
+**  In the https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP], drop-down fields for "MetroCluster 1" and "MetroCluster 2" are only populated after you select a platform for MetroCluster 3 or "MetroCluster 4".  Refer to link:../install-ip/using_rcf_generator.html[Using the port tables with the RcfFileGenerator tool or multiple MetroCluster configurations] for more information on how to use the port tables.
+** If both MetroCluster configurations are using the same the platform, NetApp recommends that you select the group "MetroCluster 3" for one configuration and the group "MetroCluster 4" for the other configuration. If the platforms are different, then you must select "MetroCluster 3" or "MetroCluster 4" for the first configuration, and select "MetroCluster 1" or "MetroCluster 2" for the second configuration.
+
 .Notes referenced in the tables:
 
 * *Note 1*: Using these ports requires an additional license.
@@ -42,24 +46,75 @@ Any configuration or feature that requires that the local cluster connections ar
 +
 Features that require a switched cluster are not supported in this configuration, including the MetroCluster FC to IP transition and tech refresh procedures.
 
-* *Note 3*: The BES-53248 switch requires all ports in a four-port group to operate at the same speed. To connect a mix of AFF 150, ASA A150, FAS2750, AFF A220 and FAS500f, AFF C250, ASA C250, AFF A250, and ASA A250 platforms, switch ports that are located in separate four-port groups must be used. If you require this type of configuration, the following applies:
-**  In the https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP], drop-down fields for "MetroCluster 1" and "MetroCluster 2" are only populated after you select a platform for MetroCluster 3 or "MetroCluster 4".  Refer to link:../install-ip/using_rcf_generator.html[Using the port tables with the RcfFileGenerator tool or multiple MetroCluster configurations] for more information on how to use the port tables.
-** If both MetroCluster configurations are using the same the platform, NetApp recommends that you select the group "MetroCluster 3" for one configuration and the group "MetroCluster 4" for the other configuration. If the platforms are different, then you must select "MetroCluster 3" or "MetroCluster 4" for the first configuration, and select "MetroCluster 1" or "MetroCluster 2" for the second configuration.
 
-== Cabling an AFF A150, ASA A150, FAS2750, AFF A220, FAS500f, AFF C250, ASA C250, AFF A250 or ASA A250 to a Broadcom BES-53248 switch
+== Choose the correct cabling table for your configuration
 
-image::../media/mcc_ip_cabling_a_aff_asa_a150_a220_c250_a250_fas2750_to_a_broadcom_bes_53248_switch.png[]
+Use the following table to determine which cabling table you should follow. 
 
-== Cabling a FAS8200, AFF A300, or AFF A320 system to a Broadcom BES-53248 switch
+[cols=2*,options="header"]
+|===
+| If your system is...
+| Use this cabling table...
+a|
+AFF A150, ASA A150
 
-image::../media/mcc_ip_cabling_a_aff_a300_or_fas8200_to_a_broadcom_bes_53248_switch.png[]
+FAS2750 
 
-image::../media/mcc_ip_cabling_a_aff_a320_to_a_broadcom_bes_53248_switch.png[]
+AFF A220 | <<table_1_bes_53248,Broadcom BES-53248 platform port assignments (group 1)>>
+|
+FAS500f 
 
-== Cabling a FAS8300, AFF C400, ASA C400, AFF A400, ASA A400 or FAS8700 system to a Broadcom BES-53248 switch					
+AFF C250, ASA C250
 
-image::../media/mcc_ip_cabling_a_fas8300_a400_c400_or_fas8700_to_a_broadcom_bes_53248_switch.png[]
+AFF A250, ASA A250 | <<table_2_bes_53248,Broadcom BES-53248 platform port assignments (group 2)>>
+| FAS8200, AFF A300 | <<table_3_bes_53248,Broadcom BES-53248 platform port assignments (group 3)>>
 
+|AFF A320 | <<table_4_bes_53248,Broadcom BES-53248 platform port assignments (group 4)>>
+| FAS8300
 
+AFF C400, ASA C400
+
+AFF A400, ASA A400 
+
+FAS8700| <<table_5_bes_53248,Broadcom BES-53248 platform port assignments (group 5)>>
+
+|===
+
+[[table_1_bes_53248]]
+.Broadcom BES-53248 platform port assignments (group 1)
+
+Review the platform port assignments to cable an AFF A150, ASA A150, FAS2750, or AFF A220 system to a Broadcom BES-53248 switch: 
+
+image::../media/mcc_ip_cabling_a_aff_asa_a150_a220_fas2750_to_a_broadcom_bes_53248_switch.png[Shows Broadcom BES-53248 platform port assignments]
+
+[[table_2_bes_53248]]
+.Broadcom BES-53248 platform port assignments (group 2)
+
+Review the platform port assignments to cable a FAS500f, AFF C250, ASA C250, AFF A250, or ASA A250 system to a Broadcom BES-53248 switch:
+
+image::../media/mcc_ip_cabling_a_aff_asa_c250_a250_fas500f_to_a_broadcom_bes_53248_switch.png[Shows Broadcom BES-53248 platform port assignments]
+
+[[table_3_bes_53248]]
+.Broadcom BES-53248 platform port assignments (group 3)
+
+Review the platform port assignments to cable a FAS8200 or AFF A300 system to a Broadcom BES-53248 switch:
+
+image::../media/mcc_ip_cabling_a_aff_a300_or_fas8200_to_a_broadcom_bes_53248_switch.png[Shows Broadcom BES-53248 platform port assignments]
+
+[[table_4_bes_53248]]
+.Broadcom BES-53248 platform port assignments (group 4)
+
+Review the platform port assignments to cable an AFF A320 system to a Broadcom BES-53248 switch:
+
+image::../media/mcc_ip_cabling_a_aff_a320_to_a_broadcom_bes_53248_switch.png[Shows Broadcom BES-53248 platform port assignments]
+
+[[table_5_bes_53248]]
+.Broadcom BES-53248 platform port assignments (group 5)				
+
+Review the platform port assignments to cable a FAS8300, AFF C400, ASA C400, AFF A400, ASA A400, or FAS8700 system to a Broadcom BES-53248 switch:
+
+image::../media/mcc_ip_cabling_a_fas8300_a400_c400_or_fas8700_to_a_broadcom_bes_53248_switch.png[Shows Broadcom BES-53248 platform port assignments]
+
+// 2024 Jun 07, ONTAPDOC-1734
 // 2023-MAR-3, BURT 1533595, BURT 1533593
 
