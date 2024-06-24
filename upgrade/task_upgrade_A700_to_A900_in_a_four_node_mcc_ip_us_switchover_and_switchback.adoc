@@ -49,6 +49,7 @@ You can use the workflow diagram to help you plan the upgrade tasks.
 
 image::../media/workflow_ip_upgrade.png[]
 
+[[upgrade_a700_a900_ip_prepare]]
 == Prepare for the upgrade
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
@@ -103,6 +104,7 @@ Follow the steps in the section for your switch vendor:
 * link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Download and install the Cisco IP RCF files]
 * link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA RCF files]
 
+[[upgrade_a700_a900_ip_map]]
 === Map ports from the old nodes to the new nodes
 
 When upgrading from an AFF A700 to an AFF A900, or FAS9000 to FAS9500, you do not change the data network ports, FCP SAN adapter ports, and SAS and NVMe storage ports. Data LIFs stay where they are during and after the upgrade. Therefore, you are not required to map the network ports from the old nodes to the new nodes.
@@ -476,7 +478,7 @@ image::../media/drw_9500_remove_PCM.png[controller module]
 ..	Move the e5b connection to e7b.
 ..	Move the e5a connection to e5b.
 +
-NOTE: Slot 7 on all nodes of the cluster should be empty as mentioned in <<Map ports from the old nodes to the new nodes>> section.
+NOTE: Slot 7 on all nodes of the cluster should be empty as mentioned in the <<upgrade_a700_a900_ip_map,Map ports from the old nodes to the new nodes>> section.
 .	Power ON the chassis and connect to serial console.
 .	After BIOS initialization, if the node starts autoboot, interrupt the AUTOBOOT by pressing Control-C.
 .	After autoboot is interrupted, the nodes stop at the LOADER prompt. If you do not interrupt autoboot on time and node1 starts booting, wait for the prompt to press Ctrl-C to go into the boot menu. After the node stops at the boot menu, use option 8 to reboot the node and interrupt the autoboot during reboot.
@@ -1007,7 +1009,7 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 .About this task
 
 * This task is performed on site_B.
-* See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#mapping-ports-from-the-old-nodes-to-the-new-nodes[Mapping ports from the old nodes to the new nodes].
+* See the port mapping plan you created in <<upgrade_a700_a900_ip_map,Map ports from the old nodes to the new nodes>>
 
 .Steps
 
@@ -1126,7 +1128,7 @@ You must repeat the upgrade tasks on site_A.
 
 .Steps
 
-. Repeat the steps to upgrade the nodes on site_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html#preparing-for-the-upgrade[Prepare for the upgrade].
+. Repeat the steps to upgrade the nodes on site_A, beginning with <<upgrade_a700_a900_ip_prepare,Prepare for the upgrade>>.
 +
 As you perform the tasks, all example references to the sites and nodes are reversed. For example, when the example is given to switchover from site_A, you will switchover from site_B.
 
