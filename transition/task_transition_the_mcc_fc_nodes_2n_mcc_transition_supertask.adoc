@@ -51,6 +51,8 @@ This task must be performed on each of the old nodes:
 * node_A_1-FC
 * node_B_1-FC
 
+.Steps 
+
 . Stop all client traffic.
 . On either of the MetroCluster FC nodes, for example node_A_1-FC, enable transition.
  .. Set the advanced privilege level: `set -priv advanced`
@@ -59,7 +61,6 @@ This task must be performed on each of the old nodes:
 . Unmirror the root aggregate by deleting the remote plex of the root aggregates.
  .. Identify the root aggregates: `storage aggregate show -root true`
  .. Display the pool1 aggregates: `storage aggregate plex show -pool 1`
- .. Delete the local plex of the root aggregate: `aggr plex delete aggr-name -plex plex-name`
  .. Offline the remote plex of the root aggregate: `aggr plex offline root-aggregate -plex remote-plex-for-root-aggregate`
 +
 For example:
@@ -122,3 +123,5 @@ If the configuration uses FC-to-SAS bridges or FC back-end switches, disconnect 
 At this point, the MetroCluster FC controllers have been removed and the shelves are disconnected from all controllers.
 
 image::../media/transition_2n_remove_fc_nodes.png[]
+
+// 2024 Jun 25, ONTAPDOC-1969
