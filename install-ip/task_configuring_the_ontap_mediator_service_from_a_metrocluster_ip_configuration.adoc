@@ -35,45 +35,11 @@ CAUTION: Beginning with ONTAP 9.12.1, you can enable the MetroCluster automatic 
 
 . Add the ONTAP Mediator service to ONTAP:
 +
-The step you follow depends on whether you are using ONTAP System Manager or the CLI.
-+
-[role="tabbed-block"]
-====
-.System Manager
---
-The ONTAP Mediator service is typically installed at a geographic location separate from either location of the clusters. The clusters communicate regularly with the service to indicate that they are up and running. If one of the clusters in the MetroCluster configuration detects that the communication with its partner cluster is down, it checks with the ONTAP Mediator to determine if the partner cluster itself is down.
-
-.Before you start
-
-Both clusters at the MetroCluster sites should be up and peered.
-
-.Steps
-
-. In System Manager in ONTAP 9.8, select *Cluster > Settings*.
-
-. In the *Mediator* section, click the settings gear icon.
-
-. On the *Configure Mediator* window, click *Add+*.
-
-. Enter the configuration details for the ONTAP Mediator.
-+
-You can enter the following details while configuring an ONTAP Mediator with System Manager.
-
-* The IP address of the Mediator.
-* The user name.
-* The password.
---
-.CLI
---
-
-Run the following command:
-
 `metrocluster configuration-settings mediator add -mediator-address _ip-address-of-mediator-host_`
-
++
 NOTE: You will be prompted for the username and password for the Mediator admin user account.
---
-====
-. Verify that the automatic switchover feature in enabled:
+
+. Verify that the automatic switchover feature is enabled:
 +
 `metrocluster show`
 . Verify that the Mediator is now running.
