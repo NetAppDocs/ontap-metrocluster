@@ -211,7 +211,7 @@ You should identify volumes contained by aggregates owned by site_A. The site_B 
 . Move the MDV_CRS_*_B system volume for site_A to the mirrored aggregate created on controller node_A_2-IP
 .. Check for possible destination aggregates:
 +
-`volume move target-aggr show -vserver <admin_svm_name> -volume system_vol_MDV_B`
+`volume move target-aggr show -vserver <admin_svm_name> -volume MDV_CRS_*_B`
 +
 The newly created aggregate on node_A_2-IP should be listed.
 
@@ -219,10 +219,10 @@ The newly created aggregate on node_A_2-IP should be listed.
 +
 `set advanced`
 +
-`volume move start -vserver <admin_svm_name> -volume system_vol_MDV_B -destination-aggregate new_node_A_2-IP_aggr -cutover-window 40`
+`volume move start -vserver <admin_svm_name> -volume MDV_CRS_*_B -destination-aggregate new_node_A_2-IP_aggr -cutover-window 40`
 .. Check status for the move operation:
 +
-`volume move show -vserver <admin_svm_name> -volume system_vol_MDV_B`
+`volume move show -vserver <admin_svm_name> -volume MDV_CRS_*_B`
 .. When the move operation complete, verify that the MDV_CRS_*_B system is contained by the new aggregate on node_A_2-IP:
 +
 `set admin`
