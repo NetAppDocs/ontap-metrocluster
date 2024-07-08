@@ -68,21 +68,18 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 ----
 
  .. Check that there are no health alerts: `*system health alert show*`
-. Configure the new switch before installation.
+. Configure the new switches before installation.
 +
 Follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/task_reset_the_brocade_fc_switch_to_factory_defaults.html[Configure the FC switches].
 
 
-. Disconnect the connections from the old switch by removing the connections in the following order:
+. Disconnect the connections from the old switches by removing the connections in the following order:
 +
-.. If the local cluster interfaces are connected to a switch:
-... Disconnect the local cluster interfaces
-... Disconnect the local cluster ISLs
 .. Disconnect the MetroCluster FC interfaces.
 .. Disconnect the MetroCluster ISLs.
 
-. Power off the old switch, remove the cables, and physically replace the old switch with the new switch.
-+
+. Power off the old switches, remove the cables, and physically replace the old switches with the new switch.
+
 
 . Cable the switches in the following order: 
 +
@@ -90,14 +87,8 @@ You must follow the steps in link:https://docs.netapp.com/us-en/ontap-metroclust
 +
 .. Cable the ISLs to the remote site.
 ..  Cable the MetroCluster FC interfaces.
-..  Cable the local cluster interfaces.
-+
-If the local cluster interfaces are connected to a switch: 
-+
-... Cable the local cluster interfaces.
-... Cable the local cluster ISLs.
 
-. Power up the switch.
+. Power up the switches.
 
 . Verify that the MetroCluster configuration is healthy by repeating <<Step 1>>.
 
