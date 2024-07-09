@@ -1,0 +1,58 @@
+---
+sidebar: sidebar
+permalink: install-ip/configure-mcc-site-system-manager.html
+keywords: metrocluster, configuration, config, mcc, HA, cluster
+summary: Beginning with ONTAP 9.8, you can manage an IP configuration of a MetroCluster operation with System Manager.  After setting up two clusters and peering them, you configure each cluster.
+---
+
+= Configure an MetroCLuster IP site
+:toclevels: 1
+:hardbreaks:
+:nofooter:
+:icons: font
+:linkattrs:
+:imagesdir: ./media/
+
+[.lead]
+Beginning with ONTAP 9.8, you can manage an IP configuration of a MetroCluster operation with System Manager.  After setting up two clusters and peering them, you configure each cluster.
+// 23 OCT 2020...thomi...review comment:  Applies only to IP sites
+
+.Before you start
+You should have completed the following procedures:
+
+* link:set-up-mcc-site-system-manager.html[Set up an MetroCLuster IP site]
+
+* link:set-up-mcc-peering-system-manager.html[Set up MetroCLuster IP peering]
+
+== Configure the connection between clusters
+
+.Steps
+
+. Log in to System Manager on one of the sites, and select *Dashboard*.
++
+In the *MetroCluster* section, the graphic shows the two clusters that you set up and peered for the MetroCluster sites. The cluster you are working from (local cluster) is shown on the left.
+
+. Click *Configure MetroCluster*.  From this window, you can perform the following tasks:
+
+.. The nodes for each cluster in the MetroCluster configuration are shown.  Use the drop-down lists to select which nodes in the local cluster will be disaster recovery partners with which nodes in the remote cluster.
+
+.. Click the check box if you want to configure an ONTAP Mediator service. See link:./task-sm-mediator.html[Configure the ONTAP Mediator service].
+
+.. If both clusters have a license to enable encryption, the *Encryption* section is displayed.
++
+To enable encryption, enter a passphrase.
+
+.. Click the check box if you want to configure MetroCluster with shared layer 3 network.
+//IE-375
++
+NOTE: The HA partner nodes and network switches connecting to the nodes must have a matching configuration.
+
+. Click *Save* to configure the MetroCluster sites.
++
+On the *Dashboard*, in the *MetroCluster* section, the graphic shows a check mark on the link between the two clusters, indicating a healthy connection.
+
+
+
+// BURT 1323827, 05 OCT 2020
+// BURT 1430515, 07 DEC 2021
+// BURT 1580225 or ONTAPDOC-1412, 29 NOV 2023
