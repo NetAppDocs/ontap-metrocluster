@@ -17,6 +17,7 @@ In MetroCluster IP configurations, you must retrieve the IP address of the Metro
 
 * Commands in this task are performed from the cluster prompt of the surviving site and from the LOADER prompt of the nodes at the disaster site.
 
+[[vlan_id_supported_platfoms]]
 * Certain platforms use a VLAN for the MetroCluster IP interface. By default, each of the two ports use a different VLAN: 10 and 20. 
 +
 If supported, you can also specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `-vlan-id` parameter.
@@ -279,7 +280,7 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 +
 `metrocluster configuration-settings interface show`
 +
-** You need the VLAN ID if the platform models use VLAN IDs (see the list above) and if you are not using the default VLAN IDs.
+** You need to determine VLAN ID if the platform models support VLAN IDs (see the <<vlan_id_supported_platfoms,list above>>) and if you are not using the default VLAN IDs.
 
 ** You need the gateway address if you are using link:../install-ip/concept_considerations_layer_3.html[Layer 3 wide-area networks].
 +
@@ -305,7 +306,7 @@ Group Cluster Node     Network Address Netmask         Gateway         State
 +
 [NOTE]
 ====
-* If the interfaces are using the default VLANs, or the platform model does not use a VLAN ID (see the list above), the _vlan-id_ is not necessary.
+* If the interfaces are using the default VLANs, or the platform model does not use a VLAN ID (see the <<vlan_id_supported_platfoms,list above>>), the _vlan-id_ is not necessary.
 * If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
 ====
 +
