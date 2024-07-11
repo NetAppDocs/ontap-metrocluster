@@ -125,11 +125,11 @@ If the maintenance is completed before the time has elapsed, you can invoke an A
 +
 include::../_include/models_supporting_vlan-id.adoc[]
 
-* When you expand a four-node MetroCluster configuration to an eight-node MetroCluster configuration, both of the DR groups use the same VLANs.
+* Both DR groups use the same VLANs when you expand from a four-node to an eight-node MetroCluster configuration.
 
-* If both of the DR groups cannot be configured using the same VLAN, you must upgrade the DR group that doesn't support the `vlan-id` parameter to use a VLAN that is supported by the other DR group.
+* If both DR groups cannot be configured using the same VLAN, you must upgrade the DR group that doesn't support the `vlan-id` parameter to use a VLAN that is supported by the other DR group.
 
-* Depending on your ONTAP version, you might be able to change some MetroCluster IP interface properties after initial configuration, refer to link:../maintain/task-modify-ip-netmask-properties.html[Modify the properties of a MetroCluster IP interface] for details on what is supported. 
+* Depending on your ONTAP version, you can change some MetroCluster IP interface properties after initial configuration. Refer to link:../maintain/task-modify-ip-netmask-properties.html[Modify the properties of a MetroCluster IP interface] for details on what is supported. 
 
 
 == Verifying the health of the MetroCluster configuration
@@ -388,7 +388,7 @@ NOTE: Update the switches in the following order:  Switch_A_1, Switch_B_1, Switc
 +
 NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switch port mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
 
-== Joining the new nodes to the clusters
+== Join the new nodes to the clusters
 
 You must add the four new MetroCluster IP nodes to the existing MetroCluster configuration.
 
@@ -474,7 +474,7 @@ You must create cluster peering LIFs, create the MetroCluster interfaces on the 
 
 .About this task
 
-* The home port used in the examples are platform-specific. You should use the appropriate home port specific to MetroCluster IP node platform.
+* The home port used in the examples are platform-specific. You should use the home port specific to your MetroCluster IP node platform.
 
 * Review the information in <<Considerations for VLANs when adding a new DR group>> before performing this task. 
 
