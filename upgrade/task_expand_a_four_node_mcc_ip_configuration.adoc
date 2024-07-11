@@ -306,13 +306,13 @@ In these steps, you clear the configuration on the nodes and clear the mailbox r
 .Steps
 
 . Rack the new controllers.
-. Cable the new MetroCluster IP nodes to the IP switches as shown in link:../install-ip/using_rcf_generator.html[Cabling the IP switches].
+. Cable the new MetroCluster IP nodes to the IP switches as shown in link:../install-ip/using_rcf_generator.html[Cable the IP switches].
 
 . Configure the MetroCluster IP nodes using the following procedures:
-.. link:../install-ip/task_sw_config_gather_info.html[Gathering required information]
-.. link:../install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module]
-.. link:../install-ip/task_sw_config_verify_haconfig.html[Verifying the ha-config state of components]
-.. link:../install-ip/task_sw_config_assign_pool0.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assigning drives for pool 0 (ONTAP 9.4 and later)]
+.. link:../install-ip/task_sw_config_gather_info.html[Gather required information]
+.. link:../install-ip/task_sw_config_restore_defaults.html[Restore system defaults on a controller module]
+.. link:../install-ip/task_sw_config_verify_haconfig.html[Verify the ha-config state of components]
+.. link:../install-ip/task_sw_config_assign_pool0.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assign drives for pool 0 (ONTAP 9.4 and later)]
 . From Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the boot_ontap command to boot the system and get to cluster setup.
 +
 Do not complete the cluster wizard or node wizard at this time.
@@ -554,7 +554,11 @@ cluster_A::>
 
 . Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes:
 +
-NOTE: You can configure the MetroCluster IP interfaces from either cluster.
+[NOTE]
+====
+* If supported, you can also specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `-vlan-id` parameter in the `metrocluster configuration-settings interface create command`. Refer to <<Considerations for VLANs when adding a new DR group>>. 
+* You can configure the MetroCluster IP interfaces from either cluster.
+====
 +
 `metrocluster configuration-settings interface create -cluster-name`
 +
