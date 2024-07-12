@@ -13,14 +13,30 @@ In MetroCluster IP configurations, you must retrieve the IP address of the Metro
 
 .About this task
 
-This task is required only in MetroCluster IP configurations.
+* This task is required only in MetroCluster IP configurations.
 
-Commands in this task are performed from the cluster prompt of the surviving site and from the LOADER prompt of the nodes at the disaster site.
+* Commands in this task are performed from the cluster prompt of the surviving site and from the LOADER prompt of the nodes at the disaster site.
 
-The nodes in these examples have the following IP addresses for their MetroCluster IP connections:
+[[vlan_id_supported_platfoms]]
+* Certain platforms use a VLAN for the MetroCluster IP interface. By default, each of the two ports use a different VLAN: 10 and 20. 
++
+If supported, you can also specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `vlan-id` parameter.
++
+The following platforms do *not* support the `vlan-id` parameter:
++
+** FAS8200 and AFF A300
+** AFF A320
+** FAS9000 and AFF A700
+** AFF C800, ASA C800, AFF A800 and ASA A800
++
+All other platforms support the `vlan-id` parameter.
 
+// 2024 Jul 08, ONTAPDOC-1942
+
+* The nodes in these examples have the following IP addresses for their MetroCluster IP connections:
++
 NOTE: These examples are for an AFF A700 or FAS9000 system. The interfaces vary by platform model.
-
++
 |===
 
 h| Node h| Port h| IP address
@@ -66,9 +82,9 @@ e5b
 a|
 172.17.27.12
 |===
-
++
 The following table summarizes the relationships between the nodes and each node's MetroCluster IP addresses.
-
++
 |===
 
 h| Node h| HA partner h| DR partner h| DR auxiliary partner
@@ -170,32 +186,7 @@ node_A_1
 * e5b: 172.17.27.10
 
 |===
-The following table lists the platform models that use VLAN IDs on the MetroCluster IP interfaces. These models might require additional steps if you are not using the default VLAN IDs.
 
-
-|===
-
-2+h| Platform models that use VLAN IDs with the MetroCluster IP interfaces
-
-a|
-
-* AFF A70
-* AFF A90 
-* AFF A1K
-* AFF A220
-* AFF A250
-* AFF A400
-
-// BURT 1374801, 14 SEP 2021
-
-a|
-
-* FAS500f
-* FAS2750
-* FAS8300
-* FAS8700
-
-|===
 
 .Steps
 
@@ -289,7 +280,7 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 +
 `metrocluster configuration-settings interface show`
 +
-** You need the VLAN ID if the platform models use VLAN IDs (see the list above) and if you are not using the default VLAN IDs.
+** You need to determine the VLAN ID if the platform models support VLAN IDs (see the <<vlan_id_supported_platfoms,list above>>) and if you are not using the default VLAN IDs.
 
 ** You need the gateway address if you are using link:../install-ip/concept_considerations_layer_3.html[Layer 3 wide-area networks].
 +
@@ -315,7 +306,7 @@ Group Cluster Node     Network Address Netmask         Gateway         State
 +
 [NOTE]
 ====
-* If the interfaces are using the default VLANs, or the platform model does not use a VLAN ID (see the list above), the _vlan-id_ is not necessary.
+* If the interfaces are using the default VLANs, or the platform model does not use a VLAN ID (see the <<vlan_id_supported_platfoms,list above>>), the _vlan-id_ is not necessary.
 * If the configuration is not using link:../install-ip/concept_considerations_layer_3.html[Layer3 wide-area networks], the value for _gateway-IP-address_ is *0* (zero).
 ====
 +
