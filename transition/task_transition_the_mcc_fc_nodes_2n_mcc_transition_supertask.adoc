@@ -61,11 +61,11 @@ This task must be performed on each of the old nodes:
 . Unmirror the root aggregate by deleting the remote plex of the root aggregates.
  .. Identify the root aggregates: `storage aggregate show -root true`
  .. Display the pool1 aggregates: `storage aggregate plex show -pool 1`
- .. Offline the remote plex and delete the local plex of the root aggregate: 
+ .. Offline and delete the remote plex of the root aggregate: 
  +
-`aggr plex offline root-aggregate -plex remote-plex-for-root-aggregate`
+`aggr plex offline <root-aggregate> -plex <remote-plex-for-root-aggregate>`
 +
-`aggr plex delete aggr-name -plex plex-name`
+`aggr plex delete <root-aggregate> -plex <remote-plex-for-root-aggregate>`
 +
 For example:
 +
@@ -74,7 +74,7 @@ For example:
 ----
 +
 ----
-# aggr plex delete aggr0_node_A_1-FC_01 -plex localplex4
+# aggr plex delete aggr0_node_A_1-FC_01 -plex remoteplex4
 ----
 . Confirm the mailbox count, disk autoassign, and transition mode before proceeding using the following commands on each controller:
  .. Set the advanced privilege level: `set -priv advanced`
