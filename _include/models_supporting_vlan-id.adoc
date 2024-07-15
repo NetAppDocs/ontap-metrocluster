@@ -1,35 +1,45 @@
 
+Certain platforms use a VLAN for the MetroCluster IP interface. By default, each of the two ports use a different VLAN: 10 and 20. 
 +
---
-[NOTE]
+If supported, you can also specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `-vlan-id` parameter in the `metrocluster configuration-settings interface create` command.
++
+The following platforms do *not* support the `-vlan-id` parameter:
++
+** FAS8200 and AFF A300
+** AFF A320
+** FAS9000 and AFF A700
+** AFF C800, ASA C800, AFF A800 and ASA A800
++
+All other platforms support the `-vlan-id` parameter.
++
+The default and valid VLAN assignments depend on whether the platform supports the `-vlan-id` parameter:
++
+[role="tabbed-block"]
 ====
-* Certain platforms use a VLAN for the MetroCluster IP interface. By default, each of the two ports use a different VLAN: 10 and 20. You can also specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `-vlan-id parameter` in the `metrocluster configuration-settings interface create` command.
-* Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:../install-ip/concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
-====
+.Platforms that support `-vlan-id`
 --
+Default VLAN:
 
-+
-The following platform models can be added to the existing MetroCluster configuration if the VLANs used are 10/20 or greater than 100. If any other VLANs are used, then these platforms cannot be added
-to the existing configuration as the MetroCluster interface cannot be configured.
-If you are using any other platform, the VLAN configuration is not relevant as this is not required in ONTAP.
-+
+* When the `-vlan-id` parameter is not specified, the interfaces are created with VLAN 10 for the "A" ports and VLAN 20 for the "B" ports.
+* The VLAN specified must match the VLAN selected in the RCF.
 
-|===
+Valid VLAN ranges:
 
-h| AFF platforms h| FAS platforms
+* Default VLAN 10 and 20
+* VLANs 101 and higher (between 101 and 4095)
+--
+.Platforms that do not support `-vlan-id`
+--
+Default VLAN: 
 
-a|
+* Not applicable. The interface does not require a VLAN to be specified on the MetroCluster interface. The switch port defines the VLAN that is used.
 
-* AFF A220
-* AFF A250
-* AFF A400
+Valid VLAN ranges:
 
-a|
+* All VLANs not explicitly excluded when generating the RCF. The RCF alerts you if the VLAN is invalid. 
 
-* FAS2750
-* FAS500f
-* FAS8300
-* FAS8700
+--
+====
 
-|===
+// 01 May 2024, ONTAPDOC-1942
 // 22 APR 2021, BURT 1180776
