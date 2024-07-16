@@ -305,28 +305,34 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 
 . Modify the intercluster LIFs on the old controllers to use a different home port than the port used for HA, cluster interconnect, or MetroCluster IP DR on the new controllers.
 +
+The intercluster LIFs on the old controllers must use a different home port than the port used for HA, cluster interconnect, or MetroCluster IP DR on the new controllers. For example, when you upgrade to AFF A90 controllers, the HA and cluster interconnect ports are e1a and e7a, and the MetroCluster IP DR ports are e2b and e3b.
++
 For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[NetApp Hardware Universe].
 +
-For example, when you upgrade to AFF A90 controllers, the HA and cluster interconnect ports are e1a and e7a, and the MetroCluster IP DR ports are e2b and e3b. 
-+
-If the old controllers you are upgrading from are using e1a, e7a, e2b or e3b for intercluster LIFs, you must modify the intercluster LIFs to use a different port:
-
-.. View the intercluster LIFs:
+.. On the old controllers, view the intercluster LIFs:
 +
 `network interface show  -role intercluster`
 +
-If the home port of the intercluster LIFs does not conflict with the port assignment for HA, cluster interconnect or MetroCluster IP DR on the new controllers, you can skip to <<controller_upgrade_prepare_network_3,step 3>>.
+Take one of the following actions:
 +
-If the home port of the intercluster LIFs is used for HA, cluster interconnect, or MetroCluster IP DR ports on the new controllers, you must follow the steps to modify the home port of intercluster LIFs to use a different network port.
-
+[cols=2*,options="header"]
+|===
+| If the intercluster LIFs...
+| Go to...
+| Use ports e1a, e7a, e2b, or e3b | <<controller_upgrade_prepare_network_replace_ports_2b,Substep b>>
+| Use a different home port | <<controller_upgrade_prepare_network_replace_ports_3,Step 3>>
+|===
++
+[[controller_upgrade_prepare_network_replace_ports_2b]]
 .. Modify the intercluster LIFs to use a different network port:
 +
 `network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-cluster-interconnect-or-mcc-ip-dr-on-new-nodes>`
++
 .. Confirm that all intercluster LIFs are at the home port.
 +
 `network interface revert  -lif  <intercluster_lif>`
-
-[[controller_upgrade_prepare_network_3]]
++
+[[controller_upgrade_prepare_network_replace_ports_3]]
 . Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 
 .. Display the LIFs:
