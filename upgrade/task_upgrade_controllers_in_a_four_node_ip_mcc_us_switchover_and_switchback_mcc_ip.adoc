@@ -766,6 +766,29 @@ You must move data LIFs to a common port, remove VLANs and interface groups on t
 +
 `boot_ontap`
 
+. Modify the intercluster LIFs on the old controllers to use a different home port than the port used for HA, cluster interconnect, or MetroCluster IP DR on the new controllers.
++
+For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[NetApp Hardware Universe].
++
+For example, when you upgrade to AFF A90 controllers, the HA and cluster interconnect ports are e1a and e7a, and the MetroCluster IP DR ports are e2b and e3b. 
++
+If the old controllers you are upgrading from are using e1a, e7a, e2b or e3b for intercluster LIFs, you must modify the intercluster LIFs to use a different port:
+
+.. View the intercluster LIFs:
++
+`network interface show  -role intercluster`
++
+If the home port of the intercluster LIFs does not conflict with the port assignment for HA, cluster interconnect or MetroCluster IP DR on the new controllers, you can skip to <<controller_upgrade_prepare_network_3,step 3>>.
++
+If the home port of the intercluster LIFs is used for HA, cluster interconnect, or MetroCluster IP DR ports on the new controllers, you must follow the steps to modify the home port of intercluster LIFs to use a different network port.
+
+.. Modify the intercluster LIFs to use a different network port:
++
+`network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-cluster-interconnect-or-mcc-ip-dr-on-new-nodes>`
+.. Confirm that all intercluster LIFs are at the home port.
++
+`network interface revert  -lif  <intercluster_lif>`
+
 . Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 
 .. Display the LIFs:
@@ -841,7 +864,7 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 . Disconnect the power cables from node_B_1-old and node_B_2-old.
 . Remove the node_B_1-old and node_B_2-old controllers from the rack.
 
-=== Set up the new controllers
+== Set up the new controllers
 
 You must rack and cable the new controllers.
 
