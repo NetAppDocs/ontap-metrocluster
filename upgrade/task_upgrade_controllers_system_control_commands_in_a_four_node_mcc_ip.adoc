@@ -319,12 +319,11 @@ Take one of the following actions:
 |===
 | If the intercluster LIFs...
 | Go to...
-| Use ports e1a, e7a, e2b, or e3b | <<controller_upgrade_prepare_network_replace_ports_2b,Substep b>>
-| Use a different home port | <<controller_upgrade_prepare_network_replace_ports_3,Step 3>>
+| Use ports e1a, e7a, e2b, or e3b as a home port| <<controller_replace_upgrade_prepare_network_ports_2b,Substep b>>
+| Use a different home port | <<controller_replace_upgrade_prepare_network_ports_3,Step 3>>
 |===
 +
-[[controller_upgrade_prepare_network_replace_ports_2b]]
-.. Modify the intercluster LIFs to use a different home port:
+.. [[controller_replace_upgrade_prepare_network_ports_2b]]Modify the intercluster LIFs to use a different home port:
 +
 `network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-cluster-interconnect-or-mcc-ip-dr-on-new-nodes>`
 +
@@ -332,8 +331,7 @@ Take one of the following actions:
 +
 `network interface revert  -lif  <intercluster_lif>`
 +
-[[controller_upgrade_prepare_network_replace_ports_3]]
-. Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
+. [[controller_replace_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 
 .. Display the LIFs:
 +
