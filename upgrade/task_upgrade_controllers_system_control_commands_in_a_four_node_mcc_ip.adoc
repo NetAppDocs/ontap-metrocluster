@@ -329,7 +329,13 @@ Take one of the following actions depending on whether the intercluster LIFs on 
 +
 `network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-interconnect-or-mcc-ip-dr-on-new-nodes>`
 +
-.. Confirm that all intercluster LIFs are at the home port.
+.. Verify that all intercluster LIFs are now on their home ports:
++
+`network interface show -role intercluster -is-home  false`
++
+The command output should be empty, indicating all that all intercluster LIFs are on their respective home ports. 
+
+.. If there are any LIFs that are not on their home ports, revert them using the following command:
 +
 `network interface revert  -lif  <intercluster_lif>`
 +
