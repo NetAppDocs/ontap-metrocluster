@@ -305,9 +305,9 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 
 . Modify the intercluster LIFs on the old controllers to use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
 +
-NOTE: This step must be performed for a successful upgrade.
+NOTE: This step is required for a successful upgrade.
 +
-The intercluster LIFs on the old controllers must use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers. For example, when you upgrade to AFF A90 controllers, the HA interconnect ports are e1a and e7a, and the MetroCluster IP DR interconnect ports are e2b and e3b. The intercluster LIFs on the old controllers must be moved if they are hosted on ports e1a,e7a, e2b, or e3b.
+The intercluster LIFs on the old controllers must use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers. For example, when you upgrade to AFF A90 controllers, the HA interconnect ports are e1a and e7a, and the MetroCluster IP DR interconnect ports are e2b and e3b. You must move the intercluster LIFs on the old controllers if they are hosted on ports e1a, e7a, e2b, or e3b.
 +
 For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[NetApp Hardware Universe].
 +
@@ -329,7 +329,7 @@ Take one of the following actions depending on whether the intercluster LIFs on 
 +
 `network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-interconnect-or-mcc-ip-dr-interconnect-on-new-nodes>`
 +
-.. Verify that all intercluster LIFs are now on their new home ports:
+.. Verify that all intercluster LIFs are on their new home ports:
 +
 `network interface show -role intercluster -is-home  false`
 +
