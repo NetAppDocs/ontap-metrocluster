@@ -303,7 +303,45 @@ To ensure that the networking resumes cleanly on the new controllers, you must m
 +
 `boot_ontap`
 
-. Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
+. Modify the intercluster LIFs on the old controllers to use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
++
+NOTE: This step is required for a successful upgrade.
++
+The intercluster LIFs on the old controllers must use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers. For example, when you upgrade to AFF A90 controllers, the HA interconnect ports are e1a and e7a, and the MetroCluster IP DR interconnect ports are e2b and e3b. You must move the intercluster LIFs on the old controllers if they are hosted on ports e1a, e7a, e2b, or e3b.
++
+For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[NetApp Hardware Universe].
++
+.. On the old controllers, view the intercluster LIFs:
++
+`network interface show  -role intercluster`
++
+Take one of the following actions depending on whether the intercluster LIFs on the old controllers use the same ports as the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
++
+[cols=2*,options="header"]
+|===
+| If the intercluster LIFs...
+| Go to...
+| Use the same home port | <<controller_replace_upgrade_prepare_network_ports_2b,Substep b>>
+| Use a different home port | <<controller_replace_upgrade_prepare_network_ports_3,Step 3>>
+|===
++
+.. [[controller_replace_upgrade_prepare_network_ports_2b]]Modify the intercluster LIFs to use a different home port:
++
+`network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-interconnect-or-mcc-ip-dr-interconnect-on-new-nodes>`
++
+.. Verify that all intercluster LIFs are on their new home ports:
++
+`network interface show -role intercluster -is-home  false`
++
+The command output should be empty, indicating that all intercluster LIFs are on their respective home ports. 
+
+.. If there are any LIFs that are not on their home ports, revert them using the following command:
++
+`network interface revert -lif <intercluster_lif>`
++
+Repeat the command for each intercluster LIF that is not on the home port.
+
+. [[controller_replace_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 
 .. Display the LIFs:
 +
@@ -1059,6 +1097,7 @@ If the MetroCluster configuration was previously configured for monitoring by th
 
 If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
 
+// 2024 Jul 17, ONTAPDOC-2213
 // 2024 Jun 17, ONTAPDOC-1735
 // 2023 AUG 24, ONTAPDOC-1030
 // 2023 JULY 5, ONTAPDOC-1083
