@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, refresh, four, node, ip, configuration, add, autosupport
 summary: 'You can add four new nodes to the MetroCluster IP configuration as a second DR group. This creates an eight-node MetroCluster configuration.'
 ---
-= Expanding a MetroCluster IP configuration
+= Expand a MetroCluster IP configuration
 :icons: font
 :imagesdir: ../media/
 
@@ -70,7 +70,7 @@ a|
 
 == Supported platform combinations when adding a second DR group
 
-The following table shows the supported platform combinations for eight-node IP configurations. 
+The following tables shows the supported platform combinations for eight-node MetroCluster IP configurations. 
 
 [IMPORTANT] 
 ====
@@ -80,10 +80,20 @@ The following table shows the supported platform combinations for eight-node IP 
 * All nodes in one DR group must be of the same type and configuration.
 ====
 
-image::../media/8node_comb_ip_914.png[Platform combinations for 8 node configurations]
+.Supported AFF and FAS MetroCluster IP expansion combinations
+
+The following table shows the supported platform combinations for expanding an AFF or FAS system in a MetroCluster IP configuration:
+
+image::../media/8node_comb_ip_aff_fas.png[Platform combinations for 8 node configurations]
 
 * *Note 1*: ONTAP 9.9.1 or later (or the minimum ONTAP version supported on the platform) is required for these combinations. 
 * *Note 2*: ONTAP 9.13.1 or later (or the minimum ONTAP version supported on the platform) is required for these combinations. 
+
+.Supported ASA MetroCluster IP expansion combinations
+
+The following table shows the supported platform combinations for expanding an ASA system in a MetroCluster IP configuration:
+
+image::../media/8node_comb_ip_asa.png[Platform combinations for 8 node configurations]
 
 == Sending a custom AutoSupport message prior to maintenance
 
@@ -97,7 +107,7 @@ This task must be performed on each MetroCluster site.
 . To prevent automatic support case generation, send an Autosupport message to indicate the upgrade is underway.
 .. Issue the following command:
 +
-`system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading _old-model_ to _new-model"_`
+`system node autosupport invoke -node * -type all -message "MAINT=10h Upgrading <old-model> to <new-model>`
 +
 This example specifies a 10 hour maintenance window. You might want to allow additional time, depending on your plan.
 +
@@ -107,16 +117,29 @@ If the maintenance is completed before the time has elapsed, you can invoke an A
 
 .. Repeat the command on the partner cluster.
 
+== Considerations for VLANs when adding a new DR group
+
+* The following VLAN considerations apply when expanding a MetroCluster IP configuration:
++
+include::../_include/models_supporting_vlan-id.adoc[]
+
+* Both DR groups use the same VLANs when you expand from a four-node to an eight-node MetroCluster configuration.
+
+* If both DR groups cannot be configured using the same VLAN, you must upgrade the DR group that doesn't support the `vlan-id` parameter to use a VLAN that is supported by the other DR group.
+
+* Depending on your ONTAP version, you can change some MetroCluster IP interface properties after initial configuration. Refer to link:../maintain/task-modify-ip-netmask-properties.html[Modify the properties of a MetroCluster IP interface] for details on what is supported. 
+
+
 == Verifying the health of the MetroCluster configuration
 
-You must verify the health and connectivity of the MetroCluster configuration prior to performing the transition
+You must verify the health and connectivity of the MetroCluster configuration prior to performing the expansion.
 
 .Steps
 
 . Verify the operation of the MetroCluster configuration in ONTAP:
 .. Check whether the system is multipathed:
 +
-`node run -node _node-name_ sysconfig -a`
+`node run -node <node-name> sysconfig -a`
 
 .. Check for any health alerts on both clusters:
 +
@@ -281,15 +304,13 @@ In these steps, you clear the configuration on the nodes and clear the mailbox r
 .Steps
 
 . Rack the new controllers.
-. Cable the new MetroCluster IP nodes to the IP switches as shown in the _MetroCluster installation and configuration._
-+
-link:../install-ip/using_rcf_generator.html[Cabling the IP switches]
+. Cable the new MetroCluster IP nodes to the IP switches as shown in link:../install-ip/using_rcf_generator.html[Cable the IP switches].
 
-. Configure the MetroCluster IP nodes using the following sections of the _MetroCluster installation and configuration._
-.. link:../install-ip/task_sw_config_gather_info.html[Gathering required information]
-.. link:../install-ip/task_sw_config_restore_defaults.html[Restoring system defaults on a controller module]
-.. link:../install-ip/task_sw_config_verify_haconfig.html[Verifying the ha-config state of components]
-.. link:../install-ip/task_sw_config_assign_pool0.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assigning drives for pool 0 (ONTAP 9.4 and later)]
+. Configure the MetroCluster IP nodes using the following procedures:
+.. link:../install-ip/task_sw_config_gather_info.html[Gather required information]
+.. link:../install-ip/task_sw_config_restore_defaults.html[Restore system defaults on a controller module]
+.. link:../install-ip/task_sw_config_verify_haconfig.html[Verify the ha-config state of components]
+.. link:../install-ip/task_sw_config_assign_pool0.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assign drives for pool 0 (ONTAP 9.4 and later)]
 . From Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the boot_ontap command to boot the system and get to cluster setup.
 +
 Do not complete the cluster wizard or node wizard at this time.
@@ -329,7 +350,7 @@ Component           Result
 nodes               ok
 lifs                ok
 config-replication  ok
-aggregates          warning
+aggregates          ok
 clusters            ok
 connections         not-applicable
 volumes             ok
@@ -346,23 +367,26 @@ volumes             ok
 +
 Follow the steps for your switch vendor:
 +
-* link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults^]
+* link:../install-ip/task_switch_config_broadcom.html[Reset the Broadcom IP switch to factory defaults]
 +
-* link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults^]
+* link:../install-ip/task_switch_config_cisco.html[Reset the Cisco IP switch to factory defaults]
++
+* link:../install-ip/task_switch_config_nvidia.html[Reset the NVIDIA IP SN2100 switch to factory defaults]
 
 . Download and install the IP RCF file, depending on your switch vendor.
 
 +
 NOTE: Update the switches in the following order:  Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2
 
-* link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Downloading and installing the Broadcom IP RCF files]
+* link:../install-ip/task_switch_config_broadcom.html[Download and install the Broadcom IP RCF files]
 
-* link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Downloading and installing the Cisco IP RCF files]
+* link:../install-ip/task_switch_config_cisco.html[Download and install the Cisco IP RCF files]
 +
+* link:../install-ip/task_switch_config_nvidia.html[Download and install the NVIDIA IP RCF files]
++
+NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switch port mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
 
-NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switchport mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
-
-== Joining the new nodes to the clusters
+== Join the new nodes to the clusters
 
 You must add the four new MetroCluster IP nodes to the existing MetroCluster configuration.
 
@@ -448,7 +472,9 @@ You must create cluster peering LIFs, create the MetroCluster interfaces on the 
 
 .About this task
 
-The home port used in the examples are platform-specific. You should use the appropriate home port specific to MetroCluster IP node platform.
+* The home port used in the examples are platform-specific. You should use the home port specific to your MetroCluster IP node platform.
+
+* Review the information in <<Considerations for VLANs when adding a new DR group>> before performing this task. 
 
 .Steps
 
@@ -526,15 +552,13 @@ cluster_A::>
 
 . Configure the MetroCluster IP interfaces for the newly joined MetroCluster IP nodes:
 +
+[NOTE]
+====
+* If supported, you can specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `-vlan-id` parameter in the `metrocluster configuration-settings interface create` command. Refer to <<Considerations for VLANs when adding a new DR group>> for supported platform information. 
+* You can configure the MetroCluster IP interfaces from either cluster.
+====
++
 `metrocluster configuration-settings interface create -cluster-name`
-+
-include::../_include/models_supporting_vlan-id.adoc[]
-
-+
---
-NOTE: You can configure the MetroCluster IP interfaces from either cluster.
---
-
 +
 ----
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_1-new -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
@@ -561,6 +585,8 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_B -home-node node_B_2-new -home-port e1b -address 172.17.27.13 -netmask 255.255.255.0
 [Job 267] Job succeeded: Interface Create is successful.
 ----
+
+
 
 [Arabic, start=6]
 . Verify the MetroCluster IP interfaces are created:
@@ -892,10 +918,9 @@ cluster_A::*> metrocluster configure -refresh true
 
 . Create mirrored data aggregates on each of the new MetroCluster nodes:
 +
-`storage aggregate create -aggregate _aggregate-name_ -node _node-name_ -diskcount _no-of-disks_ -mirror true`
+`storage aggregate create -aggregate <aggregate-name> -node <node-name> -diskcount <no-of-disks> -mirror true`
 +
 NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
-
 +
 The following example shows the creation of an aggregate on node_A_1-new.
 +
@@ -966,7 +991,6 @@ cluster_A::*>
 +
 NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
 +
-
 The following example shows the MDV volumes in the `volume show` output:
 +
 ----
@@ -992,7 +1016,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 `set -privilege advanced`
 .. Move the MDV volumes, one at a time:
 +
-`volume move start -volume _mdv-volume_ -destination-aggregate _aggr-on-new-node_ -vserver _vserver-name_`
+`volume move start -volume <mdv-volume> -destination-aggregate <aggr-on-new-node> -vserver <svm-name>`
 +
 The following example shows the command and output for moving "MDV_CRS_d6b0b313ff5611e9837100a098544e51_A" to aggregate "data_a3" on "node_A_3".
 +
@@ -1008,7 +1032,7 @@ Warning: You are about to modify the system volume
 
 .. Use the volume show command to check that the MDV volume has been successfully moved:
 +
-`volume show _mdv-name_`
+`volume show <mdv-name>`
 +
 The following output shows that the MDV volume has been successfully moved.
 +
@@ -1039,10 +1063,10 @@ node_A_4-new      false
 
 .. Set epsilon to false on the old node (node_A_1-old):
 +
-`cluster modify -node _old-node_ -epsilon false*`
+`cluster modify -node <old-node> -epsilon false*`
 .. Set epsilon to true on the new node (node_A_3-new):
 +
-`cluster modify -node _new-node_ -epsilon true`
+`cluster modify -node <new-node> -epsilon true`
 .. Verify that epsilon has moved to the correct node:
 +
 `cluster show -fields epsilon`
@@ -1060,6 +1084,8 @@ node_A_4-new      false
 ----
 . If your system supports end-to-end encryption, you can link:../maintain/task-configure-encryption.html#enable-end-to-end-encryption[Enable end-to-end encryption] on the new DR group.
 
+// 2024 Jul 08, ONTAPDOC-1942
+// 2024 Jun 17, ONTAPDOC-1734
 // 2024 Apr 19, GH 341
 // 2024 Feb 22, GH issue 366
 // 2024 Feb 21, GH issue 371

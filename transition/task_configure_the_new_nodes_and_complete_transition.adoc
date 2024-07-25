@@ -15,23 +15,20 @@ With the new nodes added, you must complete the transition steps and configure t
 
 You must implement the MetroCluster IP connections, refresh the MetroCluster configuration, and disable transition mode.
 
+.Steps
+
 . Form the new nodes into a DR group by issuing the following commands from controller node_A_1-IP:
 +
-`metrocluster configuration-settings dr-group create -partner-cluster peer-cluster-name -local-node local-controller-name -remote-node remote-controller-name`
+`metrocluster configuration-settings dr-group create -partner-cluster <peer_cluster_name> -local-node <local_controller_name> -remote-node <remote_controller_name>`
 +
 `metrocluster configuration-settings dr-group show`
 
 . Create MetroCluster IP interfaces (node_A_1-IP, node_A_2-IP, node_B_1-IP, node_B_2-IP) -- two interfaces need to be created per controller; eight interfaces in total:
 +
-`metrocluster configuration-settings interface create -cluster-name cluster-name -home-node controller-name -home-port port -address ip-address -netmask netmask -vlan-id vlan-id``metrocluster configuration-settings interface show`
+`metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <controller_name> -home-port <port_name> -address <ip_address> -netmask <netmask_address> -vlan-id <vlan_id>`
 +
-// 22 APR 2021, BURT 1180776
-NOTE: Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:../install-ip/concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
-
+`metrocluster configuration-settings interface show`
 +
-The -vlan-id parameter is required only if you are not using the default VLAN IDs. Only certain systems support non-default VLAN IDs.
-+
-// include reference
 include::../_include/models_supporting_vlan-id.adoc[]
 // end include reference
 
@@ -156,10 +153,10 @@ See the information gathered in link:task_connect_the_mcc_ip_controller_modules_
 `network interface show -field home-port`
 .. If necessary, modify the LIF configuration:
 +
-`vserver config override -command "network interface modify -vserver vserver_name -home-port active_port_after_upgrade -lif lif_name -home- node new_node_name"`
+`vserver config override -command "network interface modify -vserver <svm_name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>`
 .. Revert the LIFs to their home ports:
 +
-`network interface revert * -vserver _vserver_name_`
+`network interface revert * -vserver <svm_name>`
 
 == Bringing up the SVMs
 
@@ -172,7 +169,7 @@ Due to the changes if LIF configuration, you must restart the SVMs on the new no
 `metrocluster vserver show`
 . Restart the SVMs on cluster_A that do not have an "`-mc`" suffix:
 +
-`vserver start -vserver svm-name -force true`
+`vserver start -vserver <svm_name> -force true`
 . Repeat the previous steps on the partner cluster.
 . Check that all SVMs are in a healthy state:
 +
@@ -196,7 +193,7 @@ System volumes have the name form "`MDV\_CRS_*\_A`" or "`MDV_CRS_*\_B.`" The des
 . Move the _B system volume from node_A_1-IP to node_A_2-IP using the following steps from site_A.
 .. Create a mirrored aggregate on controller node_A_2-IP to hold the system volume:
 +
-`aggr create -aggregate new_node_A_2-IP_aggr -diskcount 10 -mirror true -node nodename_node_A_2-IP`
+`aggr create -aggregate new_node_A_2-IP_aggr -diskcount 10 -mirror true -node node_A_2-IP`
 +
 `aggr show`
 +
@@ -208,13 +205,13 @@ The advanced option, "`-force-small-aggregate true`" can be used to limit disk u
 +
 `vserver show`
 +
-`volume show -vserver _admin-vserver-name_`
+`volume show -vserver <admin_svm_name>`
 +
 You should identify volumes contained by aggregates owned by site_A. The site_B system volumes will also be shown.
 . Move the MDV_CRS_*_B system volume for site_A to the mirrored aggregate created on controller node_A_2-IP
 .. Check for possible destination aggregates:
 +
-`volume move target-aggr show -vserver _admin-vserver-name_ -volume system_vol_MDV_B`
+`volume move target-aggr show -vserver <admin_svm_name> -volume MDV_CRS_*_B`
 +
 The newly created aggregate on node_A_2-IP should be listed.
 
@@ -222,15 +219,16 @@ The newly created aggregate on node_A_2-IP should be listed.
 +
 `set advanced`
 +
-`volume move start -vserver _admin-vserver_ -volume system_vol_MDV_B -destination-aggregate new_node_A_2-IP_aggr -cutover-window 40`
+`volume move start -vserver <admin_svm_name> -volume MDV_CRS_*_B -destination-aggregate new_node_A_2-IP_aggr -cutover-window 40`
 .. Check status for the move operation:
 +
-`volume move show -vserver _admin-vserver-name_ -volume system_vol_MDV_B`
+`volume move show -vserver <admin_svm_name> -volume MDV_CRS_*_B`
 .. When the move operation complete, verify that the MDV_CRS_*_B system is contained by the new aggregate on node_A_2-IP:
 +
 `set admin`
 +
-`volume show -vserver _admin-vserver_`
+`volume show -vserver <admin_svm_name>`
 . Repeat the above steps on site_B (node_B_1-IP and node_B_2-IP).
 
 // BURT 1448684, 21 JAN 2022
+// 22 APR 2021, BURT 1180776
