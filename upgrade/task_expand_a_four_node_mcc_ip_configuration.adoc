@@ -898,15 +898,34 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 `set -privilege advanced`
 .. Refresh the MetroCluster configuration on one of the new nodes:
 +
-`metrocluster configure`
-+
-The following example shows the MetroCluster configuration refreshed on both DR groups:
-+
-----
-cluster_A::*> metrocluster configure -refresh true
+[cols="30,70"]
+|===
 
-[Job 726] Job succeeded: Configure is successful.
-----
+h| If your MetroCluster configuration has... h| Then do this...
+a|
+Multiple data aggregates
+a|
+From any node's prompt, configure MetroCluster:
+
+`metrocluster configure <node-name>`
+a|
+A single mirrored data aggregate at one or both sites
+a|
+.. From any node's prompt, change to the advanced privilege level:
++
+`set -privilege advanced`
++
+You need to respond with "`y`" when you are prompted to continue into advanced mode and you see the advanced mode prompt (*>).
+
+.. Configure the MetroCluster with the `-allow-with-one-aggregate true` parameter:
++
+`metrocluster configure -allow-with-one-aggregate true <node-name>`
+ .. Return to the admin privilege level:
+ +
+`set -privilege admin`
+
++
+|===
 
 .. Reboot each of the new nodes:
 +
