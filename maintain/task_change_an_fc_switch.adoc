@@ -4,13 +4,13 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, change, fc, switch
 summary: "You might need to to change the vendor of an FC switch (Cisco to Brocade or vice versa), change the switch model, or both."
 ---
-= Change the vendor or model of an FC switch
+= Change the vendor or model of FC switches
 
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-You might need to to change the vendor of an FC switch from Cisco to Brocade or vice versa, change the switch model, or change both.  
+You might need to to change the vendor for FC switches from Cisco to Brocade or vice versa, change the switch model, or change both.  
 
 .About this task
 
@@ -53,8 +53,6 @@ Group Cluster Node           State          Mirroring Mode
 ----
 cluster_A::> metrocluster check run
 
-Last Checked On: 10/1/2014 16:03:37
-
 Component           Result
 ------------------- ---------
 nodes               ok
@@ -68,40 +66,34 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 ----
 
  .. Check that there are no health alerts: `*system health alert show*`
-. Configure the new switch before installation.
+. Configure the new switches before installation.
 +
-Follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/task_reset_the_brocade_fc_switch_to_factory_defaults.html[Configure the FC switches].
+Follow the steps in link:../install-fc/concept-configure-fc-switches.html[Configure the FC switches].
 
 
-. Disconnect the connections from the old switch by removing the connections in the following order:
+. Disconnect the connections from the old switches by removing the connections in the following order:
 +
-.. If the local cluster interfaces are connected to a switch:
-... Disconnect the local cluster interfaces
-... Disconnect the local cluster ISLs
-.. Disconnect the MetroCluster FC interfaces.
+.. Disconnect the MetroCluster FC and FCVI interfaces.
+.. Disconnect the ATTO FibreBridge bridges.
 .. Disconnect the MetroCluster ISLs.
 
-. Power off the old switch, remove the cables, and physically replace the old switch with the new switch.
-+
+. Power off the old switches, remove the cables, and physically replace the old switches with the new switch.
+
 
 . Cable the switches in the following order: 
 +
-You must follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/task_rack_the_hardware_components_mcc_fabric_and_ip.html[Install and cable the MetroCluster components]. 
+You must follow the steps in link:../install-fc/task_configure_the_mcc_hardware_components_fabric.html[Cabling a fabric-attached MetroCluster configuration]. 
 +
 .. Cable the ISLs to the remote site.
-..  Cable the MetroCluster FC interfaces.
-..  Cable the local cluster interfaces.
-+
-If the local cluster interfaces are connected to a switch: 
-+
-... Cable the local cluster interfaces.
-... Cable the local cluster ISLs.
+.. Cable the ATTO FibreBridge bridges.
+..  Cable the MetroCluster FC and FCVI interfaces.
 
-. Power up the switch.
+. Power up the switches.
 
 . Verify that the MetroCluster configuration is healthy by repeating <<Step 1>>.
 
 . Repeat Step 1 to Step 7 for the second Fabric in the configuration. 
 
+// 2024 Jul 08, ONTAPDOC-2160
 // 2024 Mar 07, ONTAPDOC-1722
 // 2023 May 18, BURT 1491844
