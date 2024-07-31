@@ -43,6 +43,48 @@ Bridge CLI commands can be issued from the ONTAP interface `storage bridge run-c
 
 NOTE: Using in-band management with IP access disabled is recommended to improve security by limiting physical connectivity the bridge.
 
+==  Supported number of disks and shelves on ATTO 7500N and 7600N FibreBridge bridges
+
+The following tables show the supported number of disks and shelves are supported behind a pair of 7500N or 7600N ATTO FibreBridges.
+
+[NOTE]
+====
+* The first limit you reach applies.
+* If you are using DS460C shelves, only up to 240 drives can be used, which equals 4 shelves.
+* If you are using DS212C shelves, only up to 120 drives can be used, which equals 10 shelves.
+====
+
+.Supported number of disks
+
+[cols=3*,options="header"]
+|===
+| Disk configuration
+| Disk type
+| Total disks per bridge pair
+| All SSDs | SSD | 96
+| All HDDs | HDD | 240
+.2+| Mixed (96 SSDs) | SSD | 96 | HDD | 144
+.2+| Mixed (72 SSDs) | SSD | 72 | HDD | 168
+.2+| Mixed (48 SSDs) | SSD | 48 | HDD | 192
+.2+| Mixed (24 SSDs) | SSD | 24 | HDD | 216
+|===
+
+
+.Supported number of shelves
+
+[cols=3*,options="header"]
+|===
+| Disk configuration
+| Disk type
+| Total number of shelves
+| All SSDs | SSD | 4
+| All HDDs | HDD | 10
+.2+| Mixed | SSD | 1 | HDD | 9
+.2+| Mixed | SSD | 2 | HDD | 8
+.2+| Mixed | SSD | 3 | HDD | 7
+.2+| Mixed | SSD | 4 | HDD | 6
+|===
+
 == Preparing for the installation
 
 When you are preparing to install the bridges as part of your new MetroCluster system, you must ensure that your system meets certain requirements, including meeting setup and configuration requirements for the bridges. Other requirements include downloading the necessary documents, the ATTO QuickNAV utility, and the bridge firmware.
