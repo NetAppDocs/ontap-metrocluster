@@ -4,27 +4,17 @@ sidebar: sidebar
 keywords: select, transition, procedure, depend, exist, metrocluster, fc, configuration, choosing, choose
 summary: You must select a transition procedure depending on your existing MetroCluster FC configuration.
 ---
-= Choosing your transition procedure
+= Choose your transition procedure
 :icons: font
 :imagesdir: ../media/
 
 
 [.lead]
 When transitioning to a MetroCluster IP configuration, you must have a combination of supported platform models.
+
 You should also ensure that the MetroCluster IP platform is an appropriate size for the load that you are transitioning from the MetroCluster FC configuration to the MetroCluster IP configuration.
 
-The following table shows the supported platform combinations. You can transition from platforms in the left-hand column to platforms listed as supported in the columns to the right, as indicated by the colored table cells.
-
-
-For example, transitioning from a MetroCluster FC configuration consisting of AFF8060 controller modules to an IP configuration consisting of AFF A400 controller modules is supported.
-
-
-image::../media/four_node_transition_mcc_9151.png[Shows supported platform combinations for IP to FC transition]
-
-
-* Note 1:  This platform combination requires ONTAP 9.13.1 or later.
-
-* Note 2: You must have a 100GbE interface for the local cluster interfaces on the FC nodes. This platform combination requires ONTAP 9.11.1 or later.
+== Supported platform combinations 
 
 * The transition procedures all require ONTAP 9.8 or later unless stated otherwise in the notes or as required by an individual platform.
 
@@ -36,6 +26,33 @@ image::../media/four_node_transition_mcc_9151.png[Shows supported platform combi
 * If the target platform limits are lower then the MetroCluster limits, you must reconfigure the MetroCluster to be at, or below, the target platform limits before you add the new nodes.
 * Refer to the link:https://hwu.netapp.com[Hardware universe^] for platform limits. 
 ====
+
+.Supported AFF and FAS transition combinations
+
+The following table shows the supported platform combinations. You can transition from platforms in the left-hand column to platforms listed as supported in the columns to the right, as indicated by the colored table cells.
+
+For example, transitioning from a MetroCluster FC configuration consisting of AFF8060 controller modules to an IP configuration consisting of AFF A400 controller modules is supported.
+
+image::../media/4node-transition-9151-update.png[Shows supported platform combinations for IP to FC transition]
+
+* Note 1: This platform combination requires ONTAP 9.11.1 or later.
+* Note 2: You must have a 40GbE interface for the local cluster interfaces on the FC nodes. 
+* Note 3: You must have a 100GbE interface for the local cluster interfaces on the FC nodes. 
+
+.Supported ASA transition platform combinations
+
+The following table shows the supported platform combinations for ASA systems.
+
+[cols=3*,options="header"]
+|===
+| Source MetroCluster FC platform
+| Target MetroCluster IP platform
+| Supported?
+.2+| ASA A400 | ASA A400 | Yes | ASA A900 | No
+.2+| ASA A900 | ASA A400 | No | ASA A900 | Yes
+|===
+
+== Choose your transition procedure
 
 You must select a transition procedure depending on your existing MetroCluster FC configuration.
 
@@ -73,6 +90,7 @@ a| Old storage shelves are not supported on new platforms. Old storage shelves m
 a| link:task_disruptively_transition_when_exist_shelves_are_not_supported_on_new_controllers.html[Link to procedure]
 |===
 
+// 2024 Jul 24, ONTAPDOC-2229
 // 2023 Dec 05, ONTAPDOC-1516
 // 2023 Sep 21, BURT 1404890
 // 2023 Jun 30, Issue 301
