@@ -347,18 +347,18 @@ You must run the following commands:
 `FirmwareRestart`
 +
 You are prompted to restart the bridge.
-
+. Connect the FC cables to the same ports on the new bridge.
 . Update the FibreBridge firmware on each bridge.
 +
-If the new bridge is the same type as the partner bridge upgrade to the same firmware as the partner bridge. If the new bridge is a different type to the partner bridge, upgrade to the latest firmware supported by the bridge and version of ONTAP. See the section "Updating firmware on a FibreBridge bridge" in  _MetroCluster Maintenance_.
+If the new bridge is the same type as the partner bridge, upgrade to the same firmware as the partner bridge. If the new bridge is a different type to the partner bridge, upgrade to the latest firmware supported by the bridge and version of ONTAP. See link:task_update_firmware_on_a_fibrebridge_bridge_parent_topic.html[Updating firmware on a FibreBridge bridge]
 
-. [[step17-reconnect-newbridge]] Reconnect the SAS and FC cables to the same ports on the new bridge.
+. [[step18-reconnect-newbridge]] Reconnect the SAS cables to the same ports on the new bridge.
 +
 You must replace the cables connecting the bridge to the top or bottom of the shelf stack. The FibreBridge 7600N and 7500N bridges require mini-SAS cables for these connections.
 +
 NOTE: Wait at least 10 seconds before connecting the port. The SAS cable connectors are keyed; when oriented correctly into a SAS port, the connector clicks into place and the disk shelf SAS port LNK LED illuminates green. For disk shelves, you insert a SAS cable connector with the pull tab oriented down (on the underside of the connector). For controllers, the orientation of SAS ports can vary depending on the platform model; therefore, the correct orientation of the SAS cable connector varies.
 
-. [[step18-verify-each-bridge]]Verify that each bridge can see all of the disk drives and disk shelves to which the bridge is connected.
+. [[step19-verify-each-bridge]]Verify that each bridge can see all of the disk drives and disk shelves to which the bridge is connected.
 +
 
 [cols="35,65"]
@@ -423,13 +423,13 @@ h| If the output is... h| Then...
 a|
 Correct
 a|
-Repeat <<step18-verify-each-bridge,Step 18>> for each remaining bridge.
+Repeat <<step19-verify-each-bridge,Step 19>> for each remaining bridge.
 a|
 Not correct
 a|
 
- .. Check for loose SAS cables or correct the SAS cabling by repeating <<step17-reconnect-newbridge,Step 17>>.
- .. Repeat <<step18-verify-each-bridge,Step 18>>.
+ .. Check for loose SAS cables or correct the SAS cabling by repeating <<step18-reconnect-newbridge,Step 18>>.
+ .. Repeat <<step19-verify-each-bridge,Step 19>>.
 
 |===
 
@@ -1198,5 +1198,6 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 link:concept_in_band_management_of_the_fc_to_sas_bridges.html[In-band management of the FC-to-SAS bridges]
 
+// 2024 Aug 21, GH issue 418
 // 2024 APR 8, ONTAPDOC-1710
 // BURT 1448684, 19 JAN 2022

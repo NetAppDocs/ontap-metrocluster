@@ -53,6 +53,12 @@ The following example names are used in this procedure:
  ** After upgrade:
   *** node_B_1-new
   *** node_B_2-new
+  
+== Enable console logging
+
+include::../_include/console-logging.adoc[]
+
+// 2024 Aug 13, ONTAPDOC-1988
 
 == Set the required bootarg on the existing system
 
@@ -157,16 +163,16 @@ The switches at site_A will be upgraded when the controllers on site_A are upgra
 +
 Follow the steps in the section for your switch vendor: 
 
- ** link:../install-ip/task_switch_config_broadcom.html[Reset the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_cisco.html[Reset the Cisco IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_nvidia.html[Reset the NVIDIA IP SN2100 switch to factory defaults]
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Reset the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_cisco.html#resetting-the-cisco-ip-switch-to-factory-defaults[Reset the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_nvidia.html#reset-the-nvidia-ip-sn2100-switch-to-factory-defaults[Reset the NVIDIA IP SN2100 switch to factory defaults]
 
 . Download and install the RCF files.
 +
 Follow the steps in the section for your switch vendor: 
 
- ** link:../install-ip/task_switch_config_broadcom.html[Download and install the Broadcom RCF files]
- ** link:../install-ip/task_switch_config_cisco.html[Download and install the Cisco IP RCF files]
+ ** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Download and install the Broadcom RCF files]
+ ** link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Download and install the Cisco IP RCF files]
  ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCF files]
 
 === Map ports from the old nodes to the new nodes
@@ -766,7 +772,45 @@ You must move data LIFs to a common port, remove VLANs and interface groups on t
 +
 `boot_ontap`
 
-. Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
+. Modify the intercluster LIFs on the old controllers to use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
++
+NOTE: This step is required for a successful upgrade.
++
+The intercluster LIFs on the old controllers must use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers. For example, when you upgrade to AFF A90 controllers, the HA interconnect ports are e1a and e7a, and the MetroCluster IP DR interconnect ports are e2b and e3b. You must move the intercluster LIFs on the old controllers if they are hosted on ports e1a, e7a, e2b, or e3b.
++
+For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[NetApp Hardware Universe].
++
+.. On the old controllers, view the intercluster LIFs:
++
+`network interface show  -role intercluster`
++
+Take one of the following actions depending on whether the intercluster LIFs on the old controllers use the same ports as the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
++
+[cols=2*,options="header"]
+|===
+| If the intercluster LIFs...
+| Go to...
+| Use the same home port | <<controller_manual_upgrade_prepare_network_ports_2b,Substep b>>
+| Use a different home port | <<controller_manual_upgrade_prepare_network_ports_3,Step 3>>
+|===
++
+.. [[controller_manual_upgrade_prepare_network_ports_2b]]Modify the intercluster LIFs to use a different home port:
++
+`network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-interconnect-or-mcc-ip-dr-interconnect-on-new-nodes>`
++
+.. Verify that all intercluster LIFs are on their new home ports:
++
+`network interface show -role intercluster -is-home  false`
++
+The command output should be empty, indicating that all intercluster LIFs are on their respective home ports. 
+
+.. If there are any LIFs that are not on their home ports, revert them using the following command:
++
+`network interface revert -lif <intercluster_lif>`
++
+Repeat the command for each intercluster LIF that is not on the home port.
+
+. [[controller_manual_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 
 .. Display the LIFs:
 +
@@ -1028,19 +1072,19 @@ Follow the steps in the procedure for your switch vendor:
 +
 link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
 
- ** link:../install-ip/task_switch_config_broadcom.html[Reset the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_cisco.html[Reset the Cisco IP switch to factory defaults]
-** link:../install-ip/task_switch_config_nvidia.html[Reset the NVIDIA IP SN2100 switch to factory defaults] 
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[[Reset the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_cisco.html#resetting-the-cisco-ip-switch-to-factory-defaults[Reset the Cisco IP switch to factory defaults]
+** link:../install-ip/task_switch_config_nvidia.html#reset-the-nvidia-ip-sn2100-switch-to-factory-defaults[Reset the NVIDIA IP SN2100 switch to factory defaults] 
 
 . Download and install the RCF files.
 +
 Follow the steps in the section for your switch vendor:
 
-** link:../install-ip/task_switch_config_broadcom.html[Download and install the Broadcom RCF files]
+** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Download and install the Broadcom RCF files]
 
-** link:../install-ip/task_switch_config_cisco.html[Download and install the Cisco IP RCF files]
+** link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Download and install the Cisco IP RCF files]
 
-** link:../install-ip/task_switch_config_nvidia.html[Download and install the NVIDIA IP SN2100 switch RCF files]
+** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP SN2100 switch RCF files]
 
 === Set the MetroCluster IP bootarg variables
 
@@ -1627,6 +1671,7 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 
 If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
 
+// 2024 Jul 18, ONTAPDOC-2213
 // 2024 Jun 17, ONTAPDOC-1735
 // BURT 1448684, 02 FEB 2022
 // 2023-11-09, ONTAPDOC-919
