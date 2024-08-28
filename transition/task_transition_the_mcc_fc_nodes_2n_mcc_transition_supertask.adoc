@@ -83,15 +83,27 @@ For example:
  .. Confirm that the transition mode is disruptive: metrocluster transition show
 . Check for any broken disks: `disk show -broken`
 . Remove or replace any broken disks
-. Confirm aggregates are healthy using the following commands on node_A_1-FC and node_B_1-FC:``storage aggregate show```storage aggregate plex show`
+. Confirm aggregates are healthy using the following commands on node_A_1-FC and node_B_1-FC:
++
+`storage aggregate show`
++
+`storage aggregate plex show`
 +
 The storage aggregate show command indicates that the root aggregate is unmirrored.
 
-. Check for any VLANs or interface groups: `network port ifgrp show``network port vlan show`
+. Check for any VLANs or interface groups:
++
+`network port ifgrp show`
++
+`network port vlan show`
 +
 If none are present, skip the following two steps.
 
-. Display the list of LIfs using VLANs or ifgrps: `network interface show -fields home-port,curr-port``network port show -type if-group | vlan`
+. Display the list of LIfs using VLANs or ifgrps: 
++
+`network interface show -fields home-port,curr-port`
++
+`network port show -type if-group | vlan`
 . Remove any VLANs and interface groups.
 +
 You must perform these steps for all LIFs in all SVMs, including those SVMs with the -mc suffix.
