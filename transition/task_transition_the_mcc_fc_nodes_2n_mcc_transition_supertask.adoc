@@ -51,6 +51,8 @@ This task must be performed on each of the old nodes:
 * node_A_1-FC
 * node_B_1-FC
 
+.Steps 
+
 . Stop all client traffic.
 . On either of the MetroCluster FC nodes, for example node_A_1-FC, enable transition.
  .. Set the advanced privilege level: `set -priv advanced`
@@ -59,13 +61,20 @@ This task must be performed on each of the old nodes:
 . Unmirror the root aggregate by deleting the remote plex of the root aggregates.
  .. Identify the root aggregates: `storage aggregate show -root true`
  .. Display the pool1 aggregates: `storage aggregate plex show -pool 1`
- .. Delete the local plex of the root aggregate: `aggr plex delete aggr-name -plex plex-name`
- .. Offline the remote plex of the root aggregate: `aggr plex offline root-aggregate -plex remote-plex-for-root-aggregate`
+ .. Offline and delete the remote plex of the root aggregate: 
+ +
+`aggr plex offline <root-aggregate> -plex <remote-plex-for-root-aggregate>`
++
+`aggr plex delete <root-aggregate> -plex <remote-plex-for-root-aggregate>`
 +
 For example:
 +
 ----
- # aggr plex offline aggr0_node_A_1-FC_01 -plex plex4
+ # aggr plex offline aggr0_node_A_1-FC_01 -plex remoteplex4
+----
++
+----
+# aggr plex delete aggr0_node_A_1-FC_01 -plex remoteplex4
 ----
 . Confirm the mailbox count, disk autoassign, and transition mode before proceeding using the following commands on each controller:
  .. Set the advanced privilege level: `set -priv advanced`
@@ -74,15 +83,27 @@ For example:
  .. Confirm that the transition mode is disruptive: metrocluster transition show
 . Check for any broken disks: `disk show -broken`
 . Remove or replace any broken disks
-. Confirm aggregates are healthy using the following commands on node_A_1-FC and node_B_1-FC:``storage aggregate show```storage aggregate plex show`
+. Confirm aggregates are healthy by using the following commands on node_A_1-FC and node_B_1-FC:
++
+`storage aggregate show`
++
+`storage aggregate plex show`
 +
 The storage aggregate show command indicates that the root aggregate is unmirrored.
 
-. Check for any VLANs or interface groups: `network port ifgrp show``network port vlan show`
+. Check for any VLANs or interface groups:
++
+`network port ifgrp show`
++
+`network port vlan show`
 +
 If none are present, skip the following two steps.
 
-. Display the list of LIfs using VLANs or ifgrps: `network interface show -fields home-port,curr-port``network port show -type if-group | vlan`
+. Display the list of LIfs using VLANs or ifgrps: 
++
+`network interface show -fields home-port,curr-port`
++
+`network port show -type if-group | vlan`
 . Remove any VLANs and interface groups.
 +
 You must perform these steps for all LIFs in all SVMs, including those SVMs with the -mc suffix.
@@ -94,7 +115,7 @@ You must perform these steps for all LIFs in all SVMs, including those SVMs with
 +
 No LIFs should appear in the output.
 
- .. Remove VLAN and ifgrp ports from broadcast domain:: `network port broadcast-domain remove-ports -ipspace ipspace -broadcast-domain broadcast-domain-name -ports nodename:portname,nodename:portname,..`
+ .. Remove VLAN and ifgrp ports from broadcast domain: `network port broadcast-domain remove-ports -ipspace ipspace -broadcast-domain broadcast-domain-name -ports nodename:portname,nodename:portname,..`
  .. Verify that all the vlan and ifgrp ports are not assigned to a broadcast domain: `network port show -type if-group | vlan`
  .. Delete all VLANs: `network port vlan delete -node nodename -vlan-name vlan-name`
  .. Delete interface groups: `network port ifgrp delete -node nodename -ifgrp ifgrp-name`
@@ -122,3 +143,5 @@ If the configuration uses FC-to-SAS bridges or FC back-end switches, disconnect 
 At this point, the MetroCluster FC controllers have been removed and the shelves are disconnected from all controllers.
 
 image::../media/transition_2n_remove_fc_nodes.png[]
+
+// 2024 Jun 25, ONTAPDOC-1969
