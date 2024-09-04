@@ -44,7 +44,7 @@ NetApp MetroCluster Tiebreaker :> exit
 +
 [role="tabbed-block"]
 ====
-.Install 1.6P1
+.Install Tiebreaker 1.6P1
 --
 Use the following steps for a new installation of Tiebreaker 1.6P1. 
 
@@ -239,7 +239,7 @@ Successfully installed NetApp MetroCluster Tiebreaker software version 1.6P1.
 --
 Use the following steps to upgrade the Tiebreaker 1.6 software version to Tiebreaker 1.6P1.
 
-NOTE: After upgrading to Tiebreaker 1.6P1 from 1.6, you must remove Tiebreaker monitoring and re-add the MetroCluster configuration. 
+NOTE: After you upgrade to Tiebreaker 1.6P1 from 1.6, you remove the existing monitors and re-add the MetroCluster configuration for monitoring.
 
 .Steps
 
@@ -359,6 +359,191 @@ Cleaning up / removing...
 Use the following steps to upgrade the Tiebreaker 1.5 software version to Tiebreaker 1.6P1.
 
 .Steps
+
+. Run the following command at the `[root@mcctb ~] #` prompt to upgrade the software:
++
+[source,cli]
+sh MetroClusterTiebreakerInstall-1.6P1
++
+The system displays the following output for a successful upgrade:
++
+----
+Extracting the MetroCluster Tiebreaker installation/upgrade archive
+Install digest hash is Ok
+Performing the MetroCluster Tiebreaker code signature check
+Install code signature is Ok
+
+Enter database user name : root
+
+Please enter database password for root
+Enter password:
+
+Password updated successfully in the database.
+
+Do you wish to generate your own public-private key pair for encrypting audit log? [Y/N]: y
+Generating public-private key pair...
+Configuring Vault...
+==> Vault shutdown triggered
+2023-07-21T00:30:22.335+0530 [INFO]  core: marked as sealed
+2023-07-21T00:30:22.335+0530 [INFO]  core: pre-seal teardown starting
+2023-07-21T00:30:22.335+0530 [INFO]  rollback: stopping rollback manager
+2023-07-21T00:30:22.335+0530 [INFO]  core: pre-seal teardown complete
+2023-07-21T00:30:22.335+0530 [INFO]  core: stopping cluster listeners
+2023-07-21T00:30:22.335+0530 [INFO]  core.cluster-listener: forwarding rpc listeners stopped
+2023-07-21T00:30:22.375+0530 [INFO]  core.cluster-listener: rpc listeners successfully shut down
+2023-07-21T00:30:22.375+0530 [INFO]  core: cluster listeners successfully shut down
+2023-07-21T00:30:22.376+0530 [INFO]  core: vault is sealed
+Starting vault server...
+==> Vault server configuration:
+
+             Api Address: <api_address>
+                     Cgo: disabled
+         Cluster Address: <cluster_address>
+   Environment Variables: BASH_FUNC_which%%, DBUS_SESSION_BUS_ADDRESS, GODEBUG, HISTCONTROL, HISTSIZE, HOME, HOSTNAME, HOST_ACCOUNT, LANG, LESSOPEN, LOGNAME, LS_COLORS, MAIL, PATH, PWD, SHELL, SHLVL, SSH_CLIENT, SSH_CONNECTION, SSH_TTY, STAF_TEMP_DIR, TERM, USER, VAULT_ADDR, VAULT_TOKEN, XDG_RUNTIME_DIR, XDG_SESSION_ID, _, vault_Addr, which_declare
+              Go Version: go1.20.5
+              Listener 1: tcp (addr: "0.0.0.0:8200", cluster address: "0.0.0.0:8201", max_request_duration: "1m30s", max_request_size: "33554432", tls: "enabled")
+               Log Level:
+                   Mlock: supported: true, enabled: true
+           Recovery Mode: false
+                 Storage: file
+                 Version: Vault v1.14.0, built 2023-06-19T11:40:23Z
+             Version Sha: 13a649f860186dffe3f3a4459814d87191efc321
+
+==> Vault server started! Log data will stream in below:
+
+2023-07-21T00:30:33.065+0530 [INFO]  proxy environment: http_proxy="" https_proxy="" no_proxy=""
+2023-07-21T00:30:33.098+0530 [INFO]  core: Initializing version history cache for core
+2023-07-21T00:30:43.092+0530 [INFO]  core: security barrier not initialized
+2023-07-21T00:30:43.092+0530 [INFO]  core: seal configuration missing, not initialized
+2023-07-21T00:30:43.094+0530 [INFO]  core: security barrier not initialized
+2023-07-21T00:30:43.096+0530 [INFO]  core: security barrier initialized: stored=1 shares=5 threshold=3
+2023-07-21T00:30:43.098+0530 [INFO]  core: post-unseal setup starting
+2023-07-21T00:30:43.124+0530 [INFO]  core: loaded wrapping token key
+2023-07-21T00:30:43.124+0530 [INFO]  core: successfully setup plugin catalog: plugin-directory=""
+2023-07-21T00:30:43.124+0530 [INFO]  core: no mounts; adding default mount table
+2023-07-21T00:30:43.125+0530 [INFO]  core: successfully mounted: type=cubbyhole version="v1.14.0+builtin.vault" path=cubbyhole/ namespace="ID: root. Path: "
+2023-07-21T00:30:43.126+0530 [INFO]  core: successfully mounted: type=system version="v1.14.0+builtin.vault" path=sys/ namespace="ID: root. Path: "
+2023-07-21T00:30:43.126+0530 [INFO]  core: successfully mounted: type=identity version="v1.14.0+builtin.vault" path=identity/ namespace="ID: root. Path: "
+2023-07-21T00:30:43.129+0530 [INFO]  core: successfully mounted: type=token version="v1.14.0+builtin.vault" path=token/ namespace="ID: root. Path: "
+2023-07-21T00:30:43.130+0530 [INFO]  rollback: starting rollback manager
+2023-07-21T00:30:43.130+0530 [INFO]  core: restoring leases
+2023-07-21T00:30:43.130+0530 [INFO]  identity: entities restored
+2023-07-21T00:30:43.130+0530 [INFO]  identity: groups restored
+2023-07-21T00:30:43.131+0530 [INFO]  core: usage gauge collection is disabled
+2023-07-21T00:30:43.131+0530 [INFO]  expiration: lease restore complete
+2023-07-21T00:30:43.131+0530 [INFO]  core: Recorded vault version: vault version=1.14.0 upgrade time="2023-07-20 19:00:43.131158543 +0000 UTC" build date=2023-06-19T11:40:23Z
+2023-07-21T00:30:43.371+0530 [INFO]  core: post-unseal setup complete
+2023-07-21T00:30:43.371+0530 [INFO]  core: root token generated
+2023-07-21T00:30:43.371+0530 [INFO]  core: pre-seal teardown starting
+2023-07-21T00:30:43.371+0530 [INFO]  rollback: stopping rollback manager
+2023-07-21T00:30:43.372+0530 [INFO]  core: pre-seal teardown complete
+2023-07-21T00:30:43.694+0530 [INFO]  core.cluster-listener.tcp: starting listener: listener_address=0.0.0.0:8201
+2023-07-21T00:30:43.695+0530 [INFO]  core.cluster-listener: serving cluster requests: cluster_listen_address=[::]:8201
+2023-07-21T00:30:43.695+0530 [INFO]  core: post-unseal setup starting
+2023-07-21T00:30:43.696+0530 [INFO]  core: loaded wrapping token key
+2023-07-21T00:30:43.696+0530 [INFO]  core: successfully setup plugin catalog: plugin-directory=""
+2023-07-21T00:30:43.697+0530 [INFO]  core: successfully mounted: type=system version="v1.14.0+builtin.vault" path=sys/ namespace="ID: root. Path: "
+2023-07-21T00:30:43.698+0530 [INFO]  core: successfully mounted: type=identity version="v1.14.0+builtin.vault" path=identity/ namespace="ID: root. Path: "
+2023-07-21T00:30:43.698+0530 [INFO]  core: successfully mounted: type=cubbyhole version="v1.14.0+builtin.vault" path=cubbyhole/ namespace="ID: root. Path: "
+2023-07-21T00:30:43.701+0530 [INFO]  core: successfully mounted: type=token version="v1.14.0+builtin.vault" path=token/ namespace="ID: root. Path: "
+2023-07-21T00:30:43.701+0530 [INFO]  rollback: starting rollback manager
+2023-07-21T00:30:43.702+0530 [INFO]  core: restoring leases
+2023-07-21T00:30:43.702+0530 [INFO]  identity: entities restored
+2023-07-21T00:30:43.702+0530 [INFO]  expiration: lease restore complete
+2023-07-21T00:30:43.702+0530 [INFO]  identity: groups restored
+2023-07-21T00:30:43.702+0530 [INFO]  core: usage gauge collection is disabled
+2023-07-21T00:30:43.703+0530 [INFO]  core: post-unseal setup complete
+2023-07-21T00:30:43.703+0530 [INFO]  core: vault is unsealed
+Success! Uploaded policy: mcctb-policy
+2023-07-21T00:30:44.226+0530 [INFO]  core: enabled credential backend: path=approle/ type=approle version=""
+Success! Enabled approle auth method at: approle/
+2023-07-21T00:30:44.315+0530 [INFO]  core: successful mount: namespace="" path=mcctb/ type=kv version=""
+Success! Enabled the kv secrets engine at: mcctb/
+Success! Data written to: auth/approle/role/mcctb-app
+Upgrading to NetApp-MetroCluster-Tiebreaker-Software-1.6-1.x86_64.rpm
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:NetApp-MetroCluster-Tiebreaker-So################################# [ 50%]
+Performing file integrity check
+etc/cron.weekly/metrocluster-tiebreaker-support is Ok
+etc/cron.weekly/metrocluster-tiebreaker-support-cov is Ok
+etc/init.d/netapp-metrocluster-tiebreaker-software is Ok
+etc/init.d/netapp-metrocluster-tiebreaker-software-cov is Ok
+etc/logrotate.d/mcctb is Ok
+opt/netapp/mcctb/lib/common/activation-1.1.1.jar is Ok
+opt/netapp/mcctb/lib/common/aopalliance.jar is Ok
+opt/netapp/mcctb/lib/common/args4j.jar is Ok
+opt/netapp/mcctb/lib/common/aspectjrt.jar is Ok
+opt/netapp/mcctb/lib/common/aspectjweaver.jar is Ok
+opt/netapp/mcctb/lib/common/asup.jar is Ok
+opt/netapp/mcctb/lib/common/bcpkix-jdk15on.jar is Ok
+opt/netapp/mcctb/lib/common/bcprov-jdk15on.jar is Ok
+opt/netapp/mcctb/lib/common/bcprov-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/bctls-fips-1.0.13.jar is Ok
+opt/netapp/mcctb/lib/common/bctls-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/bcutil-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/cglib.jar is Ok
+opt/netapp/mcctb/lib/common/commons-codec.jar is Ok
+opt/netapp/mcctb/lib/common/commons-collections4.jar is Ok
+opt/netapp/mcctb/lib/common/commons-compress.jar is Ok
+opt/netapp/mcctb/lib/common/commons-daemon.jar is Ok
+opt/netapp/mcctb/lib/common/commons-daemon.src.jar is Ok
+opt/netapp/mcctb/lib/common/commons-dbcp2.jar is Ok
+opt/netapp/mcctb/lib/common/commons-io.jar is Ok
+opt/netapp/mcctb/lib/common/commons-lang3.jar is Ok
+opt/netapp/mcctb/lib/common/commons-logging.jar is Ok
+opt/netapp/mcctb/lib/common/commons-pool2.jar is Ok
+opt/netapp/mcctb/lib/common/guava.jar is Ok
+opt/netapp/mcctb/lib/common/httpclient.jar is Ok
+opt/netapp/mcctb/lib/common/httpcore.jar is Ok
+opt/netapp/mcctb/lib/common/jakarta.activation.jar is Ok
+opt/netapp/mcctb/lib/common/jakarta.xml.bind-api.jar is Ok
+opt/netapp/mcctb/lib/common/java-xmlbuilder.jar is Ok
+opt/netapp/mcctb/lib/common/javax.inject.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-api-2.3.1.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-core.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-impl.jar is Ok
+opt/netapp/mcctb/lib/common/jline.jar is Ok
+opt/netapp/mcctb/lib/common/jna.jar is Ok
+opt/netapp/mcctb/lib/common/joda-time.jar is Ok
+opt/netapp/mcctb/lib/common/jsch.jar is Ok
+opt/netapp/mcctb/lib/common/json.jar is Ok
+opt/netapp/mcctb/lib/common/jsvc.zip is Ok
+opt/netapp/mcctb/lib/common/junixsocket-common.jar is Ok
+opt/netapp/mcctb/lib/common/junixsocket-native-common.jar is Ok
+opt/netapp/mcctb/lib/common/logback-classic.jar is Ok
+opt/netapp/mcctb/lib/common/logback-core.jar is Ok
+opt/netapp/mcctb/lib/common/mail-1.6.2.jar is Ok
+opt/netapp/mcctb/lib/common/mariadb-java-client.jar is Ok
+opt/netapp/mcctb/lib/common/mcctb-mib.jar is Ok
+opt/netapp/mcctb/lib/common/mcctb.jar is Ok
+opt/netapp/mcctb/lib/common/mockito-core.jar is Ok
+opt/netapp/mcctb/lib/common/slf4j-api.jar is Ok
+opt/netapp/mcctb/lib/common/snmp4j.jar is Ok
+opt/netapp/mcctb/lib/common/spring-aop.jar is Ok
+opt/netapp/mcctb/lib/common/spring-beans.jar is Ok
+opt/netapp/mcctb/lib/common/spring-context-support.jar is Ok
+opt/netapp/mcctb/lib/common/spring-context.jar is Ok
+opt/netapp/mcctb/lib/common/spring-core.jar is Ok
+opt/netapp/mcctb/lib/common/spring-expression.jar is Ok
+opt/netapp/mcctb/lib/common/spring-web.jar is Ok
+opt/netapp/mcctb/lib/common/vault-java-driver.jar is Ok
+opt/netapp/mcctb/lib/common/xz.jar is Ok
+opt/netapp/mcctb/bin/mcctb_postrotate is Ok
+opt/netapp/mcctb/bin/netapp-metrocluster-tiebreaker-software-cli is Ok
+/
+
+Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
+
+Attempting to start NetApp MetroCluster Tiebreaker software services
+Started NetApp MetroCluster Tiebreaker software services
+Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.6P1.
+Cleaning up / removing...
+   2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
+
+
+----
 
 --
 .Upgrade 1.4 to 1.6P1
@@ -776,7 +961,7 @@ Successfully installed NetApp MetroCluster Tiebreaker software version 1.6.
 ----
 
 --
-.Upgrade Tiebreaker 1.5 to 1.6
+.Upgrade 1.5 to 1.6
 --
 Use the following steps to upgrade the Tiebreaker 1.5 software version to Tiebreaker 1.6.
 
@@ -968,7 +1153,7 @@ Cleaning up / removing...
 ----
 
 --
-.Upgrade Tiebreaker 1.4 to 1.6
+.Upgrade 1.4 to 1.6
 --
 
 Use the following steps to upgrade the Tiebreaker 1.4 software version to Tiebreaker 1.6.
