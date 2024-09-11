@@ -624,6 +624,15 @@ a|Enable the MetroCluster configuration.
 
 |===
 
+== Verifying and configuring the HA state of components in Maintenance mode
+
+When configuring a storage system in a MetroCluster FC configuration, you must make sure that the high-availability (HA) state of the controller module and chassis components is mcc or mcc-2n so that these components boot properly.
+
+NOTE: Although this value should be preconfigured on systems received from the factory, you should still verify the setting before proceeding.
+
+
+include::../_include/task-verify-haconfig-ip-fc.adoc[]
+
 == Restoring system defaults and configuring the HBA type on a controller module
 
 .About this task
@@ -1210,18 +1219,6 @@ If storage controller node_B_1 has four shelves, you issue the following command
 .. Show the disk shelf IDs and bays for each disk:
 +
 `disk show –v`
-
-== Verifying and configuring the HA state of components in Maintenance mode
-
-When configuring a storage system in a MetroCluster FC configuration, you must make sure that the high-availability (HA) state of the controller module and chassis components is mcc or mcc-2n so that these components boot properly.
-
-NOTE: Although this value should be preconfigured on systems received from the factory, you should still verify the setting before proceeding.
-
-.Before you begin
-
-The system must be in Maintenance mode.
-
-include::../_include/task-verify-haconfig-ip-fc.adoc[]
 
 
 == Setting up ONTAP
