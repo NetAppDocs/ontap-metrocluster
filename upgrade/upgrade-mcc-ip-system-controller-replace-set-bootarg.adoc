@@ -1,0 +1,40 @@
+---
+permalink: upgrade/upgrade-mcc-ip-system-controller-replace-set-bootarg.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster IP configuration.'
+---
+= Set the required bootarg on the existing system (systems introduced in 9.15.1 or later)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg.
+
+CAUTION: If you are upgrading to an AFF A70, AFF A90, or AFF A1K system you *must* complete this task before performing the upgrade. This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task and go directly to <<prepare_system_replace_upgrade,Prepare for the upgrade>>.
+
+.Steps
+
+. Halt one node at each site and allow its HA partner to perform a storage takeover of the node:
++
+`halt  -node <node_name>`
+
+. At the `LOADER` prompt of the halted node, enter the following: 
++
+`setenv hw.cxgbe.toe_keepalive_disable 1` 
++
+`saveenv` 
++
+`printenv hw.cxgbe.toe_keepalive_disable`  
+
+. Boot the node:
++
+`boot_ontap`
+    
+. When the node boots, perform a giveback for the node at the prompt: 
++
+`storage failover giveback -ofnode <node_name>`
+
+. Repeat the steps on each node in the DR group that is being upgraded.
+
+

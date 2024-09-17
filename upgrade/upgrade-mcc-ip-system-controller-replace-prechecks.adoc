@@ -1,0 +1,47 @@
+---
+permalink: upgrade/upgrade-mcc-ip-system-controller-replace-prechecks.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster IP configuration.'
+---
+= Set the required bootarg on the existing system (systems introduced in 9.15.1 or later only)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
+
+Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must <<man_reconfig_mediator,manually reconfigure ONTAP Mediator>>.
+
+At any stage during the upgrade, you can run the `system controller replace show` or `system controller replace show-details` command from site A to check the status. If the commands return a blank output, wait for a few minutes and rerun the command.
+
+.Steps
+
+. Start the automated controller replacement procedure from site A to replace the controllers at site B:
++
+`system controller replace start -nso true`
++
+The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
++
+[NOTE]
+====
+* If you do not run the `system controller replace start -nso true` command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
+
+* The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
++
+The `system controller replace start` command might report the following precheck error:
++
+----
+Cluster-A::*>system controller replace show
+Node        Status         Error-Action
+----------- -------------- ------------------------------------
+Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed errors in component aggregates
+----
++
+Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
+====
+
+.	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
+
+
+
