@@ -27,29 +27,99 @@ Use this cabling overview to verify your cabling.
 * RCF file version v2.10 or later is required for 25G breakout mode for MetroCluster ISLs. 
 * ONTAP 9.13.1 or later and RCF file version 2.00 are required to use a platform other than FAS8200 or AFF A300 in the "MetroCluster 4" group. 
 
+NOTE: The RCF file version is different to the version of the RCFfilegenerator tool used to generate the file. For example, you can generate an RCF file version 2.00 using RCFfilegenerator v1.6c. 
+
+// 2024 Jul 09, GH issue 400
 == Cabling two MetroCluster configurations to the switches
 
 When cabling more than one MetroCluster configuration to a Cisco 3132Q-V switch, you must cable each MetroCluster according to the appropriate table. For example, if cabling a FAS2750 and an AFF A700 to the same Cisco 3132Q-V switch. Then you cable the FAS2750 as per "MetroCluster 1" in Table 1, and the AFF A700 as per "MetroCluster 2" or "MetroCluster 3" in Table 2. You cannot physically cable both the FAS2750 and the AFF A700 as "MetroCluster 1".
 
-== Cabling an AFF A150, ASA A150, FAS2750, AFF A220, FAS500f, AFF C250, ASA C250, AFF A250, or ASA A250 system to a Cisco 3232C or Cisco 9336-FX2C switch
+== Choose the correct cabling table for your configuration
 
-image::../media/mcc_ip_cabling_a150_a220_a250_to_a_cisco_3232c_or_cisco_9336c_switch.png[]
+Use the following table to determine which cabling table you should follow. 
 
-== Cabling a FAS8200 or an AFF A300 system to a Cisco 3232C or Cisco 9336C switch
+[cols=2*,options="header"]
+|===
+| If your system is...
+| Use this cabling table...
+a|
+AFF A150, ASA A150, FAS2750, AFF A220 
 
-image::../media/mcc_ip_cabling_a_aff_a300_or_fas8200_to_a_cisco_3232c_or_cisco_9336c_switch.png[]
+FAS500f, AFF C250, ASA C250, AFF A250, ASA A250 | <<table_1_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 1)>>
+| FAS8200, AFF A300 | <<table_2_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 2)>>
+| AFF A320 
+
+FAS8300, AFF C400, ASA C400, FAS8700
+
+AFF A400, ASA A400 | <<table_3_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 3)>>
+| 
+FAS9000, AFF A700
+
+AFF C800, ASA C800, AFF A800, ASA A800
+
+FAS9500, AFF A900, ASA A900 | <<table_4_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 4)>>
+|
+AFF A70
+
+AFF A90
+
+AFF A1K
+
+*Note:* These systems require ONTAP 9.15.1 or later.
+ | <<table_5_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 5)>>
+|===
+
+
+[[table_1_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 1)
+
+Review the platform port assignments to cable an AFF A150, ASA A150, FAS2750, AFF A220, FAS500f, AFF C250, ASA C250, AFF A250, or ASA A250 system to a Cisco 3232C or 9336C switch:
+
+
+image::../media/mcc-ip-cabling-a150-a220-a250-to-a-cisco-3232c-or-cisco-9336c-switch.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
+
+[[table_2_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 2)
+
+Review the platform port assignments to cable a FAS8200 or AFF A300 system to a Cisco 3232C or 9336C switch:
+
+image::../media/mcc-ip-cabling-a-aff-a300-or-fas8200-to-a-cisco-3232c-or-cisco-9336c-switch.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
 
 If you are upgrading from older RCF files, the cabling configuration might be using ports in the "MetroCluster 4" group (ports 25/26 and 29/30). 
 
-== Cabling an AFF A320, FAS8300, AFF C400, ASA C400, AFF A400, ASA A400, FAS8700, FAS9000, AFF A700, AFF C800, ASA C800, AFF A800, ASA A800, FAS9500, AFF A900, or ASA A900 system to a Cisco 3232C or Cisco 9336C-FX2 switch
+[[table_3_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 3)
 
-image::../media/mcc_ip_cabling_a320_a400_a700_a800_a900 _cisco_3232C or_9336c_switch.png[]
+Review the platform port assignments to cable an AFF A320, FAS8300, AFF C400, ASA C400, FAS8700, AFF A400, or ASA A400 system to a Cisco 3232C or 9336C switch:
+
+image::../media/mcc_ip_cabling_a320_a400_cisco_3232C_or_9336c_switch.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
 
 *Note 1*: If you are using an X91440A adapter (40Gbps), then use either ports e4a and e4e or e4a and e8a. If you are using an X91153A adapter (100Gbps), then use either ports e4a and e4b or e4a and e8a.
 
 NOTE: Using ports in the "MetroCluster 4" group requires ONTAP 9.13.1 or later.
 
+[[table_4_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 4)
 
+Review the platform port assignments to cable a FAS9000, AFF A700, AFF C800, ASA C800, AFF A800, ASA A800, FAS9500, AFF A900, or ASA A900 system to a Cisco 3232C or 9336C switch:
+
+image::../media/mcc_ip_cabling_fas9000_a700_fas9500_a800_a900_cisco_3232C_or_9336c_switch.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
+
+*Note 1*: If you are using an X91440A adapter (40Gbps), then use either ports e4a and e4e or e4a and e8a. If you are using an X91153A adapter (100Gbps), then use either ports e4a and e4b or e4a and e8a.
+
+NOTE: Using ports in the "MetroCluster 4" group requires ONTAP 9.13.1 or later.
+
+[[table_5_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 5)
+
+Review the platform port assignments to cable an AFF A70, AFF A90, or AFF A1K system to a Cisco 3232C or 9336C switch:
+
+NOTE: The systems in this table require ONTAP 9.15.1 or later. 
+
+
+image:../media/mcc-ip-cabling-a90-a70-a1k-cisco-3232C-or-9336c-switch.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
+
+// 2024 Jun 07, ONTAPDOC-1734 
 // 2023 Oct 25, ONTAPDOC-1201
 // 2023 Apr 28, change Cisco 9336C-FX2 table
 // BURT 1501501 Sept 7th, 2022

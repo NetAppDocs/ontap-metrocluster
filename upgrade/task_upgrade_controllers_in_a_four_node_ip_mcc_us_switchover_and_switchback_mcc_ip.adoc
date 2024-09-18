@@ -15,8 +15,6 @@ Beginning with ONTAP 9.8, you can use the MetroCluster switchover operation to p
 
 * The platforms must be running ONTAP 9.8 or later.
 * The target (new) platform must be a different model than the original platform.
-
-* Platform models with internal shelves are not supported.
 * You can only upgrade specific platform models using this procedure in a MetroCluster IP configuration. 
 ** For information on what platform upgrade combinations are supported review the MetroCluster IP upgrade table in  link:concept_choosing_controller_upgrade_mcc.html[Choose a controller upgrade procedure].
 +
@@ -29,41 +27,81 @@ Refer to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosi
 +
 Operating the MetroCluster configuration with different controller types is not supported outside of this maintenance activity.
 
-* The IP switches must be running a supported firmware version.
-* If the new platform has fewer slots than the original system, or if it has fewer or different types of ports, you might need to add an adapter to the new system.
+* The MetroCluster IP switches (switch type, vendor, and model) and firmware version must be supported on the existing and new controllers in your upgrade configuration. 
 +
-For more information, see the https://hwu.netapp.com/[NetApp Hardware Universe].
+Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] or the link:https://imt.netapp.com/matrix/[IMT^] for supported switches and firmware versions.
 
-* If it is enabled on your system, link:../maintain/task-configure-encryption.html#disable-end-to-end-encryption[Disable end-to-end encryption] before performing the controller upgrade. 
+* If it is enabled on your system, link:../maintain/task-configure-encryption.html#disable-end-to-end-encryption[disable end-to-end encryption] before performing the upgrade. 
 
-* You will reuse the IP addresses, netmasks, and gateways of the original platforms on the new platforms.
-* The following example names are used in this procedure:
- ** site_A
-  *** Before upgrade:
-   **** node_A_1-old
-   **** node_A_2-old
-  *** After upgrade:
-   **** node_A_1-new
-   **** node_A_2-new
- ** site_B
-  *** Before upgrade:
-   **** node_B_1-old
-   **** node_B_2-old
-  *** After upgrade:
-   **** node_B_1-new
-   **** node_B_2-new
+* If the new platform has fewer slots than the original system, or if it has fewer or different types of ports, you might need to add an adapter to the new system.
 
-== Workflow for upgrading controllers in an MetroCluster IP configuration
+* You reuse the IP addresses, netmasks, and gateways of the original platforms on the new platforms.
 
-You can use the workflow diagram to help you plan the upgrade tasks.
+The following example names are used in this procedure:
 
-image::../media/workflow_ip_upgrade.png[]
+* site_A
+ ** Before upgrade:
+  *** node_A_1-old
+  *** node_A_2-old
+ ** After upgrade:
+  *** node_A_1-new
+  *** node_A_2-new
+* site_B
+ ** Before upgrade:
+  *** node_B_1-old
+  *** node_B_2-old
+ ** After upgrade:
+  *** node_B_1-new
+  *** node_B_2-new
+  
+== Enable console logging
 
-== Preparing for the upgrade
+include::../_include/console-logging.adoc[]
+
+// 2024 Aug 13, ONTAPDOC-1988
+
+== Set the required bootarg on the existing system
+
+If you are upgrading to an AFF A70, AFF A90, or AFF A1K system, follow the steps to set the `hw.cxgbe.toe_keepalive_disable=1` bootarg.
+
+CAUTION: If you are upgrading to an AFF A70, AFF A90, or AFF A1K system you *must* complete this task before performing the upgrade. This task *only* applies to upgrades to an AFF A70, AFF A90, or AFF A1K system from a supported system. For all other upgrades, you can skip this task and go directly to <<prepare_so_sb_upgrade,Prepare for the upgrade>>.
+
+.Steps
+
+. Halt one node at each site and allow its HA partner to perform a storage takeover of the node:
++
+`halt  -node <node_name>`
+
+. At the `LOADER` prompt of the halted node, enter the following: 
++
+`setenv hw.cxgbe.toe_keepalive_disable 1` 
++
+`saveenv` 
++
+`printenv hw.cxgbe.toe_keepalive_disable`  
+
+. Boot the node:
++
+`boot_ontap`
+    
+. When the node boots, perform a giveback for the node at the prompt: 
++
+`storage failover giveback -ofnode <node_name>`
+
+. Repeat the steps on each node in the DR group that is being upgraded.
+
+[[prepare_so_sb_upgrade]]
+== Prepare for the upgrade
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
-=== Updating the MetroCluster switch RCF files before upgrading controllers
+
+=== Workflow for upgrading controllers in an MetroCluster IP configuration
+
+You can use the workflow diagram to help you plan the upgrade tasks.
+
+image::../media/workflow_ip_upgrade.png[] 
+=== Update the MetroCluster switch RCF files before upgrading controllers
 
 Depending on the old platform models, or if switch configuration is not on the minimum version, or if you want to change VLAN IDs used by the back-end MetroCluster connections, you must update the switch RCF files before you begin the platform upgrade procedure.
 
@@ -123,20 +161,21 @@ The switches at site_A will be upgraded when the controllers on site_A are upgra
 
 . Prepare the IP switches for the application of the new RCF files.
 +
-Follow the steps in the section for your switch vendor from the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
+Follow the steps in the section for your switch vendor: 
 
-
- ** link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Reset the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_cisco.html#resetting-the-cisco-ip-switch-to-factory-defaults[Reset the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_nvidia.html#reset-the-nvidia-ip-sn2100-switch-to-factory-defaults[Reset the NVIDIA IP SN2100 switch to factory defaults]
 
 . Download and install the RCF files.
 +
-Follow the steps in the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
+Follow the steps in the section for your switch vendor: 
 
- ** link:../install-ip/task_switch_config_broadcom.html[Downloading and installing the Broadcom RCF files]
- ** link:../install-ip/task_switch_config_cisco.html[Downloading and installing the Cisco IP RCF files]
+ ** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Download and install the Broadcom RCF files]
+ ** link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Download and install the Cisco IP RCF files]
+ ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCF files]
 
-=== Mapping ports from the old nodes to the new nodes
+=== Map ports from the old nodes to the new nodes
 
 You must verify that the physical ports on node_A_1-old map correctly to the physical ports on node_A_1-new, which will allow node_A_1-new to communicate with other nodes in the cluster and with the network after the upgrade.
 
@@ -356,7 +395,7 @@ a|
 
 |===
 
-=== Netbooting the new controllers
+=== Netboot the new controllers
 
 After you install the new nodes, you need to netboot to ensure the new nodes are running the same version of ONTAP as the original nodes. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must put a copy of the ONTAP 9 boot image onto a web server that the system can access.
 
@@ -367,35 +406,12 @@ After you install the new nodes, you need to netboot to ensure the new nodes are
  .. Download the appropriate ONTAP software from the software download section of the NetApp Support Site and store the `ontap-version_image.tgz` file on a web-accessible directory.
  .. Change to the web-accessible directory and verify that the files you need are available.
 +
-
-[cols="1,3"]
-|===
-
-h| If the platform model is... h| Then...
-
-a|
-8000 series systems
-a|
-Extract the contents of the `__ontap-version___image.tgz` file to the target directory:
-
-`tar -zxvf __ontap-version___image.tgz`
-
-NOTE: If you are extracting the contents on Windows, use 7-Zip or WinRAR to extract the netboot image. Your directory listing should contain a netboot folder with a kernel file:netboot/kernel
-
 Your directory listing should contain a netboot folder with a kernel file:
-
-`netboot/kernel`
-
-a|
-All other systems
-a|
-Your directory listing should contain a netboot folder with a kernel file:
-
++
 `_ontap-version_image.tgz`
-
++
 You do not need to extract the `_ontap-version_image.tgz` file.
 
-|===
 
 .. At the LOADER prompt, configure the netboot connection for a management LIF:
 +
@@ -420,20 +436,7 @@ Configure the manual connection:
 
 ..  Perform the netboot.
 +
-
-|===
-
-h| If the platform model is... h| Then...
-
-a|
-FAS/AFF8000 series systems
-a|
-`netboot http://_web_server_ip/path_to_web-accessible_directory_/netboot/kernel`
-a|
-All other systems
-a|
 `netboot \http://_web_server_ip/path_to_web-accessible_directory/ontap-version_image.tgz`
-|===
 
 .. From the boot menu, select option **(7) Install new software first** to download and install the new software image to the boot device.
 +
@@ -450,7 +453,7 @@ Disregard the following message:
 .. Be sure to enter `n` to skip the backup recovery when you see a prompt similar to the following:
 +
 ----
-Do you want to restore the backup configuration now? {y|n} **n**
+Do you want to restore the backup configuration now? {y|n} n
 ----
 
 .. Reboot by entering `*y*` when you see a prompt similar to the following:
@@ -459,7 +462,7 @@ Do you want to restore the backup configuration now? {y|n} **n**
 The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n}
 ----
 
-=== Clearing the configuration on a controller module
+=== Clear the configuration on a controller module
 
 // include reference
 
@@ -467,7 +470,7 @@ include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 
 // end include reference
 
-=== Verifying MetroCluster health before site upgrade
+=== Verify MetroCluster health before site upgrade
 
 You must verify the health and connectivity of the MetroCluster configuration prior to performing the upgrade.
 
@@ -476,7 +479,7 @@ You must verify the health and connectivity of the MetroCluster configuration pr
 . Verify the operation of the MetroCluster configuration in ONTAP:
 .. Check whether the nodes are multipathed:
  +
-`node run -node _node-name_ sysconfig -a`
+`node run -node <node_name> sysconfig -a`
 +
 You should issue this command for each node in the MetroCluster configuration.
 
@@ -529,7 +532,8 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
  .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
-=== Gathering information before the upgrade
+[[gather_info_so_sb]]
+=== Gather information before the upgrade
 
 Before upgrading, you must gather information for each of the nodes, and, if necessary, adjust the network broadcast domains, remove any VLANs and interface groups, and gather encryption information.
 
@@ -543,15 +547,20 @@ You should gather the output of the following commands for each node:
  ** `metrocluster interconnect show`
  ** `metrocluster configuration-settings connection show`
  ** `network interface show -role cluster,node-mgmt`
- ** `network port show -node node_name -type physical`
- ** `network port vlan show -node _node-name_`
- ** `network port ifgrp show -node _node_name_ -instance`
+ ** `network port show -node <node_name> -type physical`
+ ** `network port vlan show -node <node_name>`
+ ** `network port ifgrp show -node <node_name> -instance`
  ** `network port broadcast-domain show`
  ** `network port reachability show -detail`
  ** `network ipspace show`
  ** `volume show`
  ** `storage aggregate show`
- ** `system node run -node _node-name_ sysconfig -a`
+ ** `system node run -node <node_name> sysconfig -a`
+  ** `aggr show -r` 
+ ** `disk show`  
+ ** `system node run <node-name> disk show`  
+ ** `vol show -fields type` 
+ ** `vol show -fields type , space-guarantee`
  ** `vserver fcp initiator show`
  ** `storage disk show`
  ** `metrocluster configuration-settings interface show`
@@ -656,7 +665,7 @@ dr-group-id cluster     node     node-systemid ha-partner-systemid dr-partner-sy
 4 entries were displayed.
 ----
 
-=== Removing Mediator or Tiebreaker monitoring
+=== Remove Mediator or Tiebreaker monitoring
 
 Before the upgrading the platforms, you must remove monitoring if the MetroCluster configuration is monitored with the Tiebreaker or Mediator utility.
 
@@ -689,7 +698,7 @@ a|
 Refer to the product documentation.
 |===
 
-=== Sending a custom AutoSupport message prior to maintenance
+=== Send a custom AutoSupport message prior to maintenance
 
 Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
 
@@ -711,7 +720,7 @@ The `maintenance-window-in-hours` parameter specifies the length of the maintena
 
 . Repeat these steps on the partner site.
 
-== Switching over the MetroCluster configuration
+== Switch over the MetroCluster configuration
 
 You must switch over the configuration to site_A so that the platforms on site_B can be upgraded.
 
@@ -747,7 +756,7 @@ The operation can take several minutes to complete.
 +
 Automatic healing of aggregates after negotiated switchover is disabled during controller upgrade.
 
-== Removing interface configurations and uninstalling the old controllers
+== Remove interface configurations and uninstall the old controllers
 
 You must move data LIFs to a common port, remove VLANs and interface groups on the old controllers and then physically uninstall the controllers.
 
@@ -755,7 +764,7 @@ You must move data LIFs to a common port, remove VLANs and interface groups on t
 
 * These steps are performed on the old controllers (node_B_1-old, node_B_2-old).
 
-* See the information you gathered in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Mapping ports from the old nodes to the new nodes].
+* See the information you gathered in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Map ports from the old nodes to the new nodes].
 
 .Steps
 
@@ -763,7 +772,45 @@ You must move data LIFs to a common port, remove VLANs and interface groups on t
 +
 `boot_ontap`
 
-. Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
+. Modify the intercluster LIFs on the old controllers to use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
++
+NOTE: This step is required for a successful upgrade.
++
+The intercluster LIFs on the old controllers must use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers. For example, when you upgrade to AFF A90 controllers, the HA interconnect ports are e1a and e7a, and the MetroCluster IP DR interconnect ports are e2b and e3b. You must move the intercluster LIFs on the old controllers if they are hosted on ports e1a, e7a, e2b, or e3b.
++
+For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[NetApp Hardware Universe].
++
+.. On the old controllers, view the intercluster LIFs:
++
+`network interface show  -role intercluster`
++
+Take one of the following actions depending on whether the intercluster LIFs on the old controllers use the same ports as the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
++
+[cols=2*,options="header"]
+|===
+| If the intercluster LIFs...
+| Go to...
+| Use the same home port | <<controller_manual_upgrade_prepare_network_ports_2b,Substep b>>
+| Use a different home port | <<controller_manual_upgrade_prepare_network_ports_3,Step 3>>
+|===
++
+.. [[controller_manual_upgrade_prepare_network_ports_2b]]Modify the intercluster LIFs to use a different home port:
++
+`network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-interconnect-or-mcc-ip-dr-interconnect-on-new-nodes>`
++
+.. Verify that all intercluster LIFs are on their new home ports:
++
+`network interface show -role intercluster -is-home  false`
++
+The command output should be empty, indicating that all intercluster LIFs are on their respective home ports. 
+
+.. If there are any LIFs that are not on their home ports, revert them using the following command:
++
+`network interface revert -lif <intercluster_lif>`
++
+Repeat the command for each intercluster LIF that is not on the home port.
+
+. [[controller_manual_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 
 .. Display the LIFs:
 +
@@ -779,7 +826,7 @@ For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardw
 
 .. Modify all data LIFS to use the common port as the home port:
  +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-port _port-id_`
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
 +
 In the following example, this is "e0d".
 +
@@ -788,10 +835,17 @@ For example:
 ----
 network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
+
+. Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
++
+`broadcast-domain remove-ports -broadcast-domain <broadcast-domain-name> -ports <node-name:port-id>`
++
+Repeat this step for all VLAN and physical ports.
+
 . Remove any VLAN ports using cluster ports as member ports and ifgrps using cluster ports as member ports.
  .. Delete VLAN ports:
  +
-`network port vlan delete -node _node-name_ -vlan-name _portid-vlandid_`
+`network port vlan delete -node <node_name> -vlan-name <portid-vlandid>`
 +
 For example:
 +
@@ -801,7 +855,7 @@ network port vlan delete -node node1 -vlan-name e1c-80
 
 .. Remove physical ports from the interface groups:
 +
-`network port ifgrp remove-port -node _node-name_ -ifgrp _interface-group-name_ -port _portid_`
+`network port ifgrp remove-port -node <node_name> -ifgrp <interface-group-name> -port <portid>`
 +
 For example:
 +
@@ -809,13 +863,13 @@ For example:
 network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 ----
 
-.. Remove VLAN and interface group ports from broadcast domain::
+.. Remove VLAN and interface group ports from broadcast domain:
 +
-`network port broadcast-domain remove-ports -ipspace _ipspace_ -broadcast-domain _broadcast-domain-name_ -ports _nodename:portname,nodename:portname_,..`
+`network port broadcast-domain remove-ports -ipspace <ipspace> -broadcast-domain <broadcast-domain-name> -ports <nodename:portname,nodename:portnamee>,..`
 
-.. Modify interface group ports to use other physical ports as member as needed.:
+.. Modify interface group ports to use other physical ports as member, as needed:
 +
-`ifgrp add-port -node _node-name_ -ifgrp _interface-group-name_ -port _port-id_`
+`ifgrp add-port -node <node_name> -ifgrp <interface-group-name> -port <port-id>`
 
 . Halt the nodes to the LOADER prompt:
 +
@@ -831,40 +885,7 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 . Disconnect the power cables from node_B_1-old and node_B_2-old.
 . Remove the node_B_1-old and node_B_2-old controllers from the rack.
 
-== Updating the switch RCFs to accommodate the new platforms
-
-You must update the switches to a configuration that supports the new platform models.
-
-.About this task
-
-You perform this task at the site containing the controllers that are currently being upgraded. In the examples shown in this procedure we are upgrading site_B first.
-
-The switches at site_A will be upgraded when the controllers on site_A are upgraded.
-
-.Steps
-
-. Prepare the IP switches for the application of the new RCF files.
-+
-Follow the steps in the procedure for your switch vendor:
-+
-link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
-
- ** link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults]
- ** link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
-
-. Download and install the RCF files.
-+
-Follow the steps in the section for your switch vendor from the link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
-
-** link:../install-ip/task_switch_config_broadcom.html[Downloading and installing the Broadcom RCF files]
-
-** link:../install-ip/task_switch_config_cisco.html[Downloading and installing the Cisco IP RCF files]
-
-== Configuring the new controllers
-
-You must rack and install the controllers, perform required setup in Maintenance mode, and then boot the controllers, and verify the LIF configuration on the controllers.
-
-=== Setting up the new controllers
+=== Set up the new controllers
 
 You must rack and cable the new controllers.
 
@@ -876,17 +897,42 @@ The rack space depends on the platform model of the controller modules, the swit
 
 . Properly ground yourself.
 
-. Install the controller modules in the rack or cabinet.
+. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF 800 to an AFF A90 system, you must remove the controller module from the chassis when you replace the controller module. For all other upgrades, skip to <<ip_upgrades_so_sb_4,Step 4>>.
 +
-https://docs.netapp.com/platstor/index.jsp[ONTAP Hardware Systems Documentation^]
+On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This confirms that the drives are firmly seated against the chassis midplane.
++
+image::../media/drw_a800_drive_seated.png[Shows removing controller module from chassis]
 
-. Cable the controllers to the IP switches as described in link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration].
+. [[ip_upgrades_so_sb_4]] Install the controller modules.
++
+NOTE: The installation steps you follow depend on whether your upgrade requires replacement of the controller modules, such as an upgrade from an AFF 800 to an AFF A90 system. 
++
+[role="tabbed-block"]
+====
+.Replacing controller modules
+--
+Installing the new controllers separately is not applicable for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers, as shown in the image below.
 
-** link:[Cabling the IP switches]
+The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
+
+image::../media/a90_a70_pcm_swap.png[Shows controller module swap]
+
+-- 
+.All other upgrades
+--
+Install the controller modules in the rack or cabinet.
+--
+====
+
+. Cable the controllers' power, serial console, and management connections as described in link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
++
+Do not connect any other cables that were disconnected from old controllers at this time.
++
+https://docs.netapp.com/us-en/ontap-systems/index.html[ONTAP Hardware Systems Documentation^]
 
 . Power up the new nodes and boot them to Maintenance mode.
 
-=== Restoring the HBA configuration
+=== Restore the HBA configuration
 
 Depending on the presence and configuration of HBA cards in the controller module, you need to configure them correctly for your site's usage.
 
@@ -909,19 +955,19 @@ h| If you have this type of HBA and desired mode... h| Use this command...
 a|
 CNA FC
 a|
-`ucadmin modify -m fc -t initiator _adapter-name_`
+`ucadmin modify -m fc -t initiator <adapter-name>`
 a|
 CNA Ethernet
 a|
-`ucadmin modify -mode cna _adapter-name_`
+`ucadmin modify -mode cna <adapter-name>`
 a|
 FC target
 a|
-`fcadmin config -t target _adapter-name_`
+`fcadmin config -t target <adapter-name>`
 a|
 FC initiator
 a|
-`fcadmin config -t initiator _adapter-name_`
+`fcadmin config -t initiator <adapter-name>`
 |===
 
 . Exit Maintenance mode:
@@ -951,7 +997,7 @@ a|
 `fcadmin show`
 |===
 
-=== Setting the HA state on the new controllers and chassis
+=== Set the HA state on the new controllers and chassis
 
 You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
 
@@ -961,7 +1007,7 @@ You must verify the HA state of the controllers and chassis, and, if necessary, 
 +
 `ha-config show`
 +
-The HA state for all components should be "`mccip`".
+The HA state for all components should be `mccip`.
 
 . If the displayed system state of the controller or chassis is not correct, set the HA state:
 +
@@ -969,21 +1015,92 @@ The HA state for all components should be "`mccip`".
 +
 `ha-config modify chassis mccip`
 
-=== Setting the MetroCluster IP bootarg variables
+. Verify and modify the Ethernet ports connected to NS224 shelves or storage switches.
++
+.. Verify the Ethernet ports connected to NS224 shelves or storage switches:
++
+`storage port show`
++
+.. Set all Ethernet ports connected to Ethernet shelves or storage switches, including shared switches for storage and cluster, to `storage` mode:
++ 
+`storage port modify -p <port> -m storage` 
++
+Example:
++
+----
+*> storage port modify -p e5b -m storage
+Changing NVMe-oF port e5b to storage mode
+----
++
+NOTE: This must be set on all affected ports for a successful upgrade.
++
+Disks from the shelves attached to the Ethernet ports are reported in the `sysconfig -v` output. 
++
+Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] for information on the storage ports for the system you are upgrading to.
+
+.. Verify that `storage` mode is set and confirm that the ports are in the online state:
++
+`storage port show`
+
+. Halt the node: `halt`
++
+The node should stop at the `LOADER>` prompt.
+
+.	On each node, check the system date, time, and time zone: `show date`
+.	If necessary, set the date in UTC or GMT: `set date <mm/dd/yyyy>`
+.	Check the time by using the following command at the boot environment prompt: `show time`
+.	If necessary, set the time in UTC or GMT: `set time <hh:mm:ss>`
+
+.	Save the settings: `saveenv`
+.	Gather environment variables: `printenv`
+
+=== Update the switch RCFs to accommodate the new platforms
+
+You must update the switches to a configuration that supports the new platform models.
+
+.About this task
+
+You perform this task at the site containing the controllers that are currently being upgraded. In the examples shown in this procedure, we are upgrading site_B first.
+
+The switches at site_A will be upgraded when the controllers on site_A are upgraded.
+
+.Steps
+
+. Prepare the IP switches for the application of the new RCF files.
++
+Follow the steps in the procedure for your switch vendor:
++
+link:../install-ip/concept_considerations_differences.html[MetroCluster IP installation and configuration]
+
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[[Reset the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_cisco.html#resetting-the-cisco-ip-switch-to-factory-defaults[Reset the Cisco IP switch to factory defaults]
+** link:../install-ip/task_switch_config_nvidia.html#reset-the-nvidia-ip-sn2100-switch-to-factory-defaults[Reset the NVIDIA IP SN2100 switch to factory defaults] 
+
+. Download and install the RCF files.
++
+Follow the steps in the section for your switch vendor:
+
+** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Download and install the Broadcom RCF files]
+
+** link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Download and install the Cisco IP RCF files]
+
+** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP SN2100 switch RCF files]
+
+=== Set the MetroCluster IP bootarg variables
 
 Certain MetroCluster IP bootarg values must be configured on the new controller modules. The values must match those configured on the old controller modules.
 
 .About this task
 
-In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Gathering information before the upgrade].
+In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in <<gather_info_so_sb,Gather information before the upgrade>>.
 
 .Steps
 
 . If the nodes being upgraded are AFF A400, FAS8300, or FAS8700 models, set the following bootargs at the LOADER prompt:
 +
-`setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
-`setenv bootarg.mcc.port_b_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id_`
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
 NOTE: If the interfaces are using the default VLANs, the vlan-id is not necessary.
 
@@ -1018,9 +1135,9 @@ setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,
 
 . If the nodes being upgraded are not systems listed in the previous step, at the LOADER prompt for each of the surviving nodes, set the following bootargs with local_IP/mask:
 +
-`setenv bootarg.mcc.port_a_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address_`
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address>`
 +
-`setenv bootarg.mcc.port_b_ip_config _local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address_`
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address>`
 +
 The following commands set the values for node_B_1-new:
 +
@@ -1038,15 +1155,15 @@ setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,
 
 . At the new nodes' LOADER prompt, set the UUIDs:
 +
-`setenv bootarg.mgwd.partner_cluster_uuid _partner-cluster-UUID_`
+`setenv bootarg.mgwd.partner_cluster_uuid <partner-cluster-UUID>`
 +
-`setenv bootarg.mgwd.cluster_uuid _local-cluster-UUID_`
+`setenv bootarg.mgwd.cluster_uuid <local-cluster-UUID>`
 +
-`setenv bootarg.mcc.pri_partner_uuid _DR-partner-node-UUID_`
+`setenv bootarg.mcc.pri_partner_uuid <DR-partner-node-UUID>`
 +
-`setenv bootarg.mcc.aux_partner_uuid _DR-aux-partner-node-UUID_`
+`setenv bootarg.mcc.aux_partner_uuid <DR-aux-partner-node-UUID>`
 +
-`setenv bootarg.mcc_iscsi.node_uuid _local-node-UUID_`
+`setenv bootarg.mcc_iscsi.node_uuid <local-node-UUID>`
 
 
 .. Set the UUIDs on node_B_1-new.
@@ -1073,15 +1190,35 @@ setenv bootarg.mcc.aux_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
 setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 ----
 
-. If the original systems were configured for ADP, at each of the replacement nodes' LOADER prompt, enable ADP:
+. Determine whether the original systems were configured for Advanced Drive Partitioning (ADP) by running the following command from the site that is up:
++
+`disk show`
++ 
+The "container type" column displays "shared" in the `disk show` output if ADP is configured. If "container type" has any other value, ADP is not configured on the system. The following example output shows a system configured with ADP:
++
+----
+::> disk show
+                    Usable               Disk    Container   Container
+Disk                Size       Shelf Bay Type    Type        Name      Owner
+
+Info: This cluster has partitioned disks. To get a complete list of spare disk
+      capacity use "storage aggregate show-spare-disks".
+----------------    ---------- ----- --- ------- ----------- --------- --------
+1.11.0              894.0GB    11    0   SSD      shared     testaggr  node_A_1
+1.11.1              894.0GB    11    1   SSD      shared     testaggr  node_A_1
+1.11.2              894.0GB    11    2   SSD      shared     testaggr  node_A_1
+----
+
+
+. If the original systems were configured with partitioned disks for ADP, enable it at the `LOADER` prompt for each replacement node:
 +
 `setenv bootarg.mcc.adp_enabled true`
 
 . Set the following variables:
 +
-`setenv bootarg.mcc.local_config_id _original-sys-id_`
+`setenv bootarg.mcc.local_config_id <original-sys-id>`
 +
-`setenv bootarg.mcc.dr_partner _dr-partner-sys-id_`
+`setenv bootarg.mcc.dr_partner <dr-partner-sys-id>`
 +
 NOTE: The `setenv bootarg.mcc.local_config_id` variable must be set to the sys-id of the *original* controller module, node_B_1-old.
 
@@ -1113,7 +1250,7 @@ setenv bootarg.mcc.dr_partner 537403323
 +
 `setenv bootarg.kmip.kmip.init.interface`
 
-=== Reassigning root aggregate disks
+=== Reassign root aggregate disks
 
 Reassign the root aggregate disks to the new controller module, using the sysids gathered earlier.
 
@@ -1132,6 +1269,8 @@ NOTE: Root aggregate disks are the only disks that must be reassigned during the
 . Display the disks on node_B_1-new from the Maintenance mode prompt:
 +
 `disk show -a`
++
+CAUTION: Before you proceed with disk reassignment, you must verify that the pool0 and pool1 disks belonging to the node's root aggregate are displayed in the `disk show` output. In the following example, the output lists the pool0 and pool1 disks owned by node_B_1-old.
 +
 The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (537403322). This example does not show drives owned by other nodes in the MetroCluster configuration.
 +
@@ -1161,16 +1300,16 @@ h| If you are using ADP... h| Then use this command...
 a|
 Yes
 a|
-`disk reassign -s _old-sysid_ -d _new-sysid_ -r _dr-partner-sysid_`
+`disk reassign -s <old-sysid> -d <new-sysid> -r <dr-partner-sysid>`
 a|
 No
 a|
-`disk reassign -s _old-sysid_ -d _new-sysid_`
+`disk reassign -s <old-sysid> -d <new-sysid>`
 |===
 
 . Reassign the root aggregate disks on the drive shelves to the new controllers:
 +
-`disk reassign -s old-sysid -d new-sysid`
+`disk reassign -s <old-sysid> -d <new-sysid>`
 +
 The following example shows reassignment of drives in a non-ADP configuration:
 +
@@ -1214,7 +1353,7 @@ aggr0_node_B_1           online          raid_dp, aggr         root, nosnap=on,
                                          64-bit
 ----
 
-=== Booting up the new controllers
+=== Boot up the new controllers
 
 You must boot the new controllers, taking care to ensure that the bootarg variables are correct and, if needed, perform the encryption recovery steps.
 
@@ -1225,20 +1364,20 @@ You must boot the new controllers, taking care to ensure that the bootarg variab
 `halt`
 . If external key manager is configured, set the related bootargs:
 +
-`setenv bootarg.kmip.init.ipaddr _ip-address_`
+`setenv bootarg.kmip.init.ipaddr <ip-address>`
 +
-`setenv bootarg.kmip.init.netmask _netmask_`
+`setenv bootarg.kmip.init.netmask <netmask>`
 +
-`setenv bootarg.kmip.init.gateway _gateway-address_`
+`setenv bootarg.kmip.init.gateway <gateway-addres>`
 +
-`setenv bootarg.kmip.init.interface _interface-id_`
+`setenv bootarg.kmip.init.interface <interface-id>`
 . Check if the partner-sysid is the current:
 +
 `printenv partner-sysid`
 +
 If the partner-sysid is not correct, set it:
 +
-`setenv partner-sysid _partner-sysID_`
+`setenv partner-sysid <partner-sysID>`
 
 . Display the ONTAP boot menu:
 +
@@ -1287,7 +1426,7 @@ Use the steps in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchov
 +
 If the partner-sysid is not correct, set it:
 +
-`setenv partner-sysid _partner-sysID_`
+`setenv partner-sysid <partner-sysID>`
 
 . If root encryption is used, select the boot menu option again for your key management configuration.
 +
@@ -1330,7 +1469,7 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 a|
 External key management
 a|
-`security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag _node-name_`
+`security key-manager external restore -vserver <SVM> -node <node> -key-server <host_name\|IP_address:port> -key-id key_id -key-tag key_tag <node_name>`
 
 For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys].
 
@@ -1340,6 +1479,12 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
  .. View the broadcast domains:
 +
 `network port broadcast-domain show`
+
+.. If a new broadcast domain is created for the data ports on the newly upgraded controllers, delete the broadcast domain:
++
+NOTE: Only delete the the new broadcast domain. Do not delete any of the broadcast domains that existed before starting the upgrade.
++
+`broadcast-domain delete -broadcast-domain <broadcast_domain_name>`
 
 .. Add any ports to a broadcast domain as needed.
 +
@@ -1353,11 +1498,11 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-58
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups]
 
-=== Verifying and restoring LIF configuration
+=== Verify and restore LIF configuration
 
 Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the beginning of the upgrade procedure.
 
-.About this tsak
+.About this task
 
 * This task is performed on site_B.
 * See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Mapping ports from the old nodes to the new nodes].
@@ -1372,7 +1517,7 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 
 .. Override the port configuration to ensure proper LIF placement:
 +
-`vserver config override -command "network interface modify -vserver _vserver_name_ -home-port _active_port_after_upgrade_ -lif _lif_name_ -home-node _new_node_name_"`
+`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>`
 +
 When entering the network interface modify command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the network `interface modify` using autocomplete and then enclose it in the `vserver config override` command.
 
@@ -1381,11 +1526,11 @@ When entering the network interface modify command within the `vserver config ov
 `set -privilege admin`
 . Revert the interfaces to their home node:
 +
-`network interface revert * -vserver _vserver-name_`
+`network interface revert * -vserver <svm-name>`
 +
 Perform this step on all SVMs as required.
 
-== Switching back the MetroCluster configuration
+== Switch back the MetroCluster configuration
 
 In this task, you will perform the switchback operation, and the MetroCluster configuration returns to normal operation. The nodes on site_A are still awaiting upgrade.
 
@@ -1440,7 +1585,7 @@ Remote: cluster_A         Configuration state configured
 +
 If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the `metrocluster config-replication resync-status show` command. This command is at the advanced privilege level.
 
-== Checking the health of the MetroCluster configuration
+== Check the health of the MetroCluster configuration
 
 After upgrading the controller modules you must verify the health of the MetroCluster configuration.
 
@@ -1473,7 +1618,7 @@ This task can be performed on any node in the MetroCluster configuration.
 +
 `storage failover show`
 
-== Upgrading the nodes on cluster_A
+== Upgrade the nodes on cluster_A
 
 You must repeat the upgrade tasks on cluster_A.
 
@@ -1483,7 +1628,7 @@ You must repeat the upgrade tasks on cluster_A.
 +
 As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
 
-== Restoring Tiebreaker or Mediator monitoring
+== Restore Tiebreaker or Mediator monitoring
 
 After completing the upgrade of the MetroCluster configuration, you can resume monitoring with the Tiebreaker or Mediator utility.
 
@@ -1510,7 +1655,7 @@ a|
 Refer to the product documentation.
 |===
 
-== Sending a custom AutoSupport message after maintenance
+== Send a custom AutoSupport message after maintenance
 
 After completing the upgrade, you should send an AutoSupport message indicating the end of maintenance, so automatic case creation can resume.
 
@@ -1526,5 +1671,7 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 
 If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
 
+// 2024 Jul 18, ONTAPDOC-2213
+// 2024 Jun 17, ONTAPDOC-1735
 // BURT 1448684, 02 FEB 2022
 // 2023-11-09, ONTAPDOC-919

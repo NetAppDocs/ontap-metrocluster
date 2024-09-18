@@ -14,34 +14,178 @@ The port usage in a MetroCluster IP configuration depends on the switch model an
 
 Review these considerations before using the tables:
 
-* At least one MetroCluster configuration or DR group must support switch attached NS224 shelves.
+* At least one MetroCluster configuration or DR group must support switch-attached NS224 shelves.
 * Platforms that do not support switch-attached NS224 shelves can only be connected as a second MetroCluster configuration or as a second DR group.
 * The RcfFileGenerator only shows eligible platforms when the first platform is selected.
 * Connecting one eight-node or two four-node MetroCluster configurations requires ONTAP 9.14.1 or later.
 
-== Cabling an AFF A320, AFF C400, ASA C400, AFF A400, ASA A400, AFF A700, AFF C800, ASA C800, AFF A800, AFF A900, or ASA A900 system to a Cisco 9336C-FX2 shared switch
+== Choose the correct cabling table for your configuration 
 
-image::../media/mcc_ip_cabling_a320_c400_a400_a700_c800_a800_a900_to_cisco_9336c_shared_switch.png[]
+Review the correct port assignments table for your configuration. There are two sets of cabling tables in this section: 
+
+* <<tables_connecting_ns224, Cabling tables for controllers connecting to switch-attached NS224 shelves>>
+* <<tables_not_connecting_ns224,Cabling tables for controllers not connecting to switch-attached NS224 shelves>>
+
+[[tables_connecting_ns224]]
+=== Controllers connecting to switch-attached NS224 shelves
+
+Determine which port assignments table you should follow for controllers connecting to switch-attached NS224 shelves.
+
+[cols=2*,options="header"]
+|===
+| Platform 
+| Use this cabling table...
+|
+AFF A320
+
+AFF C400, ASA C400 
+
+AFF A400, ASA A400 |  <<table_1_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 1) >> 
+|  
+AFF A700
+
+AFF C800, ASA C800, AFF A800
+
+AFF A900, ASA A900 | <<table_2_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 2) >>
+| AFF A90
+
+AFF A70
+
+AFF A1K
+
+*Note:* These systems require ONTAP 9.15.1 or later.
+| <<table_3_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 3) >> 
+
+|===
+
+[[table_1_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 1)
+
+Review the platform port assignments to cable an AFF A320, AFF C400, ASA C400, AFF A400, or ASA A400 system that is connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
+
+image::../media/mcc_ip_cabling_a320_c400_a400_to_cisco_9336c_shared_switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
 
 *Note 1*: If you are using an X91440A adapter (40Gbps), then use either ports e4a and e4e or e4a and e8a. If you are using an X91153A adapter (100Gbps), then use either ports e4a and e4b or e4a and e8a.
 
-== Cabling an AFF A150, ASA A150, FAS2750 or AFF A220 system to a Cisco 9336C-FX2 shared switch
+[[table_2_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 2)
 
-image::../media/mcc_ip_cabling_a_aff_a150_asa_a150_fas27500_aff_a220_to_a_cisco_9336c_shared_switch.png[]
+Review the platform port assignments to cable an AFF A700, AFF C800, ASA C800, AFF A800, AFF A900, or ASA A900 system that is connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
 
-
-== Cabling a FAS500f, AFF C250, ASA C250, AFF A250, or ASA A250 system to a Cisco 9336C-FX2 shared switch
-
-image::../media/mcc_ip_cabling_c250_asa_c250_a250_asa_a250_to_cisco_9336c_shared_switch.png[]
-
-== Cabling a FAS8200 or AFF A300 system to a Cisco 9336C-FX2 shared switch					
-							
-image::../media/mcc_ip_cabling_fas8200_affa300_to_cisco_9336c_shared_switch.png[]
-
-== Cabling a FAS8300, FAS8700, FAS9000, or FAS9500 system to a Cisco 9336C-FX2 shared switch	
-
-image::../media/mcc_ip_cabling_fas8300_fas8700_fas9000_fas9500_to_cisco_9336c_shared_switch.png[]
+image::../media/mcc_ip_cabling_a700_c800_a800_a900_to_cisco_9336c_shared_switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
 
 *Note 1*: If you are using an X91440A adapter (40Gbps), then use either ports e4a and e4e or e4a and e8a. If you are using an X91153A adapter (100Gbps), then use either ports e4a and e4b or e4a and e8a.
 
+[[table_3_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 3)
+
+Review the platform port assignments to cable an AFF A90, AFF A70, or AFF A1K system that is connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
+
+NOTE: The systems in this table require ONTAP 9.15.1 or later. 
+
+image::../media/mcc_ip_cabling_a70_a90_a1k_to_cisco_9336c_shared_switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
+
+For a switch-attached cluster, the identical cluster ports on the AFF A90 or AFF A70 nodes should be on the same switch. For example, e1a on node1 and e1a on node2 should be attached to one cluster switch. Similarly, the second cluster port from both nodes should be attached to the second cluster switch. Cross-connection of shared cluster HA ports, where e1a from node1 is connected to IP_Switch_x_1 and e1a from node2 is connected to IP_Switch_x_2, prevents HA communication failure.
+
+
+[[tables_not_connecting_ns224]]
+=== Controllers not connecting to switch-attached NS224 shelves
+
+Determine which port assignments table you should follow for controllers that are not connecting to switch-attached NS224 shelves.
+
+[cols=2*,options="header"]
+|===
+| Platform 
+| Use this cabling table...
+| AFF A150, ASA A150
+
+FAS2750, AFF A220 | <<table_4_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 4)>>
+| 
+FAS500f
+
+AFF C250, ASA C250 
+
+AFF A250, ASA A250| <<table_5_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 5)>>
+| FAS8200, AFF A300 | <<table_6_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 6)>>
+|  
+AFF A320
+
+FAS8300, AFF C400, ASA C400, FAS8700
+
+AFF A400, ASA A400 | <<table_7_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 7)>>
+
+|  
+FAS9000, AFF A700
+
+AFF C800, ASA C800, AFF A800, ASA A800
+
+
+FAS9500, AFF A900, ASA A900 |  <<table_8_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 8)>>
+
+|  
+AFF A70
+
+AFF A90
+
+AFF A1K
+
+*Note:* These systems require ONTAP 9.15.1 or later.
+
+| <<table_9_cisco_9336c_fx2,Cisco 9336C-FX2 shared switch platform port assignments (group 9)>>
+
+|===
+
+
+[[table_4_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 4)
+
+Review the platform port assignments to cable an AFF A150, ASA A150, FAS2750, or AFF A220 system that is not connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
+
+
+image::../media/mcc-ip-cabling-a-aff-a150-asa-a150-fas2750-aff-a220-to-a-cisco-9336c-shared-switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
+
+[[table_5_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 5)
+
+Review the platform port assignments to cable a FAS500f, AFF C250, ASA C250, AFF A250, or ASA A250 system that is not connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
+
+
+image::../media/mcc-ip-cabling-c250-asa-c250-a250-asa-a250-to-cisco-9336c-shared-switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
+
+[[table_6_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 6)				
+
+Review the platform port assignments to cable a FAS8200 or AFF A300 system that is not connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
+
+
+image::../media/mcc-ip-cabling-fas8200-affa300-to-cisco-9336c-shared-switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
+
+[[table_7_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 7)	
+
+Review the platform port assignments to cable an AFF A320, FAS8300, AFF C400, ASA C400, FAS8700, AFF A400, or ASA A400 system that is not connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
+
+image::../media/mcc_ip_cabling_a320_fas8300_a400_fas8700_to_a_cisco_9336c_shared_switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
+
+*Note 1*: If you are using an X91440A adapter (40Gbps), then use either ports e4a and e4e or e4a and e8a. If you are using an X91153A adapter (100Gbps), then use either ports e4a and e4b or e4a and e8a.
+
+[[table_8_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 8)	
+
+Review the platform port assignments to cable a FAS9000, AFF A700, AFF C800, ASA C800, AFF A800, ASA A800, FAS9500, AFF A900, or ASA A900 system that is not connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
+
+image::../media/mcc_ip_cabling_a700_a800_fas9000_fas9500_to_cisco_9336c_shared_switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
+
+*Note 1*: If you are using an X91440A adapter (40Gbps), then use either ports e4a and e4e or e4a and e8a. If you are using an X91153A adapter (100Gbps), then use either ports e4a and e4b or e4a and e8a.
+
+[[table_9_cisco_9336c_fx2]]
+.Cisco 9336C-FX2 shared switch platform port assignments (group 9)	
+
+Review the platform port assignments to cable an AFF A70, AFF A90, or AFF A1K system that is not connecting switch-attached NSS24 shelves to a Cisco 9336C-FX2 shared switch: 
+
+NOTE: The systems in this table require ONTAP 9.15.1 or later. 
+
+image::../media/mcc_ip_cabling_a70_a90_a1k_to_no_shelves_cisco_9336c_shared_switch.png[Shows Cisco 9336C-FX2 shared switch platform port assignments]
+
+// 2024 Jun 07, ONTAPDOC-1734
 // 2023 Oct 25, ONTAPDOC-1201
