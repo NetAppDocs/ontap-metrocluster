@@ -286,7 +286,7 @@ When the switch reboots, you can apply a new configuration using the steps in <<
 
 == [[Download-and-install]]Download and install the NVIDIA RCF files
 
-You must download and install the switch RCF file to each switch in the MetroCluster IP configuration.
+You must generate and install the switch RCF file to each switch in the MetroCluster IP configuration.
 
 
 .Before you begin
@@ -386,6 +386,43 @@ cumulus@IP_switch_A_1:mgmt:~$
 +
 NOTE: When you set the DAC option for multiple switch ports, you only need to reboot the switch once.
 
+== Set the switch port speed for the MetroCluster IP interfaces
+
+.About this task
+
+Use this procedure to set the switch port speed to 100G for the following systems:
+
+* AFF A70  
+* AFF A90
+* AFF A1K 
+
+.Step
+
+. Use the RCF file with the `runCmd` option to set the speed. This applies the setting and saves the configuration.
++
+The following commands set the speed for the MetroCluster interfaces `swp7` and `swp8`:
++
+[source,cli]
+sudo python3 SN2100_v2.20 _Switch-A1.py runCmd swp7 speed 100
++
+[source,cli]
+sudo python3 SN2100_v2.20 _Switch-A1.py runCmd swp8 speed 100
++
+*Example*
++
+----
+cumulus@Switch-A-1:mgmt:~$ sudo python3 SN2100_v2.20_Switch-A1.py runCmd swp7 speed 100
+[sudo] password for cumulus: <password>
+    Running cumulus version  : 5.4.0
+    Running RCF file version : v2.20
+    Running command: Setting switchport swp7 to 100G speed
+    runCmd: 'nv set interface swp7 link auto-negotiate off', ret: 0
+    runCmd: 'nv set interface swp7 link speed 100G', ret: 0
+    runCmd: committed, ret: 0
+    Completion: SUCCESS
+cumulus@Switch-A-1:mgmt:~$
+----
+
 == Disable unused ISL ports and port channels
 
 NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. 
@@ -432,7 +469,7 @@ The following example command disables port "swp14":
 Repeat this step for each identified unused port or port channel.
 
 
-
+// 2024 Jun 17, ONTAPDOC-1856
 // 2024 May 02, ONTAPDOC-1916, ONTAPDOC-1805
 // 25 July 2023, BURT 1524708, 1540349, GH issue 296
 // 2023-06-14, GH issue #257 

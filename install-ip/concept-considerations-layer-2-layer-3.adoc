@@ -12,12 +12,13 @@ summary: Depending on your requirements, you can use shared layer 2 or layer 3 n
 [.lead]
 Depending on your requirements, you can use shared layer 2 or layer 3 networks to deploy MetroCluster. 
 
-Beginning with ONTAP 9.6, MetroCluster IP configurations with supported Cisco switches can share existing networks for Inter-Switch Links (ISLs) instead of using dedicated MetroCluster ISLs. This topology is known as _shared layer 2 networks_.
+Beginning with ONTAP 9.6, MetroCluster IP configurations with supported switches can share existing networks for Inter-Switch Links (ISLs) instead of using dedicated MetroCluster ISLs. This topology is known as _shared layer 2 networks_.
 
 Beginning with ONTAP 9.9.1, MetroCluster IP configurations can be implemented with IP-routed (layer 3) backend connections. This topology is known as _shared layer 3 networks_.
 
 [NOTE] 
 ====
+* Not all features are supported in all network topologies.
 * You must verify that you have adequate network capacity and that the ISL size is appropriate for your configuration. Low latency is critical for replication of data between the MetroCluster sites. Latency issues on these connections can impact client I/O.
 * All references to MetroCluster backend switches refer to switches that are NetApp-validated switches or MetroCluster-compliant. See link:mcc-compliant-netapp-validated-switches.html[NetApp-validated and MetroCluster-compliant switches] for more details.
 ====
@@ -61,9 +62,9 @@ The intermediate customer-provided switches must meet the following requirements
 
 .VLAN configuration in ONTAP 
 
-You can only specify the VLAN during interface creation. After the MetroCluster interfaces are created, the VLAN ID cannot not be changed. You can configure other VLANs during interface creation but they must be within the range 10 to 20 or within the range 101 to 4096 (or the number supported by the switch vendor, whichever is the lower number).
+You can only specify the VLAN during interface creation. You can configure the default VLANs 10 and 20, or VLANs within the range 101 to 4096 (or the number supported by the switch vendor, whichever is the lower number). After the MetroCluster interfaces are created, you cannot change the VLAN ID. 
 
-NOTE: Some switch vendors might reserve the use of certain VLANs. 
+NOTE: Some switch vendors might reserve the use of certain VLANs.  
 
 The following systems do not require VLAN configuration within ONTAP. The VLAN is specified by the switch port configuration:
 
@@ -271,4 +272,5 @@ You assign `the MetroClusterIP_ISL_Ingress_Classify` policy map to the ISL ports
 
 You assign the `MetroClusterIP_ISL_Ingress_Match` policy map to the ISL ports on the intermediate switch that is carrying MetroCluster traffic but does not connect the Broadcom switch.
 
+// 2024 Jul 24, GH 411
 // 2024 Mar 04, ONTAPDOC-928 (ISL rework)
