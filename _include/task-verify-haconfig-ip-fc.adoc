@@ -1,0 +1,85 @@
+[CAUTION] 
+====
+If the HA state of the controller module and chassis is incorrect, you cannot configure the MetroCluster without re-initializing the node. You must correct the setting using this procedure, and then initialize the system by using one of the following procedures:
+
+* In a MetroCluster IP configuration, follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_sw_config_verify_haconfig.html[Restore system defaults on a controller module].
+
+* In a MetroCluster FC configuration, follow the steps in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_the_mcc_software_in_ontap.html#restoring-system-defaults-and-configuring-the-hba-type-on-a-controller-module[Restore system defaults and configuring the HBA type on a controller module].
+====
+
+.Before you begin
+
+Verify that the system is in Maintenance mode.
+
+.Steps
+
+. In Maintenance mode, display the HA state of the controller module and chassis:
++
+`ha-config show`
++
+The correct HA state depends on your MetroCluster configuration.
++
+|===
+
+h| MetroCluster configuration type h| HA state for all components...
+
+a|
+Eight or four node MetroCluster FC configuration
+a|
+mcc
+a|
+Two-node MetroCluster FC configuration
+a|
+mcc-2n
+a|
+Eight or four node MetroCluster IP configuration
+a|
+mccip
+|===
+
+. If the displayed system state of the controller is not correct, set the correct HA state for your configuration on the controller module:
++
+|===
+
+h| MetroCluster configuration type  h| Command
+
+a|
+Eight or four node MetroCluster FC configuration
+a|
+`ha-config modify controller mcc`
+a|
+Two-node MetroCluster FC configuration
+a|
+`ha-config modify controller mcc-2n`
+a|
+Eight or four node MetroCluster IP configuration
+a|
+`ha-config modify controller mccip`
+|===
+
+. If the displayed system state of the chassis is not correct, set the correct HA state for your configuration on the chassis:
++
+|===
+
+h| MetroCluster configuration type h| Command
+
+a|
+Eight or four node MetroCluster FC configuration
+a|
+`ha-config modify chassis mcc`
+a|
+Two-node MetroCluster FC configuration
+a|
+`ha-config modify chassis mcc-2n`
+a|
+Eight or four node MetroCluster IP configuration
+a|
+`ha-config modify chassis mccip`
+|===
+
+. Boot the node to ONTAP:
++
+`boot_ontap`
+. Repeat this entire procedure to verify the HA state on each node in the MetroCluster configuration.
+
+// 2024 Aug 20, GH issue 363

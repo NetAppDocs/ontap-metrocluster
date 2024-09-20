@@ -7,30 +7,13 @@ summary: In a MetroCluster IP configuration that is not preconfigured at the fac
 = Verifying the ha-config state of components
 
 [.lead]
-In a MetroCluster IP configuration that is not preconfigured at the factory, you must verify that the ha-config state of the controller and chassis components is set to "`mccip`" so that they boot up properly. For systems received from the factory, this value is preconfigured and you do not need to verify it.
+In a MetroCluster IP configuration, you must verify that the ha-config state of the controller and chassis components is set to "`mccip`" so that they boot up properly. Although this value should be preconfigured on systems received from the factory, you should still verify the setting before proceeding.
 
-.Before you begin
-
-The system must be in Maintenance mode.
-
-.Steps
-
-. Display the HA state of the controller module and chassis:
-+
-`ha-config show`
-+
-The controller module and chassis should show the value "`mccip`".
-
-. If the displayed system state of the controller is not "`mccip`", set the HA state for the controller:
-+
-`ha-config modify controller mccip`
-. If the displayed system state of the chassis is not "`mccip`", set the HA state for the chassis:
-+
-`ha-config modify chassis mccip`
-. Repeat these steps on each node in the MetroCluster configuration.
+include::../_include/task-verify-haconfig-ip-fc.adoc[]
 
 
 
+// 2024 Aug 20, GH issue 363
 // BURT 1180776, 22 APR 2021
 // BURT 1380267
 // BURT 1381553
