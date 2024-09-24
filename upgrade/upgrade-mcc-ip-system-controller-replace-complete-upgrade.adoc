@@ -2,14 +2,14 @@
 permalink: upgrade/upgrade-mcc-ip-system-controller-replace-complete-upgrade.html
 sidebar: sidebar
 keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
-summary: 'Set up the new controllers before you netboot the controllers to confirm the new nodes are running the same version of ONTAP as the original nodes.'
+summary: 'Verify the network reachability and complete the controller upgrade process.'
 ---
 = Complete the upgrade
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Verify the network reachability and complete the controller upgrade.  
+Verify the network reachability and complete the controller upgrade process.  
 
 The automation operation runs verification system checks and then pauses so you can verify the network reachability. After verification, the resource regain phase is initiated and the automation operation executes switchback at site A and pauses at the post upgrade checks. After you resume the automation operation, it performs the post upgrade checks and if no errors are detected, marks the upgrade as complete.
 
@@ -32,7 +32,7 @@ If the post upgrade checks did not report any errors, the upgrade is complete.
 
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
 
-[[man_reconfig_mediator]]
+
 == Reconfigure ONTAP Mediator 
 
 Manually configure ONTAP Mediator which was automatically removed before you started the upgrade. 
@@ -46,6 +46,6 @@ If the MetroCluster configuration was previously configured for monitoring by th
 . Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations].
 
 
-=== Configure end-to-end encryption
+== Configure end-to-end encryption
 
 If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
