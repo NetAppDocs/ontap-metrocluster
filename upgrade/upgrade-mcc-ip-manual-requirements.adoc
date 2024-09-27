@@ -1,0 +1,56 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-requirements.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Verify your system meets all the requirements before performing the controller upgrade.'
+---
+= Requirements for using this upgrade procedure
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Verify your system meets all the requirements before performing the controller upgrade. 
+
+== Platforms supported by this procedure
+
+* The platforms must be running ONTAP 9.8 or later.
+* The target (new) platform must be a different model than the original platform.
+* You can only upgrade specific platform models using this procedure in a MetroCluster IP configuration. 
+** For information on what platform upgrade combinations are supported review the MetroCluster IP upgrade table in  link:concept_choosing_controller_upgrade_mcc.html[Choose a controller upgrade procedure].
++
+Refer to https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/concept_choosing_controller_upgrade_mcc.html#choosing-a-procedure-that-uses-the-switchover-and-switchback-process[Choosing an upgrade or refresh method] for additional procedures.
+
+== Requirements
+
+* This procedure applies to controller modules in a MetroCluster IP configuration.
+* All controllers in the configuration should be upgraded during the same maintenance period.
++
+Operating the MetroCluster configuration with different controller types is not supported outside of this maintenance activity.
+
+* The MetroCluster IP switches (switch type, vendor, and model) and firmware version must be supported on the existing and new controllers in your upgrade configuration. 
++
+Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] or the link:https://imt.netapp.com/matrix/[IMT^] for supported switches and firmware versions.
+
+* If it is enabled on your system, link:../maintain/task-configure-encryption.html#disable-end-to-end-encryption[disable end-to-end encryption] before performing the upgrade. 
+
+* If the new platform has fewer slots than the original system, or if it has fewer or different types of ports, you might need to add an adapter to the new system.
+
+* You reuse the IP addresses, netmasks, and gateways of the original platforms on the new platforms.
+
+The following example names are used in this procedure:
+
+* site_A
+ ** Before upgrade:
+  *** node_A_1-old
+  *** node_A_2-old
+ ** After upgrade:
+  *** node_A_1-new
+  *** node_A_2-new
+* site_B
+ ** Before upgrade:
+  *** node_B_1-old
+  *** node_B_2-old
+ ** After upgrade:
+  *** node_B_1-new
+  *** node_B_2-new
+  
