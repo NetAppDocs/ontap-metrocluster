@@ -4,12 +4,14 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
 summary: 'To prepare for the controller upgrade, you perform system prechecks and collect the configuration information.'
 ---
-= Perform system prechecks before the upgrade
+= Prepare the system for upgrade
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 To prepare for the controller upgrade, you perform system prechecks and collect the configuration information.
+
+== Perform system prechecks 
 
 Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must manually link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[re-configure the ONTAP Mediator service].
 
@@ -44,4 +46,132 @@ Check if this error occurred because you have unmirrored aggregates or due to an
 .	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
 
 
+== Gather information before the upgrade
+
+Before upgrading, if the root volume is encrypted, you must gather the backup key and other information to boot the new controllers with the old encrypted root volumes.
+
+.About this task
+
+This task is performed on the existing MetroCluster IP configuration.
+
+.Steps
+
+. Label the cables for the existing controllers, so you can easily identify the cables when setting up the new controllers.
+. Display the commands to capture the backup key and other information:
++
+`system controller replace show`
++
+Run the commands listed under the `show` command from the partner cluster.
++
+The `show` command output displays three tables containing the MetroCluster interface IPs, system IDs, and system UUIDs. This information is required later in the procedure to set the bootargs when you boot the new node. 
+
+. Gather the system IDs of the nodes in the MetroCluster configuration:
++
+--
+`metrocluster node show -fields node-systemid,dr-partner-systemid`
+
+During the upgrade procedure, you will replace these old system IDs with the system IDs of the new controller modules.
+
+In this example for a four-node MetroCluster IP configuration, the following old system IDs are retrieved:
+
+** node_A_1-old: 4068741258
+** node_A_2-old: 4068741260
+** node_B_1-old: 4068741254
+** node_B_2-old: 4068741256
+
+----
+metrocluster-siteA::> metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
+dr-group-id        cluster           node            node-systemid     ha-partner-systemid     dr-partner-systemid    dr-auxiliary-systemid
+-----------        ---------------   ----------      -------------     -------------------     -------------------    ---------------------
+1                    Cluster_A       Node_A_1-old    4068741258        4068741260              4068741256             4068741256
+1                    Cluster_A       Node_A_2-old    4068741260        4068741258              4068741254             4068741254
+1                    Cluster_B       Node_B_1-old    4068741254        4068741256              4068741258             4068741260
+1                    Cluster_B       Node_B_2-old    4068741256        4068741254              4068741260             4068741258
+4 entries were displayed.
+----
+
+In this example for a two-node MetroCluster IP configuration, the following old system IDs are retrieved:
+
+** node_A_1: 4068741258
+** node_B_1: 4068741254
+
+----
+metrocluster node show -fields node-systemid,dr-partner-systemid
+
+dr-group-id cluster    node          node-systemid dr-partner-systemid
+----------- ---------- --------      ------------- ------------
+1           Cluster_A  Node_A_1-old  4068741258    4068741254
+1           Cluster_B  node_B_1-old  -             -
+2 entries were displayed.
+----
+--
+
+. Gather port and LIF information for each old node.
++
+You should gather the output of the following commands for each node:
+
+ ** `network interface show -role cluster,node-mgmt`
+ ** `network port show -node <node-name> -type physical`
+ ** `network port vlan show -node <node-name>`
+ ** `network port ifgrp show -node <node-name> -instance`
+ ** `network port broadcast-domain show`
+ ** `network port reachability show -detail`
+ ** `network ipspace show`
+ ** `volume show`
+ ** `storage aggregate show`
+ ** `system node run -node <node-name> sysconfig -a`
+ ** `aggr show -r` 
+ ** `disk show`  
+ ** `system node run <node-name> disk show`   
+ ** `vol show -fields type` 
+ ** `vol show -fields type , space-guarantee` 
+ ** `vserver fcp initiator show` 
+ ** `storage disk show`
+ ** `metrocluster configuration-settings interface show` 
+
+. If the MetroCluster nodes are in a SAN configuration, collect the relevant information.
++
+You should gather the output of the following commands:
+
+ ** `fcp adapter show -instance`
+ ** `fcp interface show -instance`
+ ** `iscsi interface show`
+ ** `ucadmin show`
+
+. If the root volume is encrypted, collect and save the passphrase used for key-manager:
++
+`security key-manager backup show`
+. If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
++
+For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Backing up onboard key management information manually^].
+
+.. If Onboard Key Manager is configured:
++
+`security key-manager onboard show-backup`
++
+You will need the passphrase later in the upgrade procedure.
+
+.. If enterprise key management (KMIP) is configured, issue the following commands:
++
+`security key-manager external show -instance`
++
+`security key-manager key query`
+
+. After you finish collecting the configuration information, resume the operation:
++
+`system controller replace resume`
+
+== Remove the existing configuration from Tiebreaker or other monitoring software
+
+Before you start the upgrade, remove the existing configuration from the Tiebreaker or other monitoring software.
+
+If the existing configuration is monitored with the MetroCluster Tiebreaker configuration or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the Tiebreaker or other software prior to replacing the old controller.
+
+.Steps
+
+. link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#removing-metrocluster-configurations[Remove the existing MetroCluster configuration] from the Tiebreaker software.
+
+. Remove the existing MetroCluster configuration from any third-party application that can initiate switchover.
++
+Refer to the documentation for the application.
 
