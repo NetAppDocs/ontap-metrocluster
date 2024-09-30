@@ -27,9 +27,9 @@ This switchover is initiated by a system administrator using System Manager.  Th
 
 * *An unplanned switchover*
 +
-In some cases, when a MetroCluster cluster goes down or the connections between the clusters are down, ONTAP will automatically initiate a switchover procedure so that the cluster that is still running handles the data handling responsibilities of the down cluster.
+In some cases, when a MetroCluster cluster goes down or the connections between the clusters are down, ONTAP automatically initiates a switchover so that the cluster that is still running handles the data handling responsibilities of the cluster that is down.
 +
-At other times, when ONTAP cannot determine the status of one of the clusters, the system administrator of the site that is working initiates the switchover procedure to take control of the data handling responsibilities of the other site.
+At other times, when ONTAP cannot determine the status of one of the clusters, the system administrator of the site that is working initiates the switchover to take control of the data handling responsibilities of the other site.
 
 For any type of switchover procedure, the data servicing capability is returned to the cluster by using a _switchback_ process.
 
@@ -59,7 +59,7 @@ System Manager verifies whether a negotiated switchover is possible.
 
 ... Halt the Site B nodes, click *Close*, and then perform the steps in link:https://docs.netapp.com/us-en/ontap-sm-classic/online-help-96-97/task_performing_unplanned_switchover.html[Performing an unplanned switchover^].
 
-..	If validation fails, and Site B is down, then most likely there is a connection problem. Verify that Site B is really down, then perform the steps in link:https://docs.netapp.com/us-en/ontap-sm-classic/online-help-96-97/task_performing_unplanned_switchover.html[Performing an unplanned switchover^].
+..	If validation fails, and Site B is down, then there is most likely a connection problem. Verify that Site B is down, then perform the steps in link:https://docs.netapp.com/us-en/ontap-sm-classic/online-help-96-97/task_performing_unplanned_switchover.html[Performing an unplanned switchover^].
 
 .	Click *Switchover from Site B to Site A* to initiate the switchover process.
 
@@ -106,14 +106,14 @@ After the switchover request is validated, control is transferred from the remot
 +
 The cluster must be repaired before it is brought online again.
 
-NOTE: After the remote cluster is brought online again, it should not be used for data servicing until you perform a switchback.
+NOTE: After the remote cluster is brought online, it should not be used for data servicing until you perform a switchback.
 
 
 === Perform a switchback (ONTAP 9.8)
 
 .Before you start
 
-Whether the remote cluster was down due to planned maintenance or due to a disaster, it should now be up and running and waiting for the switchback.
+If the remote cluster was down due to planned maintenance or due to a disaster, it should now be up and running and waiting for the switchback.
 
 .Steps
 
@@ -125,9 +125,10 @@ In the *MetroCluster* section, the two clusters are shown.
 
 . In the local cluster (shown on the left), click image:icon_kabob.gif[kebab icon], and select *Take back control*.
 +
-The data is _healed_ first, to ensure data is synchronized and mirrored between both clusters.
+The data is _healed_ first, to verify the data is synchronized and mirrored between both clusters.
 
 . When the data healing is complete, click image:icon_kabob.gif[kebab icon], and select *Initiate switchback*.
 +
-When the switchback is complete, both clusters are active and servicing data requests.  Also, the data is being mirrored and synchronized between the clusters.
+When the switchback is complete, both clusters are active and servicing data requests.  Additionally, the data is being mirrored and synchronized between the clusters.
 
+// 2024 Sep 30, ONTAPDOC-2014
