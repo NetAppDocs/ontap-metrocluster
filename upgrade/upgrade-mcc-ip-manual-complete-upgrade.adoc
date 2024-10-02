@@ -1,0 +1,98 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-complete-upgrade.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Verify the network reachability and complete the controller upgrade process.'
+---
+= Complete the upgrade
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Complete the controller upgrade process.  
+
+== Check the health of the MetroCluster configuration
+
+After upgrading the controller modules you must verify the health of the MetroCluster configuration.
+
+.About this task
+
+This task can be performed on any node in the MetroCluster configuration.
+
+.Steps
+. Verify the operation of the MetroCluster configuration:
+ .. Confirm the MetroCluster configuration and that the operational mode is normal:
+ +
+`metrocluster show`
+ .. Perform a MetroCluster check:
+ +
+`metrocluster check run`
+ .. Display the results of the MetroCluster check:
++
+`metrocluster check show`
+. Verify the MetroCluster connectivity and status.
+ .. Check the MetroCluster IP connections:
++
+`storage iscsi-initiator show`
+ .. Check that the nodes are operating:
++
+`metrocluster node show`
+ .. Check that the MetroCluster IP interfaces are up:
++
+`metrocluster configuration-settings interface show`
+ .. Check that local failover is enabled:
++
+`storage failover show`
+
+== Upgrade the nodes on cluster_A
+
+You must repeat the upgrade tasks on cluster_A.
+
+.Steps
+
+. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Preparing for the upgrade].
++
+As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
+
+== Restore Tiebreaker or Mediator monitoring
+
+After completing the upgrade of the MetroCluster configuration, you can resume monitoring with the Tiebreaker or Mediator utility.
+
+.Steps
+
+. Restore monitoring if necessary, using the procedure for your configuration.
++
+
+|===
+h| If you are using... h| Use this procedure
+
+a|
+Tiebreaker
+a|
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations].
+a|
+Mediator
+a|
+link:../install-ip/concept_mediator_requirements.html
+[Configuring the ONTAP Mediator service from a MetroCluster IP configuration].
+a|
+Third-party applications
+a|
+Refer to the product documentation.
+|===
+
+== Send a custom AutoSupport message after maintenance
+
+After completing the upgrade, you should send an AutoSupport message indicating the end of maintenance, so automatic case creation can resume.
+
+.Steps
+
+. To resume automatic support case generation, send an Autosupport message to indicate that the maintenance is complete.
+ .. Issue the following command:
+ +
+`system node autosupport invoke -node * -type all -message MAINT=end`
+ .. Repeat the command on the partner cluster.
+
+== Configure end-to-end encryption
+
+If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.

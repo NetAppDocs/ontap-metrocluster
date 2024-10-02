@@ -1,0 +1,63 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-switchback.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster IP configuration.'
+---
+= Switch back the MetroCluster configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Perform the switchback operation to return the MetroCluster configuration to normal operation. The nodes on site_A are still awaiting upgrade.
+
+image::../media/mcc_upgrade_cluster_a_switchback.png[]
+
+.Steps
+
+. Issue the `metrocluster node show` command on site_B and check the output.
+ .. Verify that the new nodes are represented correctly.
+ .. Verify that the new nodes are in "Waiting for switchback state."
+. Perform the healing and switchback by running the required commands from any node in the active cluster (the cluster that is not undergoing upgrade).
+ .. Heal the data aggregates:
+ +
+`metrocluster heal aggregates`
+ .. Heal the root aggregates:
++
+`metrocluster heal root`
+ .. Switchback the cluster:
++
+`metrocluster switchback`
+. Check the progress of the switchback operation:
++
+`metrocluster show`
++
+The switchback operation is still in progress when the output displays `waiting-for-switchback`:
++
+----
+cluster_B::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+ Local: cluster_B         Configuration state configured
+                          Mode                switchover
+                          AUSO Failure Domain -
+Remote: cluster_A         Configuration state configured
+                          Mode                waiting-for-switchback
+                          AUSO Failure Domain -
+----
++
+The switchback operation is complete when the output displays normal:
++
+----
+cluster_B::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+ Local: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain -
+Remote: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain -
+----
++
+If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the `metrocluster config-replication resync-status show` command. This command is at the advanced privilege level.

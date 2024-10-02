@@ -1,0 +1,55 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-setup-controllers.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade for a four-node MetroCluster IP configuration.'
+---
+= Set up the new controllers
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You must rack and cable the new controllers.
+
+.Steps
+
+. Plan out the positioning of the new controller modules and storage shelves as needed.
++
+The rack space depends on the platform model of the controller modules, the switch types, and the number of storage shelves in your configuration.
+
+. Properly ground yourself.
+
+. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF 800 to an AFF A90 system, you must remove the controller module from the chassis when you replace the controller module. For all other upgrades, skip to <<ip_upgrades_so_sb_4,Step 4>>.
++
+On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This confirms that the drives are firmly seated against the chassis midplane.
++
+image::../media/drw_a800_drive_seated.png[Shows removing controller module from chassis]
+
+. [[ip_upgrades_so_sb_4]] Install the controller modules.
++
+NOTE: The installation steps you follow depend on whether your upgrade requires replacement of the controller modules, such as an upgrade from an AFF 800 to an AFF A90 system. 
++
+[role="tabbed-block"]
+====
+.Replacing controller modules
+--
+Installing the new controllers separately is not applicable for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. The new controller modules and I/O cards must be swapped after powering off the old controllers, as shown in the image below.
+
+The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
+
+image::../media/a90_a70_pcm_swap.png[Shows controller module swap]
+
+-- 
+.All other upgrades
+--
+Install the controller modules in the rack or cabinet.
+--
+====
+
+. Cable the controllers' power, serial console, and management connections as described in link:../install-ip/using_rcf_generator.html[Cabling the MetroCluster IP switches]
++
+Do not connect any other cables that were disconnected from old controllers at this time.
++
+https://docs.netapp.com/us-en/ontap-systems/index.html[ONTAP Hardware Systems Documentation^]
+
+. Power up the new nodes and boot them to Maintenance mode.

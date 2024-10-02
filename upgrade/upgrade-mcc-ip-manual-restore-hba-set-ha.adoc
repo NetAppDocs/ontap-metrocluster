@@ -1,0 +1,128 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-hba-set-ha.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Configure the HBA cards in the controller module and verify and set the HA state of the controller and chassis.'
+---
+= Restore the HBA configuration and set the HA state
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Configure the HBA cards in the controller module and verify and set the HA state of the controller and chassis. 
+
+== Restore the HBA configuration
+
+Depending on the presence and configuration of HBA cards in the controller module, you need to configure them correctly for your site's usage.
+
+.Steps
+
+. In Maintenance mode configure the settings for any HBAs in the system:
+.. Check the current settings of the ports: `ucadmin show`
+.. Update the port settings as needed.
+
++
+
+|===
+
+h| If you have this type of HBA and desired mode... h| Use this command...
+
+a|
+CNA FC
+a|
+`ucadmin modify -m fc -t initiator <adapter-name>`
+a|
+CNA Ethernet
+a|
+`ucadmin modify -mode cna <adapter-name>`
+a|
+FC target
+a|
+`fcadmin config -t target <adapter-name>`
+a|
+FC initiator
+a|
+`fcadmin config -t initiator <adapter-name>`
+|===
+. Exit Maintenance mode:
++
+`halt`
++
+After you run the command, wait until the node stops at the `LOADER` prompt.
+
+. Boot the node back into Maintenance mode to enable the configuration changes to take effect:
++
+`boot_ontap maint`
+. Verify the changes you made:
++
+
+|===
+
+h| If you have this type of HBA... h| Use this command...
+
+a|
+CNA
+a|
+`ucadmin show`
+a|
+FC
+a|
+`fcadmin show`
+|===
+
+== Set the HA state on the new controllers and chassis
+
+You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
+
+.Steps
+
+. In Maintenance mode, display the HA state of the controller module and chassis:
++
+`ha-config show`
++
+The HA state for all components should be `mccip`.
+
+. If the displayed system state of the controller or chassis is not correct, set the HA state:
++
+`ha-config modify controller mccip`
++
+`ha-config modify chassis mccip`
+
+. Verify and modify the Ethernet ports connected to NS224 shelves or storage switches.
++
+.. Verify the Ethernet ports connected to NS224 shelves or storage switches:
++
+`storage port show`
++
+.. Set all Ethernet ports connected to Ethernet shelves or storage switches, including shared switches for storage and cluster, to `storage` mode:
++ 
+`storage port modify -p <port> -m storage` 
++
+Example:
++
+----
+*> storage port modify -p e5b -m storage
+Changing NVMe-oF port e5b to storage mode
+----
++
+NOTE: This must be set on all affected ports for a successful upgrade.
++
+Disks from the shelves attached to the Ethernet ports are reported in the `sysconfig -v` output. 
++
+Refer to the link:https://hwu.netapp.com[NetApp Hardware Universe^] for information on the storage ports for the system you are upgrading to.
+
+.. Verify that `storage` mode is set and confirm that the ports are in the online state:
++
+`storage port show`
+
+. Halt the node: `halt`
++
+The node should stop at the `LOADER>` prompt.
+
+.	On each node, check the system date, time, and time zone: `show date`
+.	If necessary, set the date in UTC or GMT: `set date <mm/dd/yyyy>`
+.	Check the time by using the following command at the boot environment prompt: `show time`
+.	If necessary, set the time in UTC or GMT: `set time <hh:mm:ss>`
+
+.	Save the settings: `saveenv`
+.	Gather environment variables: `printenv`
