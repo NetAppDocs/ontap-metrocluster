@@ -1,0 +1,16 @@
+---
+permalink: upgrade/upgrade-mcc-ip-system-controller-replace-verify-lifs.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'After you gather information and resume the operation, the automation operation proceeds with the switchover operation.'
+---
+= Verify the LIFs at site B
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+After you gather information and resume the operation, the automation operation pauses before initiating switchover to allow you to manually verify the LIFs at site B. 
+
+Before initiating switchover, the automation operation pauses so you can manually verify that all LIFs are "`up`" at site B. If necessary, bring any LIFs that are "`down`" to "`up`" and resume the automation operation by using the `system controller replace resume` command.
+
+The automation operation initiates the switchover operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers, and reassign the root aggregate disks to the new controller module from flash backup using the `sysids` gathered earlier.
