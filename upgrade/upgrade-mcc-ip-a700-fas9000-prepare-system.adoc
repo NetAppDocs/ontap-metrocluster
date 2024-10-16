@@ -1,0 +1,307 @@
+---
+permalink: upgrade/upgrade-mcc-ip-a700-fas9000-prepare-system.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.'
+---
+= Prepare the system for upgrade
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks
+
+== Clear slot 7 on the AFF A700 or FAS9000 controller
+
+The MetroCluster configuration on an AFF A900 or FAS9500 uses one of each of the ports on the DR cards located in slots 5 and 7. Before starting the upgrade, if there are cards in slot 7 on the AFF A700 or FAS9000, you must move them to other slots for all the nodes of the cluster.
+
+== Update the MetroCluster switch RCF files before upgrading controllers
+
+You must update the RCF files on MetroCluster switches when performing this upgrade. The following table provides the VLAN ranges supported for AFF A900/FAS9500 MetroCluster IP configurations.
+
+
+
+|===
+
+h| Platform model h| Supported VLAN IDs
+
+a|
+
+ ** AFF A900 or FAS9500
+
+a|
+
+ ** 10
+ ** 20
+ ** Any value in the range 101 to 4096 inclusive.
+
+|===
+
+* If the switch is not configured with the minimum supported RCF file version, you must update the RCF file.
+For the correct RCF file version for your switch model, refer to the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator Tool^]. The following steps are for the RCF file application.
+
+
+
+.Steps
+
+. Prepare the IP switches for the application of the new RCF files.
++
+Follow the steps in the section for your switch vendor:
++
+* link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Reset the Broadcom IP switch to factory defaults] 
+* link:../install-ip/task_switch_config_cisco.html#resetting-the-cisco-ip-switch-to-factory-defaults[Reset the Cisco IP switch to factory defaults]
++
+* link:../install-ip/task_switch_config_nvidia.html#reset-the-nvidia-ip-sn2100-switch-to-factory-defaults[Reset the NVIDIA IP switch to factory defaults]
+
+. Download and install the RCF files.
++
+Follow the steps in the section for your switch vendor:
++
+* link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Download and install the Broadcom RCF files]
+* link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Download and install the Cisco IP RCF files]
+* link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCF files]
+
+[[upgrade_a700_a900_ip_map]]
+== Map ports from the old nodes to the new nodes
+
+When upgrading from an AFF A700 to an AFF A900, or FAS9000 to FAS9500, you do not change the data network ports, FCP SAN adapter ports, and SAS and NVMe storage ports. Data LIFs stay where they are during and after the upgrade. Therefore, you are not required to map the network ports from the old nodes to the new nodes.
+
+== Verify MetroCluster health before site upgrade
+
+You must verify the health and connectivity of the MetroCluster configuration prior to performing the upgrade.
+
+.Steps
+
+. Verify the operation of the MetroCluster configuration in ONTAP:
+.. Check whether the nodes are multipathed:
+ +
+`node run -node _node-name_ sysconfig -a`
++
+You should issue this command for each node in the MetroCluster configuration.
+
+ .. Verify that there are no broken disks in the configuration:
+ +
+`storage disk show -broken`
++
+You should issue this command on each node in the MetroCluster configuration.
+
+.. Check for any health alerts:
++
+`system health alert show`
++
+You should issue this command on each cluster.
+
+.. Verify the licenses on the clusters:
++
+`system license show`
++
+You should issue this command on each cluster.
+
+.. Verify the devices connected to the nodes:
++
+`network device-discovery show`
++
+You should issue this command on each cluster.
+
+.. Verify that the time zone and time is set correctly on both sites:
++
+`cluster date show`
++
+You should issue this command on each cluster. You can use the `cluster date` command to configure the time and time zone.
+. Confirm the operational mode of the MetroCluster configuration and perform a MetroCluster check.
+ .. Confirm the MetroCluster configuration and that the operational mode is `normal`:
+ +
+`metrocluster show`
+ .. Confirm that all expected nodes are shown:
+ +
+`metrocluster node show`
+ .. Issue the following command:
++
+`metrocluster check run`
+ .. Display the results of the MetroCluster check:
++
+`metrocluster check show`
+. Check the MetroCluster cabling with the Config Advisor tool.
+ .. Download and run Config Advisor.
++
+https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor^]
+
+ .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
+
+== Gather information before the upgrade
+
+Before upgrading, you must gather information for each of the nodes, and, if necessary, adjust the network broadcast domains, remove any VLANs and interface groups, and gather encryption information.
+
+.Steps
+
+ . Record the physical cabling for each node, labelling cables as needed to allow correct cabling of the new nodes.
+ . Gather the output of the following commands for each node:
+
+  ** `metrocluster interconnect show`
+  ** `metrocluster configuration-settings connection show`
+  ** `network interface show -role cluster,node-mgmt`
+  ** `network port show -node node_name -type physical`
+  ** `network port vlan show -node _node-name_`
+  ** `network port ifgrp show -node _node_name_ -instance`
+  ** `network port broadcast-domain show`
+  ** `network port reachability show -detail`
+  ** `network ipspace show`
+  ** `volume show`
+  ** `storage aggregate show`
+  ** `system node run -node _node-name_ sysconfig -a`
+  ** `vserver fcp initiator show`
+  ** `storage disk show`
+  ** `metrocluster configuration-settings interface show`
+
+. Gather the UUIDs for the site_B (the site whose platforms are currently being upgraded): `metrocluster node show -fields node-cluster-uuid, node-uuid`
++
+These values must be configured accurately on the new site_B controller modules to ensure a successful upgrade. Copy the values to a file so that you can copy them into the proper commands later in the upgrade process.
+ +
+The following example shows the command output with the UUIDs:
++
+----
+cluster_B::> metrocluster node show -fields node-cluster-uuid, node-uuid
+   (metrocluster node show)
+dr-group-id cluster     node   node-uuid                            node-cluster-uuid
+----------- --------- -------- ------------------------------------ ------------------------------
+1           cluster_A node_A_1-A700 f03cb63c-9a7e-11e7-b68b-00a098908039 ee7db9d5-9a82-11e7-b68b-00a098908039
+1           cluster_A node_A_2-A700 aa9a7a7a-9a81-11e7-a4e9-00a098908c35 ee7db9d5-9a82-11e7-b68b-00a098908039
+1           cluster_B node_B_1-A700 f37b240b-9ac1-11e7-9b42-00a098c9e55d 07958819-9ac6-11e7-9b42-00a098c9e55d
+1           cluster_B node_B_2-A700 bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f 07958819-9ac6-11e7-9b42-00a098c9e55d
+4 entries were displayed.
+cluster_B::*
+
+----
+
+
++
+It is recommended that you record the UUIDs into a table similar to the following.
++
+
+|===
+
+h| Cluster or node h| UUID
+
+a|
+cluster_B
+a|
+07958819-9ac6-11e7-9b42-00a098c9e55d
+a|
+node_B_1-A700
+a|
+f37b240b-9ac1-11e7-9b42-00a098c9e55d
+a|
+node_B_2-A700
+a|
+bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
+a|
+cluster_A
+a|
+ee7db9d5-9a82-11e7-b68b-00a098908039
+a|
+node_A_1-A700
+a|
+f03cb63c-9a7e-11e7-b68b-00a098908039
+a|
+node_A_2-A700
+a|
+aa9a7a7a-9a81-11e7-a4e9-00a098908c35
+|===
+
+. If the MetroCluster nodes are in a SAN configuration, collect the relevant information.
++
+You should gather the output of the following commands:
+
+  ** `fcp adapter show -instance`
+  ** `fcp interface show -instance`
+  ** `iscsi interface show`
+  ** `ucadmin show`
+
+ . If the root volume is encrypted, collect and save the passphrase used for key-manager:
+ `security key-manager backup show`
+
+ . If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
+For additional information, see https://docs.netapp.com/us-en/ontap/encryption-at-rest/backup-key-management-information-manual-task.html[Backing up onboard key management information manually^].
+
+  .. If Onboard Key Manager is configured:
+  `security key-manager onboard show-backup`
+  +
+You will need the passphrase later in the upgrade procedure.
+
+  .. If enterprise key management (KMIP) is configured, issue the following commands:
+
+ security key-manager external show -instance
+ security key-manager key query
+
+ . Gather the system IDs of the existing nodes:
+ `metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid`
++
+The following output shows the reassigned drives.
++
+----
+::> metrocluster node show -fields node-systemid,ha-partner-systemid,dr-partner-systemid,dr-auxiliary-systemid
+
+dr-group-id cluster     node     node-systemid ha-partner-systemid dr-partner-systemid dr-auxiliary-systemid
+----------- ----------- -------- ------------- ------------------- ------------------- ---------------------
+1           cluster_A node_A_1-A700   537403324     537403323           537403321           537403322
+1           cluster_A node_A_2-A700   537403323     537403324           537403322          537403321
+1           cluster_B node_B_1-A700   537403322     537403321           537403323          537403324
+1           cluster_B node_B_2-A700   537403321     537403322           537403324          537403323
+4 entries were displayed.
+----
+
+== Remove Mediator or Tiebreaker monitoring
+
+Before the upgrading the platforms, you must remove monitoring if the MetroCluster configuration is monitored with the Tiebreaker or Mediator utility.
+
+.Steps
+
+. Collect the output for the following command:
++
+`storage iscsi-initiator show`
+
+. Remove the existing MetroCluster configuration from Tiebreaker, Mediator, or other software that can initiate switchover.
++
+
+|===
+
+h| If you are using... h| Use this procedure...
+
+a|
+Tiebreaker
+a|
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#removing-metrocluster-configurations[Removing MetroCluster Configurations] in the _MetroCluster Tiebreaker Installation and Configuration content_
+
+a|
+Mediator
+a|
+Issue the following command from the ONTAP prompt:
+
+`metrocluster configuration-settings mediator remove`
+a|
+Third-party applications
+a|
+Refer to the product documentation.
+|===
+
+== Send a custom AutoSupport message prior to maintenance
+
+Before performing the maintenance, you should issue an AutoSupport message to notify technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
+
+.About this task
+
+This task must be performed on each MetroCluster site.
+
+.Steps
+
+. Log in to the cluster.
+
+. Invoke an AutoSupport message indicating the start of the maintenance:
++
+`system node autosupport invoke -node * -type all -message MAINT=__maintenance-window-in-hours__`
++
+The `maintenance-window-in-hours` parameter specifies the length of the maintenance window, with a maximum of 72 hours. If the maintenance is completed before the time has elapsed, you can invoke an AutoSupport message indicating the end of the maintenance period:
++
+`system node autosupport invoke -node * -type all -message MAINT=end`
+
+. Repeat these steps on the partner site.

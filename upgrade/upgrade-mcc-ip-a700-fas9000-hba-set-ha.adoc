@@ -1,0 +1,75 @@
+---
+permalink: upgrade/upgrade-mcc-ip-a700-fas9000-hba-set-ha.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Configure the HBA cards in the controller module and verify and set the HA state of the controller and chassis.'
+---
+= Restore the HBA configuration and set the HA state
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Configure the HBA cards in the controller module and verify and set the HA state of the controller and chassis. 
+
+== Restore the HBA configuration
+
+Depending on the presence and configuration of HBA cards in the controller module, you need to configure them correctly for your site's usage.
+
+.Steps
+
+. In Maintenance mode configure the settings for any HBAs in the system:
+.. Check the current settings of the ports: `ucadmin show`
+.. Update the port settings as needed.
+
++
+
+|===
+
+h| If you have this type of HBA and desired mode... h| Use this command...
+
+a|
+CNA FC
+a|
+`ucadmin modify -m fc -t initiator <adapter-name>`
+a|
+CNA Ethernet
+a|
+`ucadmin modify -mode cna <adapter-name>`
+a|
+FC target
+a|
+`fcadmin config -t target <adapter-name>`
+a|
+FC initiator
+a|
+`fcadmin config -t initiator <adapter-name>`
+|===
+. Exit Maintenance mode:
++
+`halt`
++
+After you run the command, wait until the node stops at the `LOADER` prompt.
+
+. Boot the node back into Maintenance mode to enable the configuration changes to take effect:
++
+`boot_ontap maint`
+. Verify the changes you made:
++
+
+|===
+
+h| If you have this type of HBA... h| Use this command...
+
+a|
+CNA
+a|
+`ucadmin show`
+a|
+FC
+a|
+`fcadmin show`
+|===
+
+== Set the HA state on the new controllers and chassis
+
+include::../_include/set_the_ha_state.adoc[]
