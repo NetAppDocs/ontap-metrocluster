@@ -611,6 +611,9 @@ You must respond with `y` when you are prompted to continue into advanced mode a
 +
 NOTE: The best practice is to have multiple mirrored data aggregates. When there is only one mirrored aggregate, there is less protection because the metadata volumes are located on the same aggregate rather than on separate aggregates.
 
+. Reboot each of the new nodes:
++
+`node reboot -node <node_name> -inhibit-takeover true`
 . Verify that the nodes are added to their DR group:
 +
 `metrocluster node show`
@@ -778,6 +781,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 +
 `set -privilege admin`
 
+// 2024 Oct 21, ONTAPDOC-2504
 // 2024 May 02, ONTAPDOC-1912
 // 2023 Jan 23, ONTAPDOC-729
 // 22 Jun 2023, GH issue 243
