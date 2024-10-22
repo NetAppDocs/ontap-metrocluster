@@ -1,0 +1,120 @@
+---
+permalink: maintain/verify-health-mcc-config.html
+sidebar: sidebar
+keywords: metrocluster, ip, fc, verify, health, troubleshoot, cli, system manager, error, event, problem, maintenance, fix, correction, check
+summary: Learn how to verify that the MetroCluster components are healthy.
+---
+= Verify the health of a MetroCluster configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Learn how to verify that the MetroCluster components are healthy. 
+
+.About this task 
+
+* In MetroCluster IP and FC configurations, you can use the CLI to run health check commands and verify the state of the MetroCluster components. 
+* In MetroCluster IP configurations running ONTAP 9.8 or later, you can also use ONTAP System Manager to monitor and troubleshoot health check alerts. 
+
+.Steps
+
+Verify the health of the MetroCluster configuration depending on whether you are using the CLI or System Manager.
+
+[role="tabbed-block"]
+====
+.CLI
+--
+Use the follow steps to check the health of a MetroCluster configuration using the CLI. 
+
+.Steps
+
+. Verify that the MetroCluster components are healthy:
++
+[source,cli]
+metrocluster check run
++
+----
+cluster_A::*> metrocluster check run
+----
++
+The operation runs in the background.
+
+. After the `metrocluster check run` operation completes, display the results:
++
+[source,cli]
+metrocluster check show 
++
+After approximately five minutes, the following results are displayed:
++
+----
+cluster_A:::*> metrocluster check show
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+clusters            ok
+connections         not-applicable
+volumes             ok
+7 entries were displayed.
+----
+
+. Check the status of the running MetroCluster check operation:
++
+[source,cli]
+metrocluster operation history show -job-id <id>
+
+. Verify that there are no health alerts:
++
+[source,cli]
+system health alert show
+
+--
+.ONTAP System Manager (MetroCluster IP only)
+--
+Beginning with ONTAP 9.8, System Manager monitors the health of MetroCluster IP configurations and helps you identify and correct problems that might occur.
+
+System Manager periodically checks the health of your MetroCluster IP configuration. When you view the MetroCluster section in the Dashboard, usually the message is "MetroCluster systems are healthy."
+
+However, when a problem occurs, the message will show the number of events. You can click on this message and view the results of the health check for the following components:
+
+* Node
+* Network Interface
+* Tier (Storage)
+* Cluster
+* Connection
+* Volume
+* Configuration Replication
+
+The *Status* column identifies which components have problems, and the *Details* column suggests how to correct the problem.
+
+.Troubleshoot MetroCluster with System Manager
+
+.Steps
+
+. In System Manager, select *Dashboard*.
+
+. View the message In the *MetroCluster* section:
+
+.. If the message indicates that your MetroCluster configuration is healthy, and the connections between the clusters and the ONTAP Mediator are healthy (shown with check marks), then you have no problems to correct.
+
+.. If the message lists the number of events, or the connections have gone down (shown with an "X"), then continue to the next step.
+
+. Click the message that shows the number of events.
++
+The MetroCluster Health Report displays.
+
+. Troubleshoot the problems that appear in the report using the suggestions in the *Details* column.
+
+. When all the problems have been corrected, click *Check MetroCluster Health*.
++
+NOTE: You should perform all your troubleshooting tasks before running the check because the MetroCluster Health Check uses an intensive amount of resources.
+
++
+The MetroCluster Health Check runs in the background. You can work on other tasks while you wait for it to finish.
+--
+====
+
+// 2024 Sep 30, ONTAPDOC-2014

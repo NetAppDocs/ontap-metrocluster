@@ -624,6 +624,14 @@ a|Enable the MetroCluster configuration.
 
 |===
 
+== Verifying and configuring the HA state of components in Maintenance mode
+
+When configuring a storage system in a MetroCluster FC configuration, you must make sure that the high-availability (HA) state of the controller module and chassis components is mcc or mcc-2n so that these components boot properly. Although this value should be preconfigured on systems received from the factory, you should still verify the setting before proceeding.
+
+include::../_include/task-verify-haconfig-ip-fc.adoc[]
+
+// 2024 Aug 20, GH issue 363
+
 == Restoring system defaults and configuring the HBA type on a controller module
 
 .About this task
@@ -1211,88 +1219,6 @@ If storage controller node_B_1 has four shelves, you issue the following command
 +
 `disk show –v`
 
-== Verifying and configuring the HA state of components in Maintenance mode
-
-When configuring a storage system in a MetroCluster configuration, you must make sure that the high-availability (HA) state of the controller module and chassis components is mcc or mcc-2n so that these components boot properly.
-
-.Before you begin
-
-The system must be in Maintenance mode.
-
-.About this task
-
-This task is not required on systems that are received from the factory.
-
-.Steps
-
-. In Maintenance mode, display the HA state of the controller module and chassis:
-+
-`ha-config show`
-+
-The correct HA state depends on your MetroCluster configuration.
-+
-|===
-
-h| Number of controllers in the MetroCluster configuration h| HA state for all components should be...
-
-a|
-Eight- or four-node MetroCluster FC configuration
-a|
-mcc
-a|
-Two-node MetroCluster FC configuration
-a|
-mcc-2n
-a|
-MetroCluster IP configuration
-a|
-mccip
-|===
-
-. If the displayed system state of the controller is not correct, set the HA state for the controller module:
-+
-|===
-
-h| Number of controllers in the MetroCluster configuration h| Command
-
-a|
-Eight- or four-node MetroCluster FC configuration
-a|
-ha-config modify controller mcc
-a|
-Two-node MetroCluster FC configuration
-a|
-ha-config modify controller mcc-2n
-a|
-MetroCluster IP configuration
-a|
-ha-config modify controller mccip
-|===
-
-. If the displayed system state of the chassis is not correct, set the HA state for the chassis:
-+
-|===
-
-h| Number of controllers in the MetroCluster configuration h| Command
-
-a|
-Eight- or four-node MetroCluster FC configuration
-a|
-ha-config modify chassis mcc
-a|
-Two-node MetroCluster FC configuration
-a|
-ha-config modify chassis mcc-2n
-a|
-MetroCluster IP configuration
-a|
-ha-config modify chassis mccip
-|===
-
-. Boot the node to ONTAP:
-+
-`boot_ontap`
-. Repeat these steps on each node in the MetroCluster configuration.
 
 == Setting up ONTAP
 
