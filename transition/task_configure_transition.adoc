@@ -614,6 +614,9 @@ NOTE: The best practice is to have multiple mirrored data aggregates. When there
 . Reboot each of the new nodes:
 +
 `node reboot -node <node_name> -inhibit-takeover true`
++
+NOTE: The nodes do not need to be rebooted in a specific order but you should wait until the node is fully booted and all connections are established before rebooting the next node.
+
 . Verify that the nodes are added to their DR group:
 +
 `metrocluster node show`
@@ -781,7 +784,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 +
 `set -privilege admin`
 
-// 2024 Oct 21, ONTAPDOC-2504
+// 2024 Oct 21, ONTAPDOC-2504, ONTAPDOC-2218
 // 2024 May 02, ONTAPDOC-1912
 // 2023 Jan 23, ONTAPDOC-729
 // 22 Jun 2023, GH issue 243
