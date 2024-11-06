@@ -15,9 +15,9 @@ Upgrades to systems introduced in 9.15.1 or later require you to set a bootarg b
 
 .About this task 
 
-This task is *only* required when you upgrade to any of the following platforms: AFF A70, AFF A90, AFF A1K, FAS70, FAS90, or AFF C80. 
+This task is *only* required when you upgrade to an AFF A70, AFF A90, AFF A1K, FAS70, FAS90, or AFF C80 system. 
 
-CAUTION: If you are upgrading to an AFF A70, AFF A90, AFF A1K, FAS70, FAS90, or AFF C80 system, you *must* set the `setenv hw.cxgbe.toe_keepalive_disable 1` bootarg before performing the upgrade. For all other upgrades, you can skip this task and go directly to link:upgrade-mcc-ip-system-controller-replace-prechecks.html[Prepare the system for upgrade].
+CAUTION: If you are upgrading to an AFF A70, AFF A90, AFF A1K, FAS70, FAS90, or AFF C80 system, you *must* set the `setenv hw.cxgbe.toe_keepalive_disable 1` bootarg on the existing system before performing the upgrade. For all other upgrades, you can skip this task and go directly to link:upgrade-mcc-ip-system-controller-replace-prechecks.html[Prepare the system for upgrade].
 
 .Steps
 
@@ -44,13 +44,13 @@ CAUTION: If you are upgrading to an AFF A70, AFF A90, AFF A1K, FAS70, FAS90, or 
 . Repeat the steps on each node in the DR group that is being upgraded.
 
 
-== Upgrades to AFF A30 or AFF C30 systems
+== Upgrades to AFF A30, AFF A20, or AFF C30 systems
 
 .About this task 
 
-This task is *only* required when you upgrade from an AFF A250 to an AFF A30 or from an AFF C250 to an AFF C30 system.
+This task is *only* required when you upgrade to an AFF A30, AFF A20, or AFF C30 system.
 
-CAUTION: If you are upgrading to an AFF A30 or AFF C30 system, you *must* set the `setenv bootarg.siw.interop_enabled 1` bootarg before performing the upgrade. For all other upgrades, you can skip this task and go directly to link:upgrade-mcc-ip-system-controller-replace-prechecks.html[Prepare the system for upgrade].
+CAUTION: If you are upgrading to an AFF A30, AFF A20, or AFF C30 system, you *must* set the `setenv bootarg.siw.interop_enabled 1` bootarg on the existing system before performing the upgrade. For all other upgrades, you can skip this task and go directly to link:upgrade-mcc-ip-system-controller-replace-prechecks.html[Prepare the system for upgrade].
 
 .Steps
 
@@ -61,6 +61,10 @@ CAUTION: If you are upgrading to an AFF A30 or AFF C30 system, you *must* set th
 . At the `LOADER` prompt of the halted node, enter the following: 
 +
 `setenv bootarg.siw.interop_enabled 1` 
++
+`saveenv` 
++
+`printenv bootarg.siw.interop_enable` 
 
 . Boot the node:
 +
