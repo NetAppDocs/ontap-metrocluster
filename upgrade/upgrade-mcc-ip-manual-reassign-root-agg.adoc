@@ -13,107 +13,101 @@ Reassign the root aggregate disks to the new controller module, using the system
 
 .About this task
 
-This task is performed in Maintenance mode.
-
 The old system IDs were identified in link:upgrade-mcc-ip-prepare-system.html#gather-information-before-the-upgrade[Gather information before the upgrade].
 
-The examples in this procedure use controllers with the following system IDs:
+These steps are performed in Maintenance mode.
 
-|===
-
-h| Node h| Old system ID h| New system ID
-
-a|
-node_B_1
-a|
-4068741254
-a|
-1574774970
-|===
+NOTE: Root aggregate disks are the only disks that must be reassigned during the controller upgrade process. Disk ownership of data aggregates is handled as part of the switchover/switchback operation. 
 
 .Steps
 
-. Cable all other connections to the new controller modules (FC-VI, storage, cluster interconnect, etc.).
-
-. Halt the system and boot to Maintenance mode from the `LOADER` prompt:
+. Boot the system to Maintenance mode:
 +
 `boot_ontap maint`
 
-. Display the disks owned by node_B_1-old:
+. Display the disks on node_B_1-new from the Maintenance mode prompt:
 +
 `disk show -a`
 +
-The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (4068741254). This example does not show drives owned by other nodes in the MetroCluster configuration.
+CAUTION: Before you proceed with disk reassignment, you must verify that the pool0 and pool1 disks belonging to the node's root aggregate are displayed in the `disk show` output. In the following example, the output lists the pool0 and pool1 disks owned by node_B_1-old.
 +
-CAUTION: Before you proceed with disk reassignement, you must verify that the pool0 and pool1 disks belonging to the node's root aggregate are displayed in the `disk show` output. In the following example, the output lists the pool0 and pool1 disks owned by node_B_1-old.
+The command output shows the system ID of the new controller module (1574774970). However, the root aggregate disks are still owned by the old system ID (537403322). This example does not show drives owned by other nodes in the MetroCluster configuration.
 +
 ----
 *> disk show -a
 Local System ID: 1574774970
-
-  DISK         OWNER                     POOL   SERIAL NUMBER    HOME                      DR HOME
-------------   -------------             -----  -------------    -------------             -------------
-...
-rr18:9.126L44 node_B_1-old(4068741254)   Pool1  PZHYN0MD         node_B_1-old(4068741254)  node_B_1-old(4068741254)
-rr18:9.126L49 node_B_1-old(4068741254)   Pool1  PPG3J5HA         node_B_1-old(4068741254)  node_B_1-old(4068741254)
-rr18:8.126L21 node_B_1-old(4068741254)   Pool1  PZHTDSZD         node_B_1-old(4068741254)  node_B_1-old(4068741254)
-rr18:8.126L2  node_B_1-old(4068741254)   Pool0  S0M1J2CF         node_B_1-old(4068741254)  node_B_1-old(4068741254)
-rr18:8.126L3  node_B_1-old(4068741254)   Pool0  S0M0CQM5         node_B_1-old(4068741254)  node_B_1-old(4068741254)
-rr18:9.126L27 node_B_1-old(4068741254)   Pool0  S0M1PSDW         node_B_1-old(4068741254)  node_B_1-old(4068741254)
-...
+DISK                  OWNER                 POOL   SERIAL NUMBER   HOME                  DR HOME
+------------          ---------             -----  -------------   -------------         -------------
+prod3-rk18:9.126L44   node_B_1-old(537403322)  Pool1  PZHYN0MD     node_B_1-old(537403322)  node_B_1-old(537403322)
+prod4-rk18:9.126L49   node_B_1-old(537403322)  Pool1  PPG3J5HA     node_B_1-old(537403322)  node_B_1-old(537403322)
+prod4-rk18:8.126L21   node_B_1-old(537403322)  Pool1  PZHTDSZD     node_B_1-old(537403322)  node_B_1-old(537403322)
+prod2-rk18:8.126L2    node_B_1-old(537403322)  Pool0  S0M1J2CF     node_B_1-old(537403322)  node_B_1-old(537403322)
+prod2-rk18:8.126L3    node_B_1-old(537403322)  Pool0  S0M0CQM5     node_B_1-old(537403322)  node_B_1-old(537403322)
+prod1-rk18:9.126L27   node_B_1-old(537403322)  Pool0  S0M1PSDW     node_B_1-old(537403322)  node_B_1-old(537403322)
+.
+.
+.
 ----
 
-. Reassign the root aggregate disks on the drive shelves to the new controller:
+. Reassign the root aggregate disks on the drive shelves to the new controllers.
++
+
+|===
+
+h| If you are using ADP... h| Then use this command...
+
+a|
+Yes
+a|
+`disk reassign -s <old-sysid> -d <new-sysid> -r <dr-partner-sysid>`
+a|
+No
+a|
+`disk reassign -s <old-sysid> -d <new-sysid>`
+|===
+
+. Reassign the root aggregate disks on the drive shelves to the new controllers:
 +
 `disk reassign -s <old-sysid> -d <new-sysid>`
 +
-NOTE: If your MetroCluster IP system is configured with Advanced Disk Partitioning, you must include the DR partner system id by running the `disk reassign -s old-sysid -d new-sysid -r dr-partner-sysid` command.
-+
-The following example shows reassignment of drives:
+The following example shows reassignment of drives in a non-ADP configuration:
 +
 ----
-*> disk reassign -s 4068741254 -d 1574774970
+*> disk reassign -s 537403322 -d 1574774970
 Partner node must not be in Takeover mode during disk reassignment from maintenance mode.
 Serious problems could result!!
 Do not proceed with reassignment if the partner is in takeover mode. Abort reassignment (y/n)? n
 
 After the node becomes operational, you must perform a takeover and giveback of the HA partner node to ensure disk reassignment is successful.
-Do you want to continue (y/n)? Jul 14 19:23:49 [localhost:config.bridge.extra.port:error]: Both FC ports of FC-to-SAS bridge rtp-fc02-41-rr18:9.126L0 S/N [FB7500N107692] are attached to this controller.
-y
-Disk ownership will be updated on all disks previously belonging to Filer with sysid 4068741254.
+Do you want to continue (y/n)? y
+Disk ownership will be updated on all disks previously belonging to Filer with sysid 537403322.
 Do you want to continue (y/n)? y
 ----
 
-. Check that all disks are reassigned as expected:
+. Verify that the disks of the root aggregate are properly reassigned old-remove:
 +
 `disk show`
 +
+`storage aggr status`
++
 ----
+
 *> disk show
-Local System ID: 1574774970
+Local System ID: 537097247
 
-  DISK        OWNER                      POOL   SERIAL NUMBER   HOME                      DR HOME
-------------  -------------              -----  -------------   -------------             -------------
-rr18:8.126L18 node_B_1-new(1574774970)   Pool1  PZHYN0MD        node_B_1-new(1574774970)  node_B_1-new(1574774970)
-rr18:9.126L49 node_B_1-new(1574774970)   Pool1  PPG3J5HA        node_B_1-new(1574774970)  node_B_1-new(1574774970)
-rr18:8.126L21 node_B_1-new(1574774970)   Pool1  PZHTDSZD        node_B_1-new(1574774970)  node_B_1-new(1574774970)
-rr18:8.126L2  node_B_1-new(1574774970)   Pool0  S0M1J2CF        node_B_1-new(1574774970)  node_B_1-new(1574774970)
-rr18:9.126L29 node_B_1-new(1574774970)   Pool0  S0M0CQM5        node_B_1-new(1574774970)  node_B_1-new(1574774970)
-rr18:8.126L1  node_B_1-new(1574774970)   Pool0  S0M1PSDW        node_B_1-new(1574774970)  node_B_1-new(1574774970)
-*>
+  DISK                    OWNER                    POOL   SERIAL NUMBER   HOME                     DR HOME
+------------              -------------            -----  -------------   -------------            -------------
+prod03-rk18:8.126L18 node_B_1-new(537097247)  Pool1  PZHYN0MD        node_B_1-new(537097247)   node_B_1-new(537097247)
+prod04-rk18:9.126L49 node_B_1-new(537097247)  Pool1  PPG3J5HA        node_B_1-new(537097247)   node_B_1-new(537097247)
+prod04-rk18:8.126L21 node_B_1-new(537097247)  Pool1  PZHTDSZD        node_B_1-new(537097247)   node_B_1-new(537097247)
+prod02-rk18:8.126L2  node_B_1-new(537097247)  Pool0  S0M1J2CF        node_B_1-new(537097247)   node_B_1-new(537097247)
+prod02-rk18:9.126L29 node_B_1-new(537097247)  Pool0  S0M0CQM5        node_B_1-new(537097247)   node_B_1-new(537097247)
+prod01-rk18:8.126L1  node_B_1-new(537097247)  Pool0  S0M1PSDW        node_B_1-new(537097247)   node_B_1-new(537097247)
+::>
+::> aggr status
+           Aggr          State           Status                Options
+aggr0_node_B_1           online          raid_dp, aggr         root, nosnap=on,
+                                         mirrored              mirror_resync_priority=high(fixed)
+                                         fast zeroed
+                                         64-bit
 ----
-
-. Display the aggregate status:
-+
-`aggr status`
-+
-----
-*> aggr status
-           Aggr            State       Status           Options
-aggr0_node_b_1-root        online      raid_dp, aggr    root, nosnap=on,
-                           mirrored                     mirror_resync_priority=high(fixed)
-                           fast zeroed
-                           64-bit
-----
-
-. Repeat the above steps on the partner node (node_B_2-new).

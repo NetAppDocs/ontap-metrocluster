@@ -25,42 +25,61 @@ In this task, you use the UUIDs and system IDs identified earlier in the upgrade
 
 .Steps
 
-.	At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
+. If the nodes being upgraded are AFF A400, FAS8300, or FAS8700 models, set the following bootargs at the `LOADER` prompt:
 +
 `setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
 `setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
-The following example sets the values for node_B_1 using VLAN 120 for the first network and VLAN 130 for the second network:
+NOTE: If the interfaces are using the default VLANs, the vlan-id is not necessary.
+
++
+The following commands set the values for node_B_1-new using VLAN 120 for the first network and VLAN 130 for the second network:
 +
 ----
 setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
 setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
 ----
 +
-The following example sets the values for node_B_2 using VLAN 120 for the first network and VLAN 130 for the second network:
+The following commands set the values for node_B_2-new using VLAN 120 for the first network and VLAN 130 for the second network:
 +
 ----
 setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13,120
 setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13,130
 ----
 +
-The following example sets the values for node_B_1 using default VLANs for all MetroCluster IP DR connections:
+The following example shows the commands for node_B_1-new when the default VLAN is used:
 +
 ----
-setenv bootarg.mcc.port_a_ip_config
-172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
-setenv bootarg.mcc.port_b_ip_config
-172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
 ----
 +
-The following example sets the values for node_B_2 using default VLANs for all MetroCluster IP DR connections:
+The following example shows the commands for node_B_2-new when the default VLAN is used:
 +
 ----
-setenv bootarg.mcc.port_a_ip_config
-172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
-setenv bootarg.mcc.port_b_ip_config
-172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
+setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
+setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
+----
+
+. If the nodes being upgraded are not systems listed in the previous step, at the `LOADER` prompt for each of the surviving nodes, set the following bootargs with local_IP/mask:
++
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address>`
++
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address>`
++
+The following commands set the values for node_B_1-new:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
+----
++
+The following commands set the values for node_B_2-new:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
+setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
 ----
 
 . At the new nodes' `LOADER` prompt, set the UUIDs:
@@ -76,9 +95,9 @@ setenv bootarg.mcc.port_b_ip_config
 `setenv bootarg.mcc_iscsi.node_uuid <local-node-UUID>`
 
 
-.. Set the UUIDs on node_B_1.
+.. Set the UUIDs on node_B_1-new.
 +
-The following example shows the commands for setting the UUIDs on node_B_1:
+The following example shows the commands for setting the UUIDs on node_B_1-new:
 +
 ----
 setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
@@ -88,9 +107,9 @@ setenv bootarg.mcc.aux_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
 setenv bootarg.mcc_iscsi.node_uuid f03cb63c-9a7e-11e7-b68b-00a098908039
 ----
 
-.. Set the UUIDs on node_B_2:
+.. Set the UUIDs on node_B_2-new:
 +
-The following example shows the commands for setting the UUIDs on node_B_2:
+The following example shows the commands for setting the UUIDs on node_B_2-new:
 +
 ----
 setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
@@ -119,7 +138,8 @@ Info: This cluster has partitioned disks. To get a complete list of spare disk
 1.11.2              894.0GB    11    2   SSD      shared     testaggr  node_A_1
 ----
 
-. If the original systems were configured for ADP, at each of the replacement nodes' `LOADER` prompt, enable ADP:
+
+. If the original systems were configured with partitioned disks for ADP, enable it at the `LOADER` prompt for each replacement node:
 +
 `setenv bootarg.mcc.adp_enabled true`
 
@@ -129,20 +149,20 @@ Info: This cluster has partitioned disks. To get a complete list of spare disk
 +
 `setenv bootarg.mcc.dr_partner <dr-partner-sys-id>`
 +
-NOTE: The `setenv bootarg.mcc.local_config_id` variable must be set to the sys-id of the *original* controller module, node_B_1.
+NOTE: The `setenv bootarg.mcc.local_config_id` variable must be set to the sys-id of the *original* controller module, node_B_1-old.
 
-.. Set the variables on node_B_1.
+.. Set the variables on node_B_1-new.
 +
-The following example shows the commands for setting the values on node_B_1:
+The following example shows the commands for setting the values on node_B_1-new:
 +
 ----
 setenv bootarg.mcc.local_config_id 537403322
 setenv bootarg.mcc.dr_partner 537403324
 ----
 
-.. Set the variables on node_B_2.
+.. Set the variables on node_B_2-new.
 +
-The following example shows the commands for setting the values on node_B_2:
+The following example shows the commands for setting the values on node_B_2-new:
 +
 ----
 setenv bootarg.mcc.local_config_id 537403321
