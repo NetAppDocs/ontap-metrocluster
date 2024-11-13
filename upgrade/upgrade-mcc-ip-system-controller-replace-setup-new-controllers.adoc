@@ -39,14 +39,32 @@ The installation steps you follow depend on whether your upgrade requires replac
 | Follow the steps for ...
 | An AFF A150 or AFF A220 system to an AFF A20 system | Controller to external shelf conversion
 | An AFF A800 system to an AFF A90 system | Controller module replacement
-| Any other upgrade combinations | All other upgrades
+| Any other controller upgrade combinations | All other upgrades
 |=== 
 +
 [role="tabbed-block"]
 ====
 .Controller to external shelf conversion
 --
-<insert content here>
+If your original MetroCluster IP controllers are AFF A150 or AFF A220 models, you can convert the AFF A150 or AFF A220 HA pair to a DS224C drive shelf and then attach it to the new nodes that you are upgrading to.
+
+For example, when upgrading from an AFF A150 or AFF A220 system to an AFF A20 system, you can convert the AFF A150 or AFF A220 HA pair to a DS224C shelf by swapping the AFF A150 or AFF A220 controller modules with IOM12 modules.
+
+.Steps
+
+. Replace the controller modules in the node you are converting with IOM12 shelf modules.
++
+https://hwu.netapp.com[NetApp Hardware Universe]
+
+. Set the drive shelf ID.
++
+Each drive shelf, including the chassis, requires a unique ID.
+. Reset other drive shelf IDs as needed.
+. Power off the shelves. 
+. Cable the converted drive shelf to a SAS port on the new system, and, if you are using out-of-band ACP cabling, to the ACP port on the new node.
+. Turn on the power to the converted drive shelf and any other drive shelves attached to the new nodes.
+. Turn on the power to the new nodes, and then interrupt the boot process on each node by pressing Ctrl-C to access the boot environment prompt.
+
 --
 .Controller module replacement
 --
