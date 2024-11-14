@@ -9,7 +9,7 @@ summary: 'You install and cable ATTO FibreBridge bridges and SAS disk shelves wh
 :imagesdir: ../media/
 
 [.lead]
-You install and cable ATTO FibreBridge bridges and SAS disk shelves when adding new storage to the configuration.
+Install and cable ATTO FibreBridge bridges and SAS disk shelves when you add new storage to the configuration.
 
 .About this task
 
@@ -31,15 +31,15 @@ Beginning with ONTAP 9.5 with FibreBridge 7500N or 7600N bridges, _in-band manag
 
 NOTE: Beginning with ONTAP 9.8, the `storage bridge` command is replaced with `system bridge`. The following steps show the `storage bridge` command, but if you are running ONTAP 9.8 or later, the `system bridge` command is preferred.
 
-When using in-band management, the bridges can be managed and monitored from the ONTAP CLI via the FC connection to the bridge. Physical access to the bridge via the bridge Ethernet ports is not required, reducing the security vulnerability of the bridge.
+When using in-band management, the bridges can be managed and monitored from the ONTAP CLI using the FC connection to the bridge. Physical access to the bridge through the bridge Ethernet ports is not required, reducing the security vulnerability of the bridge.
 
 The availability of in-band management of the bridges depends on the version of ONTAP:
 
 * Beginning with ONTAP 9.8, bridges are managed via in-band connections by default and out-of-band management of the bridges via SNMP is deprecated.
 * ONTAP 9.5 through 9.7: Either in-band management or out-of-band SNMP management is supported.
-* Prior to ONTAP 9.5, only out-of-band SNMP management is supported.
+* Before ONTAP 9.5, only out-of-band SNMP management is supported.
 
-Bridge CLI commands can be issued from the ONTAP interface `storage bridge run-cli -name _bridge_name_ -command _bridge_command_name_` command at the ONTAP interface.
+Bridge CLI commands can be issued from the ONTAP interface `storage bridge run-cli -name <bridge_name> -command <bridge_command_name>` command at the ONTAP interface.
 
 NOTE: Using in-band management with IP access disabled is recommended to improve security by limiting physical connectivity the bridge.
 
@@ -91,7 +91,7 @@ Review the number of shelves supported behind a pair of FibreBridge 7600N and 75
 
 == Prepare for the installation
 
-When you are preparing to install the bridges as part of your new MetroCluster system, you must ensure that your system meets certain requirements, including meeting setup and configuration requirements for the bridges. Other requirements include downloading the necessary documents, the ATTO QuickNAV utility, and the bridge firmware.
+When you are preparing to install the bridges as part of your new MetroCluster system, you must verify that your system meets certain requirements, including meeting setup and configuration requirements for the bridges. Other requirements include downloading the necessary documents, the ATTO QuickNAV utility, and the bridge firmware.
 
 .Before you begin
 
@@ -99,10 +99,10 @@ When you are preparing to install the bridges as part of your new MetroCluster s
 * Your configuration must be using supported hardware models and software versions.
 
 +
-In the https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool (IMT)], you can use the Storage Solution field to select your MetroCluster solution. You use the *Component Explorer* to select the components and ONTAP version to refine your search. You can click *Show Results* to display the list of supported configurations that match the criteria.
+In the https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool (IMT)], you can use the *Storage Solution* field to select your MetroCluster solution. You can use the *Component Explorer* to select the components and ONTAP version to refine your search. You can select *Show Results* to display the list of supported configurations that match the criteria.
 
-* Each FC controller must have one FC port available for one bridge to connect to it.
-* You must have familiarized yourself with how to handle SAS cables and the considerations and best practices for installing and cabling disk shelves.
+* Each FC controller module must have one FC port available for one bridge to connect to it.
+* You must be familiar with how to handle SAS cables and the considerations and best practices for installing and cabling disk shelves.
 +
 The _Installation and Service Guide_ for your disk shelf model describes the considerations and best practices.
 
