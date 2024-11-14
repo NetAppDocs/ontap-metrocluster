@@ -9,7 +9,13 @@ summary: 'To ensure that the networking resumes cleanly on the new controllers, 
 :imagesdir: ../media/
 
 [.lead]
-To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
+After you gather information and resume the operation, the automation proceeds with the switchover operation.
+
+.Before you begin
+
+Before initiating switchover, the automation operation pauses so you can manually verify that all LIFs are "`up`" at site B. If necessary, bring any LIFs that are "`down`" to "`up`" and resume the automation operation by using the `system controller replace resume` command.
+
+The automation operation initiates the switchover operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot up the partner controllers, and reassign the root aggregate disks to the new controller module from flash backup using the `sysids` gathered earlier.
 
 .About this task
 
