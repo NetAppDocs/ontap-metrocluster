@@ -15,17 +15,11 @@ Upgrades to systems introduced in ONTAP 9.15.1 or later require you to set a boo
 
 All supported upgrades to the following systems require that a bootarg is set on the old controllers before you can perform the controller upgrade: 
 
-* AFF A70
-* AFF A90
-* AFF A1K
-* FAS70
-* FAS90
+* AFF A70, AFF A90,  AFF A1K
+* FAS70, FAS90
 * AFF C80
-* AFF A50
-* AFF A20
-* AFF A30
-* AFF C30
-* AFF C60 
+* AFF A50, AFF A20, AFF A30
+* AFF C30, AFF C60 
 
 CAUTION: If you are upgrading to any of the systems listed, you *must* set a required bootarg on the existing system before performing the upgrade. For all other upgrades, you can skip this task and go directly to link:upgrade-mcc-ip-system-controller-replace-prechecks.html[Prepare the system for upgrade].
 
@@ -37,12 +31,12 @@ Use the following table to determine which bootarg you need to set for your spec
 [cols=2*,options="header"]
 |===
 | For this upgrade...
-| Follow the steps for..
-| AFF A250 system to AFF A30 system | Set `bootarg.siw.interop_enable`
-| AFF C250 system to AFF C30 system | Set `bootarg.siw.interop_enable`
-| AFF A150 system to AFF A20 system | Set `bootarg.siw.interop_enable`
-| AFF A220 system to AFF A20 system | Set `bootarg.siw.interop_enable`
-| All other supported upgrades to AFF A70, AFF A90, AFF A1K, FAS70, FAS90, AFF C80, AFF A50, AFF A20, AFF A30, AFF C30 or AFF C60 systems | Set `hw.cxgbe.toe_keepalive_disable`
+| Set the bootarg...
+| AFF A250 system to AFF A30 system | `bootarg.siw.interop_enable`
+| AFF C250 system to AFF C30 system | `bootarg.siw.interop_enable`
+| AFF A150 system to AFF A20 system | `bootarg.siw.interop_enable`
+| AFF A220 system to AFF A20 system | `bootarg.siw.interop_enable`
+| All other supported upgrades to AFF A70, AFF A90, AFF A1K, FAS70, FAS90, AFF C80, AFF A50, AFF A20, AFF A30, AFF C30 or AFF C60 systems | `hw.cxgbe.toe_keepalive_disable`
 |===
 
 
@@ -56,14 +50,22 @@ This task is *only* required when you upgrade to an AFF A70, AFF A90, AFF A1K, F
 +
 `halt  -node <node_name>`
 
-. Set the required bootarg for your upgrade combination. You should have already determined the steps you need to follow by using the table in <<upgrade_paths_bootarg_manual,determine which bootarg you need to set>>. 
+. Set the required bootarg for your upgrade combination. You should have already determined the bootarg that you need to set by using the table in <<upgrade_paths_bootarg_manual,determine which bootarg you need to set>>. 
 +
 [role="tabbed-block"]
 ====
-.Set bootarg.siw.interop_enable
+.hw.cxgbe.toe_keepalive_disable
 --
-
-.Steps
+.. At the `LOADER` prompt of the halted node, enter the following: 
++
+`setenv hw.cxgbe.toe_keepalive_disable 1` 
++
+`saveenv` 
++
+`printenv hw.cxgbe.toe_keepalive_disable`
+--
+.bootarg.siw.interop_enable
+--
 
 .. At the `LOADER` prompt of the halted node, enter the following: 
 +
@@ -73,18 +75,8 @@ This task is *only* required when you upgrade to an AFF A70, AFF A90, AFF A1K, F
 +
 `printenv bootarg.siw.interop_enable` 
 
---
-.Set hw.cxgbe.toe_keepalive_disable
---
+-- 
 
-.. At the `LOADER` prompt of the halted node, enter the following: 
-+
-`setenv hw.cxgbe.toe_keepalive_disable 1` 
-+
-`saveenv` 
-+
-`printenv hw.cxgbe.toe_keepalive_disable`
---
 ====
   
 
