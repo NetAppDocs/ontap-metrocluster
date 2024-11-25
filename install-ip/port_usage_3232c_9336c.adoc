@@ -4,7 +4,6 @@ sidebar: sidebar
 keywords: cabling, cable, component, link, site, management, network, networks, hardware, component, switch, cluster, connection, management, data, configuring, configure
 summary: The port usage in a MetroCluster IP configuration depends on the switch model and platform type.
 ---
-
 = Platform port assignments for Cisco 3232C or Cisco 9336C switches
 :icons: font
 :imagesdir: ../media/
@@ -42,31 +41,40 @@ Use the following table to determine which cabling table you should follow.
 |===
 | If your system is...
 | Use this cabling table...
-a|
+|
 AFF A150, ASA A150, FAS2750, AFF A220 
 
 FAS500f, AFF C250, ASA C250, AFF A250, ASA A250 | <<table_1_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 1)>>
-| FAS8200, AFF A300 | <<table_2_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 2)>>
+|
+AFF A20| <<table_2_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 2)>>
+|
+AFF A30, AFF C30
+
+AFF C60| <<table_3_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 3)>>
+| FAS8200, AFF A300 | <<table_4_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 4)>>
 | AFF A320 
 
 FAS8300, AFF C400, ASA C400, FAS8700
 
-AFF A400, ASA A400 | <<table_3_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 3)>>
+AFF A400, ASA A400 | <<table_5_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 5)>>
+| AFF A50| <<table_6_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 6)>>
 | 
 FAS9000, AFF A700
 
 AFF C800, ASA C800, AFF A800, ASA A800
 
-FAS9500, AFF A900, ASA A900 | <<table_4_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 4)>>
+FAS9500, AFF A900, ASA A900 | <<table_7_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 7)>>
 |
-AFF A70
+FAS70, AFF A70
 
-AFF A90
+AFF C80
+
+FAS90, AFF A90
 
 AFF A1K
 
-*Note:* These systems require ONTAP 9.15.1 or later.
- | <<table_5_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 5)>>
+
+ | <<table_8_cisco_3232c_9336c,Cisco 3232C or Cisco 9336C platform port assignments (group 8)>>
 |===
 
 
@@ -86,15 +94,21 @@ image:../media/mcc-ip-cabling-aff-a20-9161.png[Shows Cisco 3232C or Cisco 9336C 
 
 [[table_3_cisco_3232c_9336c]]
 .Cisco 3232C or Cisco 9336C platform port assignments (group 3)
+Review the platform port assignments to cable an AFF A30, AFF C30, or AFF C60 to a Cisco 3232C or 9336C switch:
+
+image:../media/mcc-ip-cabling-aff-a30-c30-c60-9161.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
+
+[[table_4_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 4)
 
 Review the platform port assignments to cable a FAS8200 or AFF A300 system to a Cisco 3232C or 9336C switch:
 
-image::../media/mcc-ip-cabling-a-aff-a300-or-fas8200-to-a-cisco-3232c-or-cisco-9336c-switch.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
+image::../media/mcc-ip-cabling-a-aff-a300-or-fas8200-to-a-cisco-3232c-or-cisco-9336c-switch-9161.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
 
 If you are upgrading from older RCF files, the cabling configuration might be using ports in the "MetroCluster 4" group (ports 25/26 and 29/30). 
 
-[[table_3_cisco_3232c_9336c]]
-.Cisco 3232C or Cisco 9336C platform port assignments (group 3)
+[[table_5_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 5)
 
 Review the platform port assignments to cable an AFF A320, FAS8300, AFF C400, ASA C400, FAS8700, AFF A400, or ASA A400 system to a Cisco 3232C or 9336C switch:
 
@@ -104,8 +118,15 @@ image::../media/mcc_ip_cabling_a320_a400_cisco_3232C_or_9336c_switch.png[Shows C
 
 NOTE: Using ports in the "MetroCluster 4" group requires ONTAP 9.13.1 or later.
 
-[[table_4_cisco_3232c_9336c]]
-.Cisco 3232C or Cisco 9336C platform port assignments (group 4)
+[[table_6_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 6)
+
+Review the platform port assignments to cable an AFF A50 system to a Cisco 3232C or 9336C switch:
+
+image::../media/mcc-ip-cabling-aff-a50-cisco-3232c-9336c-9161.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
+
+[[table_7_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 7)
 
 Review the platform port assignments to cable a FAS9000, AFF A700, AFF C800, ASA C800, AFF A800, ASA A800, FAS9500, AFF A900, or ASA A900 system to a Cisco 3232C or 9336C switch:
 
@@ -115,15 +136,13 @@ image::../media/mcc_ip_cabling_fas9000_a700_fas9500_a800_a900_cisco_3232C_or_933
 
 NOTE: Using ports in the "MetroCluster 4" group requires ONTAP 9.13.1 or later.
 
-[[table_5_cisco_3232c_9336c]]
-.Cisco 3232C or Cisco 9336C platform port assignments (group 5)
+[[table_8_cisco_3232c_9336c]]
+.Cisco 3232C or Cisco 9336C platform port assignments (group 8)
 
-Review the platform port assignments to cable an AFF A70, AFF A90, or AFF A1K system to a Cisco 3232C or 9336C switch:
-
-NOTE: The systems in this table require ONTAP 9.15.1 or later. 
+Review the platform port assignments to cable an AFF A70, FAS70, AFF C80, FAS90, AFF A90, or AFF A1K system to a Cisco 3232C or 9336C switch:
 
 
-image:../media/mcc-ip-cabling-a90-a70-a1k-cisco-3232C-or-9336c-switch.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
+image:../media/mcc-ip-cabling-a90-fas90-c80-fas70-a70-a1k-cisco-3232C-or-9336c-switch.png[Shows Cisco 3232C or Cisco 9336C platform port assignments]
 
 // 2024 Jun 07, ONTAPDOC-1734 
 // 2023 Oct 25, ONTAPDOC-1201
