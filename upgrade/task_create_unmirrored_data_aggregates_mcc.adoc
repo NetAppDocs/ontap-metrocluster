@@ -34,7 +34,7 @@ https://docs.netapp.com/platstor/index.jsp[ONTAP Hardware Systems Documentation^
 
 . Manually assign all disks on the new shelf to the appropriate node:
 +
-`disk assign -disk _disk-id_ -owner _owner-node-name_`
+`disk assign -disk <disk-id> -owner <owner-node-name>`
 
 . Create the aggregate:
 +
@@ -42,7 +42,7 @@ https://docs.netapp.com/platstor/index.jsp[ONTAP Hardware Systems Documentation^
 +
 If you are logged in to the cluster on the cluster management interface, you can create an aggregate on any node in the cluster. To verify that the aggregate is created on a specific node, you should use the `-node` parameter or specify drives that are owned by that node.
 +
-You must also ensure that you are only including drives on the unmirrored shelf to the aggregate.
+Verify that you are only including drives on the unmirrored shelf to the aggregate.
 +
 You can specify the following options:
 
@@ -67,10 +67,12 @@ controller_A_1::> storage aggregate create aggr1_controller_A_1 -diskcount 10 -n
 [Job 15] The job is starting.
 [Job 15] Job succeeded: DONE
 ----
++
+NOTE: You can also use the `-disklist` parameter in the command to specify the disks that you want to use for the aggregate.
 
 . Verify the RAID group and drives of your new aggregate:
 +
-`storage aggregate show-status -aggregate _aggregate-name_`
+`storage aggregate show-status -aggregate <aggregate-name>`
 
 // BURT 1471048 May 16th 2022
 .Related information
