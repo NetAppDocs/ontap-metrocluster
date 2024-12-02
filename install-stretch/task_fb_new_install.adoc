@@ -43,50 +43,36 @@ Bridge CLI commands can be issued from the ONTAP interface `storage bridge run-c
 
 NOTE: Using in-band management with IP access disabled is recommended to improve security by limiting physical connectivity the bridge.
 
-==  Supported number of disks and shelves on FibreBridge 7600N and 7500N bridges
+== FibreBridge 7600N and 7500N bridge limits and attachment rules
 
-The following tables show the number of disks and shelves that are supported behind a pair of FibreBridge 7600N and 7500N bridges.
+Review the limits and considerations when attaching FibreBridge 7600N and 7500N bridges.
 
-[NOTE]
-====
-* The first limit you reach applies.
-* If you are using DS460C shelves, only up to 240 drives can be used, which equals 4 shelves.
-* If you are using DS212C shelves, only up to 120 drives can be used, which equals 10 shelves.
-====
+.FibreBridge 7600N and 7500N bridge limits
 
-.Supported number of disks
+* The maximum number of HDD and SSD drives combined is 240. 
+* The maximum number of SSD drives is 96.
+* The maximum number of SSDs per SAS port is 48.
+* The maximum number of shelves per SAS port is 10.
 
-Review the number of disks supported behind a pair of FibreBridge 7600N or 7500N bridges:
+.FibreBridge 7600N and 7500N bridge attachment rules
 
-[cols=3*,options="header"]
+* Do not mix SSD and HDD drives on the same SAS port.
+* Distribute the shelves evenly across the SAS ports.
+* You shouldn't have DS460 shelves on the same SAS port as other shelf types (for example, DS212 or DS224 shelves).
+ 
+
+.Example configuration
+
+The following shows an example configuration for connecting four DS224 shelves with SSD drives and six DS224 shelves with HDD drives:
+
+[cols=2*,options="header"]
 |===
-| Disk configuration
-| Disk type
-| Total disks per bridge pair
-| All SSDs | SSD | 96
-| All HDDs | HDD | 240
-.2+| Mixed (96 SSDs) | SSD | 96 | HDD | 144
-.2+| Mixed (72 SSDs) | SSD | 72 | HDD | 168
-.2+| Mixed (48 SSDs) | SSD | 48 | HDD | 192
-.2+| Mixed (24 SSDs) | SSD | 24 | HDD | 216
-|===
-
-
-.Supported number of shelves
-
-Review the number of shelves supported behind a pair of FibreBridge 7600N and 7500N bridges:
-
-[cols=3*,options="header"]
-|===
-| Disk configuration
-| Disk type
-| Total number of shelves
-| All SSDs | SSD | 4
-| All HDDs | HDD | 10
-.2+| Mixed | SSD | 1 | HDD | 9
-.2+| Mixed | SSD | 2 | HDD | 8
-.2+| Mixed | SSD | 3 | HDD | 7
-.2+| Mixed | SSD | 4 | HDD | 6
+| SAS port
+| Shelves and drives
+| SAS port-A | 2x DS224 shelves with SSD drives
+| SAS port-B | 2x DS224 shelves with SSD drives
+| SAS port-C | 3x DS224 shelves with HDD drives
+| SAS port-D | 3x DS224 shelves with HDD drives
 |===
 
 == Prepare for the installation
