@@ -87,7 +87,7 @@ When you are preparing to install the bridges as part of your new MetroCluster s
 +
 In the https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool (IMT)], you can use the *Storage Solution* field to select your MetroCluster solution. You can use the *Component Explorer* to select the components and ONTAP version to refine your search. You can select *Show Results* to display the list of supported configurations that match the criteria.
 
-* Each FC controller module must have one FC port available for one bridge to connect to it.
+* Each FC controller must have one FC port available for one bridge to connect to it.
 * You must be familiar with how to handle SAS cables and the considerations and best practices for installing and cabling disk shelves.
 +
 The _Installation and Service Guide_ for your disk shelf model describes the considerations and best practices.
@@ -494,43 +494,14 @@ The following illustration shows four stacks connected to a pair of FibreBridge 
 +
 image::../media/mcc_cabling_bridge_and_sas_stack_with_7500n_four_stacks.gif[]
 
-=== Verifying bridge connectivity and cabling the FC-to-SAS bridges to the controller module
+=== Verifying bridge connectivity and cabling the FC-to-SAS bridges to the controller FC ports
 
-You must cable the bridges to the controller module in a two-node bridge-attached MetroCluster configuration.
+You must cable the bridges to the controller FC ports in a two-node bridge-attached MetroCluster configuration.
 
 .Steps
-. [[step1-verify-detect]]Verify that each bridge can detect all of the disk drives and disk shelves to which the bridge is connected.
+. [[step1-verify-detect]]Verify that each bridge can detect all of the disk drives and disk shelves to which the bridge is connected:
 +
-
-|===
-
-h| If you are using the... h| Then...
-
-a|
-ATTO ExpressNAV GUI
-a|
-
- .. In a supported web browser, enter the IP address of a bridge in the browser box.
-+
-You will be brought to the ATTO FibreBridge homepage of the bridge link for the IP address entered.
-
- .. Click the link, then enter your user name and the password that you designated when you configured the bridge.
-+
-The ATTO FibreBridge status page of the bridge appears with a menu to the left.
-
- .. Click *Advanced* in the menu.
- .. Run the following command, and then click *Submit*:
- +
 `sastargets`
-
-a|
-Serial port connection
-a|
-Run the following command:
-
-`sastargets`
-|===
-
 +
 The `sastargets` command output shows the devices (disks and disk shelves) connected to the bridge. The output lines are sequentially numbered so that you can quickly count the devices.
 +
@@ -552,7 +523,7 @@ Tgt VendorID ProductID        Type        SerialNumber
   9 NETAPP   X410_S15K6288A15 DISK        3QP1FXW600009940VERQ
 ----
 
-. Verify that the command output shows that the bridge is connected to all of disks and disk shelves in the stack that it is supposed to be connected.
+. Verify that the command output shows that the bridge is connected to all of the disks and disk shelves in the stack that it are supposed to be connected.
 +
 [cols="30,70"]
 |===
@@ -575,13 +546,21 @@ a|
 
 |===
 
-. [[step3-cable-each-bridge]]Cable each bridge to the controller modules:
- .. Cable FC port 1 of the bridge to an FC port on the controller module in cluster_A.
- .. Cable FC port 2 of the bridge to an FC port on the controller module in cluster_B.
+. [[step3-cable-each-bridge]]Cable each bridge to the controller FC ports:
+ .. Cable FC port 1 of the bridge to an FC port on the controller in cluster_A.
+ .. Cable FC port 2 of the bridge to an FC port on the controller in cluster_B.
 +
-If the controller module is configured with a quad-port FC adapter, verify that the storage stacks are not connected to two FC ports on the same ASIC. Port a and port b share the same ASIC, and port c and port d share the same ASIC. Do not connect a stack of shelves to port a and port b. Instead use port a and port c, or use port b and port d to avoid a single point of failure if an ASIC fails.
+If the controller is configured with a quad-port FC adapter, make sure that the bridges at either end of the storage stack are not connected to two FC ports on the same ASIC. 
 +
-If the controller module is configured with more than one FC adapter, do not cable both bridge ports to the same adapter. You should distribute FC port 1 to adapter A and FC port 2 to adapter B to avoid a single point of failure.
+* Port a and port b share the same ASIC. 
++
+* Port c and port d share the same ASIC.
++
+For example, you should connect FC_bridge_A_1 to port a and FC_bridge_A2 to port c.
++
+NOTE: Do not connect a stack of shelves to port a and port b. You should use port a and port c, or port b and port d, to avoid a single point of failure if an ASIC fails.
++
+If the controller is configured with more than one FC adapter, do not cable the bridges at either end of the storage stack to the same adapter. You should distribute FC port 1 to adapter A and FC port 2 to adapter B to avoid a single point of failure.
 +
 image:../media/cluster_peering_network.png[Illustration of a cluster peering network]
 
