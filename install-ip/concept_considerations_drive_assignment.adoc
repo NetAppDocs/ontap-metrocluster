@@ -286,10 +286,10 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
-a|
+.2+|
 Minimum recommended drives (per site)
 a|
-48 drives
+48 drives (external drives only, no internal drives)
 a|
 The drives on each external shelf are divided into two equal groups (halves). Each half-shelf is automatically assigned to a separate pool.
 a|
@@ -301,8 +301,19 @@ Partitions on each shelf are used to create the root aggregate. The root aggrega
 * Two parity partitions
 * Two spare partitions
 
+a| 48 drives (external and internal drives)
+a| The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are automatically assigned on a shelf-by-shelf basis, with all of the drives on each shelf assigned to  one of the four nodes in the MetroCluster configuration.
+
 a|
-Minimum supported drives (per site)
+The root aggregate is created with 12 root partitions on the internal shelf.
+
+Each of the two plexes in the root aggregate includes:
+
+* Eight partitions for data
+* Two parity partitions
+* Two spare partitions
+
+a|Minimum supported drives (per site)
 a|
 16 internal drives 
 a|
