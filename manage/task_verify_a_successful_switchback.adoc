@@ -27,31 +27,38 @@ aggr_b2    227.1GB   227.1GB    0% online       0 node_B_2   raid_dp,
                                                                    normal
 ----
 
-. Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an admin state of "`stopped`") and the sync-source SVMs on the disaster cluster are up and running:
+. Verify that all sync-destination SVMs on the surviving cluster are dormant (showing an operational state of "`stopped`"):
++
+`vserver show -subtype sync-destination`
++
+----
+node_B_1::> vserver show -subtype sync-destination
+                               Admin    Operational  Root                       
+Vserver     Type    Subtype    State    State       Volume     Aggregate       
+----------- ------- ---------- -------- ---------- ---------- ------- 
+...
+vs1a        data    sync-destination
+                               running    stopped    vs1a_vol   aggr_b2       
+                                                                     
+----
++
+Sync-destination aggregates in the MetroCluster configuration have the suffix "`-mc`" automatically appended to their name to help identify them.
+
+. Verify the sync-source SVMs on the disaster cluster are up and running:
 +
 `vserver show -subtype sync-source`
 +
 ----
-node_B_1::> vserver show -subtype sync-source
-                               Admin      Root                       Name    Name
-Vserver     Type    Subtype    State      Volume     Aggregate       Service Mapping
------------ ------- ---------- ---------- ---------- ----------      ------- -------
+node_A_1::> vserver show -subtype sync-source
+                                      Admin    Operational  Root                        
+Vserver            Type    Subtype    State    State        Volume     Aggregate  
+-----------        ------- ---------- -------- ----------  ---------   ----------
 ...
-vs1a        data    sync-source
-                               running    vs1a_vol   node_B_2        file    file
-                                                                     aggr_b2
-
-node_A_1::> vserver show -subtype sync-destination
-                               Admin      Root                         Name    Name
-Vserver            Type    Subtype    State      Volume     Aggregate  Service Mapping
------------        ------- ---------- ---------- ---------- ---------- ------- -------
-...
-cluster_A-vs1a-mc  data    sync-destination
-                                      stopped    vs1a_vol   sosb_      file    file
-                                                                       aggr_b2
+cluster_A-vs1a     data    sync-source
+                                      running  running    vs1a_vol      aggr_b2   
+                                                                      
 ----
-+
-Sync-destination aggregates in the MetroCluster configuration have the suffix "`-mc`" automatically appended to their name to help identify them.
+
 
 . Confirm that the switchback operations succeeded by using the `metrocluster operation show` command.
 +
