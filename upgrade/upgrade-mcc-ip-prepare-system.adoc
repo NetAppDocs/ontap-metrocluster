@@ -13,36 +13,31 @@ Before making any changes to the existing MetroCluster configuration, check the 
 
 == Update the MetroCluster switch RCF files before upgrading controllers
 
-Depending on the old platform models, or if switch configuration is not on the minimum version, or if you want to change VLAN IDs used by the back-end MetroCluster connections, you must update the switch RCF files before you begin the platform upgrade procedure.
+Depending on the old platform models, if the switch configuration is not on the minimum version, or if you need to change VLAN IDs used by the back-end MetroCluster connections, you must update the switch RCF files before you begin the platform upgrade procedure.
 
 .About this task
 
+
 You must update the RCF file in the following scenarios:
 
-* For certain platform models, the switches must be using a supported VLAN ID for the back-end MetroCluster IP connections. If the old or new platform models are in the following table, *and not* using a supported VLAN ID, you must update the switch RCF files.
+* If the VLAN IDs for the MetroCluster is *not* 10, 20 and in the range of 101 to 4096, and if the new platform is *not* one of the following:
+
+** FAS8200 or AFF A300
+
+** AFF A320
+
+**  FAS9000 or AFF A700
+
+** AFF A800, AFF C800, ASA A800, or ASA C800
 +
-NOTE: The local cluster connections can use any VLAN, they do not need to be in the given range.
-+
+[NOTE] 
+====
+* You can only change the MetroCluster VLAN for the platforms listed. If the old and new platforms are not listed above, you cannot change the VLAN ID. It is configured when you create the MetroCluster interfaces and cannot be changed. In this case, the VLANs are always in the correct range.
 
-|===
-
-h| Platform model (old or new) h| Supported VLAN IDs
-
-a|
-
- ** AFF A400
-
-a|
-
- ** 10
- ** 20
- ** Any value in the range 101 to 4096 inclusive.
-
-|===
-
+* The local cluster connections can use any VLAN, they do not need to be in a certain range. 
+==== 
 * The switch configuration was not configured with minimum supported RCF version:
 +
-
 |===
 
 h| Switch model h| Required RCF file version
@@ -59,6 +54,8 @@ a|
 Broadcom BES-53248
 a|
 1.3 or later
+a| NVIDIA SN2100
+a| 2.0 or later
 |===
 
 * You want to change the VLAN configuration.
