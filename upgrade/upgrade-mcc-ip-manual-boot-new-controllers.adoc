@@ -4,14 +4,14 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
 summary: 'Boot up the new controllers and verify that LIFs are hosted on appropriate nodes and ports.'
 ---
-= Boot up the new MetroCluster IP controllers and restore LIF configuration
+= Boot the new MetroCluster IP controllers and restore LIF configuration
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Boot up the new controllers and verify that LIFs are hosted on appropriate nodes and ports.
+Boot the new controllers and verify that LIFs are hosted on appropriate nodes and ports.
 
-== Boot up the new controllers
+== Boot the new controllers
 
 You must boot the new controllers, taking care to ensure that the bootarg variables are correct and, if needed, perform the encryption recovery steps.
 
@@ -108,7 +108,7 @@ Follow the prompts to provide the required inputs to recover and restore the key
 +
 Depending on the key manager setting, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
 
-. Wait for the replaced nodes to boot up.
+. Wait for the replaced nodes to boot.
 +
 If either node is in takeover mode, perform a giveback using the `storage failover giveback` command.
 
@@ -144,7 +144,7 @@ NOTE: Only delete the the new broadcast domain. Do not delete any of the broadca
 +
 `broadcast-domain delete -broadcast-domain <broadcast_domain_name>`
 
-.. Add any ports to a broadcast domain as needed.
+.. Add ports to a broadcast domain as needed.
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Adding or removing ports from a broadcast domain^]
 
@@ -173,7 +173,7 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 +
 `set -privilege advanced`
 
-.. Override the port configuration to ensure proper LIF placement:
+.. Override the port configuration to ensure correct LIF placement:
 +
 `vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>`
 +
