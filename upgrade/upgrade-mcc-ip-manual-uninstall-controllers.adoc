@@ -29,7 +29,7 @@ NOTE: This step is required for a successful upgrade.
 +
 The intercluster LIFs on the old controllers must use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers. For example, when you upgrade to AFF A90 controllers, the HA interconnect ports are e1a and e7a, and the MetroCluster IP DR interconnect ports are e2b and e3b. You must move the intercluster LIFs on the old controllers if they are hosted on ports e1a, e7a, e2b, or e3b.
 +
-For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[NetApp Hardware Universe].
+For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[Hardware Universe].
 +
 .. On the old controllers, view the intercluster LIFs:
 +
@@ -73,7 +73,7 @@ All data LIFS including SAN and NAS are admin up and operationally down because 
 +
 For example, e0d is a physical port on old controllers and is also present on new controllers. e0d is not used as a cluster port or otherwise on the new controllers.
 +
-For port usage for platform models, see the https://hwu.netapp.com/[NetApp Hardware Universe]
+For port usage for platform models, see the https://hwu.netapp.com/[Hardware Universe]
 
 .. Modify all data LIFS to use the common port as the home port:
  +
@@ -122,11 +122,11 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 +
 `ifgrp add-port -node <node_name> -ifgrp <interface-group-name> -port <port-id>`
 
-. Halt the nodes to the LOADER prompt:
+. Halt the nodes to the `LOADER` prompt:
 +
 `halt -inhibit-takeover true`
 
-. Connect to the serial console of the old controllers (node_B_1-old and node_B_2-old) at site_B and verify it is displaying the LOADER prompt.
+. Connect to the serial console of the old controllers (node_B_1-old and node_B_2-old) at site_B and verify it is displaying the `LOADER` prompt.
 
 . Gather the bootarg values:
 +
