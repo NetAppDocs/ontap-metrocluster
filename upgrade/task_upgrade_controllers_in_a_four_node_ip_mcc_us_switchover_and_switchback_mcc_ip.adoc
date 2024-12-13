@@ -1265,50 +1265,6 @@ setenv bootarg.mcc.dr_partner 537403323
 `setenv bootarg.mcc_iscsi.node_uuid <local-node-UUID>`
 
 
-.. Set the UUIDs on node_B_1-new.
-+
-The following example shows the commands for setting the UUIDs on node_B_1-new:
-+
-----
-setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
-setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
-setenv bootarg.mcc.pri_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
-setenv bootarg.mcc.aux_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
-setenv bootarg.mcc_iscsi.node_uuid f03cb63c-9a7e-11e7-b68b-00a098908039
-----
-
-.. Set the UUIDs on node_B_2-new:
-+
-The following example shows the commands for setting the UUIDs on node_B_2-new:
-+
-----
-setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
-setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
-setenv bootarg.mcc.pri_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
-setenv bootarg.mcc.aux_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
-setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
-----
-
-. Determine whether the original systems were configured for Advanced Drive Partitioning (ADP) by running the following command from the site that is up:
-+
-`disk show`
-+ 
-The "container type" column displays "shared" in the `disk show` output if ADP is configured. If "container type" has any other value, ADP is not configured on the system. The following example output shows a system configured with ADP:
-+
-----
-::> disk show
-                    Usable               Disk    Container   Container
-Disk                Size       Shelf Bay Type    Type        Name      Owner
-
-Info: This cluster has partitioned disks. To get a complete list of spare disk
-      capacity use "storage aggregate show-spare-disks".
-----------------    ---------- ----- --- ------- ----------- --------- --------
-1.11.0              894.0GB    11    0   SSD      shared     testaggr  node_A_1
-1.11.1              894.0GB    11    1   SSD      shared     testaggr  node_A_1
-1.11.2              894.0GB    11    2   SSD      shared     testaggr  node_A_1
-----
-
-
 === Reassign root aggregate disks
 
 Reassign the root aggregate disks to the new controller module, using the sysids gathered earlier.
