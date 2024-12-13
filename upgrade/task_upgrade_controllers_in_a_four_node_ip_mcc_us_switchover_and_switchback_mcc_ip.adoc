@@ -1309,46 +1309,6 @@ Info: This cluster has partitioned disks. To get a complete list of spare disk
 ----
 
 
-. If the original systems were configured with partitioned disks for ADP, enable it at the `LOADER` prompt for each replacement node:
-+
-`setenv bootarg.mcc.adp_enabled true`
-
-. Set the following variables:
-+
-`setenv bootarg.mcc.local_config_id <original-sys-id>`
-+
-`setenv bootarg.mcc.dr_partner <dr-partner-sys-id>`
-+
-NOTE: The `setenv bootarg.mcc.local_config_id` variable must be set to the sys-id of the *original* controller module, node_B_1-old.
-
-.. Set the variables on node_B_1-new.
-+
-The following example shows the commands for setting the values on node_B_1-new:
-+
-----
-setenv bootarg.mcc.local_config_id 537403322
-setenv bootarg.mcc.dr_partner 537403324
-----
-
-.. Set the variables on node_B_2-new.
-+
-The following example shows the commands for setting the values on node_B_2-new:
-+
-----
-setenv bootarg.mcc.local_config_id 537403321
-setenv bootarg.mcc.dr_partner 537403323
-----
-
-. If using encryption with external key manager, set the required bootargs:
-+
-`setenv bootarg.kmip.init.ipaddr`
-+
-`setenv bootarg.kmip.kmip.init.netmask`
-+
-`setenv bootarg.kmip.kmip.init.gateway`
-+
-`setenv bootarg.kmip.kmip.init.interface`
-
 === Reassign root aggregate disks
 
 Reassign the root aggregate disks to the new controller module, using the sysids gathered earlier.
