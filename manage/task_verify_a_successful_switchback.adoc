@@ -33,11 +33,11 @@ aggr_b2    227.1GB   227.1GB    0% online       0 node_B_2   raid_dp,
 +
 ----
 node_B_1::> vserver show -subtype sync-destination
-                               Admin    Operational  Root                       
-Vserver     Type    Subtype    State    State       Volume     Aggregate       
------------ ------- ---------- -------- ---------- ---------- ------- 
+                                Admin    Operational  Root                       
+Vserver       Type    Subtype    State    State       Volume     Aggregate       
+-----------   ------- ---------- -------- ---------- ---------- ------- 
 ...
-vs1a        data    sync-destination
+cluster_A-vs1a-mc data sync-destination
                                running    stopped    vs1a_vol   aggr_b2       
                                                                      
 ----
@@ -50,12 +50,12 @@ Sync-destination aggregates in the MetroCluster configuration have the suffix "`
 +
 ----
 node_A_1::> vserver show -subtype sync-source
-                                      Admin    Operational  Root                        
-Vserver            Type    Subtype    State    State        Volume     Aggregate  
------------        ------- ---------- -------- ----------  ---------   ----------
+                                  Admin    Operational  Root                        
+Vserver        Type    Subtype    State    State        Volume     Aggregate  
+-----------    ------- ---------- -------- ----------  ---------   ----------
 ...
-cluster_A-vs1a     data    sync-source
-                                      running  running    vs1a_vol      aggr_b2   
+vs1a           data    sync-source
+                                  running  running    vs1a_vol  aggr_b2   
                                                                       
 ----
 
