@@ -280,7 +280,7 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 |===
 
-=== ADP and disk assignment on AFF A250, AFF C250, ASA A250, ASA C250, FAS500f, AFF A20, AFF A30, AFF A50, AFF C30, and AFF C60 systems [[ADP_FAS500f]]
+=== ADP and disk assignment on AFF A250, AFF C250, ASA A250, ASA C250, FAS500f, AFF A20, AFF A30, and AFF C30 systems [[ADP_FAS500f]]
 
 |===
 
@@ -326,6 +326,54 @@ Each of the two plexes in the root aggregate includes the following partitions:
 * No spare partitions
 
 |===
+
+=== ADP and disk assignment on AFF A50 and AFF C60 systems 
+
+|===
+
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
+
+.2+|
+Minimum recommended drives (per site)
+a|
+48 drives (external drives only, no internal drives)
+a|
+The drives on each external shelf are divided into two equal groups (halves). Each half-shelf is automatically assigned to a separate pool.
+a|
+One shelf is used by the local HA pair. The second shelf is used by the remote HA pair.
+
+Partitions on each shelf are used to create the root aggregate. The root aggregate includes the following partitions in each plex:
+
+* Eight partitions for data
+* Two parity partitions
+* Two spare partitions
+
+a| 48 drives (external and internal drives)
+a| The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool.
+
+a|
+The root aggregate is created with 12 root partitions on the internal shelf.
+
+Each of the two plexes in the root aggregate includes:
+
+* Eight partitions for data
+* Two parity partitions
+* Two spare partitions
+
+a|Minimum supported drives (per site)
+a|
+24 internal drives 
+a|
+The drives are divided into four equal groups. Each quarter-shelf is automatically assigned to a separate pool.
+a|
+Each of the two plexes in the root aggregate includes the following partitions:
+
+* Two partitions for data
+* Two parity partitions
+* No spare partitions
+
+|===
+
 
 === ADP and disk assignment on AFF A300 systems
 

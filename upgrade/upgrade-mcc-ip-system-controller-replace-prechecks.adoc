@@ -9,7 +9,75 @@ summary: 'To prepare for the controller upgrade, you perform system prechecks an
 :imagesdir: ../media/
 
 [.lead]
-To prepare for the controller upgrade, you perform system prechecks and collect the configuration information.
+To prepare for the controller upgrade, you might need to upgrade the switch reference configuration files (RCFs) depending on the old and new platform models. You then perform system prechecks, collect the configuration information, and remove existing monitoring software.
+
+== Update the MetroCluster switch RCFs before upgrading controllers
+
+Depending on the old and new platform models, you might need to update the MetroCluster switch reference configuration files (RCFs) before you upgrade controllers. This is required if the switch configuration is not on the minimum version, or if you need to change VLAN IDs used by the back-end MetroCluster connections.
+
+.About this task
+
+You must update the RCF in the following scenarios:
+
+* If the VLAN IDs for the MetroCluster are *not* 10, 20, or in the range of 101 to 4096, and the old or new platform is *not* one of the following:
+
+** FAS8200 or AFF A300
+
+** AFF A320
+
+** FAS9000 or AFF A700
+
+** AFF A800, AFF C800, ASA A800, or ASA C800
++
+[NOTE] 
+====
+* You can only change the MetroCluster VLAN for the platforms listed. If the old and new platforms are not listed above, you cannot change the VLAN ID. It is configured when you create the MetroCluster interfaces and cannot be changed. In this case, the VLANs are in the correct range.
+
+* The local cluster connections can use any VLAN, they don't need to be in the given range. 
+==== 
+
+* The switch configuration wasn't configured with the minimum supported RCF version:
++
+|===
+
+h| Switch model h| Required RCF version
+
+a|
+Cisco 3132Q-V
+a|
+1.7 or later
+a|
+Cisco 3232C
+a|
+1.7 or later
+a|
+Broadcom BES-53248
+a|
+1.3 or later
+a| NVIDIA SN2100
+a| 2.0 or later
+|===
+
+
+The switches at site_A will be upgraded when the controllers on site_A are upgraded.
+
+.Steps
+
+. Prepare the IP switches for the application of the new RCFs.
++
+Follow the steps in the section for your switch vendor: 
+
+ ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Reset the Broadcom IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_cisco.html#resetting-the-cisco-ip-switch-to-factory-defaults[Reset the Cisco IP switch to factory defaults]
+ ** link:../install-ip/task_switch_config_nvidia.html#reset-the-nvidia-ip-sn2100-switch-to-factory-defaults[Reset the NVIDIA IP SN2100 switch to factory defaults]
+
+. Download and install the RCFs.
++
+Follow the steps in the section for your switch vendor: 
+
+ ** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Download and install the Broadcom RCFs]
+ ** link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Download and install the Cisco IP RCFs]
+ ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCFs]
 
 == Perform system prechecks 
 
