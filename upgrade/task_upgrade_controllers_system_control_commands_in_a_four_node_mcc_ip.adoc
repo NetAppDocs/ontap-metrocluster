@@ -298,7 +298,7 @@ Before initiating switchover, the automation operation pauses so you can manuall
 
 === Prepare the network configuration of the old controllers
 
-To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
+To enable networking to resume cleanly on the new controllers, you verify the correct LIF placement, and  remove the networking configuration of the old controllers.
 
 .About this task
 
@@ -350,6 +350,8 @@ The command output should be empty, indicating that all intercluster LIFs are on
 Repeat the command for each intercluster LIF that is not on the home port.
 
 . [[controller_replace_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
++
+CAUTION: If the old and new controllers do not have a common port, you do not need to modify the data LIFs. Skip this step and go directly to <<upgrades_assisted_without_matching_ports, Step 4>>.
 
 .. Display the LIFs:
 +
@@ -374,7 +376,9 @@ For example:
 ----
 network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
-. Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
+
+
+. [[upgrades_assisted_without_matching_ports]] Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
 +
 `broadcast-domain remove-ports -broadcast-domain <broadcast-domain-name>-ports <node-name:port-id>`
 +

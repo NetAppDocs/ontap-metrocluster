@@ -758,7 +758,7 @@ Automatic healing of aggregates after negotiated switchover is disabled during c
 
 == Remove interface configurations and uninstall the old controllers
 
-You must move data LIFs to a common port, remove VLANs and interface groups on the old controllers and then physically uninstall the controllers.
+Verify the correct LIF placement, remove VLANs and interface groups on the old controllers, and then physically uninstall the controllers.
 
 .About this task
 
@@ -811,6 +811,8 @@ The command output should be empty, indicating that all intercluster LIFs are on
 Repeat the command for each intercluster LIF that is not on the home port.
 
 . [[controller_manual_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
++
+CAUTION: If the old and new controllers do not have a common port, you do not need to modify the data LIFs. Skip this step and go directly to <<upgrades_assisted_without_matching_ports, Step 4>>. 
 
 .. Display the LIFs:
 +
@@ -836,7 +838,7 @@ For example:
 network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
 
-. Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
+. [[upgrades_manual_without_matching_ports]] Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
 +
 `broadcast-domain remove-ports -broadcast-domain <broadcast-domain-name> -ports <node-name:port-id>`
 +
