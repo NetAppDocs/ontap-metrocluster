@@ -298,7 +298,7 @@ Before initiating switchover, the automation operation pauses so you can manuall
 
 === Prepare the network configuration of the old controllers
 
-To enable networking to resume cleanly on the new controllers, you verify the correct LIF placement, and  remove the networking configuration of the old controllers.
+To enable networking to resume cleanly on the new controllers, you verify that the LIF placement is correct, and remove the networking configuration of the old controllers.
 
 .About this task
 
@@ -351,7 +351,7 @@ Repeat the command for each intercluster LIF that is not on the home port.
 
 . [[controller_replace_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 +
-CAUTION: If the old and new controllers do not have a common port, you do not need to modify the data LIFs. Skip this step and go directly to <<upgrades_assisted_without_matching_ports, Step 4>>.
+CAUTION: If the old and new controllers don't have a common port, you don't need to modify the data LIFs. Skip this step and go directly to <<upgrades_assisted_without_matching_ports, Step 4>>.
 
 .. Display the LIFs:
 +
@@ -378,7 +378,7 @@ network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
 
 
-. [[upgrades_assisted_without_matching_ports]] Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
+. [[upgrades_assisted_without_matching_ports]] Modify broadcast domains to remove the VLAN and physical ports that need to be deleted:
 +
 `broadcast-domain remove-ports -broadcast-domain <broadcast-domain-name>-ports <node-name:port-id>`
 +
@@ -1072,7 +1072,7 @@ Verify that LIFs are hosted on appropriate nodes before you proceed with the aut
 
 * This task is performed on site_B.
 
-CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switchback the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur if the home port is not connected correctly to the correct switch port and VLAN.
+CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switchback the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur when the home port connection to the switch port and VLAN is incorrect.
 
 .Steps
 
@@ -1090,7 +1090,7 @@ CAUTION: You must verify that the location of the data LIFs is correct on the ne
 +
 `network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
 +
-If the command returns an error, you can override the port configuration using the following command:
+If the command returns an error, you can override the port configuration:
 +
 `vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>`
 +
