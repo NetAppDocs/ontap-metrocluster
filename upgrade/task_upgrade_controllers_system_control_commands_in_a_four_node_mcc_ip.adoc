@@ -658,6 +658,57 @@ In this task, you will use the UUIDs and system IDs identified earlier in the up
 
 .	At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
 +
+The steps you follow depends on your platform model.
++
+[role="tabbed-block"]
+====
+.Systems introduced in ONTAP 9.15.1 or later
+--
+The value for _HA-partner-IP-address_ must be set to *0* (zero) on systems introduced in ONTAP 9.15.1 or later because they have separate ports for DR and HA.
+
+.. Set the following bootarg:
++
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
++
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
++
+The following example sets the values for node_B_1 using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,0,172.17.26.13,172.17.26.12,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,0,172.17.27.13,172.17.27.12,130
+----
++
+The following example sets the values for node_B_2 using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,0,172.17.26.12,172.17.26.13,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,0,172.17.27.12,172.17.27.13,130
+----
++
+The following example sets the values for node_B_1 using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.10/23,0,0,172.17.26.13,172.17.26.12
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.10/23,0,0,172.17.27.13,172.17.27.12
+----
++
+The following example sets the values for node_B_2 using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.11/23,0,0,172.17.26.12,172.17.26.13
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.11/23,0,0,172.17.27.12,172.17.27.13
+----
+
+-- 
+.All other systems
+--
+.. Set the following bootargs:
++
 `setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
 `setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
@@ -693,6 +744,8 @@ setenv bootarg.mcc.port_a_ip_config
 setenv bootarg.mcc.port_b_ip_config
 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
 ----
+--
+====
 
 . At the new nodes' `LOADER` prompt, set the UUIDs:
 +
@@ -790,6 +843,7 @@ setenv bootarg.mcc.dr_partner 537403323
 +
 `setenv bootarg.kmip.kmip.init.interface`
 
+// 2024 Dec 17, ONTAPDOC-2598 
 
 === Reassign root aggregate disks
 
