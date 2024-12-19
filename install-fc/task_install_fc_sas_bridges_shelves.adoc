@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: install, installing, fc-to-sas, fc, sas, bridges, disk, shelves, atto, fibrebridge
 summary: "You install and cable ATTO FibreBridge bridges and SAS disk shelves when adding new storage to the configuration."
 ---
-= Installing FC-to-SAS bridges and SAS disk shelves
+= Install FC-to-SAS bridges and SAS disk shelves
 :icons: font
 :imagesdir: ../media/
 
@@ -77,7 +77,7 @@ The following shows an example configuration for connecting four DS224 shelves w
 
 // 2024 Nov 22, ONTAPDOC-2293
 
-== Preparing for the installation
+== Prepare for the installation
 
 When you are preparing to install the bridges as part of your new MetroCluster system, you must ensure that your system meets certain requirements, including meeting setup and configuration requirements for the bridges. Other requirements include downloading the necessary documents, the ATTO QuickNAV utility, and the bridge firmware.
 
@@ -101,7 +101,7 @@ The _ATTO Product Release Notes_ have an up-to-date list of supported web browse
 .Steps
 
 . Download the _Installation and Service Guide_ for your disk shelf model:
-. Access the ATTO web site using the link provided for your FibreBridge model and download the manual and the QuickNAV utility.
+.. Access the ATTO web site using the link provided for your FibreBridge model and download the manual and the QuickNAV utility.
 +
 [NOTE]
 ====
@@ -149,7 +149,7 @@ In-band ACP is supported without additional cabling in the following shelves and
 
 NOTE: SAS shelves in MetroCluster configurations do not support ACP cabling.
 
-=== Enabling IP port access on the FibreBridge 7600N bridge if necessary
+=== Enable IP port access on the FibreBridge 7600N bridge if necessary
 
 If you are using an ONTAP version prior to 9.5, or otherwise plan to use out-of-band access to the FibreBridge 7600N bridge using telnet or other IP port protocols and services (FTP, ExpressNAV, ICMP, or QuickNAV), you can enable the access services via the console port.
 
@@ -165,7 +165,7 @@ This task is required if you are *not* using in-band management to manage the br
 
 .Steps
 
-. Access the bridge's console interface by connecting a serial cable to the serial port on the FibreBridge 7600N bridge.
+. Access the bridge console interface by connecting a serial cable to the serial port on the FibreBridge 7600N bridge.
 . Using the console, enable the access services, and then save the configuration:
 +
 `set closeport none`
@@ -204,7 +204,7 @@ SNMP is the only protocol that requires a separate enable command.
 +
 `saveconfiguration`
 
-=== Configuring the FC-to-SAS bridges
+=== Configure the FC-to-SAS bridges
 
 Before cabling your model of the FC-to-SAS bridges, you must configure the settings in the FibreBridge software.
 
@@ -411,11 +411,8 @@ You are prompted to restart the bridge.
 +
 link:../maintain/index.html[Maintain MetroCluster Components]
 
-.Related information
 
-link:task_fb_new_install.html[In-band management of the FC-to-SAS bridges]
-
-=== Cabling disk shelves to the bridges
+=== Cable disk shelves to the bridges
 
 You must use the correct FC-to-SAS bridges for cabling your disk shelves.
 
@@ -437,7 +434,7 @@ For disk shelves, you insert a SAS cable connector with the pull tab oriented do
 .Steps
 
 . Daisy-chain the disk shelves in each stack:
-.. Beginning with the logical first shelf in the stack, connect IOM A port 3 to the next shelf's IOM A port 1 until each IOM A in the stack is connected.
+.. Beginning with the logical first shelf in the stack, connect IOM A port 3 to the IOM A port 1 on the next shelf until each IOM A in the stack is connected.
 .. Repeat the previous substep for IOM B.
 .. Repeat the previous substeps for each stack.
 
@@ -462,7 +459,7 @@ image::../media/mcc_cabling_bridge_and_sas3_stack_with_7500n_and_multiple_stacks
 --
 
 [[cabling_fb_7600N_7500N_with_iom6_iom3]]
-==== Cabling a FibreBridge 7600N or 7500N bridge with shelves using IOM6 or IOM3 modules
+==== Cable a FibreBridge 7600N or 7500N bridge with shelves using IOM6 or IOM3 modules
 
 After configuring the bridge, you can start cabling your new system. The FibreBridge 7600N or 7500N bridge uses mini-SAS connectors and supports shelves that use IOM6 or IOM3 modules.
 
@@ -496,7 +493,7 @@ The following illustration shows four stacks connected to a pair of FibreBridge 
 +
 image::../media/mcc_cabling_bridge_and_sas_stack_with_7500n_four_stacks.gif[]
 
-=== Verifying bridge connectivity and cabling the bridge FC ports
+=== Verify bridge connectivity and cabling the bridge FC ports
 
 You should verify that each bridge can detect all of the disk drives, and then cable each bridge to the local FC switches.
 
@@ -567,7 +564,7 @@ a|
 
  .. Check for loose SAS cables or correct the SAS cabling by repeating the cabling.
 +
-<<Cabling disk shelves to the bridges>>
+<<Cable disk shelves to the bridges>>
 
  .. Repeat <<step1_bridge,Step 1>>.
 
@@ -585,12 +582,13 @@ See the port assignments for your version of ONTAP.
 
 .Related information
 
+You need to verify that you are using the specified port assignments when you cable the FC switches when using ONTAP 9.1 and later. 
+
 link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
 
-You need to verify that you are using the specified port assignments when you cable the FC switches when using ONTAP 9.1 and later.
 
 
-== Securing or unsecuring the FibreBridge bridge
+== Secure or unsecure the FibreBridge bridge
 
 To easily disable potentially unsecure Ethernet protocols on a bridge, beginning with ONTAP 9.5 you can secure the bridge. This disables the bridge's Ethernet ports. You can also reenable Ethernet access.
 
