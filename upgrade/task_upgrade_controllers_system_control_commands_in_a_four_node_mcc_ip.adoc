@@ -650,19 +650,64 @@ include::../_include/update_the_switch_rcf_files.adoc[]
 
 Certain MetroCluster IP bootarg values must be configured on the new controller modules. The values must match those configured on the old controller modules.
 
-.About this task
+..About this task
 
-In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in <<gather_info_system_replace, Gather information before the upgrade>>.
+* You need the UUIDs and system IDs identified earlier in the upgrade procedure in <<gather_info_so_sb,Gather information before the upgrade>>.
+
+* Depending on your platform model, you can specify the VLAN ID using the `-vlan-id` parameter. The following platforms do not support the `-vlan-id` parameter:
++
+** FAS8200 and AFF A300
+
+** AFF A320
+
+** FAS9000 and AFF A700
+
+** AFF C800, ASA C800, AFF A800 and ASA A800
++
+All other platforms support the `-vlan-id` parameter.
+
+* The MetroCluster bootarg values you set depend on whether your new system uses cluster HA ports or MetroCluster HA ports. 
++
+The systems listed in the following table use *MetroCluster HA ports*. All other systems use *cluster HA ports*. 
++
+[cols=2*,options="header""]
+|===
+h| AFF and ASA systems that use MetroCluster HA ports h| FAS systems that use MetroCluster HA ports
+a| 
+* AFF A150, ASA A150 
+* AFF A220
+* AFF C250, ASA C250
+* AFF A250, ASA A250
+* AFF A300
+* AFF A320
+* AFF C400, ASA C400
+* AFF A400, ASA A400
+* AFF A700
+* AFF C800, ASA C800
+* AFF A800, ASA A800
+* AFF A900, ASA A900
+a| 
+* FAS2750
+* FAS500f
+* FAS8200
+* FAS8300
+* FAS8700
+* FAS9000
+* FAS9500
+
+|===
+
+
 
 .Steps
 
-.	At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
+. At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
 +
-The steps you follow depends on your new platform model.
+The steps you follow depends on the new platform model.
 +
 [role="tabbed-block"]
 ====
-.Upgrades to systems introduced in ONTAP 9.15.1 or later
+.Upgrades to systems that use cluster HA ports
 --
 
 .. Set the following bootargs:
@@ -706,7 +751,7 @@ setenv bootarg.mcc.port_b_ip_config
 ----
 
 -- 
-.All other systems
+.Upgrades to systems that use MetroCluster HA ports
 --
 .. Set the following bootargs:
 +
