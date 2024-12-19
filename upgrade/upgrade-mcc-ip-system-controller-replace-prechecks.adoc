@@ -17,12 +17,10 @@ Depending on the old and new platform models, you might need to update the Metro
 
 .About this task
 
-This task is required under the following conditions: 
+* This task is required under the following conditions: 
 
-* If the switch RCF configuration is not on the minimum version
-* If you need to change VLAN IDs used by the back-end MetroCluster connections.
-
-NOTE: The switches at site_A will be upgraded when the controllers on site_A are upgraded.
+** If the switch RCF configuration is not on the minimum version
+** If you need to change VLAN IDs used by the back-end MetroCluster connections.
 
 .Before you begin
 
@@ -50,7 +48,7 @@ a| NVIDIA SN2100
 a| 2.0 or later
 |===
 
-* If both of your old and new platform models are in the following list, you do not need to update the VLAN ID before you upgrade controllers, the VLAN ID is configured when the interfaces are created and cannot be changed: 
+* If both of your old and new platform models are in the following list, you do *not* need to update the VLAN ID before you upgrade controllers:
 
 ** FAS8200 or AFF A300
 
@@ -60,7 +58,7 @@ a| 2.0 or later
 
 ** AFF A800, AFF C800, ASA A800, or ASA C800
 +
-If either of your old or new platform models are not listed above, you need to confirm that the MetroCluster interfaces are using a supported VLAN ID. Supported VLAN IDs for the MetroCluster interfaces are: 10, 20, or in the range of 101 to 4096.
+If either of your old or new platform models are not listed above, you *must* confirm that the MetroCluster interfaces are using a supported VLAN ID. Supported VLAN IDs for the MetroCluster interfaces are: 10, 20, or in the range of 101 to 4096.
 +
 [CAUTION] 
 ====
@@ -73,6 +71,8 @@ If either of your old or new platform models are not listed above, you need to c
 . Prepare the IP switches for the application of the new RCFs.
 +
 Follow the steps in the section for your switch vendor: 
++
+NOTE: You should update the switches in the following order: switch_A_1, switch_B_1, switch_A_2, switch_B_2.
 
  ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Reset the Broadcom IP switch to factory defaults]
  ** link:../install-ip/task_switch_config_cisco.html#resetting-the-cisco-ip-switch-to-factory-defaults[Reset the Cisco IP switch to factory defaults]
@@ -85,6 +85,7 @@ Follow the steps in the section for your switch vendor:
  ** link:../install-ip/task_switch_config_broadcom.html#downloading-and-installing-the-broadcom-rcf-files[Download and install the Broadcom RCFs]
  ** link:../install-ip/task_switch_config_cisco.html#downloading-and-installing-the-cisco-ip-rcf-files[Download and install the Cisco IP RCFs]
  ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCFs]
+
 
 == Perform system prechecks 
 

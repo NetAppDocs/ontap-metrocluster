@@ -13,30 +13,20 @@ Before making any changes to the existing MetroCluster configuration, check the 
 
 == Update the MetroCluster switch RCFs before upgrading controllers
 
-Depending on the old and new platform models, you might need to update the MetroCluster switch reference configuration files (RCFs) before you upgrade controllers. This is required if the switch configuration is not on the minimum version, or if you need to change VLAN IDs used by the back-end MetroCluster connections.
+Depending on the old and new platform models, you might need to update the MetroCluster switch reference configuration files (RCFs) before you upgrade controllers. 
 
 .About this task
 
-You must update the RCF in the following scenarios:
+* This task is required under the following conditions: 
 
-* If the VLAN IDs for the MetroCluster are *not* 10, 20, or in the range of 101 to 4096, and the old or new platform is *not* one of the following:
+** If the switch RCF configuration is not on the minimum version
+** If you need to change VLAN IDs used by the back-end MetroCluster connections
 
-** FAS8200 or AFF A300
+.Before you begin
 
-** AFF A320
+Determine whether you need to update the RCFs before you upgrade your controllers: 
 
-** FAS9000 or AFF A700
-
-** AFF A800, AFF C800, ASA A800, or ASA C800
-+
-[NOTE] 
-====
-* You can only change the MetroCluster VLAN for the platforms listed. If the old and new platforms are not listed above, you cannot change the VLAN ID. It is configured when you create the MetroCluster interfaces and cannot be changed. In this case, the VLANs are in the correct range.
-
-* The local cluster connections can use any VLAN, they don't need to be in the given range. 
-==== 
-
-* The switch configuration wasn't configured with the minimum supported RCF version:
+* If the switch configuration wasn't configured with the minimum supported RCF version, you need to update the RCFs before you upgrade your controllers:
 +
 |===
 
@@ -58,14 +48,31 @@ a| NVIDIA SN2100
 a| 2.0 or later
 |===
 
+* If both of your old and new platform models are in the following list, you do *not* need to update the VLAN ID before you upgrade controllers:
 
-The switches at site_A will be upgraded when the controllers on site_A are upgraded.
+** FAS8200 or AFF A300
+
+** AFF A320
+
+** FAS9000 or AFF A700
+
+** AFF A800, AFF C800, ASA A800, or ASA C800
++
+If either of your old or new platform models are not listed above, you *must* confirm that the MetroCluster interfaces are using a supported VLAN ID. Supported VLAN IDs for the MetroCluster interfaces are: 10, 20, or in the range of 101 to 4096.
++
+[CAUTION] 
+====
+* If the VLAN ID is not 10, 20, or in the range of 101 to 4096, you must upgrade the switch RCF before you upgrade controllers. 
+* The local cluster connections can use any VLAN, they don't need to be in the given range. 
+====
 
 .Steps
 
 . Prepare the IP switches for the application of the new RCFs.
 +
 Follow the steps in the section for your switch vendor: 
++
+NOTE: You should update the switches in the following order: switch_A_1, switch_B_1, switch_A_2, switch_B_2.
 
  ** link:../install-ip/task_switch_config_broadcom.html#resetting-the-broadcom-ip-switch-to-factory-defaults[Reset the Broadcom IP switch to factory defaults]
  ** link:../install-ip/task_switch_config_cisco.html#resetting-the-cisco-ip-switch-to-factory-defaults[Reset the Cisco IP switch to factory defaults]

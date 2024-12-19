@@ -479,7 +479,7 @@ Each of the two plexes in the root aggregate includes:
 
 |===
 
-=== ADP and disk assignment on AFF C800, ASA C800, ASA A800, AFF A800, AFF A70, AFF A90, and AFF C80 systems
+=== ADP and disk assignment on AFF C800, ASA C800, ASA A800, and AFF A800 systems
 
 
 |===
@@ -501,7 +501,7 @@ Each of the two plexes in the root aggregate includes:
 * Two parity partitions
 * Two spare partitions
 
-*Note:* On AFF A800 systems, the root aggregate is created with 12 root partitions on the internal shelf. This applies to AFF A800 systems only. 
+*Note:* The root aggregate is created with 12 root partitions on the internal shelf.
 a|
 Minimum supported drives (per site)
 a|
@@ -515,7 +515,45 @@ Each of the two plexes in the root aggregate includes:
 * Two parity partitions
 * One spare partitions
 
-*Note:* On AFF A800 systems, the root aggregate is created with 12 root partitions on the internal shelf. This applies to AFF A800 systems only. 
+*Note:* The root aggregate is created with 12 root partitions on the internal shelf. 
+|===
+
+
+=== ADP and disk assignment on AFF A70, AFF A90, and AFF C80 systems
+
+
+|===
+
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root aggregate
+
+a|
+Minimum recommended drives (per site)
+a|
+Internal drives and 96 external drives
+a|
+The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are automatically assigned on a shelf-by-shelf basis, with all of the drives on each shelf assigned to  one of the four nodes in the MetroCluster configuration.
+
+a|
+
+Each of the two plexes in the root aggregate includes:
+
+* Eight partitions for data
+* Two parity partitions
+* Two spare partitions
+
+a|
+Minimum supported drives (per site)
+a|
+24 internal drives 
+a|
+The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool.
+a|
+Each of the two plexes in the root aggregate includes:
+
+* Three partitions for data
+* Two parity partitions
+* One spare partitions
+
 |===
 
 === ADP and disk assignment on AFF A900, ASA A900, and AFF A1K systems
