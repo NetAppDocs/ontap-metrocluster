@@ -298,7 +298,7 @@ Before initiating switchover, the automation operation pauses so you can manuall
 
 === Prepare the network configuration of the old controllers
 
-To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
+To enable networking to resume cleanly on the new controllers, you verify that the LIF placement is correct, and remove the networking configuration of the old controllers.
 
 .About this task
 
@@ -350,6 +350,8 @@ The command output should be empty, indicating that all intercluster LIFs are on
 Repeat the command for each intercluster LIF that is not on the home port.
 
 . [[controller_replace_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
++
+CAUTION: If the old and new controllers don't have a common port, you don't need to modify the data LIFs. Skip this step and go directly to <<upgrades_assisted_without_matching_ports, Step 4>>.
 
 .. Display the LIFs:
 +
@@ -374,7 +376,9 @@ For example:
 ----
 network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
-. Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
+
+
+. [[upgrades_assisted_without_matching_ports]] Modify broadcast domains to remove the VLAN and physical ports that need to be deleted:
 +
 `broadcast-domain remove-ports -broadcast-domain <broadcast-domain-name>-ports <node-name:port-id>`
 +
@@ -1054,11 +1058,56 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 
 |===
 
-. Before you resume the operation, verify that the MetroCluster is configured correctly. Check the node status:
+. Verify that the MetroCluster is configured correctly. Check the node status:
 +
 `metrocluster node show`
 +
 Verify that the new nodes (site_B) are in *Waiting for switchback state* from site_A.
+
+=== Verify and restore LIF configuration
+
+Verify that LIFs are hosted on appropriate nodes before you proceed with the automated switchback operation.
+
+.About this task
+
+* This task is performed on site_B.
+
+CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switchback the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur when the home port connection to the switch port and VLAN is incorrect.
+
+.Steps
+
+. Verify that LIFs are hosted on the appropriate node and ports before switchback.
+
+.. Change to the advanced privilege level:
++
+`set -privilege advanced`
+
+..  Display the LIFs, and confirm that each data LIF is using the correct home port:
++
+`network interface show` 
+
+.. Modify any LIFs that aren't using the correct home port:
++
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
++
+If the command returns an error, you can override the port configuration:
++
+`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>"`
++
+When entering the network interface modify command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the network `interface modify` using autocomplete and then enclose it in the `vserver config override` command.
+
+.. Confirm that all data LIFs are now on the correct home port:
++
+`network interface show` 
+
+.. Return to the admin privilege level:
++
+`set -privilege admin`
+. Revert the interfaces to their home node:
++
+`network interface revert * -vserver <svm-name>`
++
+Perform this step on all SVMs as required.
 
 . Resume the operation:
 +
@@ -1105,6 +1154,7 @@ If the MetroCluster configuration was previously configured for monitoring by th
 
 If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
 
+// 2024 Dec 13, ONTAPDOC-2597
 // 2024 Jul 31, ONTAPDOC-2219
 // 2024 Jul 17, ONTAPDOC-2213
 // 2024 Jun 17, ONTAPDOC-1735
