@@ -1106,13 +1106,15 @@ Certain MetroCluster IP bootarg values must be configured on the new controller 
 +
 All other platforms support the `-vlan-id` parameter.
 
-* The MetroCluster bootarg values you set depend on whether your new system uses cluster HA ports or MetroCluster HA ports. 
+* The MetroCluster bootarg values you set depend on whether your new system uses shared cluster/HA ports or shared MetroCluster/HA ports. 
 +
-The systems listed in the following table use *MetroCluster HA ports*. All other systems use *cluster HA ports*. 
+The systems listed in the following table use *shared MetroCluster/HA ports*.
++
+All other systems use *shared cluster/HA ports*. 
 +
 [cols=2*,options="header""]
 |===
-h| AFF and ASA systems that use MetroCluster HA ports h| FAS systems that use MetroCluster HA ports
+h| AFF and ASA systems using shared MetroCluster/HA ports h| FAS systems using shared MetroCluster/HA ports
 a| 
 * AFF A150, ASA A150 
 * AFF A220
@@ -1143,11 +1145,11 @@ a|
 
 . At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
 +
-The steps you follow depends on the new platform model.
+The steps you follow depends on the ports used by the new platform model.
 +
 [role="tabbed-block"]
 ====
-.Upgrades to systems that use cluster HA ports
+.Upgrades to systems that use shared cluster/HA ports
 --
 
 .. Set the following bootargs:
@@ -1191,7 +1193,7 @@ setenv bootarg.mcc.port_b_ip_config
 ----
 
 -- 
-.Upgrades to systems that use MetroCluster HA ports
+.Upgrades to systems that use shared MetroCluster/HA ports
 .. Set the following bootargs:
 +
 `setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
