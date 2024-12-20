@@ -165,19 +165,33 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 * This task is performed on site_B.
 * See the port mapping plan you created in link:upgrade-mcc-ip-prepare-system.html#map-ports-from-the-old-nodes-to-the-new-nodes[Map ports from the old nodes to the new nodes].
 
+CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switchback the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur when the home port connection to the switch port and VLAN is incorrect.
+
 .Steps
 
-. Verify that LIFs are hosted on the appropriate node and ports prior to switchback.
+. Verify that LIFs are hosted on the appropriate node and ports before switchback.
 
 .. Change to the advanced privilege level:
 +
 `set -privilege advanced`
 
-.. Override the port configuration to ensure correct LIF placement:
+..  Display the LIFs, and confirm that each data LIF is using the correct home port:
 +
-`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>`
+`network interface show` 
+
+.. Modify any LIFs that aren't using the correct home port:
++
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
++
+If the command returns an error, you can override the port configuration:
++
+`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>"`
 +
 When entering the network interface modify command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the network `interface modify` using autocomplete and then enclose it in the `vserver config override` command.
+
+.. Confirm that all data LIFs are now on the correct home port:
++
+`network interface show`  
 
 .. Return to the admin privilege level:
 +
