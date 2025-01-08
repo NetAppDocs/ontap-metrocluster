@@ -758,7 +758,7 @@ Automatic healing of aggregates after negotiated switchover is disabled during c
 
 == Remove interface configurations and uninstall the old controllers
 
-You must move data LIFs to a common port, remove VLANs and interface groups on the old controllers and then physically uninstall the controllers.
+Verify the correct LIF placement. Then remove the VLANs and interface groups on the old controllers and physically uninstall the controllers.
 
 .About this task
 
@@ -811,6 +811,8 @@ The command output should be empty, indicating that all intercluster LIFs are on
 Repeat the command for each intercluster LIF that is not on the home port.
 
 . [[controller_manual_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
++
+CAUTION: If the old and new controllers don't have a common port, you don't need to modify the data LIFs. Skip this step and go directly to <<upgrades_manual_without_matching_ports, Step 4>>. 
 
 .. Display the LIFs:
 +
@@ -836,7 +838,7 @@ For example:
 network interface modify -vserver vs0 -lif datalif1 -home-port e0d
 ----
 
-. Modify broadcast domains to remove VLAN and physical ports that need to be deleted:
+. [[upgrades_manual_without_matching_ports]] Modify broadcast domains to remove the VLAN and physical ports that need to be deleted:
 +
 `broadcast-domain remove-ports -broadcast-domain <broadcast-domain-name> -ports <node-name:port-id>`
 +
@@ -1092,66 +1094,149 @@ Certain MetroCluster IP bootarg values must be configured on the new controller 
 
 .About this task
 
-In this task, you will use the UUIDs and system IDs identified earlier in the upgrade procedure in <<gather_info_so_sb,Gather information before the upgrade>>.
+* You need the UUIDs and system IDs identified earlier in the upgrade procedure in <<gather_info_so_sb,Gather information before the upgrade>>.
+
+* Depending on your platform model, you can specify the VLAN ID using the `-vlan-id` parameter. The following platforms do not support the `-vlan-id` parameter:
++
+** FAS8200 and AFF A300
+
+** AFF A320
+
+** FAS9000 and AFF A700
+
+** AFF C800, ASA C800, AFF A800, and ASA A800
++
+All other platforms support the `-vlan-id` parameter.
+
+* The MetroCluster bootarg values you set depend on whether your new system uses shared cluster/HA ports or shared MetroCluster/HA ports. 
++
+The systems listed in the following table use *shared MetroCluster/HA ports*.
++
+All other systems use *shared cluster/HA ports*. 
++
+[cols=2*,options="header""]
+|===
+h| AFF and ASA systems using shared MetroCluster/HA ports h| FAS systems using shared MetroCluster/HA ports
+a| 
+* AFF A150, ASA A150 
+* AFF A220
+* AFF C250, ASA C250
+* AFF A250, ASA A250
+* AFF A300
+* AFF A320
+* AFF C400, ASA C400
+* AFF A400, ASA A400
+* AFF A700
+* AFF C800, ASA C800
+* AFF A800, ASA A800
+* AFF A900, ASA A900
+a| 
+* FAS2750
+* FAS500f
+* FAS8200
+* FAS8300
+* FAS8700
+* FAS9000
+* FAS9500
+
+|===
+
+
 
 .Steps
 
-. If the nodes being upgraded are AFF A400, FAS8300, or FAS8700 models, set the following bootargs at the LOADER prompt:
+. At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
++
+The steps you follow depends on the ports used by the new platform model.
++
+[role="tabbed-block"]
+====
+.Systems that use shared cluster/HA ports
+--
+
+.. Set the following bootargs:
++
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
++
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
++
+NOTE: If the interfaces are using a default VLAN ID, the `vlan-id` parameter is not required. 
++
+The following example sets the values for node_B_1-new using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,0,172.17.26.13,172.17.26.12,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,0,172.17.27.13,172.17.27.12,130
+----
++
+The following example sets the values for node_B_2-new using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,0,172.17.26.12,172.17.26.13,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,0,172.17.27.12,172.17.27.13,130
+----
++
+The following example sets the values for node_B_1-new using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.10/23,0,0,172.17.26.13,172.17.26.12
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.10/23,0,0,172.17.27.13,172.17.27.12
+----
++
+The following example sets the values for node_B_2-new using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.11/23,0,0,172.17.26.12,172.17.26.13
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.11/23,0,0,172.17.27.12,172.17.27.13
+----
+
+-- 
+.Systems that use shared MetroCluster/HA ports
+.. Set the following bootargs:
 +
 `setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
 `setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
 +
-NOTE: If the interfaces are using the default VLANs, the vlan-id is not necessary.
-
+NOTE: If the interfaces are using a default VLAN ID, the `vlan-id` parameter is not required. 
 +
-The following commands set the values for node_B_1-new using VLAN 120 for the first network and VLAN 130 for the second network:
+The following example sets the values for node_B_1-new using VLAN 120 for the first network and VLAN 130 for the second network:
 +
 ----
 setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
 setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
 ----
 +
-The following commands set the values for node_B_2-new using VLAN 120 for the first network and VLAN 130 for the second network:
+The following example sets the values for node_B_2-new using VLAN 120 for the first network and VLAN 130 for the second network:
 +
 ----
 setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13,120
 setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13,130
 ----
 +
-The following example shows the commands for node_B_1-new when the default VLAN is used:
+The following example sets the values for node_B_1-new using default VLANs for all MetroCluster IP DR connections:
 +
 ----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
-setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
 ----
 +
-The following example shows the commands for node_B_2-new when the default VLAN is used:
+The following example sets the values for node_B_2-new using default VLANs for all MetroCluster IP DR connections:
 +
 ----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
-setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
 ----
-
-. If the nodes being upgraded are not systems listed in the previous step, at the LOADER prompt for each of the surviving nodes, set the following bootargs with local_IP/mask:
-+
-`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address>`
-+
-`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address>`
-+
-The following commands set the values for node_B_1-new:
-+
-----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
-setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
-----
-+
-The following commands set the values for node_B_2-new:
-+
-----
-setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
-setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
-----
+--
+====
 
 . At the new nodes' LOADER prompt, set the UUIDs:
 +
@@ -1249,6 +1334,7 @@ setenv bootarg.mcc.dr_partner 537403323
 `setenv bootarg.kmip.kmip.init.gateway`
 +
 `setenv bootarg.kmip.kmip.init.interface`
+
 
 === Reassign root aggregate disks
 
@@ -1507,19 +1593,35 @@ Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the 
 * This task is performed on site_B.
 * See the port mapping plan you created in link:task_upgrade_controllers_in_a_four_node_ip_mcc_us_switchover_and_switchback_mcc_ip.html[Mapping ports from the old nodes to the new nodes].
 
+
+CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switchback the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur when the home port connection to the switch port and VLAN is incorrect.
+
+
 .Steps
 
-. Verify that LIFs are hosted on the appropriate node and ports prior to switchback.
+. Verify that LIFs are hosted on the appropriate node and ports before switchback.
 
 .. Change to the advanced privilege level:
 +
 `set -privilege advanced`
 
-.. Override the port configuration to ensure proper LIF placement:
+..  Display the LIFs, and confirm that each data LIF is using the correct home port:
 +
-`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>`
+`network interface show` 
+
+.. Modify any LIFs that aren't using the correct home port:
++
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
++
+If the command returns an error, you can override the port configuration:
++
+`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>"`
 +
 When entering the network interface modify command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the network `interface modify` using autocomplete and then enclose it in the `vserver config override` command.
+
+.. Confirm that all data LIFs are now on the correct home port:
++
+`network interface show` 
 
 .. Return to the admin privilege level:
 +
@@ -1670,6 +1772,7 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 
 If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
 
+// 2024 Dec 12, ONTAPDOC-2597
 // 2024 Jul 18, ONTAPDOC-2213
 // 2024 Jun 17, ONTAPDOC-1735
 // BURT 1448684, 02 FEB 2022
