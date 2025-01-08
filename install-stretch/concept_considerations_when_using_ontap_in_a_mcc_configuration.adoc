@@ -160,6 +160,9 @@ You must consider the following guidelines when creating LIFs:
 * ARP broadcasts: You must enable ARP broadcasts between the two clusters.
 * Duplicate LIFs: You must not create multiple LIFs with the same IP address (duplicate LIFs) in an IPspace.
 * NFS and SAN configurations: You must use different storage virtual machines (SVMs) for both the unmirrored and mirrored aggregates.
+* You should create a subnet object before you create a LIF. A subnet object enables ONTAP to determine failover targets on the destination cluster because it has an associated broadcast domain.
+
+// 2024 Dec 09, ONTAPDOC-2507
 
 ==== Verify LIF creation
 
