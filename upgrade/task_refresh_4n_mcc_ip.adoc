@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, refresh, four, node, ip, configuration, add, autosupport
 summary: 'Beginning with ONTAP 9.8, you can upgrade the controllers and storage in a four-node MetroCluster IP configuration by expanding the configuration to become a temporary eight-node configuration and then removing the old disaster recovery (DR) group.'
 ---
-= Refreshing a four-node or an eight-node MetroCluster IP configuration (ONTAP 9.8 and later)
+= Refresh a four-node or an eight-node MetroCluster IP configuration (ONTAP 9.8 and later)
 :icons: font
 :imagesdir: ../media/
 
@@ -32,6 +32,16 @@ NOTE: If you refresh both DR groups, the platform combination might not be suppo
 ** For information on which platform upgrade combinations are supported, review the MetroCluster IP refresh table in  link:../upgrade/concept_choosing_tech_refresh_mcc.html#supported-metrocluster-ip-tech-refresh-combinations[Choosing a system refresh method].
 * The lower limits of the source and target platforms apply. If you transition to a higher platform, the limits of the new platform applies only after the tech refresh of all DR groups completes.
 * If you perform a tech refresh to a platform with lower limits than the source platform, you must adjust and reduce the limits to be at, or below, the target platform limits before performing this procedure. 
+
+== Enable console logging 
+
+include::../_include/console-logging.adoc[]
+
+// 2024 Aug 13, ONTAPDOC-1988
+
+== Perform the refresh procedure
+
+Use the following steps to refresh the MetroCluster IP configuration. 
 
 .Steps
 

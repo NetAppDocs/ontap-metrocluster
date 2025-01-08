@@ -611,6 +611,12 @@ You must respond with `y` when you are prompted to continue into advanced mode a
 +
 NOTE: The best practice is to have multiple mirrored data aggregates. When there is only one mirrored aggregate, there is less protection because the metadata volumes are located on the same aggregate rather than on separate aggregates.
 
+. Reboot each of the new nodes:
++
+`node reboot -node <node_name> -inhibit-takeover true`
++
+NOTE: You don't need to reboot the nodes in a specific order, but you should wait until one node is fully booted and all connections are established before rebooting the next node.
+
 . Verify that the nodes are added to their DR group:
 +
 `metrocluster node show`
@@ -642,7 +648,7 @@ cluster_A::>
 +
 `storage aggregate create -aggregate aggregate-name -node node-name -diskcount no-of-disks -mirror true`
 +
-NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
+NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is acceptable that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
 +
 
 The following example shows the creation of an aggregate on node_A_3-IP.
@@ -778,6 +784,7 @@ cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
 +
 `set -privilege admin`
 
+// 2024 Oct 21, ONTAPDOC-2504, ONTAPDOC-2218
 // 2024 May 02, ONTAPDOC-1912
 // 2023 Jan 23, ONTAPDOC-729
 // 22 Jun 2023, GH issue 243

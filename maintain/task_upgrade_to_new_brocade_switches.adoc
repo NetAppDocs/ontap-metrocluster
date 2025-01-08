@@ -22,6 +22,9 @@ https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool^]
 
 * This procedure is nondisruptive and takes approximately two hours to complete.
 * You need the admin password and access to an FTP or SCP server.
+* link:enable-console-logging-before-maintenance.html[Enable console logging] before performing this task.
+
+// 2024 Aug 13, ONTAPDOC-1988
 
 The switch fabrics are upgraded one at a time.
 
@@ -47,15 +50,14 @@ image::../media/brocade_upgr_to_g620_fab_1_down.gif[]
 +
 image::../media/brocade_upgr_to_g620_replaced_a_1.gif[]
 
-.. Disable the new switches:
+.. Disable the new switches by running the following command on both switches:
 +
 `switchCfgPersistentDisable`
-+
-The command disables both switches in the switch fabric.
 +
 ----
 FC_switch_A_1:admin> switchCfgPersistentDisable
 ----
+
 
 .. Cable the new switch using the recommended port assignments.
 +
@@ -68,8 +70,12 @@ Both switches in fabric 1 have been replaced.
 image::../media/brocade_upgr_to_g620_replaced_b_1.gif[]
 
 . Power up the new switches and let them boot up.
-. Download the RCF files for the new switch.
-. Apply the RCF files to both new switches in the fabric, following the directions on the download page.
+. Configure the Brocade FC switches using one of the following procedures:
++
+link:../install-fc/task_reset_the_brocade_fc_switch_to_factory_defaults.html[Configure Brocade FC switches with RCF files]
++
+link:../install-fc/task_fcsw_brocade_configure_the_brocade_fc_switches_supertask.html[Configure the Brocade FC switches manually]
+
 . Save the switch configuration:
 +
 `cfgSave`
@@ -154,4 +160,6 @@ After repeating the steps, all four switches have been upgraded and the MetroClu
 
 image::../media/brocade_upgr_to_g620_replacement_completed.gif[]
 
+// 2024 Sep 26, GH 428
+// 2024 Sep 11, GH 423
 // BURT 1448684, 03 FEB 2022

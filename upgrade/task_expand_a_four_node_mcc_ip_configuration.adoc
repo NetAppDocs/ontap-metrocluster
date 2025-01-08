@@ -35,6 +35,10 @@ https://hwu.netapp.com[NetApp Hardware Universe^]
 +
 When you add new nodes to an existing cluster without a default broadcast domain, node management LIFs are created for the new nodes using universal unique identifiers (UUIDs) instead of the expected names. For more information, see the Knowledge Base article https://kb.netapp.com/onprem/ontap/os/Node_management_LIFs_on_newly-added_nodes_generated_with_UUID_names[Node management LIFs on newly-added nodes generated with UUID names^].
 
+== Enable console logging 
+
+include::../_include/console-logging.adoc[] 
+
 == Example naming in this procedure
 
 This procedure uses example names throughout to identify the DR groups, nodes, and switches involved.
@@ -68,6 +72,8 @@ a|
 
 |===
 
+
+// 2024 Aug 13, ONTAPDOC-1988
 == Supported platform combinations when adding a second DR group
 
 The following tables shows the supported platform combinations for eight-node MetroCluster IP configurations. 
@@ -896,21 +902,33 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 .. Enter advanced privilege mode:
 +
 `set -privilege advanced`
-.. Refresh the MetroCluster configuration on one of the new nodes:
+.. Refresh the MetroCluster configuration on any of the nodes:
 +
-`metrocluster configure`
-+
-The following example shows the MetroCluster configuration refreshed on both DR groups:
-+
-----
-cluster_A::*> metrocluster configure -refresh true
+[cols="30,70"]
+|===
 
-[Job 726] Job succeeded: Configure is successful.
-----
+h| If your MetroCluster configuration has... h| Then do this...
+a|
+Multiple data aggregates
+a|
+From any node's prompt, run:
+
+`metrocluster configure <node-name>`
+a|
+A single mirrored data aggregate at one or both sites
+a|
+
+From any node's prompt, configure the MetroCluster with the `-allow-with-one-aggregate true` parameter:
+
+`metrocluster configure -allow-with-one-aggregate true <node-name>`
+
+|===
 
 .. Reboot each of the new nodes:
 +
 `node reboot -node <node_name> -inhibit-takeover true`
++
+NOTE: You don't need to reboot the nodes in a specific order, but you should wait until one node is fully booted and all connections are established before rebooting the next node.
 
 .. Return to admin privilege mode:
 +
@@ -920,7 +938,7 @@ cluster_A::*> metrocluster configure -refresh true
 +
 `storage aggregate create -aggregate <aggregate-name> -node <node-name> -diskcount <no-of-disks> -mirror true`
 +
-NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is support that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
+NOTE: You must create at least one mirrored data aggregate per site. It is recommended to have two mirrored data aggregates per site on MetroCluster IP nodes to host the MDV volumes, however a single aggregate per site is supported (but not recommended). It is acceptable that one site of the MetroCluster has a single mirrored data aggregate and the other site has more than one mirrored data aggregate.
 +
 The following example shows the creation of an aggregate on node_A_1-new.
 +
@@ -986,10 +1004,12 @@ Group Cluster Node               State          Mirroring Mode
 cluster_A::*>
 ----
 
-. Move the MDV_CRS volumes from the old nodes to the new nodes in advanced privilege.
+. Move the MDV_CRS volumes in advanced privilege mode.
 .. Display the volumes to identify the MDV volumes:
 +
-NOTE: If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
+If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
++
+If you are expanding a four-node MetroCluster configuration to a permanent eight-node configuration, you should move one of the MDV volumes to the new DR group. 
 +
 The following example shows the MDV volumes in the `volume show` output:
 +
@@ -1082,8 +1102,11 @@ node_A_3-new      true
 node_A_4-new      false
 4 entries were displayed.
 ----
+
 . If your system supports end-to-end encryption, you can link:../maintain/task-configure-encryption.html#enable-end-to-end-encryption[Enable end-to-end encryption] on the new DR group.
 
+// 2024 Oct 23, ONTAPDOC-2504, ONTAPDOC-2218
+// 2024 Sep 05, GH 386, 374
 // 2024 Jul 08, ONTAPDOC-1942
 // 2024 Jun 17, ONTAPDOC-1734
 // 2024 Apr 19, GH 341
