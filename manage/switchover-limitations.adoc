@@ -1,0 +1,43 @@
+---
+permalink: manage/switchover-limitations.html
+sidebar: sidebar
+keywords: switchover, perform, heal, operation, restore, metrocluster, functionality, fc, configuration, ip, limitations, 
+summary: During a switchover, certain operations should not be performed.
+---
+= Limitations when the MetroCluster configuration is in switchover
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+When the system is in switchover, certain operations should not be performed. Learn about restricted operations when the system is in switchover. 
+
+== Restricted operations in switchover
+
+The following operations are not supported when the system is in switchover:
+
+* Creating or deleting aggregates and volumes 
+* Creating or deleting SVMs
+* Creating or deleting LIFs
+* Adding or removing disks (only if you are replacing them as part of a recovery procedure)
+* Performing configuration changes to SnapMirror SVM DR
+* Modifying existing broadcast domains or creating new broadcast domains
+* Modifying network subnets 
+
+== Hardware replacement in switchover
+
+Use the following procedures to replace controller hardware when the system is in switchover:
+
+* If you need to replace a controller of the same type, at the site not in switchover, follow the procedure to link:../disaster-recovery/task_recover_from_a_multi_controller_and_or_storage_failure.html[Recover from a multi-controller or storage failure].
+
+** If you need to replace the controller modules and chassis while the nodes are switched over at the surviving site, shut down both controllers and then perform the procedure to link:../disaster-recovery/task_recover_from_a_multi_controller_and_or_storage_failure.html[Recover from a multi-controller or storage failure].
+
+* If you need to replace a controller with a different type of controller, follow the procedure for your configuration in link:../upgrade/concept_choosing_controller_upgrade_mcc.html[Choose a controller upgrade procedure].
+
+** If your system is in switchover because of a controller failure or if you experience a controller failure while in switchover, you must first replace the controller hardware, perform a switchback, and then perform a controller upgrade:
++
+. To replace the controller hardware and perform the switchback, follow link:../disaster-recovery/task_recover_from_a_multi_controller_and_or_storage_failure.html[Recover from a multi-controller or storage failure].
+. After you have replaced the hardware, perform a controller upgrade using the procedures in link:../upgrade/concept_choosing_controller_upgrade_mcc.html[Choose a controller upgrade procedure].
+
+
+
+// 2024 Sep 05, ONTAPDOC-2302, ONTAPDOC-2291
