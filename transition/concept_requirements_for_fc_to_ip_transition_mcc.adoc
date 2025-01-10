@@ -11,6 +11,7 @@ summary: Before starting the transition process, you must make sure the configur
 [.lead]
 Before starting the transition process, verify that the configuration meets the requirements.
 
+You can perform a nodisruptive FC-to-IP transition if your configuration meets the following requirements:
 
 * If you have an eight-node configuration, all nodes are running ONTAP 9.13.1 or later.
 * If you have a four-node configuration, all nodes are running ONTAP 9.8 or later.
@@ -22,6 +23,13 @@ link:concept_choosing_your_transition_procedure_mcc_transition.html[Supported pl
 +
 https://hwu.netapp.com[NetApp Hardware Universe]
 
+[CAUTION] 
+====
+If you are using shared storage MetroCluster switches, you can only transition to a four-node MetroCluster IP configuration. Transitioning to an eight-node MetroCluster IP configuration using shared storage MetroCluster switches is not supported. 
+
+After you have completed the transition to a four-node MetroCluster IP configuration, you can expand to an eight-node MetroCluster IP configuration by following the steps in link:../upgrade/task_expand_a_four_node_mcc_ip_configuration.html[Expand a MetroCluster IP configuration].
+====
+
 
 * Your configuration meets all requirements and is cabled as described in the following _MetroCluster Installation and Configuration_ procedures.
 +
@@ -29,11 +37,7 @@ link:../install-fc/index.html[Fabric-attached MetroCluster installation and conf
 +
 link:../install-stretch/concept_considerations_differences.html[Stretch MetroCluster installation and configuration]
 
-.Unsupported configurations
 
-If you are using shared storage MetroCluster switches, you can only transition to a four-node MetroCluster IP configuration. Transitioning to an eight-node MetroCluster IP configuration using shared storage MetroCluster switches is not supported. 
-
-After you have completed the transition, you can expand the four-node MetroCluster IP configuration to an eight-node MetroCluster IP configuration by following the steps in link:..upgrade/task_expand_a_four_node_mcc_ip_configuration.html[Expand a MetroCluster IP configuration].
 
 // 2025 jan 10, ONTAPDOC-2632
 // 2023 Feb 02, GH issue 263,264
