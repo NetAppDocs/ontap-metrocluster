@@ -9,23 +9,34 @@ summary: Before starting the transition process, you must make sure the configur
 :imagesdir: ../media/
 
 [.lead]
-Before starting the transition process, you must make sure the configuration meets the requirements.
+Before starting the transition process, verify that the configuration meets the requirements.
 
-* If you have an eight-node configuration, all nodes must be running ONTAP 9.13.1 or later.
-* If you have a four-node configuration, all nodes must be running ONTAP 9.8 or later.
-* The existing and new platforms must be a supported combination for transition.
+You can perform a nodisruptive FC-to-IP transition if your configuration meets the following requirements:
+
+* If you have an eight-node configuration, all nodes are running ONTAP 9.13.1 or later.
+* If you have a four-node configuration, all nodes are running ONTAP 9.8 or later.
+* The existing and new platforms are a supported combination for transition.
 +
 link:concept_choosing_your_transition_procedure_mcc_transition.html[Supported platforms for nondisruptive transition]
 
-* It must support a switched cluster configuration.
+* Your configuration supports a switched cluster configuration.
 +
-https://hwu.netapp.com[NetApp Hardware Universe]
+https://hwu.netapp.com[Hardware Universe^]
 
-* It must meet all requirements and cabling as described in the _MetroCluster Installation and Configuration_ procedures.
+[CAUTION] 
+====
+If you are using shared storage MetroCluster switches, you can only transition to a four-node MetroCluster IP configuration. Transitioning to an eight-node MetroCluster IP configuration using shared storage MetroCluster switches is not supported.  After you complete the transition to a four-node MetroCluster IP configuration, you can link:../upgrade/task_expand_a_four_node_mcc_ip_configuration.html[expand to an eight-node MetroCluster IP configuration].
+====
+
+
+* Your configuration meets all requirements and is cabled as described in the following _MetroCluster Installation and Configuration_ procedures.
 +
 link:../install-fc/index.html[Fabric-attached MetroCluster installation and configuration]
 +
 link:../install-stretch/concept_considerations_differences.html[Stretch MetroCluster installation and configuration]
 
+
+
+// 2025 jan 10, ONTAPDOC-2632
 // 2023 Feb 02, GH issue 263,264
 // BURT 1448684, 01 FEB 2022
