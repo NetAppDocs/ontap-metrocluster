@@ -17,10 +17,10 @@ Depending on the old and new platform models, you might need to update the Metro
 
 .About this task
 
-* This task is required under the following conditions: 
+Perform this task in the following circumstances: 
 
-** If the switch RCF configuration is not on the minimum version.
-** If you need to change VLAN IDs used by the back-end MetroCluster connections
+** The switch RCF configuration is not on the minimum version.
+** You need to change VLAN IDs used by the back-end MetroCluster connections
 
 .Before you begin
 
@@ -58,13 +58,13 @@ a| 2.0 or later
 
 ** AFF A800, AFF C800, ASA A800, or ASA C800
 +
-If either of your old or new platform models are not listed above, you *must* confirm that the MetroCluster interfaces are using a supported VLAN ID. Supported VLAN IDs for the MetroCluster interfaces are: 10, 20, or in the range of 101 to 4096.
+If either of your old or new platform models are not listed above, you must confirm that the MetroCluster interfaces are using a supported VLAN ID. Supported VLAN IDs for the MetroCluster interfaces are: 10, 20, or in the range of 101 to 4096.
 +
 [CAUTION] 
 ====
 * If the VLAN ID is not 10, 20, or in the range of 101 to 4096, you must upgrade the switch RCF before you upgrade controllers. 
 * The local cluster connections can use any VLAN, they don't need to be in the given range.
-* The new RCF that you are upgrading to must use the VLANs 10, 20 or be in the range 101 to 4096. Do not change the VLAN for the local cluster unless it is required.  
+* The new RCF that you are upgrading to must use the VLANs 10, 20, or be in the range 101 to 4096. Don't change the VLAN for the local cluster unless it is required.  
 ====
 
 .Steps
@@ -89,11 +89,11 @@ Follow the steps in the section for your switch vendor:
 
 == Map ports from the old nodes to the new nodes
 
-You must verify that the physical ports on node_A_1-old map correctly to the physical ports on node_A_1-new, which will allow node_A_1-new to communicate with other nodes in the cluster and with the network after the upgrade.
+You must verify that the physical ports on node_A_1-old map correctly to the physical ports on node_A_1-new. This allows node_A_1-new to communicate with other nodes in the cluster and with the network after the upgrade.
 
 .About this task
 
-When the new node is first booted during the upgrade process, it will replay the most recent configuration of the old node it is replacing. When you boot node_A_1-new, ONTAP attempts to host LIFs on the same ports that were used on node_A_1-old. Therefore, as part of the upgrade you must adjust the port and LIF configuration so it is compatible with that of the old node. During the upgrade procedure, you will perform steps on both the old and new nodes to ensure correct configuration for the cluster, management, and data LIFs.
+When the new node first boots during the upgrade process, it replays the most recent configuration of the old node it's replacing. When you boot node_A_1-new, ONTAP attempts to host LIFs on the same ports that were used on node_A_1-old. This means that you have to adjust the port and LIF configuration as part of the upgrade so it's compatible with the configuration of the old node. During the upgrade procedure, you perform steps on both the old and new nodes to ensure correct configuration for the cluster, management, and data LIFs
 
 The following table shows examples of configuration changes related to the port requirements of the new nodes.
 
@@ -118,14 +118,14 @@ a|
 e0a,e0b,e0c,e0d
 
 a|
-e0c and e0d are matching ports. You don't have to change the configuration, but after upgrade you can spread your cluster LIFs across the available cluster ports.
+e0c and e0d are matching ports. You don't have to change the configuration, but after the upgrade you can spread your cluster LIFs across the available cluster ports.
 
 |===
 
 .Steps
 . Determine what physical ports are available on the new controllers and what LIFs can be hosted on the ports.
 +
-The controller's port usage depends on the platform module and which switches you will use in the MetroCluster IP configuration. You can gather the port usage of the new platforms from the link:https://hwu.netapp.com[Hardware Universe].
+The controller's port usage depends on the platform module and which switches you will use in the MetroCluster IP configuration. You can gather the port usage of the new platforms from the link:https://hwu.netapp.com[Hardware Universe^].
 
 . Plan your port usage and fill in the following tables for reference for each of the new nodes.
 +
