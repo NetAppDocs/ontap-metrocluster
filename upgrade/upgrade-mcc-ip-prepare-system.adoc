@@ -20,7 +20,7 @@ Depending on the old and new platform models, you might need to update the Metro
 Perform this task in the following circumstances: 
 
 ** The switch RCF configuration is not on the minimum version.
-** You need to change VLAN IDs used by the back-end MetroCluster connections
+** You need to change VLAN IDs used by the back-end MetroCluster connections.
 
 .Before you begin
 
@@ -109,7 +109,7 @@ a|
 e3a, e3b
 
 a|
-No matching port. After upgrade, you must recreate cluster ports.
+No matching port. After the upgrade, you must recreate the cluster ports.
 
 a|
 e0c, e0d
@@ -393,37 +393,37 @@ You must verify the health and connectivity of the MetroCluster configuration pr
  +
 `node run -node <node_name> sysconfig -a`
 +
-You should issue this command for each node in the MetroCluster configuration.
+Issue this command for each node in the MetroCluster configuration.
 
  .. Verify that there are no broken disks in the configuration:
  +
 `storage disk show -broken`
 +
-You should issue this command on each node in the MetroCluster configuration.
+Issue this command on each node in the MetroCluster configuration.
 
 .. Check for any health alerts:
 +
 `system health alert show`
 +
-You should issue this command on each cluster.
+Issue this command on each cluster.
 
 .. Verify the licenses on the clusters:
 +
 `system license show`
 +
-You should issue this command on each cluster.
+Issue this command on each cluster.
 
 .. Verify the devices connected to the nodes:
 +
 `network device-discovery show`
 +
-You should issue this command on each cluster.
+Issue this command on each cluster.
 
 .. Verify that the time zone and time is set correctly on both sites:
 +
 `cluster date show`
 +
-You should issue this command on each cluster. You can use the `cluster date` commands to configure the time and time zone.
+Issue this command on each cluster. You can use the `cluster date` commands to configure the time and time zone.
 . Confirm the operational mode of the MetroCluster configuration and perform a MetroCluster check.
  .. Confirm the MetroCluster configuration and that the operational mode is `normal`:
  +
@@ -453,7 +453,7 @@ Before upgrading, you must gather information for each of the nodes, and, if nec
 . Record the physical cabling for each node, labelling cables as needed to allow correct cabling of the new nodes.
 . Gather interconnect, port, and LIF information for each node.
 +
-You should gather the output of the following commands for each node:
+Gather the output of the following commands for each node:
 
  ** `metrocluster interconnect show`
  ** `metrocluster configuration-settings connection show`
@@ -497,7 +497,7 @@ dr-group-id cluster     node   node-uuid                            node-cluster
 cluster_B::*
 ----
 +
-It is recommended that you record the UUIDs into a table similar to the following.
+NetApp recommends that you record the UUIDs in a table similar to the following.
 +
 
 |===
@@ -532,14 +532,14 @@ aa9a7a7a-9a81-11e7-a4e9-00a098908c35
 
 . If the MetroCluster nodes are in a SAN configuration, collect the relevant information.
 +
-You should gather the output of the following commands:
+Gather the output of the following commands:
 
  ** `fcp adapter show -instance`
  ** `fcp interface show -instance`
  ** `iscsi interface show`
  ** `ucadmin show`
 
-. If the root volume is encrypted, collect and save the passphrase used for key-manager:
+. If the root volume is encrypted, collect and save the passphrase used for the key manager:
 +
 `security key-manager backup show`
 
@@ -551,7 +551,7 @@ For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp
  +
 `security key-manager onboard show-backup`
 +
-You will need the passphrase later in the upgrade procedure.
+You need the passphrase later in the upgrade procedure.
 
  .. If enterprise key management (KMIP) is configured, issue the following commands:
 +
