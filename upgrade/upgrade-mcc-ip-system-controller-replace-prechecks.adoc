@@ -88,7 +88,7 @@ Follow the steps in the section for your switch vendor:
  ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCFs]
 
 
-== Perform system prechecks 
+== Start the controller replacement operation and perform system prechecks 
 
 Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must manually link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[re-configure the ONTAP Mediator service].
 
@@ -97,6 +97,8 @@ At any stage during the upgrade, you can run the `system controller replace show
 .Steps
 
 . Start the automated controller replacement procedure from site A to replace the controllers at site B:
++
+CAUTION: If you are repeating this procedure after already replacing the controllers at site B, you must run `system controller replace start -nso true -skip-metrocluster-check true` instead.
 +
 `system controller replace start -nso true`
 +
