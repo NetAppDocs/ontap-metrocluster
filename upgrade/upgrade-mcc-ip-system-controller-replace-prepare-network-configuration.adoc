@@ -1,0 +1,147 @@
+---
+permalink: upgrade/upgrade-mcc-ip-system-controller-replace-prepare-network-configuration.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'After you gather information and resume the operation, the automation operation proceeds with the switchover.'
+---
+= Prepare the network configuration of the old MetroCluster IP controllers
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+After you gather information and resume the operation, the automation operation proceeds with the switchover.
+
+.Before you begin
+
+Before initiating switchover, the automation operation pauses so you can manually verify that all LIFs are "`up`" at site B. If necessary, bring any LIFs that are "`down`" to "`up`" and resume the automation operation by using the `system controller replace resume` command.
+
+The automation operation initiates the switchover operations. After these operations complete, the operation pauses at *paused for user intervention* so you can rack and install the controllers, boot the partner controllers, and reassign the root aggregate disks to the new controller module from flash backup using the `sysids` gathered earlier.
+
+.About this task
+
+* This task must be performed on each of the old nodes.
+* You use the information gathered in link:upgrade-mcc-ip-system-controller-replace-prechecks.html#gather-information-before-the-upgrade[Gather information before the upgrade].
+
+.Steps
+
+. Boot the old nodes and then log in to the nodes:
++
+`boot_ontap`
+
+. Modify the intercluster LIFs on the old controllers to use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
++
+NOTE: This step is required for a successful upgrade.
++
+The intercluster LIFs on the old controllers must use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers. For example, when you upgrade to AFF A90 controllers, the HA interconnect ports are e1a and e7a, and the MetroCluster IP DR interconnect ports are e2b and e3b. You must move the intercluster LIFs on the old controllers if they are hosted on ports e1a, e7a, e2b, or e3b.
++
+For port distribution and allocation on the new nodes, refer to the https://hwu.netapp.com[Hardware Universe].
++
+.. On the old controllers, view the intercluster LIFs:
++
+`network interface show  -role intercluster`
++
+Take one of the following actions depending on whether the intercluster LIFs on the old controllers use the same ports as the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
++
+[cols=2*,options="header"]
+|===
+| If the intercluster LIFs...
+| Go to...
+| Use the same home port | <<controller_replace_upgrade_prepare_network_ports_2b,Substep b>>
+| Use a different home port | <<controller_replace_upgrade_prepare_network_ports_3,Step 3>>
+|===
++
+.. [[controller_replace_upgrade_prepare_network_ports_2b]]Modify the intercluster LIFs to use a different home port:
++
+`network interface modify -vserver <vserver> -lif <intercluster_lif> -home-port <port-not-used-for-ha-interconnect-or-mcc-ip-dr-interconnect-on-new-nodes>`
++
+.. Verify that all intercluster LIFs are on their new home ports:
++
+`network interface show -role intercluster -is-home  false`
++
+The command output should be empty, indicating that all intercluster LIFs are on their respective home ports. 
+
+.. Revert any LIFs that are not on their home ports:
++
+`network interface revert -lif <intercluster_lif>`
++
+Repeat the command for each intercluster LIF that is not on the home port.
+
+. [[controller_replace_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
++
+CAUTION: If the old and new controllers don't have a common port, you don't need to modify the data LIFs. Skip this step and go directly to <<upgrades_assisted_without_matching_ports, Step 4>>.
+
+.. Display the LIFs:
++
+`network interface show`
++
+All data LIFS including SAN and NAS will be admin "`up`" and operationally "`down`" since those are up at switchover site (cluster_A).
+
+.. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
++
+For example, "`e0d`" is a physical port on old controllers and is also present on new controllers. "`e0d`" is not used as a cluster port or otherwise on the new controllers.
++
+Refer to the link:https://hwu.netapp.com/[Hardware Universe^] for the port usage of each platform model. 
+
+.. Modify all data LIFS to use the common port as the home port:
++
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
++
+In the following example, this is "`e0d`".
++
+For example:
++
+----
+network interface modify -vserver vs0 -lif datalif1 -home-port e0d
+----
+. [[upgrades_assisted_without_matching_ports]] Modify broadcast domains to remove the VLAN and physical ports that need to be deleted:
++
+`broadcast-domain remove-ports -broadcast-domain <broadcast-domain-name>-ports <node-name:port-id>`
++
+Repeat this step for all VLAN and physical ports.
+
+. Remove any VLAN ports using cluster ports as member ports and interface groups using cluster ports as member ports.
+.. Delete VLAN ports:
++
+`network port vlan delete -node <node-name> -vlan-name <portid-vlandid>`
++
+For example:
++
+----
+network port vlan delete -node node1 -vlan-name e1c-80
+----
+
+.. Remove physical ports from the interface groups:
++
+`network port ifgrp remove-port -node <node-name> -ifgrp <interface-group-name> -port <portid>`
++
+For example:
++
+----
+network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
+----
+
+.. Remove VLAN and interface group ports from the broadcast domain:
++
+`network port broadcast-domain remove-ports -ipspace <ipspace> -broadcast-domain <broadcast-domain-name>-ports <nodename:portname,nodename:portname>,..`
+.. Modify interface group ports to use other physical ports as member as needed:
++
+`ifgrp add-port -node <node-name> -ifgrp <interface-group-name> -port <port-id>`
+
+. Halt the nodes:
++
+`halt -inhibit-takeover true -node <node-name>`
++
+This step must be performed on both nodes.
+
+. Verify that the nodes are at the `LOADER` prompt and collect and preserve the current environment variables.
+
+. Gather the bootarg values: 
++
+`printenv`
+
+. Power off the nodes and shelves at the site where the controller is being upgraded. 
+
+.What's next?
+link:upgrade-mcc-ip-system-controller-replace-setup-new-controllers.html[Set up and netboot the new controllers].
+
+// 2024 Nov 12, ONTAPDOC-2351
