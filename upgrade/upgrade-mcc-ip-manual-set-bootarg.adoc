@@ -1,0 +1,99 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-set-bootarg.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc, bootarg
+summary: 'Upgrades to systems introduced in ONTAP 9.15.1 or later require you to set a bootarg before you can proceed with the controller upgrade.'
+---
+= Set the required bootarg (for MetroCluster IP upgrades to systems introduced in ONTAP 9.15.1 or later)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Controller upgrades to systems introduced in ONTAP 9.15.1 or later require you to set a bootarg before you can start the upgrade.
+
+== Step 1: Determine the bootarg you need to set on the old controllers
+
+All supported upgrades to the following systems require you to set a bootarg on the old controllers before performing the controller upgrade: 
+
+* AFF A70, AFF A90, AFF A1K
+* FAS70, FAS90
+* AFF C80
+* AFF A50, AFF A20, AFF A30
+* AFF C30, AFF C60 
+
+CAUTION: If you are upgrading to any of the systems listed, you *must* set a required bootarg on the existing system before performing the upgrade. For all other upgrades, you can skip this task and go directly to link:upgrade-mcc-ip-prepare-system.html[Prepare the system for upgrade].
+
+Most upgrades to systems introduced in ONTAP 9.15.1 or later require you to set the `hw.cxgbe.toe_keepalive_disable` bootarg on the old controllers. However, certain upgrade paths require you to set the `bootarg.siw.interop_enabled` bootarg instead. 
+
+Use the following table to determine which bootarg you need to set for your specific upgrade combination.  
+
+[[upgrade_paths_bootarg_manual]]
+[cols=2*,options="header"]
+|===
+| For this upgrade...
+| Set the bootarg...
+| From AFF A250 to AFF A30 | `bootarg.siw.interop_enabled`
+| From AFF C250 to AFF C30 | `bootarg.siw.interop_enabled`
+| From AFF A150 to AFF A20 | `bootarg.siw.interop_enabled`
+| From AFF A220 to AFF A20 | `bootarg.siw.interop_enabled`
+| All other supported upgrades to AFF A70, AFF A90, AFF A1K, FAS70, FAS90, AFF C80, AFF A50, AFF A20, AFF A30, AFF C30, or AFF C60 systems | `hw.cxgbe.toe_keepalive_disable`
+|===
+
+
+== Step 2: Set the required bootarg on the old controllers
+
+This task is *only* required when you upgrade to an AFF A70, AFF A90, AFF A1K, FAS70, FAS90, AFF C80, AFF A50, AFF A20, AFF A30, AFF C30, or AFF C60 system.
+
+.Steps
+
+. Halt one node at each site and allow its HA partner to perform a storage takeover of the node:
++
+`halt  -node <node_name>`
+
+. Set the required bootarg for your upgrade combination. You already determined the bootarg that you need to set by using the table in <<upgrade_paths_bootarg_manual,determine which bootarg you need to set>>. 
++
+[role="tabbed-block"]
+====
+.hw.cxgbe.toe_keepalive_disable
+--
+.. At the `LOADER` prompt of the halted node, enter the following: 
++
+`setenv hw.cxgbe.toe_keepalive_disable 1` 
++
+`saveenv` 
++
+`printenv hw.cxgbe.toe_keepalive_disable`
+--
+.bootarg.siw.interop_enabled
+--
+
+.. At the `LOADER` prompt of the halted node, enter the following: 
++
+`setenv bootarg.siw.interop_enabled 1` 
++
+`saveenv` 
++
+`printenv bootarg.siw.interop_enabled` 
+
+-- 
+
+====
+  
+
+. Boot the node:
++
+`boot_ontap`
+    
+. When the node boots, perform a giveback for the node at the prompt: 
++
+`storage failover giveback -ofnode <node_name>`
+
+. Repeat the steps on each node in the DR group that is being upgraded.
+
+.What's next?
+link:upgrade-mcc-ip-prepare-system.html[Prepare the system for upgrade].
+
+
+// 2024 Nov 12, ONTAPDOC-2351
+
+
