@@ -1,0 +1,208 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-boot-new-controllers.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Boot the new controllers and verify that LIFs are hosted on appropriate nodes and ports.'
+---
+= Boot the new MetroCluster IP controllers and restore LIF configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Boot the new controllers and verify that LIFs are hosted on appropriate nodes and ports.
+
+== Boot the new controllers
+
+You must boot the new controllers, taking care to ensure that the bootarg variables are correct and, if needed, perform the encryption recovery steps.
+
+.Steps
+
+. Halt the new nodes:
++
+`halt`
+. If external key manager is configured, set the related bootargs:
++
+`setenv bootarg.kmip.init.ipaddr <ip-address>`
++
+`setenv bootarg.kmip.init.netmask <netmask>`
++
+`setenv bootarg.kmip.init.gateway <gateway-addres>`
++
+`setenv bootarg.kmip.init.interface <interface-id>`
+. Check if the partner-sysid is the current:
++
+`printenv partner-sysid`
++
+If the partner-sysid is not correct, set it:
++
+`setenv partner-sysid <partner-sysID>`
+
+. Display the ONTAP boot menu:
++
+`boot_ontap menu`
+. If root encryption is used, select the boot menu option for your key management configuration.
++
+
+|===
+
+h| If you are using... h| Select this boot menu option...
+
+a|
+Onboard key management
+a|
+Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+a|
+External key management
+a|
+Option `11`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+|===
+
+. From the boot menu, select "`(6) Update flash from backup config`".
++
+NOTE: Option 6 reboots the node twice before the process completes.
+
++
+Respond with "`y`" to the system ID change prompts. Wait for the second reboot messages:
++
+----
+Successfully restored env file from boot media...
+
+Rebooting to load the restored env file...
+----
+
+. At the `LOADER` prompt, verify the bootarg values and update the values as needed.
++
+Use the steps in link:upgrade-mcc-ip-manual-apply-rcf-set-bootarg.html#set-the-metrocluster-ip-bootarg-variables[Set the MetroCluster IP bootarg variables].
+
+. Verify that the partner-sysid is the correct:
++
+`printenv partner-sysid`
++
+If the partner-sysid is not correct, set it:
++
+`setenv partner-sysid <partner-sysID>`
+
+. If root encryption is used, select the boot menu option again for your key management configuration.
++
+|===
+
+h| If you are using... h| Select this boot menu option...
+
+a|
+Onboard key management
+a|
+Option `10`
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+a|
+External key management
+a|
+Option "`11`"
+
+Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+|===
++
+Depending on the key manager setting, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
+
+. Wait for the replaced nodes to boot.
++
+If either node is in takeover mode, perform a giveback using the `storage failover giveback` command.
+
+. If encryption is used, restore the keys using the correct command for your key management configuration.
++
+
+|===
+
+h| If you are using... h| Use this command...
+a|
+Onboard key management
+a|
+`security key-manager onboard sync`
+
+For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-E4AB2ED4-9227-4974-A311-13036EB43A3D.html[Restore onboard key management encryption keys^].
+a|
+External key management
+a|
+`security key-manager external restore -vserver <SVM> -node <node> -key-server <host_name\|IP_address:port> -key-id key_id -key-tag key_tag <node_name>`
+
+For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restore external key management encryption keys^].
+
+|===
+
+. Verify that all ports are in a broadcast domain:
+ .. View the broadcast domains:
++
+`network port broadcast-domain show`
+
+.. If a new broadcast domain is created for the data ports on the newly upgraded controllers, delete the broadcast domain:
++
+NOTE: Only delete the new broadcast domain. Don't delete any of the broadcast domains that existed before starting the upgrade.
++
+`broadcast-domain delete -broadcast-domain <broadcast_domain_name>`
+
+.. Add ports to a broadcast domain as needed.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Add or remove ports from a broadcast domain^]
+
+.. Recreate VLANs and interface groups as needed.
++
+VLAN and interface group membership might differ from the old node.
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Create a VLAN^]
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combinine physical ports to create interface groups^]
+
+== Verify and restore LIF configuration
+
+Verify that LIFs are hosted on appropriate nodes and ports as mapped out at the beginning of the upgrade procedure.
+
+.About this task
+
+* This task is performed on site_B.
+* See the port mapping plan you created in link:upgrade-mcc-ip-prepare-system.html#map-ports-from-the-old-nodes-to-the-new-nodes[Map ports from the old nodes to the new nodes].
+
+CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switchback the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur when the home port connection to the switch port and VLAN is incorrect.
+
+.Steps
+
+. Verify that LIFs are hosted on the appropriate node and ports before switchback.
+
+.. Change to the advanced privilege level:
++
+`set -privilege advanced`
+
+..  Display the LIFs, and confirm that each data LIF is using the correct home port:
++
+`network interface show` 
+
+.. Modify any LIFs that aren't using the correct home port:
++
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
++
+If the command returns an error, you can override the port configuration:
++
+`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>"`
++
+When entering the network interface modify command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the network `interface modify` using autocomplete and then enclose it in the `vserver config override` command.
+
+.. Confirm that all data LIFs are now on the correct home port:
++
+`network interface show`  
+
+.. Return to the admin privilege level:
++
+`set -privilege admin`
+. Revert the interfaces to their home node:
++
+`network interface revert * -vserver <svm-name>`
++
+Perform this step on all SVMs as required.
+
+.What's next?
+link:upgrade-mcc-ip-manual-switchback.html[Switchback the MetroCluster configuration].
+
+// 2024 Nov 12, ONTAPDOC-2351

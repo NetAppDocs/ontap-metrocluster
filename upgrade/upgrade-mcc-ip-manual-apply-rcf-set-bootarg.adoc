@@ -1,0 +1,267 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-apply-rcf-set-bootarg.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, rcf, bootarg
+summary: 'Update the switch RCF files for the new platforms and set the MetroCluster IP bootarg values on the controller modules.'
+---
+= Update the switch RCFs and set the MetroCluster IP bootarg values 
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Update the switch reference configuration files (RCFs) for the new platforms and set the MetroCluster IP bootarg values on the controller modules. 
+
+== Update the switch RCFs to accommodate the new platforms
+
+include::../_include/update_the_switch_rcf_files.adoc[]
+
+== Set the MetroCluster IP bootarg variables
+
+You must configure certain MetroCluster IP bootarg values on the new controller modules. The bootarg values must match those configured on the old controller modules.
+
+.About this task
+
+* You use the UUIDs and system IDs identified earlier in the upgrade procedure in link:upgrade-mcc-ip-prepare-system.html#gather-information-before-the-upgrade[Gather information before the upgrade].
+
+* Depending on your platform model, you can specify the VLAN ID using the `-vlan-id` parameter. The following platforms do not support the `-vlan-id` parameter:
++
+** FAS8200 and AFF A300
+
+** AFF A320
+
+** FAS9000 and AFF A700
+
+** AFF C800, ASA C800, AFF A800, and ASA A800
++
+All other platforms support the `-vlan-id` parameter.
+
+* The MetroCluster bootarg values you set depend on whether your new system uses shared cluster/HA ports or shared MetroCluster/HA ports. 
++
+The systems listed in the following table use *shared MetroCluster/HA ports*.
++
+All other systems use *shared cluster/HA ports*. 
++
+[cols=2*,options="header""]
+|===
+h| AFF and ASA systems using shared MetroCluster/HA ports h| FAS systems using shared MetroCluster/HA ports
+a| 
+* AFF A150, ASA A150 
+* AFF A220
+* AFF C250, ASA C250
+* AFF A250, ASA A250
+* AFF A300
+* AFF A320
+* AFF C400, ASA C400
+* AFF A400, ASA A400
+* AFF A700
+* AFF C800, ASA C800
+* AFF A800, ASA A800
+* AFF A900, ASA A900
+a| 
+* FAS2750
+* FAS500f
+* FAS8200
+* FAS8300
+* FAS8700
+* FAS9000
+* FAS9500
+
+|===
+
+.Steps
+
+. At the `LOADER>` prompt, set the following bootargs on the new nodes at site_B:
++
+The steps you follow depend on the ports used by the new platform model.
++
+[role="tabbed-block"]
+====
+.Systems that use shared cluster/HA ports
+--
+
+.. Set the following bootargs:
++
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
++
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
++
+NOTE: If the interfaces are using a default VLAN ID, the `vlan-id` parameter is not required. 
++
+The following example sets the values for node_B_1-new using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,0,172.17.26.13,172.17.26.12,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,0,172.17.27.13,172.17.27.12,130
+----
++
+The following example sets the values for node_B_2-new using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,0,172.17.26.12,172.17.26.13,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,0,172.17.27.12,172.17.27.13,130
+----
++
+The following example sets the values for node_B_1-new using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.10/23,0,0,172.17.26.13,172.17.26.12
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.10/23,0,0,172.17.27.13,172.17.27.12
+----
++
+The following example sets the values for node_B_2-new using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.11/23,0,0,172.17.26.12,172.17.26.13
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.11/23,0,0,172.17.27.12,172.17.27.13
+----
+
+-- 
+.Systems that use shared MetroCluster/HA ports
+.. Set the following bootargs:
++
+`setenv bootarg.mcc.port_a_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
++
+`setenv bootarg.mcc.port_b_ip_config <local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id>`
++
+NOTE: If the interfaces are using a default VLAN ID, the `vlan-id` parameter is not required. 
++
+The following example sets the values for node_B_1-new using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12,130
+----
++
+The following example sets the values for node_B_2-new using VLAN 120 for the first network and VLAN 130 for the second network:
++
+----
+setenv bootarg.mcc.port_a_ip_config 172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13,120
+setenv bootarg.mcc.port_b_ip_config 172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13,130
+----
++
+The following example sets the values for node_B_1-new using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.10/23,0,172.17.26.11,172.17.26.13,172.17.26.12
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.10/23,0,172.17.27.11,172.17.27.13,172.17.27.12
+----
++
+The following example sets the values for node_B_2-new using default VLANs for all MetroCluster IP DR connections:
++
+----
+setenv bootarg.mcc.port_a_ip_config
+172.17.26.11/23,0,172.17.26.10,172.17.26.12,172.17.26.13
+setenv bootarg.mcc.port_b_ip_config
+172.17.27.11/23,0,172.17.27.10,172.17.27.12,172.17.27.13
+----
+--
+====
+
+. At the new nodes' LOADER prompt, set the UUIDs:
++
+`setenv bootarg.mgwd.partner_cluster_uuid <partner-cluster-UUID>`
++
+`setenv bootarg.mgwd.cluster_uuid <local-cluster-UUID>`
++
+`setenv bootarg.mcc.pri_partner_uuid <DR-partner-node-UUID>`
++
+`setenv bootarg.mcc.aux_partner_uuid <DR-aux-partner-node-UUID>`
++
+`setenv bootarg.mcc_iscsi.node_uuid <local-node-UUID>`
+
+
+.. Set the UUIDs on node_B_1-new:
++
+The following example shows the commands for setting the UUIDs on node_B_1-new:
++
+----
+setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
+setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
+setenv bootarg.mcc.pri_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
+setenv bootarg.mcc.aux_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
+setenv bootarg.mcc_iscsi.node_uuid f03cb63c-9a7e-11e7-b68b-00a098908039
+----
+
+.. Set the UUIDs on node_B_2-new:
++
+The following example shows the commands for setting the UUIDs on node_B_2-new:
++
+----
+setenv bootarg.mgwd.cluster_uuid ee7db9d5-9a82-11e7-b68b-00a098908039
+setenv bootarg.mgwd.partner_cluster_uuid 07958819-9ac6-11e7-9b42-00a098c9e55d
+setenv bootarg.mcc.pri_partner_uuid bf8e3f8f-9ac4-11e7-bd4e-00a098ca379f
+setenv bootarg.mcc.aux_partner_uuid f37b240b-9ac1-11e7-9b42-00a098c9e55d
+setenv bootarg.mcc_iscsi.node_uuid aa9a7a7a-9a81-11e7-a4e9-00a098908c35
+----
+
+. Determine whether the original systems were configured for Advanced Drive Partitioning (ADP) by running the following command from the site that is up:
++
+`disk show`
++ 
+The "container type" column displays "shared" in the `disk show` output if ADP is configured. If "container type" has any other value, ADP is not configured on the system. The following example output shows a system configured with ADP:
++
+----
+::> disk show
+                    Usable               Disk    Container   Container
+Disk                Size       Shelf Bay Type    Type        Name      Owner
+
+Info: This cluster has partitioned disks. To get a complete list of spare disk
+      capacity use "storage aggregate show-spare-disks".
+----------------    ---------- ----- --- ------- ----------- --------- --------
+1.11.0              894.0GB    11    0   SSD      shared     testaggr  node_A_1
+1.11.1              894.0GB    11    1   SSD      shared     testaggr  node_A_1
+1.11.2              894.0GB    11    2   SSD      shared     testaggr  node_A_1
+----
+
+
+. If the original systems were configured with partitioned disks for ADP, enable it at the `LOADER` prompt for each replacement node:
++
+`setenv bootarg.mcc.adp_enabled true`
+
+. Set the following variables:
++
+`setenv bootarg.mcc.local_config_id <original-sys-id>`
++
+`setenv bootarg.mcc.dr_partner <dr-partner-sys-id>`
++
+NOTE: The `setenv bootarg.mcc.local_config_id` variable must be set to the sys-id of the *original* controller module, node_B_1-old.
+
+.. Set the variables on node_B_1-new.
++
+The following example shows the commands for setting the values on node_B_1-new:
++
+----
+setenv bootarg.mcc.local_config_id 537403322
+setenv bootarg.mcc.dr_partner 537403324
+----
+
+.. Set the variables on node_B_2-new.
++
+The following example shows the commands for setting the values on node_B_2-new:
++
+----
+setenv bootarg.mcc.local_config_id 537403321
+setenv bootarg.mcc.dr_partner 537403323
+----
+
+. If using encryption with external key manager, set the required bootargs:
++
+`setenv bootarg.kmip.init.ipaddr`
++
+`setenv bootarg.kmip.kmip.init.netmask`
++
+`setenv bootarg.kmip.kmip.init.gateway`
++
+`setenv bootarg.kmip.kmip.init.interface`
+
+
+.What's next?
+link:upgrade-mcc-ip-manual-reassign-root-agg.html[Reassign the root aggregate disks].
+
+// 2024 Nov 12, ONTAPDOC-2351

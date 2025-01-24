@@ -204,7 +204,7 @@ The drives on each external shelf are divided into two equal groups (halves). Ea
 a|
 One shelf is used by the local HA pair. The second shelf is used by the remote HA pair.
 
-Partitions on each shelf are used to create the root aggregate. Each of the two plexes in the root aggregate includes the following partitions::
+Partitions on each shelf are used to create the root aggregate. Each of the two plexes in the root aggregate includes the following partitions:
 
 * Eight partitions for data
 * Two parity partitions
@@ -239,7 +239,7 @@ Internal drives only
 a|
 The internal drives are divided into four equal groups. Each group is automatically assigned to a separate pool and each pool is assigned to a separate controller in the configuration.
 
-NOTE: Half of the internal drives remain unassigned before MetroCluster is configured.
+*Note:* Half of the internal drives remain unassigned before MetroCluster is configured.
 
 a|
 Two quarters are used by the local HA pair. The other two quarters are used by the remote HA pair.
@@ -269,7 +269,7 @@ For example: a shelf with quarters Q1 through Q4 can have following assignments:
 * Q3: node_B_1 pool1
 * Q4:node_B_2 pool1
 
-NOTE: Half of the internal drives remain unassigned before MetroCluster is configured.
+*Note:* Half of the internal drives remain unassigned before MetroCluster is configured.
 
 a|
 Each of the two plexes in the root aggregate includes the following partitions:
@@ -280,16 +280,16 @@ Each of the two plexes in the root aggregate includes the following partitions:
 
 |===
 
-=== ADP and disk assignment on AFF C250, AFF A250, ASA A250, ASA C250, and FAS500f systems [[ADP_FAS500f]]
+=== ADP and disk assignment on AFF A250, AFF C250, ASA A250, ASA C250, FAS500f, AFF A20, AFF A30, and AFF C30 systems [[ADP_FAS500f]]
 
 |===
 
 h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
-a|
+.2+|
 Minimum recommended drives (per site)
 a|
-48 drives
+48 drives (external drives only, no internal drives)
 a|
 The drives on each external shelf are divided into two equal groups (halves). Each half-shelf is automatically assigned to a separate pool.
 a|
@@ -301,8 +301,17 @@ Partitions on each shelf are used to create the root aggregate. The root aggrega
 * Two parity partitions
 * Two spare partitions
 
+a| 48 drives (external and internal drives)
+a| The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool.
+
 a|
-Minimum supported drives (per site)
+Each of the two plexes in the root aggregate includes:
+
+* Eight partitions for data
+* Two parity partitions
+* Two spare partitions
+
+a|Minimum supported drives (per site)
 a|
 16 internal drives 
 a|
@@ -315,6 +324,53 @@ Each of the two plexes in the root aggregate includes the following partitions:
 * No spare partitions
 
 |===
+
+=== ADP and disk assignment on AFF A50 and AFF C60 systems 
+
+|===
+
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
+
+.2+|
+Minimum recommended drives (per site)
+a|
+48 drives (external drives only, no internal drives)
+a|
+The drives on each external shelf are divided into two equal groups (halves). Each half-shelf is automatically assigned to a separate pool.
+a|
+The local HA pair uses one shelf. The remote HA pair uses the second shelf.
+
+Partitions on each shelf are used to create the root aggregate. The root aggregate includes the following partitions in each plex:
+
+* Eight partitions for data
+* Two parity partitions
+* Two spare partitions
+
+a| 48 drives (external and internal drives)
+a| The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool.
+
+a|
+
+Each of the two plexes in the root aggregate includes:
+
+* Eight partitions for data
+* Two parity partitions
+* Two spare partitions
+
+a|Minimum supported drives (per site)
+a|
+24 internal drives 
+a|
+The drives are divided into four equal groups. Each quarter-shelf is automatically assigned to a separate pool.
+a|
+Each of the two plexes in the root aggregate includes the following partitions:
+
+* Two partitions for data
+* Two parity partitions
+* No spare partitions
+
+|===
+
 
 === ADP and disk assignment on AFF A300 systems
 
@@ -423,7 +479,7 @@ Each of the two plexes in the root aggregate includes:
 
 |===
 
-=== ADP and disk assignment on AFF C800, ASA C800, ASA A800, AFF A800, AFF A70, and AFF A90 systems
+=== ADP and disk assignment on AFF C800, ASA C800, ASA A800, and AFF A800 systems
 
 
 |===
@@ -438,7 +494,46 @@ a|
 The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are automatically assigned on a shelf-by-shelf basis, with all of the drives on each shelf assigned to  one of the four nodes in the MetroCluster configuration.
 
 a|
-The root aggregate is created with 12 root partitions on the internal shelf.
+
+Each of the two plexes in the root aggregate includes:
+
+* Eight partitions for data
+* Two parity partitions
+* Two spare partitions
+
+*Note:* The root aggregate is created with 12 root partitions on the internal shelf.
+a|
+Minimum supported drives (per site)
+a|
+24 internal drives 
+a|
+The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool.
+a|
+Each of the two plexes in the root aggregate includes:
+
+* Three partitions for data
+* Two parity partitions
+* One spare partitions
+
+*Note:* The root aggregate is created with 12 root partitions on the internal shelf. 
+|===
+
+
+=== ADP and disk assignment on AFF A70, AFF A90, and AFF C80 systems
+
+
+|===
+
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root aggregate
+
+a|
+Minimum recommended drives (per site)
+a|
+Internal drives and 96 external drives
+a|
+The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are automatically assigned on a shelf-by-shelf basis, with all of the drives on each shelf assigned to one of the four nodes in the MetroCluster configuration.
+
+a|
 
 Each of the two plexes in the root aggregate includes:
 
@@ -453,8 +548,6 @@ a|
 a|
 The internal partitions are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool.
 a|
-The root aggregate is created with 12 root partitions on the internal shelf.
-
 Each of the two plexes in the root aggregate includes:
 
 * Three partitions for data
@@ -553,7 +646,7 @@ Not applicable
 
 The same disk assignment guidelines and rules for AFF C250 and AFF A250 systems apply to FAS500f systems. For disk assignment on FAS500f systems, refer to the <<ADP_FAS500f>> table.
 
-=== Disk assignment on FAS9000 systems
+=== Disk assignment on FAS9000, FAS9500, FAS70, and FAS90 systems
 
 
 |===
@@ -571,45 +664,16 @@ Not applicable
 a|
 Minimum supported drives (per site)
 a|
-48 drives
-a|
-The drives on the shelves are divided into two equal groups (halves). Each half-shelf is automatically assigned to a separate pool.
-a|
-Not applicable
-a|
-24 drives
-a|
-Not applicable
-|===
-
-=== Disk assignment on FAS9500 systems
-
-
-|===
-
-h| Guideline h| Shelves per site h| Drive assignment rules h| ADP layout for root partition
-
-a|
-Minimum recommended drives (per site)
-a|
-96 drives
-a|
-Drives are automatically assigned on a shelf-by-shelf basis.
-a|
-Not applicable
-
-a|
-Minimum supported drives (per site)
-a|
 24 drives
 a|
 The drives are divided into four equal groups (quarters). Each quarter-shelf is automatically assigned to a separate pool.
 a|
 Not applicable
-|a
 
 |===
 
+
+// 2024 Dec 09, ONTAPDOC-2349
 // 2024 Jun 19, GH issue 401
 // 2024 MAR 20, ONTAPDOC-1572
 // 2024 MAR 7, ONTAPDOC-1716
