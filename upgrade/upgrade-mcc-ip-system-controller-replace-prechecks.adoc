@@ -96,17 +96,19 @@ At any stage during the upgrade, you can run the `system controller replace show
 
 .Steps
 
-. Start the automated controller replacement procedure from site A to replace the controllers at site B:
+. Start the automated controller replacement procedure depending on whether you are performing this procedure on the first site (from site A to replace the controllers at site B), or if you are repeating the procedure after already replacing the controllers at site B.
 +
-CAUTION: If you are repeating this procedure after already replacing the controllers at site B, you must run the `system controller replace start -nso true -skip-metrocluster-check true` command instead. This avoids precheck errors that can occur when there are two different platform models at each site.
+NOTE: If you do not use the `-nso true` parameter in the command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
++
+[role="tabbed-block"]
+====
+.Upgrading controllers at the first site
+--
+. Run the following command from site A to replace the controllers at site B:
 +
 `system controller replace start -nso true`
 +
 The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
-+
-[NOTE]
-====
-* If you do not run the `system controller replace start -nso true` command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
 
 * The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
 +
@@ -120,7 +122,17 @@ Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed 
 ----
 +
 Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
+--
+.Upgrading controllers at the second site (repeating the procedure)
+--
+. Run the following command from site B to replace the controllers at site A:
++
+`system controller replace start -nso true -skip-metrocluster-check true`
++
+This skips the prechecks to avoid an error caused by having two different platform models at each site.
+--
 ====
+
 
 .	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
 
