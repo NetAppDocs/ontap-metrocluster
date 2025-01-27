@@ -1,0 +1,52 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-switchover.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'You switch over the configuration to site_A so that the platforms on site_B can be upgraded.'
+---
+= Switch over the MetroCluster IP configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+You switch over the configuration to site_A so that the platforms on site_B can be upgraded.
+
+.About this task
+
+This task must be performed on site_A.
+
+After you complete this task:
+
+* cluster_A is active and serving data for both sites. 
+* cluster_B is inactive and ready to begin the upgrade process.
+
+image::../media/mcc_upgrade_cluster_a_in_switchover.png[Shows cluster_A is ready for upgrade and cluster_B is in switchover]
+
+.Steps
+
+. Switch over the MetroCluster configuration to site_A so that site_B's nodes can be upgraded:
+
+.. Issue the following command on cluster_A:
++
+`metrocluster switchover -controller-replacement true`
++
+The operation can take several minutes to complete.
+
+.. Monitor the switchover operation:
++
+`metrocluster operation show`
+
+.. After the operation is complete, confirm that the nodes are in switchover state:
++
+`metrocluster show`
+
+.. Check the status of the MetroCluster nodes:
++
+`metrocluster node show`
++
+Automatic healing of aggregates after negotiated switchover is disabled during a controller upgrade.
+
+.What's next?
+link:upgrade-mcc-ip-manual-uninstall-controllers.html[Remove interface configurations and uninstall the old controllers].
+
+// 2024 Nov 12, ONTAPDOC-2351
