@@ -102,14 +102,14 @@ At any stage during the upgrade, you can run the `system controller replace show
 +
 NOTE: If you do not use the `-nso true` parameter in the command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
 +
-Run the command to skip the MetroCluster prechecks under the following circumstances:
+Run the command to *Upgrade without MetroCluster prechecks* under the following circumstances:
 +
 * You have unmirrored aggregates 
 * You are repeating the procedure after already replacing the controllers at site B.
 +
 [role="tabbed-block"]
 ====
-.Perform MetroCluster prechecks
+.Upgrade with MetroCluster prechecks
 --
 . Run the following command from site A to replace the controllers at site B:
 +
@@ -130,7 +130,7 @@ Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed 
 +
 Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
 --
-.Skip MetroCluster prechecks
+.Upgrade without MetroCluster prechecks
 --
 . The following command skips the prechecks to avoid an error caused by having two different platform models at each site or if the configuration has unmirrored aggregates:
 +
