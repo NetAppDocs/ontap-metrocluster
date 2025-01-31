@@ -88,11 +88,11 @@ Follow the steps in the section for your switch vendor:
  ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCFs]
 
 
-== Start the controller replacement operation and perform system prechecks (if required)
+== Start the controller replacement operation and perform system checks (if required)
 
 .About this task
 
-Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, if prechecks fail, or you choose not to proceed with the upgrade, you must manually link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[re-configure the ONTAP Mediator service].
+Before the MetroCluster checks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, if prechecks fail, or you choose not to proceed with the upgrade, you must manually link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[re-configure the ONTAP Mediator service].
 
 At any stage during the upgrade, you can run the `system controller replace show` or `system controller replace show-details` command from site A to check the status. If the commands return a blank output, wait for a few minutes and rerun the command.
 
@@ -102,20 +102,20 @@ At any stage during the upgrade, you can run the `system controller replace show
 +
 NOTE: If you do not use the `-nso true` parameter in the command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
 +
-Run the command to *Upgrade without MetroCluster prechecks* under the following circumstances:
+Run the command to *Upgrade without MetroCluster checks* under the following circumstances:
 +
-* You have unmirrored aggregates 
+* You have unmirrored aggregates. 
 * You are repeating the procedure after already replacing the controllers at site B.
 +
 [role="tabbed-block"]
 ====
-.Upgrade with MetroCluster prechecks
+.Upgrade with MetroCluster checks
 --
 . Run the following command from site A to replace the controllers at site B:
 +
 `system controller replace start -nso true`
 +
-The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
+The automated operation executes the checks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
 +
 The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
 +
@@ -130,13 +130,13 @@ Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed 
 +
 Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
 --
-.Upgrade without MetroCluster prechecks
+.Upgrade without MetroCluster checks
 --
-. The following command skips the prechecks to avoid an error caused by having two different platform models at each site or if the configuration has unmirrored aggregates:
+. Skip the checks to avoid an error caused by having two different platform models at each site or if the configuration has unmirrored aggregates:
 +
 `system controller replace start -nso true -skip-metrocluster-check true`
 +
-CAUTION: Don't skip the MetroCluster prechecks if you are performing this procedure on the first site or if your configuration doesn't have unmirrored aggregates. 
+CAUTION: Don't skip the MetroCluster checks if you are performing this procedure on the first site or if your configuration doesn't have unmirrored aggregates. 
 
 --
 ====
