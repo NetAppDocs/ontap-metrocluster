@@ -560,13 +560,12 @@ cluster_A::>
 +
 [NOTE]
 ====
+* Do not use 169.254.17.x and 18.x IP addresses when you create MetroCluster IP interfaces.
 * If supported, you can specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `-vlan-id` parameter in the `metrocluster configuration-settings interface create` command. Refer to <<Considerations for VLANs when adding a new DR group>> for supported platform information. 
 * You can configure the MetroCluster IP interfaces from either cluster.
 ====
 +
 `metrocluster configuration-settings interface create -cluster-name`
-+
-CAUTION: Do not use 169.254.17.x and 18.x IP addresses when you create MetroCluster IP interfaces.
 +
 ----
 cluster_A::> metrocluster configuration-settings interface create -cluster-name cluster_A -home-node node_A_1-new -home-port e1a -address 172.17.26.10 -netmask 255.255.255.0
