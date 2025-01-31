@@ -1,0 +1,96 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual-setup-controllers.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Rack and cable the new MetroCluster IP controllers.'
+---
+= Set up the new MetroCluster IP controllers
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Rack and cable the new MetroCluster IP controllers.
+
+.Steps
+
+. Plan out the positioning of the new controller modules and storage shelves as needed.
++
+The rack space depends on the platform model of the controller modules, the switch types, and the number of storage shelves in your configuration.
+
+. Properly ground yourself.
+
+. If your upgrade requires replacement of the controller modules, for example, upgrading from an AFF A800 to an AFF A90 system or from an AFF C800 to an AFF C80 system, you must remove the controller module from the chassis when you replace the controller module. For all other upgrades, skip to <<ip_upgrades_so_sb_4,Step 4>>.
++
+On the front of the chassis, use your thumbs to firmly push each drive in until you feel a positive stop. This confirms that the drives are firmly seated against the chassis midplane.
++
+image::../media/drw-a800-drive-seated.png[Shows removing controller module from chassis]
+
+. [[ip_upgrades_so_sb_4]] Install the controller modules.
++
+The installation steps you follow depend on whether your upgrade requires replacement of the controller modules, or if IOM modules are required to convert the old controllers to an external shelf. 
++
+[cols=2*,options="header"]
+|===
+| If you are upgrading...
+| Follow the steps for ...
+a| 
+* An AFF A150 to an AFF A20 system
+* An AFF A220 to an AFF A20 system  | Controller to external shelf conversion
+a|
+* An AFF A800 to an AFF A90 system 
+* An AFF C800 to an AFF C80 system | Controller module replacement
+| Any other controller upgrade combinations | All other upgrades
+|===
++
+[role="tabbed-block"]
+====
+.Controller to external shelf conversion
+--
+If your original MetroCluster IP controllers are AFF A150 or AFF A220 models, you can convert the AFF A150 or AFF A220 HA pair to a DS224C drive shelf and then attach it to the new nodes.
+
+For example, when upgrading from an AFF A150 or AFF A220 system to an AFF A20 system, you can convert the AFF A150 or AFF A220 HA pair to a DS224C shelf by swapping the AFF A150 or AFF A220 controller modules with IOM12 modules.
+
+.Steps
+
+. Replace the controller modules in the node you are converting with IOM12 shelf modules.
++
+https://hwu.netapp.com[Hardware Universe^]
+
+. Set the drive shelf ID.
++
+Each drive shelf, including the chassis, requires a unique ID.
+. Reset other drive shelf IDs as needed.
+. Power off the shelves. 
+. Cable the converted drive shelf to a SAS port on the new system, and, if you are using out-of-band ACP cabling, to the ACP port on the new node.
+. Turn on the power to the converted drive shelf and any other drive shelves attached to the new nodes.
+. Turn on the power to the new nodes, and then interrupt the boot process on each node by pressing Ctrl-C to access the boot environment prompt.
+
+
+--
+.Controller module replacement
+--
+Installing the new controllers separately is not applicable for upgrades of integrated systems with disks and controllers in the same chassis, for example, from an AFF A800 system to an AFF A90 system. You must swap the new controller modules and I/O cards after powering off the old controllers, as shown in the image below.
+
+The following example image is for representation only, the controller modules and I/O cards can vary between systems. 
+
+image::../media/a90-a70-pcm-swap.png[Shows controller module swap]
+
+-- 
+.All other upgrades
+--
+Install the controller modules in the rack or cabinet.
+--
+====
+
+. Cable the controllers' power, serial console, and management connections as described in link:../install-ip/using_rcf_generator.html[Cable the MetroCluster IP switches].
++
+Don't connect any other cables that were disconnected from old controllers at this time.
++
+https://docs.netapp.com/us-en/ontap-systems/index.html[ONTAP Hardware Systems Documentation^]
+
+. Power up the new nodes and boot them to Maintenance mode.
+
+.What's next?
+link:upgrade-mcc-ip-manual-hba-set-ha.html[Restore the HBA configuration and set the HA state].
+
+// 2024 Nov 12, ONTAPDOC-2351

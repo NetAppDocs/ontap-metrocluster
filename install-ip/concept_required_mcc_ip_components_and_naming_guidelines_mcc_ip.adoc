@@ -81,6 +81,9 @@ The following example names are used in the documentation:
 
 MetroCluster IP configurations use a 40/100 Gbps or 10/25 Gbps Ethernet adapter for the IP interfaces to the IP switches used for the MetroCluster IP fabric.
 
+[NOTE]
+Onboard ports are built into the controller hardware (Slot 0) and can't be replaced, so the required slot for adapter is not applicable.
+
 |===
 
 h| Platform model h| Required Gigabit Ethernet adapter h| Required slot for adapter h| Ports
@@ -99,7 +102,8 @@ AFF A800, AFF C800, ASA A800, and ASA C800
 a|
 X1146A/onboard ports
 a|
-Slot 1
+Slot 1/Not applicable for onboard ports
+
 a|
 e0b. e1b
 a|
@@ -124,7 +128,7 @@ FAS2750, AFF A150, ASA A150, and AFF A220
 a|
 Onboard ports
 a|
-Slot 0
+Not applicable
 a|
 e0a, e0b
 a|
@@ -132,7 +136,7 @@ FAS500f, AFF A250, ASA A250, ASA C250, and AFF C250
 a|
 Onboard ports
 a|
-Slot 0
+Not applicable
 a|
 e0c, e0d
 a|
@@ -140,11 +144,11 @@ AFF A320
 a|
 Onboard ports
 a|
-Slot 0
+Not applicable
 a|
 e0g, e0h
 a|
-AFF A70 
+AFF A70, FAS70
 a|
 X50132A
 a|
@@ -152,7 +156,7 @@ Slot 2
 a|
 e2a, e2b
 a|
-AFF A90 and AFF A1K
+AFF A90,  AFF A1K, FAS90, AFF C80
 a|
 X50132A
 a|
@@ -162,6 +166,30 @@ e2b, e3b
 
 *Note:* Ports e2a and e3a must remain unused. Using these ports for front-end networks or peering is not supported.
 
+a|
+AFF A50
+a|
+X60134A
+a|
+Slot 2
+a|
+e2a, e2b
+a|
+AFF A30, AFF C30, AFF C60
+a|
+X60134A
+a|
+Slot 2
+a|
+e2a, e2b
+a|
+AFF A20
+a|
+X60132A
+a|
+Slot 4, Slot 2
+a|
+e2b, e4b
 |===
 
 link:concept_considerations_drive_assignment.html[Learn about automatic drive assignment and ADP systems in MetroCluster IP configurations].
@@ -225,6 +253,9 @@ Your version of ONTAP must support shelf mixing. Refer to the https://imt.netapp
 
 For further details on shelf mixing, see https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-ds-mix-hotadd/home.html[Hot-adding shelves with IOM12 modules to a stack of shelves with IOM6 modules^]
 
+// 2024 Dec 09, ONTAPDOC-2349
+// 2024 Dec 05, ONTAPDOC 2512
+// 2024 Nov 14, ONTAPDOC 2512
 // 2024 Mar 05, GH issue 377
 // 2023 JULY 18, BURT 1527723
 // 2022 June 15, BURT 1484617

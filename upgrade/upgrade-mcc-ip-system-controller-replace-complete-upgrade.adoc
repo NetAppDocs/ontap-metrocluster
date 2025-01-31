@@ -1,0 +1,64 @@
+---
+permalink: upgrade/upgrade-mcc-ip-system-controller-replace-complete-upgrade.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Complete the automated controller upgrade process by verifying the network reachability and restoring any monitoring configuration.'
+---
+= Complete the MetroCluster IP controller upgrade
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Complete the automated controller upgrade process by verifying the network reachability and restoring any monitoring configuration.   
+
+== Verify network reachability 
+
+The automation operation runs verification system checks and then pauses so you can verify the network reachability. After verification, the resource regain phase is initiated and the automation operation executes switchback at site A and pauses at the post upgrade checks. After you resume the automation operation, it performs the post upgrade checks and if no errors are detected, marks the upgrade as complete.
+
+.Steps
+
+.	Verify the network reachability by following the console message.
+.	After you complete the verification, resume the operation:
++
+`system controller replace resume`
+.	The automation operation performs `heal-aggregate`, `heal-root-aggregate`, and switchback operations at site A, and the post upgrade checks. When the operation pauses, manually check the SAN LIF status and verify the network configuration by following the console message.
+.	After you complete the verification, resume the operation:
++
+`system controller replace resume`
+
+.	Check the post upgrade checks status:
++
+`system controller replace show`
++
+If the post upgrade checks didn't report any errors, the upgrade is complete.
+
+.	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
+
+== Upgrade the nodes on cluster_A
+
+You must repeat the upgrade tasks to upgrade the nodes on cluster_A at site A.
+
+.Steps
+
+. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:upgrade-mcc-ip-system-controller-replace-supported-platforms.html[Prepare for the upgrade].
++
+As you perform the tasks, all example references to the clusters and nodes are reversed.
+
+== Reconfigure ONTAP Mediator 
+
+Manually configure ONTAP Mediator which was automatically removed before you started the upgrade. 
+
+. Use the steps in link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[Configure the ONTAP Mediator service from a MetroCluster IP configuration]. 
+
+==  Restore Tiebreaker monitoring
+
+If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
+
+. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Add MetroCluster configurations].
+
+
+== Configure end-to-end encryption
+
+If it is supported on your system, you can encrypt back-end traffic, such as NVlog and storage replication data, between the MetroCluster IP sites. Refer to link:../maintain/task-configure-encryption.html[Configure end-to-end encryption] for more information.
+
+// 2024 Nov 12, ONTAPDOC-2351
