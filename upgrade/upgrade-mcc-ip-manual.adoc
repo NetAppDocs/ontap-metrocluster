@@ -1,0 +1,32 @@
+---
+permalink: upgrade/upgrade-mcc-ip-manual.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Beginning with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded.'
+---
+= Workflow for MetroCluster IP controller upgrades using switchover and switchback (ONTAP 9.8 and later)
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Beginning with ONTAP 9.8, you can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
+
+.About this workflow
+
+You can use this workflow to upgrade MetroCluster IP controllers using switchover and switchback on systems running ONTAP 9.8 or later. 
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png[One]link:upgrade-mcc-ip-manual-requirements.html[Prepare to upgrade]
+[role="quick-margin-para"]
+Review the supported upgrade combinations and requirements, and complete the required tasks to prepare your system for the controller upgrade. 
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png[Two]link:upgrade-mcc-ip-manual-switchover.html[Upgrade your controllers]
+[role="quick-margin-para"]
+Switch over the MetroCluster configuration in order to remove the configuration from the old controllers, rack and install the new controllers, reassign the root aggregate disks, and boot the new controllers before you perform a switchback. 
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png[Three]link:upgrade-mcc-ip-manual-complete-upgrade.html[Complete the upgrade]
+[role="quick-margin-para"]
+Complete the controller upgrade by repeating the upgrade tasks at the second site and restoring any monitoring configuration.
+
+// 2024 Nov 12, ONTAPDOC-2351
+
+
