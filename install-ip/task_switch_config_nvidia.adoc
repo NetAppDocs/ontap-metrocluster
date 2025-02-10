@@ -392,6 +392,24 @@ cumulus@IP_switch_A_1:mgmt:~$
 +
 NOTE: When you set the DAC option for multiple switch ports, you only need to reboot the switch once.
 
+== Set Forward Error Correction for systems using 25-Gbps connectivity
+
+If your system is configured using 25-Gbps connectivity, set the Forward Error Correction (fec) parameter manually to off after applying the RCF file. The RCF file does not apply this setting.
+
+.About this task
+
+This task only applies to platforms using 25-Gbps connectivity. Refer to link:../install-ip/port_usage_sn2100.html[Platform port assignments for NVIDIA supported SN2100 IP switches]
+
+This task must be performed on all four switches in the MetroCluster IP configuration.
+
+.Steps
+
+. Use the RCF to set the `fec` parameter to off:
++
+`sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> fec off`
+
+. Repeat the step for each 25-Gbps port that is connected to a controller module. 
+
 == Set the switch port speed for the MetroCluster IP interfaces
 
 .About this task
