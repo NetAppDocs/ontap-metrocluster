@@ -481,7 +481,11 @@ NOTE: In Fabric OS 9.0 and later, the license method is dynamic by default. The 
 
 .. Change the existing community string:
 +
-`snmpconfig --set snmpv1`
+[role="tabbed-block"]
+====
+.For Fabric OS 8.2.x and earlier
+--
+.. Run the command `snmpconfig --set snmpv1`.
 
 .. Press *Enter* until you see  "Community (ro): [public]" text.
 
@@ -528,6 +532,14 @@ Trap Recipient's IP address : [0.0.0.0]
 Committing configuration.....done.
 FC_switch_B_1:admin>
 ----
+
+--
+.For Fabric OS 9.0 and later
+--
+Run the command `snmpconfig --add snmpv1 -index <index> -community <community name> -groupname <rw/ro> -host <ipv4/ipv6/dns> -port <udp port> -severity <severity level>`.
+--
+====
++
 . Reboot the switch:
 +
 `reboot`
