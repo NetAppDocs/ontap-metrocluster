@@ -1,0 +1,59 @@
+---
+permalink: upgrade/upgrade-mcc-ip-system-controller-replace-requirements.html
+sidebar: sidebar
+keywords: metrocluster, upgrade, controllers, switchover, switchback, ip, configuration, net, boot, root, aggregate, system, commands, mcc
+summary: 'Verify your system meets all the requirements before performing the controller upgrade.'
+---
+= Requirements for using this MetroCluster IP upgrade procedure
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Verify that your system meets all the requirements before performing the controller upgrade. 
+
+* You can use this procedure only for controller upgrade.
++
+Other components in the configuration, such as storage shelves or switches, cannot be upgraded at the same time.
+
+* The MetroCluster IP switches (switch type, vendor, and model) and the firmware version must be supported on the existing and new controllers in your upgrade configuration. 
++
+Refer to the link:https://hwu.netapp.com[Hardware Universe^] or the link:https://imt.netapp.com/matrix/[IMT^] for supported switches and firmware versions. 
+
+* The MetroCluster IP systems must be running the same ONTAP version at both sites. 
+* When you upgrade from systems that have more slots or ports than the new system, you need to verify that there are sufficient slots and ports on the new system. 
++
+Before you start the upgrade, refer to the  link:https://hwu.netapp.com[Hardware Universe^] to verify the number of slots and ports on the new system.
+
+* You can use this procedure to upgrade controllers in a four-node MetroCluster IP configuration using NSO based automated switchover and switchback. 
++
+NOTE: Performing an upgrade using aggregate relocation (ARL) with “systems controller replace” commands is not supported for a four-node MetroCluster IP configuration.
+
+* If it is enabled on your system, link:../maintain/task-configure-encryption.html#disable-end-to-end-encryption[disable end-to-end encryption] before performing the upgrade.  
+
+* You must use the automated NSO controller upgrade procedure to upgrade the controllers at both sites in sequence.
+* This automated NSO based controller upgrade procedure gives you the capability to initiate controller replacement to a MetroCluster disaster recovery (DR) site. You can only initiate a controller replacement at one site at a time.
+* To initiate a controller replacement at site A, you need to run the controller replacement start command from site B. The operation guides you to replace controllers of both the nodes at site A only. To replace the controllers at site B, you need to run the controller replacement start command from site A. A message displays identifying the site at which the controllers are being replaced.
+
+The following example names are used in this procedure:
+
+* cluster_A at site_A
+ ** Before upgrade:
+  *** node_A_1-old
+  *** node_A_2-old
+ ** After upgrade:
+  *** node_A_1-new
+  *** node_A_2-new
+* cluster_B at site_B
+ ** Before upgrade:
+  *** node_B_1-old
+  *** node_B_2-old
+ ** After upgrade:
+  *** node_B_1-new
+  *** node_B_2-new
+  
+
+.What's next?
+
+link:upgrade-mcc-ip-system-controller-replace-console-logging.html[Enable console logging].
+
+// 2024 Nov 12, ONTAPDOC-2351
