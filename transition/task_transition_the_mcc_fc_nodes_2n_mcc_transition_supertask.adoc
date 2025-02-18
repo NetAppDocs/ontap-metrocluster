@@ -136,6 +136,10 @@ You must move the LIFs identified in step 1 of link:concept_requirements_for_fc_
 . Disconnect the shelves from the MetroCluster FC controllers and document which shelves are local storage to each cluster.
 +
 If the configuration uses FC-to-SAS bridges or FC back-end switches, disconnect and remove them.
++
+To remove the FC-to-SAS bridges, run:
++
+`storage bridge remove -name <ATTO_bridge_name>`
 
 . In Maintenance mode on the MetroCluster FC nodes (node_A_1-FC and node_B_1-FC), confirm no disks are connected: `disk show -v`
 . Power down and remove the MetroCluster FC nodes.
