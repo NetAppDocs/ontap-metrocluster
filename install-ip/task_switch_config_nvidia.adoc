@@ -398,55 +398,31 @@ If your system is configured using 25-Gbps connectivity, set the Forward Error C
 
 .About this task
 
-This task only applies to platforms using 25-Gbps connectivity. Refer to link:../install-ip/port_usage_sn2100.html[Platform port assignments for NVIDIA supported SN2100 IP switches]
+* This task only applies to platforms using 25-Gbps connectivity. Refer to link:../install-ip/port_usage_sn2100.html[Platform port assignments for NVIDIA supported SN2100 IP switches]
 
-This task must be performed on all four switches in the MetroCluster IP configuration.
+* This task must be performed on all four switches in the MetroCluster IP configuration.
+
+* You must update each switch port individually, you cannot specify multiple ports or port ranges in the command.
 
 .Steps
 
-. Use the RCF to set the `fec` parameter to off:
-+
-----
-cumulus@mcc1-integrity-a1:mgmt:~$ sudo python3 SN2100_v2.0_IP_Switch-A1.py runCmd
-[sudo] password for cumulus:
-    Running cumulus version  : 5.4.0
-    Running RCF file version : v2.0
-Help for runCmd:
-    To run a command execute the RCF script as follows:
-    sudo python3 <script> runCmd <option-1> <option-2> <option-x>
-    Depending on the command more or less options are required. Example to 'up' port 'swp1'
-        sudo python3 SN2100_v2.0_IP_Switch-A1.py runCmd swp1 up
-    Available commands:
-        UP / DOWN the switchport
-            sudo python3 SN2100_v2.0_IP_Switch-A1.py runCmd <switchport> state <up | down>
-        Set the switch port speed
-            sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> speed <10 | 25 | 40 | 100 | AN>
-        Set the fec mode on the switch port
-            sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> fec <default | auto | rs | baser | off>
-        Set the [localISL | remoteISL] to 'UP' or 'DOWN' state
-            sudo python3 SN2100_v2.0_Switch-A1.py runCmd [localISL | remoteISL] state [up | down]
-        Set the option on the port to support DAC cables. This option does not support port ranges.
-            You must reload the switch after changing this option for the required ports. This will disrupt traffic.
-            This setting requires Cumulus 5.4 or a later 5.x release.
-            sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> DacOption [enable | disable]
-cumulus@mcc1-integrity-a1:mgmt:~$
-----
-+
-The following example command manually sets the forward error correction setting to `off`: 
+. Set the `fec` parameter to off for the first switch port that uses 25-Gbps connectivity: 
 +
 `sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> fec off`
 
-. Repeat the step for each 25-Gbps port that is connected to a controller module. 
+. Repeat the step for each 25-Gbps switch port that is connected to a controller module. 
 
 == Set the switch port speed for the MetroCluster IP interfaces
 
 .About this task
 
-Use this procedure to set the switch port speed to 100G for the following systems:
+* Use this procedure to set the switch port speed to 100G for the following systems:
 
-* AFF A70  
-* AFF A90
-* AFF A1K 
+** AFF A70  
+** AFF A90
+** AFF A1K 
+
+* You must update each switch port individually, you cannot specify multiple ports or port ranges in the command.
 
 .Step
 
@@ -477,7 +453,9 @@ cumulus@Switch-A-1:mgmt:~$
 
 == Disable unused ISL ports and port channels
 
-NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. 
+NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. You must disable each port or port channel individually, you cannot specify multiple ports or port ranges in the command. 
+
+.Steps 
 
 . Identify the unused ISL ports and port channels using the RCF file banner:
 +
