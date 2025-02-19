@@ -79,19 +79,31 @@ When using the default Red Hat or CentOS firewall, the firewall is automatically
 
 The following table lists the ports that you must allow in your firewall:
 
-NOTE: The iSCSI port is only required in a MetroCluster IP configuration.
+[NOTE] 
+====
+* The iSCSI port is only required in a MetroCluster IP configuration.
+* The 22/tcp port is not required for normal operation but you can enable it temporarily for maintenance and disable it when the maintenance session has finished. 
+====
 
 |===
 
-h| Port/services h| Source h| Network h| Direction h|  Destination h| Purpose 
+h| Port/services h| Source h| Direction h|  Destination h| Purpose 
 
+a| 
+22/tcp
+a|
+Mediator
+a|
+Inbound
+a|
+Management host
+a|
+SSH / Mediator Management
 a|
 31784/tcp
 a|
-ONTAP cluster management interfaces
+Cluster management LIFs
 //ontap-metrocluster/issues/34
-a|
-ONTAP Cluster Management
 a|
 Inbound
 a|
@@ -101,9 +113,7 @@ REST API (HTTPS)
 a|
 3260/tcp
 a|
-ONTAP cluster (data LIFs or data management LIFs)
-a|
-ONTAP Cluster Management
+Cluster management LIFs
 a|
 Bidirectional
 a|
