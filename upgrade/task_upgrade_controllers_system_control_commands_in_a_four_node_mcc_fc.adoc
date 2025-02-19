@@ -11,7 +11,7 @@ summary: 'You can use this guided automated MetroCluster switchover operation to
 [.lead]
 You can use this guided automated MetroCluster switchover operation to perform a non-disruptive controller upgrade on a four-node MetroCluster FC configuration. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.
 
-== Supported platform combinations
+== Supported platform combinations 
 
 ** For information on what platform upgrade combinations are supported, review the MetroCluster FC upgrade table in  link:concept_choosing_controller_upgrade_mcc.html#supported-metrocluster-fc-controller-upgrades[Choose a controller upgrade procedure].
 
@@ -54,7 +54,7 @@ The following example names are used in this procedure:
 include::../_include/console-logging.adoc[]
 
 // 2024 Aug 13, ONTAPDOC-1988
-
+[[fc_controller_replace_prepare]]
 == Preparing for the upgrade
 
 To prepare for the controller upgrade, you need to perform system prechecks and collect the configuration information.
@@ -713,6 +713,18 @@ The automation operation runs verification system checks and then pauses so you 
 If the post upgrade checks did not report any errors, the upgrade is complete.
 
 .	After you complete the controller upgrade, log in at site B and verify that the replaced controllers are configured correctly.
+
+== Upgrade the nodes on cluster_A
+
+You must repeat the upgrade tasks to upgrade the nodes on cluster_A at site A.
+
+.Steps
+
+. Repeat the steps to upgrade the nodes on cluster_A, beginning with <<fc_controller_replace_prepare, prepare for the upgrade>>.
++
+CAUTION: When there are different platform models at each site, it can cause some components of the MetroCluster check to fail. When you repeat the automated controller replacement operation to upgrade the controllers at the second site, you must skip the MetroCluster checks by using the  `system controller replace start -nso true - skip-metrocluster-check true` command. 
++
+As you perform the tasks, all example references to the clusters and nodes are reversed.
 
 === Restoring Tiebreaker monitoring
 
