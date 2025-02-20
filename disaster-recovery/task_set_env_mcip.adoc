@@ -187,6 +187,9 @@ node_A_1
 
 |===
 
+* The MetroCluster bootarg values you set depend on whether your new system uses shared cluster/HA ports or shared MetroCluster/HA ports. Use the following information to determine the ports for your system.
++
+include::../_include/shared-metrocluster-ha-or-shared-cluster-ha.adoc[]
 
 .Steps
 
@@ -196,13 +199,12 @@ node_A_1
 +
 The required addresses are the DR Partner addresses shown in the *Destination Network Address* column.
 +
-The command output varies depending on your platform model. 
+The command output varies depending on whether your platform model uses shared cluster/HA ports or shared MetroCluster/HA ports. 
 +
 [role="tabbed-block"]
 ====
-.Systems introduced in ONTAP 9.15.1 or later
+.Systems using shared cluster/HA ports
 --
-Systems introduced in ONTAP 9.15.1 or later (AFF A70, AFF A90, and AFF A1K) have separate ports for HA and DR, as shown in the following example output:
 
 ----
 cluster_B::*> metrocluster configuration-settings connection show
@@ -233,7 +235,7 @@ Group Cluster Node    Network Address Network Address Partner Type Config State
 ----
 
 --
-.All other systems
+.Systems using shared MetroCluster/HA ports
 --
 The following output shows the IP addresses for a configuration with AFF A700 and FAS9000 systems with the MetroCluster IP interfaces on ports e5a and e5b. The interfaces can vary depending on the platform type.
 
@@ -302,7 +304,7 @@ Group Cluster Node     Network Address Netmask         Gateway         State
                           172.17.27.10  255.255.255.0  -            completed
 ----
 
-. At the LOADER prompt for each of the disaster site nodes, set the bootarg value depending on the platform model:
+. At the `LOADER` prompt for each of the disaster site nodes, set the bootarg value depending on whether your platform model uses shared cluster/HA ports or shared MetroCluster/HA ports:
 +
 [NOTE]
 ====
@@ -312,16 +314,15 @@ Group Cluster Node     Network Address Netmask         Gateway         State
 +
 [role="tabbed-block"]
 ====
-.Systems introduced in ONTAP 9.15.1 or later
+.Systems using shared cluster/HA ports
 --
-The value for _HA-partner-IP-address_ must be set to *0* (zero) on systems introduced in ONTAP 9.15.1 or later because they have separate ports for DR and HA.
 
 Set the following bootarg:
 
 ----
-setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
 
-setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,0,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
 ----
 
 The following commands set the values for node_A_1 using VLAN 120 for the first network and VLAN 130 for the second network:
@@ -340,13 +341,13 @@ setenv bootarg.mcc.port_a_ip_config 172.17.26.10/23,0,0,172.17.26.13,172.17.26.1
 setenv bootarg.mcc.port_b_ip_config 172.17.27.10/23,0,0,172.17.27.13,172.17.27.12
 ----
 --
-.All other systems
+.Systems using shared MetroCluster/HA ports
 --
 Set the following bootarg:
 ....
-setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+setenv bootarg.mcc.port_a_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
 
-setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,gateway-IP-address,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
+setenv bootarg.mcc.port_b_ip_config local-IP-address/local-IP-mask,0,HA-partner-IP-address,DR-partner-IP-address,DR-aux-partnerIP-address,vlan-id
 ....
 
 The following commands set the values for node_A_1 using VLAN 120 for the first network and VLAN 130 for the second network:
@@ -526,5 +527,6 @@ setenv bootarg.mcc.local_config_id 4068741260
 setenv bootarg.mcc.dr_partner 4068741256
 ----
 
+// 2025 Feb 13, ONTAPDOC-2660
 // 2024 June 17, ONTAPDOC-2041
 // 2024 Feb 23, ONTAPDOC-1675
