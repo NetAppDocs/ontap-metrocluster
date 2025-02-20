@@ -81,7 +81,7 @@ Take one of the following actions depending on whether the intercluster LIFs on 
 | If the intercluster LIFs...
 | Go to...
 | Use the same home port | <<controller_manual_upgrade_prepare_network_ports_2b,Substep b>>
-| Use a different home port | <<controller_manual_upgrade_prepare_network_ports_3,Step 3>>
+| Use a different home port | <<controller_manual_upgrade_prepare_network_ports_3,Step 4>>
 |===
 +
 .. [[controller_manual_upgrade_prepare_network_ports_2b]]Modify the intercluster LIFs to use a different home port:
@@ -102,13 +102,13 @@ Repeat the command for each intercluster LIF that isn't on the home port.
 
 . [[controller_manual_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 +
-CAUTION: If the old and new controllers don't have a common port, you don't need to modify the data LIFs. Skip this step and go directly to <<upgrades_manual_without_matching_ports, Step 4>>. 
+CAUTION: If the old and new controllers don't have a common port, you don't need to modify the data LIFs. Skip this step and go directly to <<upgrades_manual_without_matching_ports, Step 5>>. 
 
 .. Display the LIFs:
 +
 `network interface show`
 +
-All data LIFS including SAN and NAS are admin up and operationally down because those are up at switchover site (cluster_A).
+All data LIFs including SAN and NAS are admin up and operationally down because those are up at switchover site (cluster_A).
 
  .. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
 +
