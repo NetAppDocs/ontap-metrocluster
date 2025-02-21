@@ -133,8 +133,6 @@ include::../_include/models_supporting_vlan-id.adoc[]
 
 * If both DR groups cannot be configured using the same VLAN, you must upgrade the DR group that doesn't support the `vlan-id` parameter to use a VLAN that is supported by the other DR group.
 
-* Depending on your ONTAP version, you can change some MetroCluster IP interface properties after initial configuration. Refer to link:../maintain/task-modify-ip-netmask-properties.html[Modify the properties of a MetroCluster IP interface] for details on what is supported. 
-
 
 == Verifying the health of the MetroCluster configuration
 
@@ -560,6 +558,7 @@ cluster_A::>
 +
 [NOTE]
 ====
+* Do not use 169.254.17.x or 169.254.18.x IP addresses when you create MetroCluster IP interfaces to avoid conflicts with system auto-generated interface IP addresses in the same range. 
 * If supported, you can specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `-vlan-id` parameter in the `metrocluster configuration-settings interface create` command. Refer to <<Considerations for VLANs when adding a new DR group>> for supported platform information. 
 * You can configure the MetroCluster IP interfaces from either cluster.
 ====
@@ -592,7 +591,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [Job 267] Job succeeded: Interface Create is successful.
 ----
 
-
+//2025 Jan 31, ONTAPDOC-2607
 
 [Arabic, start=6]
 . Verify the MetroCluster IP interfaces are created:
@@ -1105,7 +1104,9 @@ node_A_4-new      false
 
 . If your system supports end-to-end encryption, you can link:../maintain/task-configure-encryption.html#enable-end-to-end-encryption[Enable end-to-end encryption] on the new DR group.
 
+
 // 2024 Feb 20, ONTAPDOC-2807
+// 2025 Feb 13, ONTAPDOC-2607
 // 2024 Dec 09, ONTAPDOC-2350
 // 2024 Oct 23, ONTAPDOC-2504, ONTAPDOC-2218
 // 2024 Sep 05, GH 386, 374
