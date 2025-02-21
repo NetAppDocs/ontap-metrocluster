@@ -33,17 +33,17 @@ At other times, when ONTAP cannot determine the status of one of the clusters, t
 
 For any type of switchover procedure, the data servicing capability is returned to the cluster by using a _switchback_ process.
 
-You perform different switchover and switchback processes for ONTAP 9.7 and 9.8:
+The switchover and switchback process you follow depends on your ONTAP version:
 
-* <<sm97-sosb,Use System Manager in ONTAP 9.7 for switchover and switchback>>
-* <<sm98-sosb,Use System Manager in ONTAP 9.8 for switchover and switchback>>
+* <<sm97-sosb,Use System Manager in ONTAP 9.6 or 9.7 for switchover and switchback>>
+* <<sm98-sosb,Use System Manager in ONTAP 9.8 or later for switchover and switchback>>
 
 [[sm97-sosb]]
-== Use System Manager in ONTAP 9.7 for switchover and switchback
+== Use System Manager in ONTAP 9.6 or 9.7 for switchover and switchback
 
 .Steps
 
-. Log in to System Manager in ONTAP 9.7.
+. Log in to System Manager in ONTAP 9.6 or 9.7.
 
 .	Click *(Return to classic version)*.
 
@@ -66,13 +66,13 @@ System Manager verifies whether a negotiated switchover is possible.
 .	Click *Switch to the new experience*.
 
 [[sm98-sosb]]
-== Use System Manager in ONTAP 9.8 for switchover and switchback
+== Use System Manager in ONTAP 9.8 or later for switchover and switchback
 
-=== Perform a planned switchover (ONTAP 9.8)
+=== Perform a planned switchover (ONTAP 9.8 or later)
 
 .Steps
 
-. Log in to System Manager in ONTAP 9.8.
+. Log in to System Manager in ONTAP 9.8 or later.
 
 . Select *Dashboard*. In the *MetroCluster* section, the two clusters are shown with a connection.
 
@@ -85,13 +85,13 @@ The remote cluster reboots, but the storage components are not active, and the c
 
 NOTE: The remote cluster should not be used for data servicing until you perform a switchback.
 
-=== Perform an unplanned switchover (ONTAP 9.8)
+=== Perform an unplanned switchover (ONTAP 9.8 or later)
 
 An unplanned switchover might be initiated automatically by ONTAP. If ONTAP cannot determine if a switchback is needed, the system administrator of the MetroCluster site that is still running initiates the switchover with the following steps:
 
 .Steps
 
-. Log in to System Manager in ONTAP 9.8.
+. Log in to System Manager in ONTAP 9.8 or later.
 
 . Select *Dashboard*.
 +
@@ -109,7 +109,7 @@ The cluster must be repaired before it is brought online again.
 NOTE: After the remote cluster is brought online, it should not be used for data servicing until you perform a switchback.
 
 
-=== Perform a switchback (ONTAP 9.8)
+=== Perform a switchback (ONTAP 9.8 or later)
 
 .Before you begin
 
@@ -117,7 +117,7 @@ If the remote cluster was down due to planned maintenance or due to a disaster, 
 
 .Steps
 
-. On the local cluster, log in to System Manager in ONTAP 9.8.
+. On the local cluster, log in to System Manager in ONTAP 9.8 or later.
 
 . Select *Dashboard*.
 +
@@ -131,4 +131,6 @@ The data is _healed_ first, to verify the data is synchronized and mirrored betw
 +
 When the switchback is complete, both clusters are active and servicing data requests. Additionally, the data is being mirrored and synchronized between the clusters.
 
+// 2025 Feb 18, ONTAPDOC-1047
+// 2024 Dec 04, ONTAPDOC-2569
 // 2024 Sep 30, ONTAPDOC-2014
