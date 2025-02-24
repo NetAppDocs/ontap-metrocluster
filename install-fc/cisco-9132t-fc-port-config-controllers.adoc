@@ -1,0 +1,498 @@
+---
+permalink: install-fc/cisco-9132t-fc-port-config-controllers.html
+sidebar: sidebar
+keywords:  ONTAP, FAS, FC, Cisco, metrocluster
+summary: 'The following tables show port usage on Brocade switches.'
+---
+= Cisco 9132T port usage for controllers in a MetroCluster FC configuration 
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Review the information in this section to learn how to cable Cisco 9132T FC switches to controllers. 
+
+== Cisco 9132T port usage for controllers (excluding AFF A900 and FAS9500) running ONTAP 9.4 or later
+
+The following tables show the port usage on a Cisco 9132T switch.
+
+=== Controller configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+
+The following table shows controller configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2). The tables show the maximum supported configurations with four and eight controller modules in two DR groups. 
+
+NOTE: For eight-node configurations, you must perform the zoning manually because RCFs are not provided.
+
+|===
+7+^h| MetroCluster 1 or DR Group 1
+4+^h|
+2+^h| Four-node
+h| Eight-node
+2+^h| Component h| Port h| Connects to FC_switch... h| 9132T (1x LEM) h| 9132T (2x LEM) h| 9132T (2x LEM) 
+2.8+a|
+controller_x_1
+a|
+FC-VI port a
+a|
+1
+a|
+LEM1-1
+a|
+LEM1-1
+a|
+LEM1-1
+a|
+FC-VI port b
+a|
+2
+a|
+LEM1-1
+a|
+LEM1-1
+a|
+LEM1-1
+a|
+FC-VI port c
+a|
+1
+a|
+LEM1-2
+a|
+LEM1-2
+a|
+LEM1-2
+a|
+FC-VI port d
+a|
+2
+a|
+LEM1-2
+a|
+LEM1-2
+a|
+LEM1-2
+a|
+HBA port a
+a|
+1
+a|
+LEM1-5
+a|
+LEM1-5
+a|
+LEM1-3
+a|
+HBA port b
+a|
+2
+a|
+LEM1-5
+a|
+LEM1-5
+a|
+LEM1-3
+a|
+HBA port c
+a|
+1
+a|
+LEM1-6
+a|
+LEM1-6
+a|
+LEM1-4
+a|
+HBA port d
+a|
+2
+a|
+LEM1-6
+a|
+LEM1-6
+a|
+LEM1-4
+2.8+a|
+controller_x_2
+a|
+FC-VI port a
+a|
+1
+a|
+LEM1-7
+a|
+LEM1-7
+a|
+LEM1-5
+a|
+FC-VI port b
+a|
+2
+a|
+LEM1-7
+a|
+LEM1-7
+a|
+LEM1-5
+a|
+FC-VI port c
+a|
+1
+a|
+LEM1-8
+a|
+LEM1-8
+a|
+LEM1-6
+a|
+FC-VI port d
+a|
+2
+a|
+LEM1-8
+a|
+LEM1-8
+a|
+LEM1-6
+a|
+HBA port a
+a|
+1
+a|
+LEM1-11
+a|
+LEM1-11
+a|
+LEM1-7
+a|
+HBA port b
+a|
+2
+a|
+LEM1-11
+a|
+LEM1-11
+a|
+LEM1-7
+a|
+HBA port c
+a|
+1
+a|
+LEM1-12
+a|
+LEM1-12
+a|
+LEM1-8
+a|
+HBA port d
+a|
+2
+a|
+LEM1-12
+a|
+LEM1-12
+a|
+LEM1-8
+7+^h| MetroCluster 2 or DR Group 2
+2.8+a|
+controller_x_3
+a|
+FC-VI port a
+a|
+1
+|
+-
+|
+-
+a|
+LEM2-1
+a|
+FC-VI port b
+a|
+2
+|
+-
+|
+-
+a|
+LEM2-1
+a|
+FC-VI port c
+a|
+1
+|
+-
+|
+-
+a|
+LEM2-2
+
+a|
+FC-VI port d
+a|
+2
+|
+-
+|
+-
+a|
+LEM2-2
+a|
+HBA port a
+a|
+1
+|
+-
+|
+-
+a|
+LEM2-3
+a|
+HBA port b
+a|
+2
+|
+-
+|
+-
+a|
+LEM2-3
+a|
+HBA port c
+a|
+1
+|
+-
+|
+-
+a|
+LEM2-4
+a|
+HBA port d
+a|
+2
+|
+-
+|
+-
+a|
+LEM2-4
+2.8+a|
+controller_x_4
+a|
+FC-VI-1 port a
+a|
+1
+|
+-
+|
+-
+a|
+LEM2-5
+a|
+FC-VI-1 port b
+a|
+2
+|
+-
+|
+-
+a|
+LEM2-5
+a|
+FC-VI-1 port c
+a|
+1
+|
+-
+|
+-
+a|
+LEM2-6
+a|
+FC-VI-1 port d
+a|
+2
+|
+-
+|
+-
+a|
+LEM2-6
+a|
+HBA port a
+a|
+1
+|
+-
+|
+-
+a|
+LEM2-7
+a|
+HBA port b
+a|
+2
+|
+-
+|
+-
+a|
+LEM2-7
+a|
+HBA port c
+a|
+1
+|
+-
+|
+-
+a|
+LEM2-8
+a|
+HBA port d
+a|
+2
+|
+-
+|
+-
+a|
+LEM2-8
+|===
+
+== AFF A900 and FAS9500 Cisco 9132T port usage for controllers
+
+The table show the maximum supported configurations, with eight AFF A900 or FAS9500 controller modules in a DR group.
+
+=== AFF A900 or FAS9500 Cisco 9132T port usage using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
+
+The table shows the maximum supported configurations, with eight AFF A900 or FAS9500 controller modules in a DR group.
+
+[NOTE]
+====
+* The following table shows systems with eight FC-VI ports. AFF A900 and FAS9500 have eight FC-VI ports (a, b, c, and d for FC-VI-1 and FC-VI-2).
+* MetroCluster 2 or DR 2 is not supported with 9132T switches.
+====
+
+|===
+6+^h| MetroCluster 1 or DR Group 1
+2.2+h| Component .2+h| Port 3+h| Cisco switch model
+h| Connects to FC_switch... h| 9132T (1x LEM) h| 9132T (2x LEM)
+
+2.12+|controller_x_1
+
+| FC-VI-1 port a |1 |LEM1-1 |LEM1-1
+
+| FC-VI-1 port b |2 |LEM1-1 |LEM1-1
+
+| FC-VI-1 port c |1 |LEM1-2 |LEM1-2
+
+| FC-VI-1 port d |2 |LEM1-2 |LEM1-2
+
+| FC-VI-2 port a |1 |LEM1-3 |LEM1-3
+
+| FC-VI-2 port b |2 |LEM1-3 |LEM1-3
+
+| FC-VI-2 port c |1 |LEM1-4 |LEM1-4
+
+| FC-VI-2 port d |2 |LEM1-4 |LEM1-4
+
+| HBA port a |1 |LEM1-5 |LEM1-5
+
+| HBA port b |2 |LEM1-5 |LEM1-5
+
+| HBA port c |1 |LEM1-6 |LEM1-6
+
+| HBA port d |2 |LEM1-6 |LEM1-6
+
+2.12+|controller_x_2
+
+| FC-VI-1 port a |1 |LEM1-7 |LEM1-7
+
+| FC-VI-1 port b |2 |LEM1-7 |LEM1-7
+
+| FC-VI-1 port c |1 |LEM1-8 |LEM1-8
+
+| FC-VI-1 port d |2 |LEM1-8 |LEM1-8
+
+| FC-VI-2 port a |1 |LEM1-9 |LEM1-9
+
+| FC-VI-2 port b |2 |LEM1-9 |LEM1-9
+
+| FC-VI-2 port c |1 |LEM1-10 |LEM1-10
+
+| FC-VI-2 port d |2 |LEM1-10 |LEM1-10
+
+| HBA port a |1 |LEM1-11 |LEM1-11
+
+| HBA port b |2 |LEM1-11 |LEM1-11
+
+| HBA port c |1 |LEM1-12 |LEM1-12
+
+| HBA port d |2 |LEM1-12 |LEM1-12
+
+.4+|Stack 1
+
+.2+|bridge_x_1a
+
+| FC1 |1 |LEM1-13 |LEM1-13
+
+| FC2 |2 |LEM1-13 |LEM1-13
+
+.2+|bridge_x_1b
+
+| FC1 |1 |LEM1-14 |LEM1-14
+
+| FC2 |2 |LEM1-14 |LEM1-14
+
+.4+|Stack 2
+
+.2+|bridge_x_2a
+
+| FC1 |1 |- |LEM1-15
+
+| FC2 |2 |- |LEM1-15
+ 
+
+.2+|bridge_x_2b
+
+| FC1 |1 |- |LEM1-16
+
+| FC2 |2 |- |LEM1-16
+
+.4+|Stack 3
+
+.2+|bridge_x_3a
+
+| FC1 |1 |- |LEM2-1
+
+| FC2 |2 |- |LEM2-1
+
+
+.2+|bridge_x_3b
+
+| FC1 |1 |- |LEM2-2
+
+| FC2 |2 |- |LEM2-2
+
+.4+|Stack y
+
+.2+|bridge_x_ya
+
+| FC1 |1 |- |LEM2-3
+
+| FC2 |2 |- |LEM2-3
+
+
+.2+|bridge_x_yb
+
+| FC1 |1 |- |LEM2-4
+
+| FC2 |2 |- |LEM2-4
+
+|===
+
+[NOTE]
+====
+* You can cable additional bridges to ports LEM2-5 through LEM2-8 in 9132T switches with 2x LEM Modules.
+* Only one (1) bridge stack is supported using 9132T switches with 1x LEM Module.
+====
