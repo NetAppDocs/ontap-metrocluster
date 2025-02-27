@@ -11,7 +11,7 @@ summary: 'You can hot-add a disk shelf when you want to increase storage without
 [.lead]
 You can hot-add a disk shelf when you want to increase storage without any reduction in performance.
 
-== Step 1 Prepare to hot-add SAS disk shelves
+== Step 1: Prepare to hot-add SAS disk shelves
 
 To prepare for hot-adding a SAS disk shelf, you must download documents along with the disk drive and disk shelf firmware.
 
@@ -77,7 +77,7 @@ If you insert a SAS cable into the wrong port, when you remove the cable from a 
 . Properly ground yourself.
 . Verify disk shelf connectivity from the system console of either controller:
 +
-`*sysconfig -v*`
+`sysconfig -v`
 +
 The output is similar to the following:
 
@@ -163,38 +163,38 @@ https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware[NetApp 
 
  .. Change to the advanced privilege level:
  +
-`*set -privilege advanced*`
+`set -privilege advanced`
 +
 You need to respond with `*y*` when prompted to continue into advanced mode and see the advanced mode prompt (*>).
 
  .. Update the disk drive firmware to the most current version from the system console:
  +
-`*storage disk firmware update*`
+`storage disk firmware update`
  .. Return to the admin privilege level:
  +
-`*set -privilege admin*`
+`set -privilege admin`
  .. Repeat the previous substeps on the other controller.
 
 . Verify the operation of the MetroCluster configuration in ONTAP:
  .. Check whether the system is multipathed:
 +
-`*node run -node _node-name_ sysconfig -a*`
+`node run -node <node-name> sysconfig -a`
  .. Check for any health alerts on both clusters:
  +
-`*system health alert show*`
+`system health alert show`
  .. Confirm the MetroCluster configuration and that the operational mode is normal:
  +
-`*metrocluster show*`
+`metrocluster show`
  .. Perform a MetroCluster check:
  +
-`*metrocluster check run*`
+`metrocluster check run`
  .. Display the results of the MetroCluster check:
 +
-`*metrocluster check show*`
+`metrocluster check show`
  .. Check for any health alerts on the switches (if present):
 +
-`*storage switch show*`
- .. Run Config Advisor.
+`storage switch show`
+ .. Run Active IQ Config Advisor.
 +
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
 
