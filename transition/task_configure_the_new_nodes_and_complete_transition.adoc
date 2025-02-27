@@ -25,6 +25,8 @@ You must implement the MetroCluster IP connections, refresh the MetroCluster con
 
 . Create MetroCluster IP interfaces (node_A_1-IP, node_A_2-IP, node_B_1-IP, node_B_2-IP) -- two interfaces need to be created per controller; eight interfaces in total:
 +
+CAUTION: Do not use 169.254.17.x or 169.254.18.x IP addresses when you create MetroCluster IP interfaces to avoid conflicts with system auto-generated interface IP addresses in the same range. 
++
 `metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <controller_name> -home-port <port_name> -address <ip_address> -netmask <netmask_address> -vlan-id <vlan_id>`
 +
 `metrocluster configuration-settings interface show`
@@ -230,5 +232,6 @@ The newly created aggregate on node_A_2-IP should be listed.
 `volume show -vserver <admin_svm_name>`
 . Repeat the above steps on site_B (node_B_1-IP and node_B_2-IP).
 
+// 2025 Feb 13, ONTAPDOC-2607
 // BURT 1448684, 21 JAN 2022
 // 22 APR 2021, BURT 1180776
