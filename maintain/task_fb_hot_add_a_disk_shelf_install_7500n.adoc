@@ -11,6 +11,7 @@ summary: 'You can hot-add a disk shelf when you want to increase storage without
 [.lead]
 You can hot-add a disk shelf when you want to increase storage without any reduction in performance.
 
+[[prepare_to_hot_add_disk]]
 == Step 1: Prepare to hot-add SAS disk shelves
 
 To prepare for hot-adding a SAS disk shelf, you must download documents along with the disk drive and disk shelf firmware.
@@ -50,7 +51,7 @@ https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware[NetApp 
 [[step_2_hot_add_shelf]]
 == Step 2: Hot-add a disk shelf
 
-* The system must meet all of the requirements in <<Prepare to hot-add SAS disk shelves>>.
+* The system must meet all of the requirements in <<prepare_to_hot_add_disk,Prepare to hot-add SAS disk shelves>>.
 * Your environment must meet one of the following scenarios to hot-add a shelf:
  ** You have two FibreBridge 7500N bridges connected to a stack of SAS disk shelves.
  ** You have two FibreBridge 7600N bridges connected to a stack of SAS disk shelves.
@@ -105,7 +106,7 @@ cisco_A_1-1:9.126L2   : NETAPP   X421_HCOBD450A10 NA01 418.0GB (879097968 520B/s
 
 . Check whether your system has disk auto-assignment enabled from the console of either controller:
 +
-`*storage disk option show*`
+`storage disk option show`
 +
 The auto-assignment policy is shown in the Auto Assign column.
 +
@@ -124,13 +125,12 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk 
 +
 [NOTE]
 ====
-If you are splitting a single stack of disk shelves between two controllers, disk auto-assignment must be disabled before you assign disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller and pool.
-
-The `storage disk option modify -node <node-name> -autoassign off` command disables disk autoassignment.
-====
+* If you are splitting a single stack of disk shelves between two controllers, disk auto-assignment must be disabled before you assign disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller and pool.
 +
-NOTE: Disk drives must not be added to aggregates or volumes until the disk drive and disk shelf firmware have been updated.
+The `storage disk option modify -node <node-name> -autoassign off` command disables disk autoassignment.
 
+* Disk drives must not be added to aggregates or volumes until the disk drive and disk shelf firmware have been updated.
+====
 . Update the disk shelf firmware to the most current version by using the instructions for the downloaded firmware.
 +
 You can run the commands in the procedure from the system console of either controller.
