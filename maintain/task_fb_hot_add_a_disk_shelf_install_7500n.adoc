@@ -13,12 +13,12 @@ You can hot-add a disk shelf when you want to increase storage without any reduc
 
 == Step 1 Prepare to hot-add SAS disk shelves
 
-Preparing to hot-add a SAS disk shelf involves downloading documents as well as the disk drive and disk shelf firmware.
+To prepare for hot-adding a SAS disk shelf, you must download documents along with the disk drive and disk shelf firmware.
 
 * Your system must be a supported configuration and must be running a supported version of ONTAP.
 * All disk drives and disk shelves in the system must be running the latest firmware version.
 +
-You might want to update the disk and shelf firmware throughout the MetroCluster configuration prior to adding shelves.
+You might want to update the disk and shelf firmware throughout the MetroCluster configuration before you add shelves.
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ug-rdg/home.html[Upgrade, revert, or downgrade]
 
@@ -37,7 +37,7 @@ https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool]
 
 . Download the latest disk and disk shelf firmware:
 +
-NOTE: In this step, you are only completing the download portion of the instructions provided in the links. You need to follow the steps found in the link:task_fb_hot_add_a_disk_shelf_install_7500n.html[Hot-adding a disk shelf] section for installing the disk shelf.
+NOTE: In this step, you only complete the download portion of the instructions. You need to follow the steps in <<step_2_hot_add_shelf, hot-add a disk shelf>> to install the disk shelf.
 
  .. Download the disk firmware and make a copy of the disk firmware instructions for reference later.
 +
@@ -47,6 +47,7 @@ https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware[NetApp 
 +
 https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware[NetApp Downloads: Disk Shelf Firmware]
 
+[[step_2_hot_add_shelf]]
 == Step 2: Hot-add a disk shelf
 
 * The system must meet all of the requirements in <<Prepare to hot-add SAS disk shelves>>.
@@ -62,11 +63,15 @@ This procedure is written with the assumption that the last disk shelf in a stac
 * You should hot-add an equal number of disk shelves at each site.
 * If you are hot-adding more than one disk shelf, you must hot-add one disk shelf at a time.
 +
-NOTE: Each pair of FibreBridge 7500N or 7600N bridges can support up to four stacks.
+Each pair of FibreBridge 7500N or 7600N bridges can support up to four stacks.
 
-IMPORTANT: Hot-adding a disk shelf requires you to update the disk drive firmware on the hot-added disk shelf by running the `storage disk firmware update` command in advanced mode. Running this command can be disruptive if the firmware on existing disk drives in your system is an older version.
+[CAUTION] 
+====
+Hot-adding a disk shelf requires you to update the disk drive firmware on the hot-added disk shelf by running the `storage disk firmware update` command in advanced mode. Running this command can be disruptive if the firmware on existing disk drives in your system is an older version.
 
-IMPORTANT: If you insert a SAS cable into the wrong port, when you remove the cable from a SAS port, you must wait at least 120 seconds before plugging the cable into a different SAS port. If you fail to do so, the system will not recognize that the cable has been moved to another port.
+If you insert a SAS cable into the wrong port, when you remove the cable from a SAS port, you must wait at least 120 seconds before plugging the cable into a different SAS port. If you fail to do so, the system will not recognize that the cable has been moved to another port.
+
+====
 
 .Steps
 . Properly ground yourself.
@@ -98,11 +103,11 @@ cisco_A_1-1:9.126L1   : NETAPP   X421_HCOBD450A10 NA01 418.0GB (879097968 520B/s
 cisco_A_1-1:9.126L2   : NETAPP   X421_HCOBD450A10 NA01 418.0GB (879097968 520B/sect)
 ----
 
-. Check whether your system has disk autoassignment enabled from the console of either controller:
+. Check whether your system has disk auto-assignment enabled from the console of either controller:
 +
 `*storage disk option show*`
 +
-The autoassignment policy is shown in the Auto Assign column.
+The auto-assignment policy is shown in the Auto Assign column.
 +
 ----
 
@@ -113,15 +118,15 @@ node_A_2             on           on           on           default
 2 entries were displayed.
 ----
 
-. If your system does not have disk autoassignment enabled, or if disk drives in the same stack are owned by both controllers, assign disk drives to the appropriate pools.
+. If your system does not have disk auto-assignment enabled, or if disk drives in the same stack are owned by both controllers, assign disk drives to the appropriate pools.
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk and aggregate management]
 +
 [NOTE]
 ====
-If you are splitting a single stack of disk shelves between two controllers, disk autoassignment must be disabled before you assign disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller and pool.
+If you are splitting a single stack of disk shelves between two controllers, disk auto-assignment must be disabled before you assign disk ownership; otherwise, when you assign any single disk drive, the remaining disk drives might be automatically assigned to the same controller and pool.
 
-The `storage disk option modify -node _node-name_ -autoassign off` command disables disk autoassignment.
+The `storage disk option modify -node <node-name> -autoassign off` command disables disk autoassignment.
 ====
 +
 NOTE: Disk drives must not be added to aggregates or volumes until the disk drive and disk shelf firmware have been updated.
@@ -194,7 +199,7 @@ You need to respond with `*y*` when prompted to continue into advanced mode and 
 https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp Downloads: Config Advisor]
 
  .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
-. If you are hot-adding more than one disk shelf, repeat the previous steps for each disk shelf that you are hot-adding..
+. If you are hot-adding more than one disk shelf, repeat the previous steps for each disk shelf that you are hot-adding.
 
 // 2025 Jan 20, CQP edit
 // 2024 APR 8, ONTAPDOC-1710
