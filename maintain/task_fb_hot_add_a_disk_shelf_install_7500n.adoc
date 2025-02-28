@@ -12,9 +12,9 @@ summary: 'You can hot-add a disk shelf when you want to increase storage without
 You can hot-add a disk shelf when you want to increase storage without any reduction in performance.
 
 [[prepare_to_hot_add_disk]]
-== Step 1: Prepare to hot-add SAS disk shelves
+== Step 1: Prepare to hot-add a SAS disk shelf
 
-To prepare for hot-adding a SAS disk shelf, you must download documents along with the disk drive and disk shelf firmware.
+To prepare for hot-adding a SAS disk shelf, you need to download documents along with the disk drive and disk shelf firmware.
 
 * Your system must be a supported configuration and must be running a supported version of ONTAP.
 * All disk drives and disk shelves in the system must be running the latest firmware version.
@@ -23,18 +23,18 @@ You might want to update the disk and shelf firmware throughout the MetroCluster
 +
 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ug-rdg/home.html[Upgrade, revert, or downgrade]
 
-NOTE: A mix of IOM12 modules and IOM6 modules is supported within the same stack if your system is running a supported version of ONTAP. To establish whether your version of ONTAP supports shelf mixing, refer to the link:https://imt.netapp.com/matrix/[Interoperability Matrix Tool (IMT)^]. If your version of ONTAP is not supported and you cannot upgrade or downgrade the IOM modules on the existing stack or the new shelf that is to be added to a supported combination of IOM modules, you need to do one of the following:
+NOTE: A mix of IOM12 modules and IOM6 modules is supported within the same stack if your system is running a supported ONTAP version. To establish whether your ONTAP version supports shelf mixing, refer to the link:https://imt.netapp.com/matrix/[Interoperability Matrix Tool (IMT)^]. If your version of ONTAP is not supported and you cannot upgrade or downgrade the IOM modules on the existing stack or the new shelf that is to be added to a supported combination of IOM modules, you need to do one of the following:
 
 * Start a new stack on a new SAS port (if supported by the bridge-pair).
 * Start a new stack on an additional bridge-pair.
 
 .Steps
 . Download or view the following documents from the NetApp Support Site:
- ** https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool]
+ ** https://mysupport.netapp.com/matrix[Interoperability Matrix Tool]
  ** The _Installation Guide_ for your disk shelf model.
 . Verify that the disk shelf you are hot-adding is supported.
 +
-https://mysupport.netapp.com/matrix[NetApp Interoperability Matrix Tool]
+https://mysupport.netapp.com/matrix[Interoperability Matrix Tool^]
 
 . Download the latest disk and disk shelf firmware:
 +
@@ -42,11 +42,11 @@ NOTE: In this step, you only complete the download portion of the instructions. 
 
  .. Download the disk firmware and make a copy of the disk firmware instructions for reference later.
 +
-https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware[NetApp Downloads: Disk Drive Firmware]
+https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware[NetApp Downloads: Disk Drive Firmware^]
 
  .. Download the disk shelf firmware and make a copy of the disk shelf firmware instructions for reference later.
 +
-https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware[NetApp Downloads: Disk Shelf Firmware]
+https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware[NetApp Downloads: Disk Shelf Firmware^]
 
 [[step_2_hot_add_shelf]]
 == Step 2: Hot-add a disk shelf
@@ -70,7 +70,7 @@ Each pair of FibreBridge 7500N or 7600N bridges can support up to four stacks.
 ====
 Hot-adding a disk shelf requires you to update the disk drive firmware on the hot-added disk shelf by running the `storage disk firmware update` command in advanced mode. Running this command can be disruptive if the firmware on existing disk drives in your system is an older version.
 
-If you insert a SAS cable into the wrong port, when you remove the cable from a SAS port, you must wait at least 120 seconds before plugging the cable into a different SAS port. If you fail to do so, the system will not recognize that the cable has been moved to another port.
+If you insert a SAS cable into the wrong port, after you remove the cable from a SAS port, you must wait at least 120 seconds before plugging the cable into a different SAS port. If you fail to do so, the system will not recognize that you have moved the cable to a different port.
 
 ====
 
@@ -129,7 +129,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html[Disk 
 +
 The `storage disk option modify -node <node-name> -autoassign off` command disables disk autoassignment.
 
-* Disk drives must not be added to aggregates or volumes until the disk drive and disk shelf firmware have been updated.
+* You cannot add drives to aggregates or volumes until after you have updated the disk drive and disk shelf firmware.
 ====
 . Update the disk shelf firmware to the most current version by using the instructions for the downloaded firmware.
 +
