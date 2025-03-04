@@ -37,13 +37,15 @@ IMPORTANT: You must use both the authentication and privacy protocols in the com
 +
 ----
 (IP_switch_1)# config
-(IP_switch_1) (Config)# snmp-server user <user_name> network-admin [auth-md5/auth-sha/noauth] "<auth_password>" [priv-aes128/priv-des] "<priv_password>"
+(IP_switch_1) (Config)# snmp-server user <user_name> network-admin auth-sha priv-aes128 
 ----
 +
-You must use quotation marks around the authentication and privacy passwords, as shown in the following example:
+Enter the authentication password when prompted. 
 +
 ----
-snmp-server user admin1 network-admin auth-md5 "password" priv-des "password"
+#snmp-server user admin1 network-admin auth-sha priv-aes128
+ 
+Enter Authentication Password:
 ----
 
 --
@@ -96,4 +98,9 @@ Use the following steps to configure the SNMPv3 user in ONTAP.
 +
 `system switch ethernet show-all -instance -device <device_serial_number>`
 
+.After you finish
+Optionally, follow the steps to link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cshm/config-log-collection.html[Configure log collection^].
+
+// 2025 Jan 14, ONTAPDOC-2637
+// 2025 Jan 08, ONTAPDOC-2015
 // 2023 Feb 15, GH issue 292
