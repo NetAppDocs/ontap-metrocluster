@@ -23,9 +23,9 @@ Perform these steps on both switches in the fabric to verify ISL connectivity.
 
 . Disable the ISL ports of the ISLs to be added on both switches in the fabric:
 +
-`*FC_switch_A_1#config t*`
+`FC_switch_A_1#config t`
 +
-Enter the configuration commands, one per line. End with CTRL-Z after all the configuration commands have been entered.
+Enter the following configuration commands, one per line. Enter CTRL-Z after you have entered all of the configuration commands.
 +
 ----
 
@@ -36,14 +36,14 @@ Enter the configuration commands, one per line. End with CTRL-Z after all the co
 
 . Insert SFPs into the ports you are adding as ISL ports, and cable them according to the link:..install-fc/task_configure_the_mcc_hardware_components_fabric.html[Cable a fabric-attached MetroCluster configuration]
 +
-Verify that these ports are listed in the cabling documentation the for the switch model you are adding them to.
+Verify that these ports are listed in the cabling documentation for the switch model that you are adding them to.
 
-. Configure the ISL ports by following the steps in the link:/install-fc/task_cable_the_isl_between_the_mcc_sites_fabric_config.html[Cabling the ISLs between MetroCluster sites].
+. Configure the ISL ports by following the steps in link:../install-fc/task_cable_the_isl_between_the_mcc_sites_fabric_config.html[Cabling the ISLs between MetroCluster sites].
 . Enable all ISL ports (if not enabled) on both switches in the fabric:
 +
 `*FC_switch_A_1# config t*`
 +
-Enter the configuration commands, one per line. End with CTRL-Z.
+Enter the following configuration commands, one per line. End with CTRL-Z after you have entered all of the configuration commands.
 +
 ----
 
@@ -52,9 +52,10 @@ Enter the configuration commands, one per line. End with CTRL-Z.
 	FC_switch_A_1(config)# end
 ----
 
-. Verify the ISLs are established between both switches:
+. Verify that the ISLs are established between both switches:
 +
-`*show topology isl*`
+`show topology isl`
+
 . Repeat the procedure on the second fabric:
 +
 ----
@@ -78,11 +79,11 @@ Perform these steps on both switches in the fabric to verify ISL connectivity.
 
 .Steps 
 
-. Disable the ISL ports of the ISLs that you want to change the speed of on both switches in the fabric:
+. Disable the ISL ports for the ISLs that you want to change the speed on for both switches in the fabric:
 +
-`*FC_switch_A_1# config t*`
+`FC_switch_A_1# config t`
 +
-Enter configuration commands, one per line. End with CTRL-Z after you have entered all of the configuration commands.
+Enter the following configuration commands, one per line. End with CTRL-Z after you have entered all of the configuration commands.
 +
 ----
 
@@ -93,9 +94,9 @@ Enter configuration commands, one per line. End with CTRL-Z after you have enter
 
 . Change the speed of the ISL ports on both switches in the fabric:
 +
-`*FC_switch_A_1# config t*`
+`FC_switch_A_1# config t`
 +
-Enter configuration commands, one per line. End with CTRL-Z after you have entered all of the configuration commands.
+Enter the following configuration commands, one per line. End with CTRL-Z after you have entered all of the configuration commands.
 +
 ----
 
@@ -103,15 +104,15 @@ Enter configuration commands, one per line. End with CTRL-Z after you have enter
 	FC_switch_A_1(config-if)# switchport speed 16000
 ----
 +
-NOTE: Speeds for ports are 16 = 16,000 Gbps, 8 = 8,000 Gbps, 4 = 4,000 Gbps.
+NOTE: Speeds for the ports are 16 = 16,000 Gbps, 8 = 8,000 Gbps, 4 = 4,000 Gbps.
 +
-Verify that the ISL ports for your switch are listed in the _Fabric-attached MetroCluster Installation and Configuration Guide_.
+Verify that the ISL ports for your switch are listed in link:../install-fc/index.html[Install a fabric-attached MetroCluster configuration]
 
 . Enable all ISL ports (if not enabled) on both switches in the fabric:
 +
-`*FC_switch_A_1# config t*`
+`FC_switch_A_1# config t`
 +
-Enter configuration commands, one per line. End with CTRL-Z after you have entered all of the configuration commands.
+Enter the following configuration commands, one per line. End with CTRL-Z after you have entered all of the configuration commands.
 +
 ----
 
@@ -120,9 +121,9 @@ Enter configuration commands, one per line. End with CTRL-Z after you have enter
 	FC_switch_A_1(config)# end
 ----
 
-. Verify the ISLs are established between both switches:
+. Verify that the ISLs are established between both switches:
 +
-`*show topology isl*`
+`show topology isl`
 +
 ----
 --------------------------------------------------------------------------------
@@ -139,7 +140,7 @@ Enter configuration commands, one per line. End with CTRL-Z after you have enter
 
 == Reconfigure the VSAN to guarantee IOD or OOD of frames
 
-The standard in-order delivery (IOD) settings are recommended. You should configure out-of-order delivery of frames (OOD) only if necessary.
+The standard IOD settings are recommended. You should only configure OOD if necessary.
 
 link:concept_prepare_for_the_mcc_installation.html[Considerations for using TDM/WDM equipment with fabric-attached MetroCluster configurations]
 
@@ -162,7 +163,7 @@ IMPORTANT: For FC-VI VSANs (FCVI_1_10 and FCVI_2_30), you must enable in-order g
 
 .. Enable load balancing for the VSAN:
 +
-`vsan _vsan-ID_ loadbalancing src-dst-id`
+`vsan <vsan-ID> loadbalancing src-dst-id`
 
 .. Exit configuration mode:
 +
@@ -206,11 +207,11 @@ The following steps must be performed to reconfigure OOD of frames:
 
 . Disable the in-order guarantee of exchanges for the VSAN:
 +
-`no in-order-guarantee vsan _vsan-ID_`
+`no in-order-guarantee vsan <vsan-ID>`
 
 . Enable load balancing for the VSAN:
 +
-`vsan _vsan-ID_ loadbalancing src-dst-id`
+`vsan <vsan-ID> loadbalancing src-dst-id`
 
 . Exit configuration mode:
 +
@@ -244,6 +245,6 @@ FC_switch_B_1# copy running-config startup-config
 +
 NOTE: When configuring ONTAP on the controller modules, OOD must be explicitly configured on each controller module in the MetroCluster configuration.
 +
-link:concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
+link:concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Learn about configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
 
 // 2024 May 03, ONTAPDOC-1950
