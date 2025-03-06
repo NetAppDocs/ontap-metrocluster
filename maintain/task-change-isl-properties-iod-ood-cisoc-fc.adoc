@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, change, isl, properties, isl, ports, iod, ood,configuration, cisco, switch
 summary: 'You can add Inter-Switch Links (ISLs), change ISL speed, and reconfigure in-order delivery (IOD) or out of-order delivery (OOD) settings on a Cisco FC switch.'
 ---
-= Change ISL properties or the IOD/OOD configuration on a Cisco FC switch
+= Change ISL properties and the IOD/OOD configuration on a Cisco FC switch
 :icons: font
 :imagesdir: ../media/
 
@@ -13,7 +13,7 @@ You can add Inter-Switch Links (ISLs), change ISL speed, and reconfigure in-orde
 
 == Add ISLs to a Cisco FC switch
 
-You might need add ISLs to a switch if you are adding or upgrading hardware such as additional or faster controllers or faster switches.
+You might need add ISLs to a switch if you are adding or upgrading hardware, for example, adding or upgrading to faster controllers or faster switches.
 
 .About this task
 
@@ -69,9 +69,9 @@ Enter the following configuration commands, one per line. End with CTRL-Z after 
 	  1   0x11 cisco9 fc1/48  fc1/48 cisco9 0xbc    1    1   15 up   up    16g   64g
 ----
 
-== Change the speed of ISL ports on a Cisco FC switch
+== Change ISL port speeds on a Cisco FC switch
 
-ISLs traveling greater distances might need their speed lowered to improve quality. You can change the speed of ISL ports on a switch to improve the quality of the ISL.
+You can change the speed of ISL ports on a switch to improve the quality of the ISL, for example, lowering the speed on ISLs traveling a greater distance.
 
 .About this task 
 
@@ -104,7 +104,7 @@ Enter the following configuration commands, one per line. End with CTRL-Z after 
 	FC_switch_A_1(config-if)# switchport speed 16000
 ----
 +
-NOTE: Speeds for the ports are 16 = 16,000 Gbps, 8 = 8,000 Gbps, 4 = 4,000 Gbps.
+NOTE: Speeds for the ports are 16 = 16,000 Gbps, 8 = 8,000 Gbps, and 4 = 4,000 Gbps.
 +
 Verify that the ISL ports for your switch are listed in link:../install-fc/index.html[Install a fabric-attached MetroCluster configuration].
 
@@ -140,11 +140,11 @@ Enter the following configuration commands, one per line. End with CTRL-Z after 
 
 == Reconfigure the VSAN to guarantee IOD or OOD of frames
 
-The standard IOD settings are recommended. You should only configure OOD if necessary.
+The standard IOD settings are recommended. You should only reconfigure OOD if necessary.
 
 === Reconfigure IOD 
 
-The following steps must be performed to reconfigure IOD of frames.
+Perform the following step to reconfigure IOD of frames.
 
 .Steps
 
@@ -243,6 +243,6 @@ FC_switch_B_1# copy running-config startup-config
 +
 NOTE: When configuring ONTAP on the controller modules, OOD must be explicitly configured on each controller module in the MetroCluster configuration.
 +
-link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Learn about configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
+link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Learn about configuring IOD or OOD of frames on ONTAP software].
 
 // 2024 May 03, ONTAPDOC-1950
