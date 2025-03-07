@@ -9,58 +9,24 @@ summary: 'You might need to upgrade an RCF file on a MetroCluster IP switch. For
 :imagesdir: ../media/
 
 [.lead]
-You might need to upgrade an RCF file on a MetroCluster IP switch. For example, if the RCF file version that you are running on the switches is not supported by the ONTAP version, the switch firmware version, or both.
+You might need to upgrade a reference configuration file (RCF) file on a MetroCluster IP switch. For example, if the RCF version that you are running on the switches is not supported by the ONTAP version, the switch firmware version, or both.
 
-== Verify that the RCF file is supported
+.Before you begin
 
-If you are changing the ONTAP version or the switch firmware version, you should verify that you have an RCF file that is supported for that version. If you use the RCF generator, the correct RCF file will be generated for you.
-
-.Steps
-
-. Use the following commands from the switches to verify the version of the RCF file:
-+
-[cols="30,70"]
-|===
-
-h| From this switch...   h| Issue this command...
-
-a| Broadcom switch
-a| `(IP_switch_A_1) # show clibanner`
-
-a| Cisco switch
-a| `IP_switch_A_1# show banner motd`
-
-|===
-
-+
-For either switch, find the line in the output that indicates the version of the RCF file. For example, the following output is from a Cisco switch, which indicates the RCF file version is "`v1.80`".
-+
-....
-Filename : NX3232_v1.80_Switch-A2.txt
-....
-
-. To check which files are supported for a specific ONTAP version, switch, and platform, use the RcfFileGenerator.  If you can generate the RCF file for the configuration that you have or that you want to upgrade to, then it is supported.
-
-. To verify that the switch firmware is supported, refer to the following:
-+
-* https://hwu.netapp.com[Hardware Universe]
-* https://imt.netapp.com/matrix/[NetApp Interoperability Matrix^]
-
-== Upgrade RCF files
-
-If you are installing new switch firmware, you must install the switch firmware before upgrading the RCF file.
+* If you are installing new switch firmware, you must install the switch firmware before upgrading the RCF file.
+* Before you upgrade the RCF, link:task_upgrade_firmware_on_mcc_ip_switches.html[verify that the RCF is supported].
+* link:enable-console-logging-before-maintenance.html[Enable console logging] before performing this task.
 
 .About this task
 
-* This procedure disrupts traffic on the switch where the RCF file is upgraded. Traffic will resume once the new RCF file is applied.
+* This procedure disrupts traffic on the switch where the RCF file is upgraded. Traffic resumes when the new RCF file is applied.
 
 * Perform the steps on one switch at a time, in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2.
 
-* link:enable-console-logging-before-maintenance.html[Enable console logging] before performing this task.
-
 // 2024 Aug 13, ONTAPDOC-1988
 
-.Steps
+.Steps 
+
 . Verify the health of the configuration.
 .. Verify that the MetroCluster components are healthy:
 +
@@ -120,6 +86,7 @@ Follow the steps for your switch vendor:
 +
 NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switchport mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
 
+// 2025 Mar 05, ONTAPDOC-2286, 1587
 // 2025 Jan 17, GH issue 449
 // 2024 Feb 22, GH issue 366
 // 2023 Feb 21, GH issue 361
