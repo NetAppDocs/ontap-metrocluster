@@ -23,6 +23,20 @@ Verify the correct LIF placement. Then remove the VLANs and interface groups on 
 +
 `boot_ontap`
 
+. If the system you are upgrading to uses *shared cluster/HA ports*, verify that the MetroCluster IP interfaces are using supported IP addresses. 
++
+Use the following information to determine whether the new system uses shared cluster/HA ports:
++
+include::../_include/shared-metrocluster-ha-or-shared-cluster-ha.adoc[]
+.. Verify the IP addresses of the MetroCluster interfaces on the old controllers:
++
+`metrocluster configuration-settings interface show`
+
+.. If the MetroCluster interfaces are using 169.254.17.x or 169.254.18.x IP addresses, refer to link:https://kb.netapp.com/on-prem/ontap/mc/MC-KBs/How_to_modify_the_properties_of_a_MetroCluster_IP_interface[the Knowledge Base article "How to modify the properties of a MetroCluster IP interface"^] to modify the interface IP addresses before you proceed with the upgrade.
++
+CAUTION: Upgrading to any system that uses *shared cluster/HA ports* isn't supported if the MetroCluster interfaces are configured with 169.254.17.x or 169.254.18.x IP addresses.
+
+
 . Modify the intercluster LIFs on the old controllers to use a different home port than the ports used for HA interconnect or MetroCluster IP DR interconnect on the new controllers.
 +
 NOTE: This step is required for a successful upgrade.
@@ -42,7 +56,7 @@ Take one of the following actions depending on whether the intercluster LIFs on 
 | If the intercluster LIFs...
 | Go to...
 | Use the same home port | <<controller_manual_upgrade_prepare_network_ports_2b,Substep b>>
-| Use a different home port | <<controller_manual_upgrade_prepare_network_ports_3,Step 3>>
+| Use a different home port | <<controller_manual_upgrade_prepare_network_ports_3,Step 4>>
 |===
 +
 .. [[controller_manual_upgrade_prepare_network_ports_2b]]Modify the intercluster LIFs to use a different home port:
@@ -63,13 +77,13 @@ Repeat the command for each intercluster LIF that isn't on the home port.
 
 . [[controller_manual_upgrade_prepare_network_ports_3]]Assign the home port of all data LIFs on the old controller to a common port that is the same on both the old and new controller modules.
 +
-CAUTION: If the old and new controllers don't have a common port, you don't need to modify the data LIFs. Skip this step and go directly to <<upgrades_manual_without_matching_ports, Step 4>>. 
+CAUTION: If the old and new controllers don't have a common port, you don't need to modify the data LIFs. Skip this step and go directly to <<upgrades_manual_without_matching_ports, Step 5>>. 
 
 .. Display the LIFs:
 +
 `network interface show`
 +
-All data LIFS including SAN and NAS are admin up and operationally down because those are up at switchover site (cluster_A).
+All data LIFs including SAN and NAS are admin up and operationally down because those are up at switchover site (cluster_A).
 
  .. Review the output to find a common physical network port that is the same on both the old and new controllers that is not used as a cluster port.
 +
@@ -141,4 +155,6 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 .What's next?
 link:upgrade-mcc-ip-manual-setup-controllers.html[Set up the new controllers].
 
+// 2025 Mar 05, ONTAPDOC-2848
+// 2025 Feb 13, ONTAPDOC-2607
 // 2024 Nov 12, ONTAPDOC-2351
