@@ -12,4 +12,8 @@ summary: You can configure the IP switches to use SNMPv3 for health monitoring.
 [.lead]
 The Ethernet switch health monitor (CSHM) is responsible for ensuring the operational health of Cluster and Storage network switches and collecting switch logs for debugging purposes.
 
-== Requirements for CSHM in a MetroCluster IP configuration
+This section contains the generic steps for configuring SNMPv3 and log collection on Cisco, Broadcom, and NVIDIA SN2100 switches. You must follow the steps for a switch firmware version that is supported in a MetroCluster IP configuration. Refer to the link:https://hwu.netapp.com/[Hardware Universe^] to verify the supported firmware versions.
+
+For log collection with Broadcom and Cisco switches, a new user should be created on the switch for each setup with log collection enabled. These switches do not support multiple SSH keys for the same user. Any additional log collection setup performed overwrites any pre-existing SSH keys for the use. 
+
+Before you configure the CSHM, you should disable unused ISLs to avoid any unnecessary ISL alerts. 
