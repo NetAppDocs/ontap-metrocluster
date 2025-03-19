@@ -12,6 +12,8 @@ summary: You can configure the IP switches to use SNMPv3 for health monitoring.
 [.lead]
 In a MetroCluster IP configuration, you can configure log collection to collect switch logs for debugging purposes. 
 
+CAUTION: On Broadcom and Cisco switches, a new user is required for each cluster setup with log collection. For example, MetroCluster 1, MetroCluster 2, and MetroCluster 3 all require a separate user to be configured on the switches. Multiple SSH keys for the same user is not supported.
+
 .About this task 
 
 The Ethernet switch health monitor (CSHM) is responsible for ensuring the operational health of Cluster and Storage network switches and collecting switch logs for debugging purposes. This procedure guides you through the process of setting up collection, requesting detailed *Support* logs, and enabling an hourly collection of *Periodic* data that is collected by AutoSupport.
@@ -29,9 +31,7 @@ The Ethernet switch health monitor (CSHM) is responsible for ensuring the operat
 * The user must have access to the switch `show` commands. If these are not available, create a new user and grant the necessary permissions to the user. 
 * Switch health monitoring must be enabled for the switch. Verify this by ensuring the `Is Monitored:` field is set to *true* in the output of the `system switch ethernet show` command.
 //* For NVIDIA switches, the user for log collection must be specified when the Reference Configuration File (RCF) is applied. By default, this user is set to 'admin'. If you wish to use a different user, you must specify this in the *# SHM User's* section of the RCF.
-* For log collection with Broadcom and Cisco switches, a new user should be created on the switch for each setup with log collection enabled. 
-+
-CAUTION: These switches do not support multiple SSH keys for the same user. Any additional log collection setup performed overwrites any pre-existing SSH keys for the user. 
+* For log collection with Broadcom and Cisco switches, a new user should be created on the switch for each cluster setup with log collection enabled. These switches do not support multiple SSH keys for the same user. Any additional log collection setup performed overwrites any pre-existing SSH keys for the user. 
 
 * For support log collection with NVIDIA switches, the _user_ for log collection must be permitted to run the `cl-support` command without having to provide a password. To allow this usage, run the command:
 +
