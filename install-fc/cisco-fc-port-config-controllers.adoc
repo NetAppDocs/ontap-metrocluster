@@ -17,12 +17,17 @@ The tables show the maximum supported configurations, with eight controller modu
 
 NOTE: For Cisco 9132T, see <<cisco_9132t_port,Cisco 9132T port usage in a MetroCluster configuration running ONTAP 9.4 or later>>.
 
-=== Cisco 9148V port usage for controllers
+The following table shows the Cisco port usage for controllers using FibreBridge 7500N or 7600N bridges. 
+
+NOTE: The Cisco 9124V and 9250i switches are not supported for eight-node MetroCluster configurations.
 
 |===
 
-4+^h| Cisco 9148V
-h| Component h| Port h| Switch 1 h| Switch 2
+8+^h| MetroCluster 1 or DR Group 1
+.2+h| Component .2+h| Port 6+h| Cisco Switch Model Port Connection
+h| Connects to FC switch... h| 9124V h| 9148S h| 9148V	h| 9250i h|9396S
+					
+
 
 .8+a|
 controller_x_1
@@ -31,47 +36,111 @@ FC-VI port a
 a|
 1
 a|
--
+1
+a|
+1
+a|
+1
+a| 
+1
+a| 
+1
 a|
 FC-VI port b
 a|
--
+2
+a|
+1
+a|
+1
+a|
+1
+a|
+1
 a|
 1
 a|
 FC-VI port c
 a|
+1
+a|
 2
 a|
--
+2
+a|
+2
+a|
+2
+a|
+2
 a|
 FC-VI port d
 a|
--
+2
+a|
+2
+a|
+2
+a|
+2
+a|
+2
 a|
 2
 a|
 HBA port a
 a|
+1
+a|
 3
 a|
--
+3
+a|
+3
+a|
+3
+a|
+3
 a|
 HBA port b
 a|
--
+2
+a|
+3
+a|
+3
+a|
+3
+a|
+3
 a|
 3
 a|
 HBA port c
 a|
+1
+a|
 4
 a|
--
+4
+a|
+4
+a|
+4
+a|
+4
 a|
 HBA port d
 a|
--
+2
+a|
+4
+a|
+4
+a|
+4
+a|
+4
 a|
 4
 .8+a|
@@ -79,847 +148,353 @@ controller_x_2
 a|
 FC-VI port a
 a|
+1
+a|
 5
 a|
--
+5
 a|
+5
+a| 
+5
+a| 
+5
+a| 
 FC-VI port b
 a|
--
+2
+a|
+5
+a|
+5
+a|
+5
+a|
+5
 a|
 5
 a|
 FC-VI port c
 a|
+1
+a|
 6
 a|
--
+6
+a|
+6
+a|
+6
+a|
+6
 a|
 FC-VI port d
 a|
--
+2
+a|
+6
+a|
+6
+a|
+6
+a|
+6
 a|
 6
 a|
 HBA port a
 a|
+1
+a|
 7
 a|
--
+7
+a|
+7
+a|
+7
+a|
+7
 a|
 HBA port b
 a|
--
+2
+a|
+7
+a|
+7
+a|
+7
+a|
+7
 a|
 7
 a|
 HBA port c
 a|
+1
+a|
 8
 a|
-
+8
+a|
+8
+a|
+8
+a|
+8
 a|
 HBA port d
 a|
--
+2
 a|
 8
+a|
+8
+a|
+8
+a|
+8
+a|
+8
+
+|===
+
+|===
+
+8+^h| MetroCluster 2 or DR Group 2
+.2+h| Component .2+h| Port 6+h| Cisco Switch Model Port Connection
+h| Connects to FC switch... h| 9124V h| 9148S h| 9148V	h| 9250i h|9396S
+					
+
+
 .8+a|
-controller_x_3
+controller_x_1
 a|
 FC-VI port a
+a|
+1
+a|
+Not applicable
 a|
 25
 a|
-
-a|
-FC-VI port b
-a|
--
-a|
 25
-a|
-FC-VI port c
-a|
-26
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-26
-a|
-HBA port a
-a|
-27
-a|
--
-a|
-HBA port b
-a|
--
-a|
-27
-a|
-HBA port c
-a|
-28
-a|
-
-a|
-HBA port d
-a|
--
-a|
-28
-.8+a|
-controller_x_4
-a|
-FC-VI port a
-a|
-29
-a|
--
-a|
-FC-VI port b
-a|
--
-a|
-29
-a|
-FC-VI port c
-a|
-30
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-30
-a|
-HBA port a
-a|
-31
-a|
--
-a|
-HBA port b
-a|
--
-a|
-31
-a|
-HBA port c
-a|
-32
-a|
--
-a|
-HBA port d
-a|
--
-a|
-32
-|===
-
-
-=== Cisco 9124V port usage for controllers
-
-|===
-
-4+^h| Cisco 9124V
-h| Component h| Port h| Switch 1 h| Switch 2
-
-.8+a|
-controller_x_1
-a|
-FC-VI port a
-a|
-1
-a|
--
-a|
-FC-VI port b
-a|
--
-a|
-1
-a|
-FC-VI port c
-a|
-2
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-2
-a|
-HBA port a
-a|
-3
-a|
--
-a|
-HBA port b
-a|
--
-a|
-3
-a|
-HBA port c
-a|
-4
-a|
--
-a|
-HBA port d
-a|
--
-a|
-4
-.8+a|
-controller_x_2
-a|
-FC-VI port a
-a|
-5
-a|
--
-a|
-FC-VI port b
-a|
--
-a|
-5
-a|
-FC-VI port c
-a|
-6
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-6
-a|
-HBA port a
-a|
-7
-a|
--
-a|
-HBA port b
-a|
--
-a|
-7
-a|
-HBA port c
-a|
-8
-a|
-
-a|
-HBA port d
-a|
--
-a|
-8
-
-|===
-
-
-=== Cisco 9396S port usage for controllers
-
-|===
-
-4+^h| Cisco 9396S
-h| Component h| Port h| Switch 1 h| Switch 2
-
-.8+a|
-controller_x_1
-a|
-FC-VI port a
-a|
-1
-a|
--
-a|
-FC-VI port b
-a|
--
-a|
-1
-a|
-FC-VI port c
-a|
-2
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-2
-a|
-HBA port a
-a|
-3
-a|
--
-a|
-HBA port b
-a|
--
-a|
-3
-a|
-HBA port c
-a|
-4
-a|
--
-a|
-HBA port d
-a|
--
-a|
-4
-.8+a|
-controller_x_2
-a|
-FC-VI port a
-a|
-5
-a|
--
-a|
-FC-VI port b
-a|
--
-a|
-5
-a|
-FC-VI port c
-a|
-6
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-6
-a|
-HBA port a
-a|
-7
-a|
--
-a|
-HBA port b
-a|
--
-a|
-7
-a|
-HBA port c
-a|
-8
-a|
-
-a|
-HBA port d
-a|
--
-a|
-8
-.8+a|
-controller_x_3
-a|
-FC-VI port a
-a|
+a| 
+Not applicable
+a| 
 49
 a|
-
-a|
 FC-VI port b
 a|
--
+2
+a|
+Not applicable
+a|
+25
+a|
+25
+a|
+Not applicable
 a|
 49
 a|
 FC-VI port c
 a|
-50
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-50
-a|
-HBA port a
-a|
-51
-a|
--
-a|
-HBA port b
-a|
--
-a|
-51
-a|
-HBA port c
-a|
-52
-a|
-
-a|
-HBA port d
-a|
--
-a|
-52
-.8+a|
-controller_x_4
-a|
-FC-VI port a
-a|
-53
-a|
--
-a|
-FC-VI port b
-a|
--
-a|
-53
-a|
-FC-VI port c
-a|
-54
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-54
-a|
-HBA port a
-a|
-55
-a|
--
-a|
-HBA port b
-a|
--
-a|
-55
-a|
-HBA port c
-a|
-56
-a|
--
-a|
-HBA port d
-a|
--
-a|
-56
-|===
-
-=== Cisco 9148S port usage for controllers
-
-|===
-
-
-4+^h| Cisco 9148S
-h| Component h| Port h| Switch 1 h| Switch 2
-
-.8+a|
-controller_x_1
-a|
-FC-VI port a
-a|
 1
 a|
-
+Not applicable
 a|
-FC-VI port b
+26
 a|
--
+26
 a|
-1
+Not applicable
 a|
-FC-VI port c
+50
+a|
+FC-VI port d
 a|
 2
 a|
--
+Not applicable
 a|
-FC-VI port d
+26
 a|
--
+26
 a|
-2
+Not applicable
+a|
+50
 a|
 HBA port a
 a|
-3
+1
 a|
--
+Not applicable
+a|
+27
+a|
+27
+a|
+Not applicable
+a|
+51
 a|
 HBA port b
 a|
--
+2
 a|
-3
+Not applicable
+a|
+27
+a|
+27
+a|
+Not applicable
+a|
+51
 a|
 HBA port c
 a|
-4
+1
 a|
--
+Not applicable
+a|
+28
+a|
+28
+a|
+Not applicable
+a|
+52
 a|
 HBA port d
 a|
--
+2
 a|
-4
+Not applicable
+a|
+28
+a|
+28
+a|
+Not applicable
+a|
+52
 .8+a|
 controller_x_2
 a|
 FC-VI port a
 a|
-5
+1
 a|
--
-a|
-FC-VI port b
-a|
--
-a|
-5
-a|
-FC-VI port c
-a|
-6
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-6
-a|
-HBA port a
-a|
-7
-a|
--
-a|
-HBA port b
-a|
--
-a|
-7
-a|
-HBA port c
-a|
-8
-a|
--
-a|
-HBA port d
-a|
--
-a|
-8
-.8+a|
-controller_x_3
-a|
-FC-VI port a
-a|
-25
-a|
-
-a|
-FC-VI port b
-a|
--
-a|
-25
-a|
-FC-VI port c
-a|
-26
-a|
--
-a|
-FC-VI port d
-a|
--
-a|
-26
-a|
-HBA port a
-a|
-27
-a|
--
-a|
-HBA port b
-a|
--
-a|
-27
-a|
-HBA port c
-a|
-28
-a|
--
-a|
-HBA port d
-a|
--
-a|
-28
-.8+a|
-controller_x_4
-a|
-FC-VI port a
+Not applicable
 a|
 29
 a|
--
-a|
+29
+a| 
+Not applicable
+a| 
+53
+a| 
 FC-VI port b
 a|
--
+2
+a|
+Not applicable
 a|
 29
 a|
+29
+a|
+Not applicable
+a|
+53
+a|
 FC-VI port c
+a|
+1
+a|
+Not applicable
 a|
 30
 a|
--
+30
+a|
+Not applicable
+a|
+54
 a|
 FC-VI port d
 a|
--
+2
+a|
+Not applicable
 a|
 30
 a|
+30
+a|
+Not applicable
+a|
+50
+a|
 HBA port a
-a|
-31
-a|
--
-a|
-HBA port b
-a|
--
-a|
-31
-a|
-HBA port c
-a|
-32
-a|
--
-a|
-HBA port d
-a|
--
-a|
-32
-|===
-
-=== Cisco 9250i port usage for controllers
-
-NOTE: The following table shows systems with two FC-VI ports. AFF A700 and FAS9000 systems have four FC-VI ports (a, b, c, and d). If using an AFF A700 or FAS9000 system, the port assignments move along by one position. For example, FC-VI ports c and d go to switch port 2 and HBA ports a and b go to switch port 3.
-
-|===
-4+^h| Cisco 9250i
-
-Note: The Cisco 9250i switch is not supported for eight-node MetroCluster configurations.
-h| Component h| Port h| Switch 1 h| Switch 2
-
-.6+a|
-controller_x_1
-a|
-FC-VI port a
 a|
 1
 a|
--
+Not applicable
 a|
-FC-VI port b
+31
 a|
--
+31
+a|
+Not applicable
+a|
+55
+a|
+HBA port b
+a|
+2
+a|
+Not applicable
+a|
+31
+a|
+31
+a|
+Not applicable
+a|
+55
+a|
+HBA port c
 a|
 1
 a|
-HBA port a
+Not applicable
 a|
-2
+32
 a|
--
+32
 a|
-HBA port b
+Not applicable
 a|
--
-a|
-2
-a|
-HBA port c
-a|
-3
-a|
--
+56
 a|
 HBA port d
 a|
--
+1
 a|
-3
-.6+a|
-controller_x_2
+Not applicable
 a|
-FC-VI port a
+32
 a|
-4
+32
 a|
--
+Not applicable
 a|
-FC-VI port b
-a|
--
-a|
-4
-a|
-HBA port a
-a|
-5
-a|
--
-a|
-HBA port b
-a|
--
-a|
-5
-a|
-HBA port c
-a|
-6
-a|
--
-a|
-HBA port d
-a|
--
-a|
-6
-.6+a|
-controller_x_3
-a|
-FC-VI port a
-a|
-7
-a|
--
-a|
-FC-VI port b
-a|
--
-a|
-7
-a|
-HBA port a
-a|
-8
-a|
--
-a|
-HBA port b
-a|
--
-a|
-8
-a|
-HBA port c
-a|
-9
-a|
--
-a|
-HBA port d
-a|
--
-a|
-9
-.6+a|
-controller_x_4
-a|
-FC-VI port a
-a|
-10
-a|
--
-a|
-FC-VI port b
-a|
--
-a|
-10
-a|
-HBA port a
-a|
-11
-a|
--
-a|
-HBA port b
-a|
--
-a|
-11
-a|
-HBA port c
-a|
-13
-a|
--
-a|
-HBA port d
-a|
--
-a|
-13
+56
+
 |===
-
-
-
