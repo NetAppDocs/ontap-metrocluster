@@ -291,11 +291,18 @@ CAUTION: Don't power up the shelves before you power up the controllers. This pr
 
 . Power on the shelves, allowing enough time for them to power on completely.
 
-. Verify that the storage is visible.
-.. Verify that the storage is visible from the surviving site. Bring the offline plexes back online to restart the resync operation and reestablish the SyncMirror.
+. Verify that the storage is visible from maintenance mode.
+.. Boot into Maintenance mode:
++
+`boot_ontap maint`
+.. Verify that the storage is visible from the surviving site. 
 .. Verify that the local storage is visible from the node in Maintenance mode:
 +
 `disk show -v`
+
+. Halt the nodes:
++
+`halt`
 
 . Reestablish the MetroCluster configuration.
 +
