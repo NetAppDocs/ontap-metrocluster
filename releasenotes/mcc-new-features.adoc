@@ -10,11 +10,9 @@ summary: ''
 :imagesdir: ../media/
 
 [.lead]
-Learn about the new ONTAP MetroCluster features and new and enhanced ONTAP features that improve the capabilities, manageability, and performance of MetroCluster configurations. 
+Each release of the ONTAP 9 data management software delivers new and enhanced features that improve the capabilities, manageability, and performance of ONTAP MetroCluster configurations.
 
-== MetroCluster-specific features
-
-The following table lists the new MetroCluster-specific features for each ONTAP release. 
+For details about known issues, limitations, and upgrade cautions affecting ONTAP MetroCluster configurations,  refer to the https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508[ONTAP 9 Release Notes^]. You must sign in with your NetApp account or create an account to access the Release Notes. 
 
 [cols="20,65,15"*,options="header"]
 |===
@@ -27,6 +25,26 @@ You can update the firmware on Fibrebridge bridges using credentials if they are
 link:../maintain/task_update_firmware_on_a_fibrebridge_bridge_parent_topic.html[Update firmware on a FibreBridge bridge]
 a|
 ONTAP 9.16.1 
+a|
+SVM data mobility support for migrating MetroCluster configurations
+a|
+ONTAP supports the following MetroCluster SVM migrations: 
+
+* Migrating an SVM between a non-MetroCluster HA pair and a MetroCluster IP configuration
+* Migrating an SVM between two MetroCluster IP configurations 
+* Migrating an SVM between a MetroCluster FC configuration and a MetroCluster IP configuration
+
+link:https://docs.netapp.com/us-en/ontap/svm-migrate/index.html[SVM data mobility^]
+a|
+ONTAP 9.16.1
+a|
+MD5 authentication support for BGP peer groups
+a|
+ONTAP supports MD5 authentication on BGP peer groups to protect BGP sessions. When MD5 is enabled, BGP sessions can only be established and processed among authorized peers, preventing potential disruptions of the session by an unauthorized actor.
+
+link:https://docs.netapp.com/us-en/ontap/networking/configure_virtual_ip_@vip@_lifs.html[Configure virtual IP (VIP) LIFs^]
+a|
+ONTAP 9.16.1
 a|
 MetroCluster IP support for end-to-end encryption
 a|
@@ -46,6 +64,14 @@ In four-node MetroCluster IP configurations, the following volume limits for AFF
 a|
 ONTAP 9.15.1
 a|
+MetroCluster IP support for NVMe
+a|
+The NVMe/TCP front-end host protocol is supported on four-node MetroCluster IP configurations.
+
+link:https://docs.netapp.com/us-en/ontap/san-admin/san-config-mcc-concept.html[SAN configurations in a MetroCluster environment^]
+a|
+ONTAP 9.15.1
+a|
 Volume limit increase for four-node MetroCluster IP configurations on AFF A900 systems
 a|
 In four-node MetroCluster IP configurations, the following volume limits for AFF A900 systems have increased:
@@ -53,6 +79,14 @@ In four-node MetroCluster IP configurations, the following volume limits for AFF
 * The maximum number of FlexVol volumes per aggregate increased from 200 to 625.
 * The maximum number of FlexVol volumes per node increased from 800 to 1250.
 * The maximum number of FlexVol volumes per high-availability (HA) pair increased from 1600 to 2500.
+a|
+ONTAP 9.14.1
+a|
+S3 object storage support on mirrored and unmirrored aggregates
+a|
+You can enable an S3 object storage server on an SVM in a mirrored or unmirrored aggregate in MetroCluster IP and FC configurations.
+
+https://docs.netapp.com/us-en/ontap/s3-config/index.html[S3 configuration overview^]
 a|
 ONTAP 9.14.1
 a|
@@ -120,11 +154,35 @@ https://docs.netapp.com/us-en/ontap/s3-config/index.html#s3-configuration-with-s
 a|
 ONTAP 9.12.1
 a|
+Support for provisioning an S3 bucket on mirrored and unmirrored aggregates in a MetroCluster cluster
+a|
+You can create a bucket on a mirrored or unmirrored aggregate in MetroCluster configurations.
+
+https://docs.netapp.com/us-en/ontap/s3-config/create-bucket-mcc-task.html[Create a bucket on a mirrored or unmirrored aggregate in a MetroCluster configuration^]
+a|
+ONTAP 9.12.1
+a|
+MetroCluster IP support for NVMe
+a|
+The NVMe/FC protocol is supported on four-node MetroCluster IP configurations.
+
+link:https://docs.netapp.com/us-en/ontap/san-admin/san-config-mcc-concept.html[SAN configurations in a MetroCluster environment^]
+a|
+ONTAP 9.12.1
+a|
 Transitioning from a MetroCluster FC configuration to an AFF A250 or FAS500f  MetroCluster IP configuration
 a|
 You can transition from a MetroCluster FC configuration to an AFF A250 or FAS500f MetroCluster IP configuration.
 
 https://docs.netapp.com/us-en/ontap-metrocluster/transition/task_move_cluster_connections.html#which-connections-to-move[Move the local cluster connections]
+a|
+ONTAP 9.11.1
+a|
+IPsec support for front-end host protocol in MetroCluster IP and MetroCluster fabric-attached configurations
+a|
+IPsec support for front-end host protocol (such as NFS and iSCSI) is available in MetroCluster IP and MetroCluster fabric-attached configurations.
+
+https://docs.netapp.com/us-en/ontap/networking/configure_ip_security_@ipsec@_over_wire_encryption.html[Configure IP security (IPsec) over wire encryption^]
 a|
 ONTAP 9.11.1
 a|
@@ -204,6 +262,20 @@ https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_consideratio
 a|
 ONTAP 9.7
 a|
+FabricPool mirrors on MetroCluster configurations
+a|
+You can set up a mirrored FabricPool on MetroCluster configurations to tier cold data to two different fault zones.
+
+https://docs.netapp.com/us-en/ontap/fabricpool/setup-object-stores-mcc-task.html[Setting up object stores for FabricPool in a MetroCluster configuration^]
+a|
+ONTAP 9.7
+a|
+Consistency groups
+a|
+Consistency groups are supported in MetroCluster configurations.
+a|
+ONTAP 9.7
+a|
 Private layer 2 network sharing
 a|
 MetroCluster IP configurations with supported Cisco switches can share existing networks for ISLs, rather than using dedicated MetroCluster ISLs. Earlier ONTAP versions require dedicated ISLs.
@@ -226,91 +298,6 @@ You can allow one cluster site to take over the tasks of another cluster site. T
 https://docs.netapp.com/us-en/ontap-metrocluster/manage/index.html[MetroCluster switchover and switchback]
 a|
 ONTAP 9.6
-|===
-
-== MetroCluster configuration support for ONTAP features
-
-Each release of the ONTAP 9 data management software delivers new and enhanced features that improve the capabilities, manageability, and performance of ONTAP MetroCluster configurations.
-
-For details about known issues, limitations, and upgrade cautions affecting ONTAP MetroCluster configurations,  refer to the https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508[ONTAP 9 Release Notes^]. You must sign in with your NetApp account or create an account to access the Release Notes.
-
-[cols="20,65,15"*,options="header"]
-|===
-| Supported features in MetroCluster configuration| Description| Available beginning
-a|
-SVM data mobility support for migrating MetroCluster configurations
-a|
-ONTAP supports the following MetroCluster SVM migrations: 
-
-* Migrating an SVM between a non-MetroCluster HA pair and a MetroCluster IP configuration
-* Migrating an SVM between two MetroCluster IP configurations 
-* Migrating an SVM between a MetroCluster FC configuration and a MetroCluster IP configuration
-
-link:https://docs.netapp.com/us-en/ontap/svm-migrate/index.html[SVM data mobility^]
-a|
-ONTAP 9.16.1
-a|
-MD5 authentication support for BGP peer groups
-a|
-ONTAP supports MD5 authentication on BGP peer groups to protect BGP sessions. When MD5 is enabled, BGP sessions can only be established and processed among authorized peers, preventing potential disruptions of the session by an unauthorized actor.
-
-link:https://docs.netapp.com/us-en/ontap/networking/configure_virtual_ip_@vip@_lifs.html[Configure virtual IP (VIP) LIFs^]
-a|
-ONTAP 9.16.1
-a|
-MetroCluster IP support for NVMe
-a|
-The NVMe/TCP front-end host protocol is supported on four-node MetroCluster IP configurations.
-
-link:https://docs.netapp.com/us-en/ontap/san-admin/san-config-mcc-concept.html[SAN configurations in a MetroCluster environment^]
-a|
-ONTAP 9.15.1
-a|
-S3 object storage support on mirrored and unmirrored aggregates
-a|
-You can enable an S3 object storage server on an SVM in a mirrored or unmirrored aggregate in MetroCluster IP and FC configurations.
-
-https://docs.netapp.com/us-en/ontap/s3-config/index.html[S3 configuration overview^]
-a|
-ONTAP 9.14.1
-a|
-Support for provisioning an S3 bucket on mirrored and unmirrored aggregates in a MetroCluster cluster
-a|
-You can create a bucket on a mirrored or unmirrored aggregate in MetroCluster configurations.
-
-https://docs.netapp.com/us-en/ontap/s3-config/create-bucket-mcc-task.html[Create a bucket on a mirrored or unmirrored aggregate in a MetroCluster configuration^]
-a|
-ONTAP 9.12.1
-a|
-MetroCluster IP support for NVMe
-a|
-The NVMe/FC protocol is supported on four-node MetroCluster IP configurations.
-
-link:https://docs.netapp.com/us-en/ontap/san-admin/san-config-mcc-concept.html[SAN configurations in a MetroCluster environment^]
-a|
-ONTAP 9.12.1
-a|
-IPsec support for front-end host protocol in MetroCluster IP and MetroCluster fabric-attached configurations
-a|
-IPsec support for front-end host protocol (such as NFS and iSCSI) is available in MetroCluster IP and MetroCluster fabric-attached configurations.
-
-https://docs.netapp.com/us-en/ontap/networking/configure_ip_security_@ipsec@_over_wire_encryption.html[Configure IP security (IPsec) over wire encryption^]
-a|
-ONTAP 9.11.1
-a|
-Consistency groups
-a|
-Consistency groups are supported in MetroCluster configurations.
-a|
-ONTAP 9.7
-a|
-FabricPool mirrors on MetroCluster configurations
-a|
-You can set up a mirrored FabricPool on MetroCluster configurations to tier cold data to two different fault zones.
-
-https://docs.netapp.com/us-en/ontap/fabricpool/setup-object-stores-mcc-task.html[Setting up object stores for FabricPool in a MetroCluster configuration^]
-a|
-ONTAP 9.7
 a|
 SVM disaster recovery
 a|
@@ -319,6 +306,9 @@ a|
 ONTAP 9.5
 |===
 
+
+// 2025 April 09, ONTAPDOC-2282
+// 2025 March 29, ONTAPDOC-2607
 // 2024 Nov 07, ONTAPDOC-2299
 // 2024 May 15, ONTAPDOC-1602 (9.15.1)
 // 2024 Nov 07, ONTAPDOC-2070
