@@ -86,16 +86,35 @@ The following tables shows the supported platform combinations for eight-node Me
 * All nodes in one DR group must be of the same type and configuration.
 ====
 
-.Supported AFF and FAS MetroCluster IP expansion combinations
+=== Supported AFF and FAS MetroCluster IP expansion combinations
 
-The following table shows the supported platform combinations for expanding an AFF or FAS system in a MetroCluster IP configuration:
+The following tables show the supported platform combinations for expanding an AFF or FAS system in a MetroCluster IP configuration. The tables are split into two groups:
 
-image::../media/mccip_expand_ip_8node_9161.png[Platform combinations for 8 node configurations]
+* *Group 1* shows combinations for AFF A150, AFF A20, FAS2750, AFF A220, FAS500f, AFF C250, AFF A250, FAS50, AFF C30, AFF A30, FAS8200, AFF A300, AFF A320, FAS8300, AFF C400, AFF A400, and FAS8700 systems.
+* *Group 2* shows combinations for AFF C60, AFF A50, FAS70, FAS9000, AFF A700, AFF A70, AFF C800, AFF A800, FAS9500, AFF A900, AFF C80, FAS90, AFF A90, and AFF A1K systems.
 
-* *Note 1*: ONTAP 9.9.1 or later (or the minimum ONTAP version supported on the platform) is required for these combinations. 
-* *Note 2*: ONTAP 9.13.1 or later (or the minimum ONTAP version supported on the platform) is required for these combinations. 
+The following notes apply to both groups:
 
-.Supported ASA MetroCluster IP expansion combinations
+* Note 1: ONTAP 9.9.1 or later (or the minimum ONTAP version supported on the platform) is required for these combinations. 
+* Note 2: ONTAP 9.13.1 or later (or the minimum ONTAP version supported on the platform) is required for these combinations. 
+
+[role="tabbed-block"]
+====
+.AFF and FAS combinations group 1
+--
+Review the expansion combinations for AFF A150, AFF A20, FAS2750, AFF A220, FAS500f, AFF C250, AFF A250, FAS50, AFF C30, AFF A30, FAS8200, AFF A300, AFF A320, FAS8300, AFF C400, AFF A400, and FAS8700 systems.
+
+image:../media/expand-ip-group-1.png[]
+--
+.AFF and FAS combinations group 2
+--
+Review the expansion combinations for AFF C60, AFF A50, FAS70, FAS9000, AFF A700, AFF A70, AFF C800, AFF A800, FAS9500, AFF A900, AFF C80, FAS90, AFF A90, and AFF A1K systems.
+
+image:../media/expand-ip-group-2.png[]
+--
+==== 
+
+=== Supported ASA MetroCluster IP expansion combinations
 
 The following table shows the supported platform combinations for expanding an ASA system in a MetroCluster IP configuration:
 
@@ -133,8 +152,7 @@ include::../_include/models_supporting_vlan-id.adoc[]
 
 * If both DR groups cannot be configured using the same VLAN, you must upgrade the DR group that doesn't support the `vlan-id` parameter to use a VLAN that is supported by the other DR group.
 
-* Depending on your ONTAP version, you can change some MetroCluster IP interface properties after initial configuration. Refer to link:../maintain/task-modify-ip-netmask-properties.html[Modify the properties of a MetroCluster IP interface] for details on what is supported. 
-
+// 2025 Mar 24, ONTAPDOC-2840, FAS50
 
 == Verifying the health of the MetroCluster configuration
 
@@ -560,6 +578,7 @@ cluster_A::>
 +
 [NOTE]
 ====
+* Do not use 169.254.17.x or 169.254.18.x IP addresses when you create MetroCluster IP interfaces to avoid conflicts with system auto-generated interface IP addresses in the same range. 
 * If supported, you can specify a different (non-default) VLAN higher than 100 (between 101 and 4095) using the `-vlan-id` parameter in the `metrocluster configuration-settings interface create` command. Refer to <<Considerations for VLANs when adding a new DR group>> for supported platform information. 
 * You can configure the MetroCluster IP interfaces from either cluster.
 ====
@@ -592,7 +611,7 @@ cluster_A::> metrocluster configuration-settings interface create -cluster-name 
 [Job 267] Job succeeded: Interface Create is successful.
 ----
 
-
+//2025 Jan 31, ONTAPDOC-2607
 
 [Arabic, start=6]
 . Verify the MetroCluster IP interfaces are created:
@@ -1105,6 +1124,9 @@ node_A_4-new      false
 
 . If your system supports end-to-end encryption, you can link:../maintain/task-configure-encryption.html#enable-end-to-end-encryption[Enable end-to-end encryption] on the new DR group.
 
+
+// 2024 Feb 20, ONTAPDOC-2807
+// 2025 Feb 13, ONTAPDOC-2607
 // 2024 Dec 09, ONTAPDOC-2350
 // 2024 Oct 23, ONTAPDOC-2504, ONTAPDOC-2218
 // 2024 Sep 05, GH 386, 374

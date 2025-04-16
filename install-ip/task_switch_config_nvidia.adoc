@@ -308,6 +308,9 @@ NOTE: If you perform further configuration after resetting the switch and before
 .About this task
 You must repeat these steps on each of the IP switches in the MetroCluster IP configuration (new installation) or on the replacement switch (switch replacement).
 
+If you are using a QSFP-to-SFP+ adapter, you might need to configure the ISL port in native speed mode instead of breakout speed mode. Refer to your switch vendor documentation to determine the ISL port speed mode.
+
+// 2025 Mar 03, ONTAPDOC-2699
 
 .Steps
 . Generate the NVIDIA RCF files for MetroCluster IP.
@@ -392,15 +395,38 @@ cumulus@IP_switch_A_1:mgmt:~$
 +
 NOTE: When you set the DAC option for multiple switch ports, you only need to reboot the switch once.
 
+== Set Forward Error Correction for systems using 25-Gbps connectivity
+
+If your system is configured using 25-Gbps connectivity, set the Forward Error Correction (fec) parameter manually to off after applying the RCF. The RCF does not apply this setting.
+
+.About this task
+
+* This task only applies to platforms using 25-Gbps connectivity. Refer to link:../install-ip/port_usage_sn2100.html[Platform port assignments for NVIDIA supported SN2100 IP switches].
+
+* This task must be performed on all four switches in the MetroCluster IP configuration.
+
+* You must update each switch port individually, you cannot specify multiple ports or port ranges in the command.
+
+.Steps
+
+. Set the `fec` parameter to off for the first switch port that uses 25-Gbps connectivity: 
++
+`sudo python3 SN2100_v2.0_Switch-A1.py runCmd <switchport> fec off`
+
+. Repeat the step for each 25-Gbps switch port that is connected to a controller module. 
+
 == Set the switch port speed for the MetroCluster IP interfaces
 
 .About this task
 
-Use this procedure to set the switch port speed to 100G for the following systems:
+* Use this procedure to set the switch port speed to 100G for the following systems:
 
-* AFF A70  
-* AFF A90
-* AFF A1K 
+** AFF A70, AFF A90, AFF A1K, AFF C80
+** AFF A30, AFF C30, AFF A50, AFF C60 
+** FAS50, FAS70, FAS90
+
+
+* You must update each switch port individually, you cannot specify multiple ports or port ranges in the command.
 
 .Step
 
@@ -431,7 +457,9 @@ cumulus@Switch-A-1:mgmt:~$
 
 == Disable unused ISL ports and port channels
 
-NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. 
+NetApp recommends disabling unused ISL ports and port channels to avoid unnecessary health alerts. You must disable each port or port channel individually, you cannot specify multiple ports or port ranges in the command. 
+
+.Steps 
 
 . Identify the unused ISL ports and port channels using the RCF file banner:
 +
@@ -474,6 +502,7 @@ The following example command disables port "swp14":
 +
 Repeat this step for each identified unused port or port channel.
 
+// 2025 Mar 05, ONTAPDOC-1450
 // 2024 Oct 14, ONTAPDOC-2112
 // 2024 Jun 17, ONTAPDOC-1856
 // 2024 May 02, ONTAPDOC-1916, ONTAPDOC-1805

@@ -658,8 +658,6 @@ NOTE: The MetroCluster IP and connected switch ports do not come online until af
 
 * You must create two interfaces for each node. The interfaces must be associated with the VLANs defined in the MetroCluster RCF file.
 
-* Depending on your ONTAP version, you can change some MetroCluster IP interface properties after initial configuration. Refer to link:../maintain/task-modify-ip-netmask-properties.html[Modify the properties of a MetroCluster IP interface] for details on what is supported. 
-
 * You must create all MetroCluster IP interface "A" ports in the same VLAN and all MetroCluster IP interface "B" ports in the other VLAN.  Refer to link:concept_considerations_mcip.html[Considerations for MetroCluster IP configuration].
 
 * Beginning with ONTAP 9.9.1, if you are using a layer 3 configuration, you must also specify the `-gateway` parameter when creating MetroCluster IP interfaces. Refer to link:../install-ip/concept_considerations_layer_3.html[Considerations for layer 3 wide-area networks].
@@ -781,6 +779,8 @@ cluster_B
 . Create the interfaces on node_A_1.
 
 .. Configure the interface on port "e5a" on "node_A_1":
++
+CAUTION: Do not use 169.254.17.x or 169.254.18.x IP addresses when you create MetroCluster IP interfaces to avoid conflicts with system auto-generated interface IP addresses in the same range. 
 +
 `metrocluster configuration-settings interface create -cluster-name <cluster_name> -home-node <node_name> -home-port e5a -address <ip_address> -netmask <netmask>`
 +
@@ -1958,6 +1958,7 @@ link:https://docs.netapp.com/us-en/ontap/network-management/index.html[Network a
 
 After configuring, enabling, and checking the MetroCluster configuration, you can proceed to complete the cluster configuration by adding additional SVMs, network interfaces and other ONTAP functionality as needed.
 
+// 2025 Feb 13, ONTAPDOC-2607
 // 2024 Oct 12, ONTAPDOC-2370
 // 2024 Jul 08, ONTAPDOC-1942
 // 2024 Feb 22, GH issue 366
