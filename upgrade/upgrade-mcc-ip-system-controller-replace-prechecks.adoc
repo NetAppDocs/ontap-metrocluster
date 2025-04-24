@@ -102,7 +102,9 @@ At any stage during the upgrade, you can run the `system controller replace show
 +
 NOTE: If you do not use the `-nso true` parameter in the command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
 +
-Run the command to *Upgrade without MetroCluster checks* under the following circumstances:
+The `system controller replace start` command performs MetroCluster system health checks that run in the background. In certain circumstances, NetApp recommends to skip the MetroCluster system health check to avoid unnecessary warnings. 
++
+You only run the command to *Upgrade without MetroCluster checks* under the following circumstances:
 +
 * You have unmirrored aggregates. 
 * You are repeating the procedure at one site after already replacing the controllers at the other site.
@@ -275,4 +277,5 @@ Refer to the documentation for the application.
 .What's next?
 link:upgrade-mcc-ip-system-controller-replace-prepare-network-configuration.html[Prepare the network configuration of the old controllers].
 
+// 2025 Apr 24, ONTAPDOC-2651
 // 2024 Nov 12, ONTAPDOC-2351

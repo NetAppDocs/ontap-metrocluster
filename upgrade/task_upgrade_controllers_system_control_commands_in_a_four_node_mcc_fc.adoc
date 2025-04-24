@@ -65,9 +65,11 @@ At any stage during the upgrade, you can run the `system controller replace show
 
 .	Start the automated controller replacement operation.
 +
-Run the command to *Upgrade without MetroCluster checks* under the following circumstances:
+The `system controller replace start` command performs MetroCluster system health checks that run in the background. In certain circumstances, NetApp recommends to skip the MetroCluster system health check to avoid unnecessary warnings. 
 +
-* You have unmirrored aggregates. 
+You only run the command to *Upgrade without MetroCluster checks* under the following circumstances:
++
+* Your configuration has unmirrored aggregates. 
 * You are repeating the procedure at one site after already replacing the controllers at the other site.
 +
 [role="tabbed-block"]
@@ -732,6 +734,7 @@ If the MetroCluster configuration was previously configured for monitoring by th
 
 . Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations].
 
+// 2025 Apr 24, ONTAPDOC-2651
 // 2023 JULY 5, ONTAPDOC-1083
 // BURT 1404898, 19 OCT 2021
 // BURT 1448684, 02 FEB 2022
