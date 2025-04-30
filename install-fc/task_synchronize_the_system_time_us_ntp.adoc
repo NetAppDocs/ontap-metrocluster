@@ -2,36 +2,22 @@
 permalink: install-fc/task_synchronize_the_system_time_us_ntp.html
 sidebar: sidebar
 keywords: metrocluster, fabric, installation, synchronize, system, time, ntp
-summary: 'Each cluster needs its own Network Time Protocol \(NTP\) server to synchronize the time between the nodes and their clients. You can use the Edit DateTime dialog box in System Manager to configure the NTP server.'
+summary: 'Each cluster needs its own Network Time Protocol \(NTP\) server to synchronize the time between the nodes and their clients.'
 ---
-= Synchronizing the system time using NTP
+= Synchronize the system time using NTP
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Each cluster needs its own Network Time Protocol (NTP) server to synchronize the time between the nodes and their clients. You can use the Edit DateTime dialog box in System Manager to configure the NTP server.
-
-.Before you begin
-
-You must have downloaded and installed System Manager. System Manager is available from the NetApp Support Site.
+Each cluster needs its own Network Time Protocol (NTP) server to synchronize the time between the nodes and their clients.
 
 .About this task
 
 * You cannot modify the time zone settings for a failed node or the partner node after a takeover occurs.
 * Each cluster in the MetroCluster FC configuration should have its own separate NTP server or servers used by the nodes, FC switches, and FC-to-SAS bridges at that MetroCluster site.
-+
-If you are using the MetroCluster Tiebreaker software, it should also have its own separate NTP server.
+* If you are using the MetroCluster Tiebreaker software, it should also have its own separate NTP server.
 
-.Steps
+include::../_include/steps-edit-system-time.adoc[]
 
-. From the home page, double-click the appropriate storage system.
-. Expand the *Cluster* hierarchy in the left navigation pane.
-. In the navigation pane, click *Configuration* > *System Tools* > *DateTime*.
-. Click *Edit*.
-. Select the time zone.
-. Specify the IP addresses of the time servers, and then click *Add*.
-+
-You must add an NTP server to the list of time servers. The domain controller can be an authoritative server.
-
-. Click *OK*.
-. Verify the changes you made to the date and time settings in the *Date and Time* window.
+// 2025 Apr 08, ONTAPDOC-1706
+// 2025-Feb-5, MCC-1706
