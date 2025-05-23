@@ -166,8 +166,12 @@ Run the command: `boot_ontap`
 ====
 .If a plex fails:
 --
-Destroy it and reestablish the mirror relationship by using the following command to recreate the mirror:
+.. Destroy the plex:
++
+`storage aggregate plex delete -aggregate <aggregate_name> -plex <plex_name>`
 
+.. Then reestablish the mirror relationship by using the following command to recreate the mirror:
++
 `storage aggregate mirror -aggregate <aggregate-name>`
 --
 .If a plex is offline:
