@@ -98,19 +98,16 @@ At any stage during the upgrade, you can run the `system controller replace show
 
 .Steps
 
-. Start the automated controller replacement operation.
-+
-NOTE: If you don't use the `-nso true` parameter in the command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
-+
-The `system controller replace start` command performs MetroCluster system health checks that run in the background. If you're repeating the procedure at one site, after already replacing the controllers at the other site, NetApp recommends that you skip the checks to avoid warnings that occur when there are different platform models at both sites. 
-+
-[role="tabbed-block"]
-====
-.If you're upgrading the first site
---
-.. Run the following command from site A to replace the controllers at site B:
+. Run the following command from site A to replace the controllers at site B:
 +
 `system controller replace start -nso true`
++
+[NOTE] 
+====
+* If you don't use the `-nso true` parameter in the command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
+* If you're repeating the procedure at one site, after already replacing the controllers at the other site, an error occurs dues to a mismatch between the nodes at each site and it's the expected behavior when there are different platform models on both sites. 
+You can use the `-skip-metrocluster-check true` option with the `system controller replace start` command if this is the only error that is returned.
+====
 +
 The automated operation executes the checks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
 +
@@ -126,16 +123,7 @@ Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed 
 ----
 +
 Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
---
-.If you're upgrading the second site
---
-.. Run the command to start the upgrade without MetroCluster checks:
-+
-`system controller replace start -nso true -skip-metrocluster-check true`
-+
-CAUTION: Don't use the `-skip-metrocluster-check true` parameter when all of the nodes in the DR group are of the same platform model.  
---
-====
+
 
 .	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
 
