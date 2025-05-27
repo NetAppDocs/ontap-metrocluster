@@ -4,25 +4,31 @@ sidebar: sidebar
 keywords:  ONTAP, FAS, FC, Cisco, metrocluster
 summary: 'The following tables show port usage on Brocade switches.'
 ---
-= Cisco port usage with 1x or 2x LEM in one or two four-node MetroClusters or DR groups
+= Cisco 9132t port usage for FC-to-SAS bridges in a MetroCluster FC configuration
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Review the information in this section to learn how to cable Cisco 9132T FC switches.
+Review the information in this section to learn how to cable Cisco 9132T FC switches to FC-to-SAS bridges.
 
-== Cisco 9132T with 1x LEM and one four-node MetroCluster or DR Group
+== Shelf Configurations using FibreBridge 7500N or 7600N using both FC ports (FC1 and FC2)
 
-The following tables show the port usage for a Cisco 9132T switch with 1x LEM and one four-node MetroCluster or DR Group. 
 
 NOTE: Only one (1) bridge stack is supported using 9132T switches with 1x LEM Module.
 
+=== MetroCluster 1 or DR group 1
+
+[options="header"]
 |===
-4+^h| Cisco 9132T with 1x LEM
-4+^h| MetroCluster 1 or DR Group 1
-3+^h|
-h| Four-node
-h| FibreBridge 7500N or 7600N using two FC ports h| Port h| Connects to FC_switch... h| 9132T (1x LEM) 
+7+^h| MetroCluster 1 or DR Group 1
+4+^h| FibreBridge 7500N or 7600N using two FC ports
+2+^h| Four-node
+h| Eight-node
+2+^h| Component h| Port h| Connects to FC_switch... h| 9132T (1x LEM) h| 9132T (2x LEM) h| 9132T (2x LEM) 
+
+
+.4+a|
+Stack 1
 .2+a|
 bridge_x_1a
 a|
@@ -32,175 +38,17 @@ a|
 a|
 LEM1-13
 a|
-FC2
-a|
-2
-a|
 LEM1-13
-.2+a|
-bridge_x_1b
-a|
-FC1
-a|
-1
-a|
-LEM1-14
-a|
-FC2
-a|
-2
-a|
-LEM1-14
-|===
-
-
-== Cisco 9132T with 2x LEM and one four-node MetroCluster or DR Group
-
-The following table shows the port usage for a Cisco 9132T switch with 2x LEM and one four-node MetroCluster or DR Group.
-
-NOTE: In four-node configurations, you can cable additional bridges to ports LEM2-5 through LEM2-8 in 9132T switches with 2x LEMs.
-
-|===
-4+^h| MetroCluster 1 or DR Group 1
-3+^h|
-h| Four-node
-h| FibreBridge 7500N or 7600N using two FC ports h| Port h| Connects to FC_switch... h| 9132T (2x LEM) 
-.2+a|
-bridge_x_1a
-a|
-FC1
-a|
-1
-a|
-LEM1-13
-a|
-FC2
-a|
-2
-a|
-LEM1-13
-.2+a|
-bridge_x_1b
-a|
-FC1
-a|
-1
-a|
-LEM1-14
-a|
-FC2
-a|
-2
-a|
-LEM1-14
-.2+a|
-bridge_x_2a
-a|
-FC1
-a|
-1
-a|
-LEM1-15
-a|
-FC2
-a|
-2
-a|
-LEM1-15
-.2+a|
-bridge_x_2b
-a|
-FC1
-a|
-1
-a|
-LEM1-16
-a|
-FC2
-a|
-2
-a|
-LEM1-16
-.2+a|
-bridge_x_3a
-a|
-FC1
-a|
-1
-a|
-LEM2-1
-a|
-FC2
-a|
-2
-a|
-LEM2-1
-.2+a|
-bridge_x_3b
-a|
-FC1
-a|
-1
-a|
-LEM2-2
-a|
-FC2
-a|
-2
-a|
-LEM2-2
-.2+a|
-bridge_x_ya
-a|
-FC1
-a|
-1
-a|
-LEM2-3
-a|
-FC2
-a|
-2
-a|
-LEM2-3
-.2+a|
-bridge_x_yb
-a|
-FC1
-a|
-1
-a|
-LEM2-4
-a|
-FC2
-a|
-2
-a|
-LEM2-4
-|===
-
-
-== Cisco 9132T with two four-node MetroClusters or one eight-node MetroCluster with two DR groups
-
-The following table shows the port usage for a Cisco 9132T switch with two four-node MetroClusters or one eight-node MetroCluster with two DR groups. 
-
-NOTE: In eight-node configurations, you can cable additional bridges to ports LEM2-13 through LEM2-16 in 9132T switches with 2x LEMs.
-
-|===
-4+^h| MetroCluster 1 or DR Group 1
-h| FibreBridge 7500N or 7600N using two FC ports h| Port h| Connects to FC_switch... h| 9132T (2x LEM)
-.2+a|
-bridge_x_1a
-a|
-FC1
-a|
-1
 a|
 LEM1-9
 a|
 FC2
 a|
 2
+a|
+LEM1-13
+a|
+LEM1-13
 a|
 LEM1-9
 .2+a|
@@ -210,13 +58,23 @@ FC1
 a|
 1
 a|
+LEM1-14
+a|
+LEM1-14
+a|
 LEM1-10
 a|
 FC2
 a|
 2
 a|
+LEM1-14
+a|
+LEM1-14
+a|
 LEM1-10
+.4+a|
+Stack 2
 .2+a|
 bridge_x_2a
 a|
@@ -224,11 +82,19 @@ FC1
 a|
 1
 a|
+Not applicable
+a|
+LEM1-15
+a|
 LEM1-11
 a|
 FC2
 a|
 2
+a|
+Not applicable 
+a|
+LEM1-15
 a|
 LEM1-11
 .2+a|
@@ -238,70 +104,125 @@ FC1
 a|
 1
 a|
-LEM1-12
+Not applicable
 a|
-FC2
-a|
-2
+LEM1-16
 a|
 LEM1-12
-4+^h| MetroCluster 2 or DR Group 2
-h| FibreBridge 7500N or 7600N using two FC ports h| Port h| Connects to FC_switch... h| 9132T (2x LEM)
-.2+a|
-bridge_x_3a
-a|
-FC1
-a|
-1
-a|
-LEM2-9
 a|
 FC2
 a|
 2
 a|
-LEM2-9
-.2+a|
-bridge_x_3b
+Not applicable
 a|
-FC1
+LEM1-16
 a|
-1
-a|
-LEM2-10
-a|
-FC2
-a|
-2
-a|
-LEM2-10
-.2+a|
-bridge_x_ya
-a|
-FC1
-a|
-1
-a|
-LEM2-11
-a|
-FC2
-a|
-2
-a|
-LEM2-11
-.2+a|
-bridge_x_yb
-a|
-FC1
-a|
-1
-a|
-LEM2-12
-a|
-FC2
-a|
-2
-a|
-LEM2-12
+LEM1-12
 |===
 
+
+=== MetroCluster 2 or DR group 2
+
+[options="header"]
+|===
+7+^h| MetroCluster 2 or DR group 2
+4+^h| FibreBridge 7500N or 7600N using two FC ports
+2+^h| Four-node
+h| Eight-node
+2+^h| Component h| Port h| Connects to FC_switch... h| 9132T (1x LEM) h| 9132T (2x LEM) h| 9132T (2x LEM) 
+
+
+.4+a|
+Stack 1
+.2+a|
+bridge_x_1a
+a|
+FC1
+a|
+1
+a|
+Not applicable
+a|
+Not applicable
+a|
+LEM1-9
+a|
+FC2
+a|
+2
+a|
+Not applicable
+a|
+Not applicable
+a|
+LEM1-9
+.2+a|
+bridge_x_1b
+a|
+FC1
+a|
+1
+a|
+Not applicable
+a|
+Not applicable
+a|
+LEM1-10
+a|
+FC2
+a|
+2
+a|
+Not applicable
+a|
+Not applicable
+a|
+LEM1-10
+.4+a|
+Stack 2
+.2+a|
+bridge_x_2a
+a|
+FC1
+a|
+1
+a|
+Not applicable
+a|
+Not applicable
+a|
+LEM1-11
+a|
+FC2
+a|
+2
+a|
+Not applicable 
+a|
+Not applicable
+a|
+LEM1-11
+.2+a|
+bridge_x_2b
+a|
+FC1
+a|
+1
+a|
+Not applicable
+a|
+Not applicable
+a|
+LEM1-12
+a|
+FC2
+a|
+2
+a|
+Not applicable
+a|
+Not applicable
+a|
+LEM1-12
+|===
