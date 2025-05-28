@@ -31,9 +31,65 @@ If you have a two-node MetroCluster FC configuration, see link:concept_choosing_
 
 .Important information
 
-During the transition, refresh, and expand procedures, you might add a new platform model to your MetroCluster configuration once or multiple times. At any stage during these procedures, if your existing MetroCluster configuration contains a platform that uses *shared cluster/HA ports*, you cannot add a platform that uses *shared MetroCluster/HA ports* to the configuration without upgrading your ONTAP version to ONTAP 9.15.1P3. 
+During the transition, refresh, and expand procedures, you might add a new platform model to your MetroCluster configuration. At any stage during these procedures, if your existing MetroCluster configuration contains a platform that uses *shared cluster/HA ports*, you cannot add a platform that uses *shared MetroCluster/HA ports* to the configuration without upgrading your ONTAP version to ONTAP 9.15.1P3. 
 
-Use the following information to determine if your platform uses shared cluster/HA or shared MetroCluster/HA ports:
+Before you start this procedure, review the information in the following table carefully. If your existing platform is listed in the first column, and the platform you want to add to the configuration is listed in the second column, all nodes in the configuration must be running ONTAP 9.15.1P3 or later to support this procedure. 
 
-include::../_include/shared-metrocluster-ha-or-shared-cluster-ha.adoc[]
+CAUTION: The existing platform and the platform you want to add to the configuration must both be running ONTAP 9.15.1P3 or later. 
+
+[cols="20,20,20,20,20" options="header"]
+|===
+2+a| If your existing MetroCluster contains..
+2+a| And the platform you're adding is...
+a| Then... 
+a|
+
+An AFF system using *shared cluster/HA ports*: 
+
+* AFF A20
+* AFF A30
+* AFF C30
+* AFF A50
+* AFF C60
+* AFF C80
+* AFF A70
+* AFF A90
+* AFF A1K
+a|
+
+A FAS system using *shared cluster/HA ports*: 
+
+* FAS50
+* FAS70
+* FAS90
+a|
+
+An AFF system using *shared MetroCluster/HA ports*: 
+
+* AFF A150, ASA A150 
+* AFF A220
+* AFF C250, ASA C250
+* AFF A250, ASA A250
+* AFF A300
+* AFF A320
+* AFF C400, ASA C400
+* AFF A400, ASA A400
+* AFF A700
+* AFF C800, ASA C800
+* AFF A800, ASA A800
+* AFF A900, ASA A900
+a|
+A FAS system using *shared MetroCluster/HA ports*:
+
+* FAS2750
+* FAS500f
+* FAS8200
+* FAS8300
+* FAS8700
+* FAS9000
+* FAS9500
+|
+Upgrade all nodes in the existing and new configuration to ONTAP 9.15.1P3 before you add the new platform to your existing MetroCluster configuration.
+
+|===
 
