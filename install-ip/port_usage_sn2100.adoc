@@ -31,7 +31,7 @@ The following sections describe the physical cabling outline.  You can also refe
 
 Use the following table to determine which cabling table you should follow. 
 
-[cols=2*,options="header"]
+[cols=2*,options="header",cols="25,75"]
 |===
 | If your system is...
 | Use this cabling table...
@@ -46,7 +46,13 @@ AFF A250,  ASA A250 | <<table_1_nvidia_sn2100,NVIDIA SN2100 platform port assign
 | AFF A20 | <<table_2_nvidia_sn2100,NVIDIA SN2100 platform port assignments (group 2)>>
 |  AFF C30, AFF A30
 
-AFF C60 | <<table_3_nvidia_sn2100,NVIDIA SN2100 platform port assignments (group 3)>>
+FAS50
+
+AFF C60 a| 
+The table you follow depends on whether you are using a 25G (group 3a) or 100G (group 3b) Ethernet card. 
+
+* <<table_3a_nvidia_sn2100,NVIDIA SN2100 platform port assignments (group 3a -25G)>>
+* <<table_3b_nvidia_sn2100,NVIDIA SN2100 platform port assignments (group 3b -100G)>>
 | 
 FAS8300
 
@@ -92,15 +98,26 @@ Review the platform port assignments to cable an AFF A20 system to a NVIDIA SN21
 
 
 [[table_2_nvidia_sn2100]]
-image::../media/mccip-cabling-aff-a20-nvidia-sn2100.png[Shows NVIDIA SN2100 platform port assignments]
+image::../media/mccip-cabling-nvidia-a20-updated.png[Shows NVIDIA SN2100 platform port assignments]
 
-.NVIDIA SN2100 platform port assignments (group 3)
+.NVIDIA SN2100 platform port assignments (group 3a)
 
-Review the platform port assignments to cable an AFF C30, AFF A30, or AFF C60 system to a NVIDIA SN2100 switch:
+Review the platform port assignments to cable an  AFF A30, AFF C30, AFF C60, or FAS50 system to a NVIDIA SN2100 switch using a four-port 25G Ethernet card:
+
+NOTE: This configuration requires a four-port 25G Ethernet card in slot 4 to connect the local cluster and HA interfaces.
+
+[[table_3a_nvidia_sn2100]]
+image::../media/mccip-cabling-nvidia-a30-c30-fas50-c60-25G.png[Shows NVIDIA SN2100 platform port assignments]
+
+.NVIDIA SN2100 platform port assignments (group 3b)
+
+Review the platform port assignments to cable an AFF A30, AFF C30, AFF C60, or FAS50 system to a NVIDIA SN2100 switch using a two-port 100G Ethernet card:
+
+NOTE: This configuration requires a two-port 100G Ethernet card in slot 4 to connect the local cluster and HA interfaces.
 
 
-[[table_3_nvidia_sn2100]]
-image::../media/mccip-cabling-aff-a30-c30-c60-nvidia-sn2100.png[Shows NVIDIA SN2100 platform port assignments]
+[[table_3b_nvidia_sn2100]]
+image::../media/mccip-cabling-nvidia-a30-c30-fas50-c60-100G.png[Shows NVIDIA SN2100 platform port assignments]
 
 [[table_4_nvidia_sn2100]]
 .NVIDIA SN2100 platform port assignments (group 4)
@@ -134,7 +151,7 @@ image::../media/mcc_ip_cabling_fas8300_aff_asa_a800_a900_fas9500_MSN2100.png[Sho
 Review the platform port assignments to cable a FAS70, AFF A70, AFF C80, FAS90, AFF A90, or AFF A1K system to a NVIDIA SN2100 switch:
 
 
-image::../media/mccip-cabling-fas90-fas70-aff-a70--a90-c80-a1k-nvidia-sn2100-updated.png[Shows NVIDIA SN2100 platform port assignments]
+image::../media/mccip-cabling-nvidia-a70-c80-fas90-fas70-a1k.png[Shows NVIDIA SN2100 platform port assignments]
 
 // 2024 Dec 09, ONTAPDOC-2349
 // 2024 Jun 07, ONTAPDOC-1734

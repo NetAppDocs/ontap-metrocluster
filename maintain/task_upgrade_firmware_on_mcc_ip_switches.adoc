@@ -12,6 +12,47 @@ summary: 'Upgrading firmware on MetroCluster IP switches.'
 You might need to upgrade the firmware on a MetroCluster IP switch.
 
 //GH issue #132 31/01/2022
+
+== Verify that the RCF is supported
+
+When you change ONTAP version or the switch firmware version, you should verify that you have a reference configuration file (RCF) that is supported for that version. If you use the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator^] tool, the correct RCF is generated for your configuration.
+
+.Steps
+
+. Use the following commands from the switches to verify the version of the RCF:
++
+[cols="30,70"]
+|===
+
+h| From this switch...   h| Issue this command...
+
+a| Broadcom switch
+a| `(IP_switch_A_1) # show clibanner`
+
+a| Cisco switch
+a| `IP_switch_A_1# show banner motd`
+
+a| NVIDIA SN2100 switch
+a| `cumulus@mcc1:mgmt:~$ nv config find message`
+
+|===
+
++
+Locate the line in the command output that indicates the RCF version. For example, the following output from a Cisco switch indicates that the RCF version is "`v1.80`".
++
+....
+Filename : NX3232_v1.80_Switch-A2.txt
+....
+
+. To check which files are supported for a specific ONTAP version, switch, and platform, use the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP^].  If you can generate the RCF for the configuration that you have or that you want to upgrade to, then it is supported.
+
+. To verify that the switch firmware is supported, refer to the following:
++
+* https://hwu.netapp.com[Hardware Universe]
+* https://imt.netapp.com/matrix/[NetApp Interoperability Matrix^]
+
+== Upgrade the switch firmware 
+
 .About this task
 You must repeat this task on each of the switches in succession.
 
@@ -109,6 +150,7 @@ Follow the steps for installing switch software in the relevant topic depending 
 
 . Repeat <<step_1_fw_upgrade,Step 1>> to check the health of the configuration.
 
+// 2025 Mar 05, ONTAPDOC-2286, 1587
 // 2024 Dec 12, GH issue 1 (german)
 // 2024 May 02, ONTAPDOC-1916, ONTAPDOC-1805
 // BURT 1376758, 15 DEC 2021
