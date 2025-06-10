@@ -174,7 +174,7 @@ link:https://software.cisco.com/download/home[Cisco Software Download^]
 +
 `copy sftp://root@server-ip-address/tftpboot/NX-OS-file-name bootflash: vrf management`
 +
-In this example, the nxos.7.0.3.I4.6.bin file is copied from SFTP server 10.10.99.99 to the local bootflash:
+In this example, the nxos.7.0.3.I4.6.bin file and EPLD image is copied from SFTP server 10.10.99.99 to the local bootflash:
 +
 ----
 IP_switch_A_1# copy sftp://root@10.10.99.99/tftpboot/nxos.7.0.3.I4.6.bin bootflash: vrf management
@@ -186,6 +186,18 @@ Fetching /tftpboot/nxos.7.0.3.I4.6.bin to /bootflash/nxos.7.0.3.I4.6.bin
 /tftpboot/nxos.7.0.3.I4.6.bin                 100%  666MB   7.2MB/s   01:32
 sftp> exit
 Copy complete, now saving to disk (please wait)...
+Copy complete.
+
+IP_switch_A_1# copy sftp://root@10.10.99.99/tftpboot/n9000-epld.9.3.5.img bootflash: vrf management
+root@10.10.99.99's password: password
+sftp> progress
+Progress meter enabled
+sftp> get   /tftpboot/n9000-epld.9.3.5.img  /bootflash/n9000-epld.9.3.5.img
+Fetching /tftpboot/n9000-epld.9.3.5.img to /bootflash/n9000-epld.9.3.5.img
+/tftpboot/n9000-epld.9.3.5.img                 161MB   9.5MB/s   00:16
+sftp> exit
+Copy complete, now saving to disk (please wait)...
+Copy complete.
 ----
 
 . Verify on each switch that the switch NX-OS files are present in each switch's bootflash directory:
@@ -344,6 +356,47 @@ plugin
   Core Plugin, Ethernet Plugin
 IP_switch_A_1#
 ----
+
+. Upgrade the EPLD image and reboot the switch.
++
+----
+IP_switch_A_1# install epld bootflash:n9000-epld.9.3.5.img module 1
+Compatibility check:
+Module        Type         Upgradable    Impact      Reason
+------  ------------------ ------------- ----------- -----------------
+     1         SUP         Yes           disruptive  Module Upgradable
+
+Retrieving EPLD versions.... Please wait.
+Images will be upgraded according to following table:
+Module  Type   EPLD              Running-Version   New-Version  Upg-Required
+------- ------ ----------------- ----------------- ------------ ------------
+     1  SUP    MI FPGA           0x07              0x07         No
+     1  SUP    IO FPGA           0x17              0x19         Yes
+     1  SUP    MI FPGA2          0x02              0x02         No
+The above modules require upgrade.
+The switch will be reloaded at the end of the upgrade
+Do you want to continue (y/n) ?  [n] y
+
+Proceeding to upgrade Modules.
+
+Starting Module 1 EPLD Upgrade
+
+Module 1 : IO FPGA [Programming] : 100.00% (     64 of      64 sectors)
+Module 1 EPLD upgrade is successful.
+Module   Type  Upgrade-Result
+-------- ----- --------------
+     1   SUP   Success
+
+EPLDs upgraded.
+
+Module 1 EPLD upgrade is successful.
+----
+
+[start=8]
+
+. [[step8]]After the switch reboot, log in again and verify that the new version of EPLD loaded successfully.
++
+`show version module 1 epld`
 
 . Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
 
@@ -580,3 +633,4 @@ Copy complete.
 // 20 JAN 2022, BURT 1448684
 // 29 MAR 2022, BURT 1354395
 // GH issue 165, June 29 2022
+// GH issue 466, 2025-APR-16
