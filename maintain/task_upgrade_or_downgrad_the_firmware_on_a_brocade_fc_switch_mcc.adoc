@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, upgrade, downgrade, firmware, brocade, fc, switch
 summary: 'To upgrade or downgrade the firmware on a Brocade FC switch, you must use the Brocade-specific commands to disable the switch, perform and verify the firmware change, and reboot and reenable the switch.'
 ---
-= Upgrading or downgrading the firmware on a Brocade FC switch
+= Upgrade or downgrade the firmware on a Brocade FC switch
 :icons: font
 :imagesdir: ../media/
 
@@ -26,12 +26,15 @@ Confirm that you have checked and performed the following tasks for your configu
 * Console logging is enabled.
 +
 link:enable-console-logging-before-maintenance.html[Enable console logging]
+ 
 
 // 2024 Aug 13, ONTAPDOC-1988
 
 The switch fabric is disabled during a firmware upgrade or downgrade, and the MetroCluster configuration relies on the second fabric to continue operation.
 
 Beginning in Fabric OS 9.0.1, SNMPv2 is not supported on Brocade switches. If you upgrade to Fabric OS 9.0.1 or later, you must use SNMPv3 for health monitoring. For more information, see link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-snmpv3-in-a-metrocluster-configuration[Configuring SNMPv3 in a MetroCluster configuration]. 
+
+If you are upgrading to Fabric OS v 9.2.x or later, you must have a Brocade TruFOS certificate installed, refer to link:https://techdocs.broadcom.com/us/en/fibre-channel-networking/fabric-os/fabric-os-software-upgrade/9-2-x/Obtaining-Firmware/download-prerequisites-new/brocade-trufos-certificates.html[Brocade Fabric OS Software Upgrade Guide, 9.2.x^] for more information.
 
 This task must be performed on each of the switch fabrics in succession so that all switches are running the same firmware version.
 
@@ -164,3 +167,5 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
  .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 . Wait 15 minutes before repeating this procedure for the second switch fabric.
+
+// 2025 Mar 13, ONTAPDOC-2668

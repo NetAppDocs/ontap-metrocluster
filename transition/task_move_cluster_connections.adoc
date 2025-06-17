@@ -50,17 +50,35 @@ The following table shows which switch ports the FC nodes connect to. For the Br
 
 h| Switch model h| MetroCluster IP node model h| Switch port(s) h| Connects to
 
-.2+| Cisco 3132Q-V, 3232C, or 9336C-FX2
-.2+| Any
+| Cisco 3132Q-V
 a|
-5
+Any
+a|
+5, 6
+a|
+Local cluster interface on FC node
+a|
+Cisco 3232C, or 9336C-FX2 (36-port)
+a|
+Any
+a|
+5, 6, or 13, 14
+
+*Note:* To use switch ports 13 and 14, you must select two speed modes.
 a|
 Local cluster interface on FC node
 a|
-6
+Cisco 9336C-FX2 shared (36-port)
+a|
+Any
+a|
+3,4, or 11,12 
+
+*Note:* To use switch ports 11 and 12, you must select two speed modes.
 a|
 Local cluster interface on FC node
-.6+| Broadcom BES-53248
+
+.3+| Broadcom BES-53248
 a|
 FAS500f/A250
 a|
@@ -80,7 +98,17 @@ a|
 1 - 6
 a|
 Local cluster interface on FC node
+
 a|
+NVIDIA SN2100
+a|
+Any
+a|
+5,6, or 11,12 
+
+*Note:* To use switch ports 11 and 12, you must select two speed modes.
+a|
+Local cluster interface on FC node
 
 |===
 
@@ -230,15 +258,18 @@ link:../install-ip/concept_considerations_differences.html[MetroCluster IP insta
 +
 You should use the latest firmware that the MetroCluster IP nodes support.
 
-  *** link:../install-ip/task_switch_config_broadcom.html[Downloading and installing the Broadcom switch EFOS software]
-  *** link:../install-ip/task_switch_config_cisco.html[Downloading and installing the Cisco switch NX-OS software]
+  *** link:../install-ip/task_switch_config_broadcom.html[Download and install the Broadcom switch EFOS software]
+  *** link:../install-ip/task_switch_config_cisco.html[Download and install the Cisco switch NX-OS software]
+  *** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-cumulus-software[Download and install the NVIDIA Cumulus software]
 
  .. Prepare the IP switches for the application of the new RCF files.
-  *** link:../install-ip/task_switch_config_broadcom.html[Resetting the Broadcom IP switch to factory defaults] **
-  *** link:../install-ip/task_switch_config_cisco.html[Resetting the Cisco IP switch to factory defaults]
+  *** link:../install-ip/task_switch_config_broadcom.html[Reset the Broadcom IP switch to factory defaults] 
+  *** link:../install-ip/task_switch_config_cisco.html[Reset the Cisco IP switch to factory defaults]
+  *** link:../install-ip/task_switch_config_nvidia.html#reset-the-nvidia-ip-sn2100-switch-to-factory-defaults[Reset the NVIDIA IP SN2100 switch to factory defaults] 
  .. Download and install the IP RCF file depending on your switch vendor.
-  *** link:../install-ip/task_switch_config_broadcom.html[Downloading and installing the Broadcom IP RCF files]
-  *** link:../install-ip/task_switch_config_cisco.html[Downloading and installing the Cisco IP RCF files]
+  *** link:../install-ip/task_switch_config_broadcom.html[Download and installing the Broadcom IP RCF files]
+  *** link:../install-ip/task_switch_config_cisco.html[Download and installing the Cisco IP RCF files]
+  *** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA RCF files]
 
 . Reconnect the group A ports to switch_A_1_IP.
 +
