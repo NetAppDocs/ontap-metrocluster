@@ -9,15 +9,11 @@ summary: After reviewing all requirements and preparing for the transition, you 
 :imagesdir: ../media/
 
 [.lead]
-You must move the MetroCluster FC configuration's cluster interfaces to the IP switches.
+Move the MetroCluster FC configuration's cluster interfaces to the IP switches. The steps you follow depend on whether you are using the existing IP switches or you are using new IP switches.
 
-== Move the cluster connections on the MetroCluster FC nodes
+You perform this task on both MetroCluster sites.
 
-You must move the cluster connections on the MetroCluster FC nodes to the IP switches. The steps depend on whether you are using the existing IP switches or you are using new IP switches.
-
-You must perform this task on both MetroCluster sites.
-
-=== Which connections to move
+== Which connections to move
 
 The following task assumes a controller module using two ports for the cluster connections. Some controller module models use four or more ports for the cluster connection. In that case, for the purposes of this example, the ports are divided into two groups, alternating ports between the two groups
 
@@ -122,9 +118,11 @@ Local cluster interface on FC node
 
 |===
 
-=== Moving the local cluster connections when using new IP switches
+== Move the local cluster connections when using new IP switches
 
-If you are using new IP switches, you must physically move the existing MetroCluster FC nodes' cluster connections to the new switches.
+If you are using new IP switches, you physically move the existing MetroCluster FC nodes' cluster connections to the new switches.
+
+.Steps 
 
 . Move the MetroCluster FC node group A cluster connections to the new IP switches.
 +
@@ -237,11 +235,15 @@ cluster_A::*>
 . Perform the above steps on both nodes (node_A_1-FC and node_A_2-FC) to move the group B ports of the cluster interfaces.
 . Repeat the above steps on the partner cluster "`cluster_B`".
 
-=== Moving the local cluster connections when reusing existing IP switches
+== Move the local cluster connections when reusing existing IP switches
 
-If you are reusing existing IP switches, you must update firmware, reconfigure the switches with the correct Reference Configure Files (RCFs) and move the connections to the correct ports one switch at a time.
+If you are reusing existing IP switches, you update firmware, reconfigure the switches with the correct Reference Configure Files (RCFs) and move the connections to the correct ports one switch at a time.
+
+.About this task
 
 This task is required only if the FC nodes are connected to existing IP switches and you are reusing the switches.
+
+.Steps
 
 . Disconnect the local cluster connections that connect to switch_A_1_IP
  .. Disconnect the group A ports from the existing IP switch.
@@ -343,9 +345,11 @@ Cluster-A::*>
 . Repeat the above steps at site_B for switch B_1_IP and switch B_2_IP.
 . Connect the remote ISLs between the sites.
 
-== Verifying that the cluster connections are moved and the cluster is healthy
+== Verify that the cluster connections are moved and the cluster is healthy
 
-To ensure that there is proper connectivity and that the configuration is ready to proceed with the transition process, you must verify that the cluster connections are moved correctly, the cluster switches are recognized and the cluster is healthy.
+To ensure that there is proper connectivity and that the configuration is ready to proceed with the transition process, verify that the cluster connections are moved correctly, the cluster switches are recognized and the cluster is healthy.
+
+.Steps 
 
 . Verify that all cluster ports are up and running:
 +
