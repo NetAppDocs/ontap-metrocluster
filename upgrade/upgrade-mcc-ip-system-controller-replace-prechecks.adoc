@@ -88,7 +88,9 @@ Follow the steps in the section for your switch vendor:
  ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCFs]
 
 
-== Start the controller replacement operation and perform system checks (if required)
+== Start the controller replacement operation 
+
+When you start the automated controller replacement operation, the operation issues a series of prechecks and then pauses so that you can manually collect the configuration related information.
 
 .About this task
 
@@ -105,13 +107,13 @@ At any stage during the upgrade, you can run the `system controller replace show
 [NOTE] 
 ====
 * If you don't use the `-nso true` parameter in the command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
-* If you're repeating the procedure at one site, after already replacing the controllers at the other site, an error occurs dues to a mismatch between the nodes at each site and it's the expected behavior when there are different platform models on both sites. 
-You can use the `-skip-metrocluster-check true` option with the `system controller replace start` command if this is the only error that is returned.
+* If you're repeating the procedure at one site, after already replacing the controllers at the other site, an error occurs due to a mismatch between the nodes at each site. This is the expected behavior when there are different platform models on both sites. 
+You can use the `-skip-metrocluster-check true` option with the `system controller replace start` command if only the mismatch error is returned.
 ====
 +
 The automated operation executes the checks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
 +
-The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
+The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes boot. To bring the cluster back to a healthy state, follow the manual recovery procedure.
 +
 The `system controller replace start` command might report the following precheck error:
 +
