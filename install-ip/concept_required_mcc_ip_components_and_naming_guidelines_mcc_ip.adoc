@@ -88,7 +88,13 @@ Onboard ports are built into the controller hardware (Slot 0) and can't be repla
 
 h| Platform model h| Required Gigabit Ethernet adapter h| Required slot for adapter h| Ports
 
-| AFF A900, ASA A900, and FAS9500 | X91146A | Slot 5, Slot 7 | e5b, e7b
+a| AFF A900, ASA A900, and FAS9500 
+a| X91146A 
+a| Slot 5, Slot 7 
+a| e5b, e7b
+
+*Note:* Ports e5a and e7a can only be used for intercluster LIFs. You cannot use these ports for a data LIF. 
+
 a|
 AFF A700 and FAS9000
 a|
@@ -214,7 +220,9 @@ In a minimum supported configuration, each pool has the following drive layout:
 
 In a minimum supported configuration, at least one shelf is needed per site.
 
-MetroCluster configurations support RAID-DP and RAID4.
+MetroCluster configurations support RAID-DP, RAID4, and RAID-TEC.
+
+NOTE: Beginning with ONTAP 9.4, MetroCluster IP configurations support new installations using automatic disk assignment and ADP (Advanced Drive Partitioning). Refer to link:../install-ip/concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems] for more information.
 
 == Drive location considerations for partially populated shelves
 
@@ -254,6 +262,8 @@ Your version of ONTAP must support shelf mixing. Refer to the https://imt.netapp
 
 For further details on shelf mixing, see https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-ds-mix-hotadd/home.html[Hot-adding shelves with IOM12 modules to a stack of shelves with IOM6 modules^]
 
+// 2025 May 29, GH 473
+//2025 May 22, ONTAPDOC-1003
 // 2024 Dec 09, ONTAPDOC-2349
 // 2024 Dec 05, ONTAPDOC 2512
 // 2024 Nov 14, ONTAPDOC 2512
