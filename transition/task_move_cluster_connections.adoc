@@ -9,17 +9,20 @@ summary: After reviewing all requirements and preparing for the transition, you 
 :imagesdir: ../media/
 
 [.lead]
-You must move the MetroCluster FC configuration's cluster interfaces to the IP switches.
+Move the MetroCluster FC configuration's cluster interfaces to the IP switches. 
 
-== Move the cluster connections on the MetroCluster FC nodes
 
-You must move the cluster connections on the MetroCluster FC nodes to the IP switches. The steps depend on whether you are using the existing IP switches or you are using new IP switches.
+== Step 1: Move the cluster connections on the MetroCluster FC nodes
 
-You must perform this task on both MetroCluster sites.
+Move the cluster connections on the MetroCluster FC nodes to the IP switches. The steps you follow depend on whether you're using existing IP switches or new IP switches.
+
+.About this task 
+
+* You perform this task on both MetroCluster sites.
 
 === Which connections to move
 
-The following task assumes a controller module using two ports for the cluster connections. Some controller module models use four or more ports for the cluster connection. In that case, for the purposes of this example, the ports are divided into two groups, alternating ports between the two groups
+The following task assumes a controller module is using two ports for the cluster connections. Some controller module models use four or more ports for the cluster connection. In this example, the ports are divided into two groups, alternating ports between the two groups.
 
 The following table shows the example ports used in this task.
 
@@ -55,6 +58,16 @@ a|
 Any
 a|
 5, 6
+a|
+Local cluster interface on FC node
+a|
+Cisco 9336C-FX2 (12-port)
+a|
+Any
+a|
+3,4, or 11,12 
+
+*Note:* To use switch ports 11 and 12, you must select two speed modes.
 a|
 Local cluster interface on FC node
 a|
@@ -112,9 +125,11 @@ Local cluster interface on FC node
 
 |===
 
-=== Moving the local cluster connections when using new IP switches
+=== Move the local cluster connections when using new IP switches
 
-If you are using new IP switches, you must physically move the existing MetroCluster FC nodes' cluster connections to the new switches.
+If you are using new IP switches, you physically move the existing MetroCluster FC nodes' cluster connections to the new switches.
+
+.Steps 
 
 . Move the MetroCluster FC node group A cluster connections to the new IP switches.
 +
@@ -227,11 +242,15 @@ cluster_A::*>
 . Perform the above steps on both nodes (node_A_1-FC and node_A_2-FC) to move the group B ports of the cluster interfaces.
 . Repeat the above steps on the partner cluster "`cluster_B`".
 
-=== Moving the local cluster connections when reusing existing IP switches
+=== Move the local cluster connections when reusing existing IP switches
 
-If you are reusing existing IP switches, you must update firmware, reconfigure the switches with the correct Reference Configure Files (RCFs) and move the connections to the correct ports one switch at a time.
+If you are reusing existing IP switches, you update firmware, reconfigure the switches with the correct reference configuration files (RCFs) and move the connections to the correct ports one switch at a time.
+
+.About this task
 
 This task is required only if the FC nodes are connected to existing IP switches and you are reusing the switches.
+
+.Steps
 
 . Disconnect the local cluster connections that connect to switch_A_1_IP
  .. Disconnect the group A ports from the existing IP switch.
@@ -333,9 +352,11 @@ Cluster-A::*>
 . Repeat the above steps at site_B for switch B_1_IP and switch B_2_IP.
 . Connect the remote ISLs between the sites.
 
-== Verifying that the cluster connections are moved and the cluster is healthy
+== Step 2: Verify that the cluster connections are moved and the cluster is healthy
 
-To ensure that there is proper connectivity and that the configuration is ready to proceed with the transition process, you must verify that the cluster connections are moved correctly, the cluster switches are recognized and the cluster is healthy.
+To ensure that there is proper connectivity and that the configuration is ready to proceed with the transition process, verify that the cluster connections are moved correctly, the cluster switches are recognized and the cluster is healthy.
+
+.Steps 
 
 . Verify that all cluster ports are up and running:
 +
@@ -478,6 +499,7 @@ Total entries displayed: 4
 (Switch-A-4-IP)#
 ....
 
+// 2025 Jun 19, ONTAPDOC-3052
 // BURT 1448684, 01 FEB 2022
 
 // 2023-FEB-7, GH issue 256
