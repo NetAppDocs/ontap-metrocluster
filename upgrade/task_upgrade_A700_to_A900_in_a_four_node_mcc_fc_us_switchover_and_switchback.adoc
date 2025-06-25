@@ -88,6 +88,8 @@ The MetroCluster configuration on an AFF A900 or FAS9500 requires 8 FC-VI ports 
 === Verify the health of the MetroCluster configuration
 Before you update the RCF files and cabling for the AFF A900 or FAS9500 fabric MetroCluster configuration, you must verify the health and connectivity of the configuration.
 
+CAUTION: After you upgrade the controllers at the first site and before you upgrade the second, running `metrocluster check run` followed by `metrocluster check show` returns an error in the `config-replication` field. This error indicates an NVRAM size mismatch between the nodes at each site and it's the expected behavior when there are different platform models on both sites. You can ignore the error until the controller upgrade is completed for all nodes in the DR group.
+
 .Steps
 
 . Verify the operation of the MetroCluster configuration in ONTAP:
@@ -1162,6 +1164,7 @@ If the MetroCluster configuration was previously configured for monitoring by th
 
 . Use the steps in: link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#adding-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
 
+// 2025 Apr 24, ONTAPDOC-2651
 // 2023 JULY 5, ONTAPDOC-1083
 // 2023 May 05, GH issue 277
 //BURT 1414896 /05/01/22
