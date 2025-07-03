@@ -15,19 +15,19 @@ If your configuration includes unmirrored aggregates, you must be aware of poten
 
 If you are using hierarchical namespaces, you should configure the junction path so that all of the volumes in that path are either on mirrored aggregates only or on unmirrored aggregates only. Configuring a mix of unmirrored and mirrored aggregates in the junction path might prevent access to the unmirrored aggregates after the switchover operation.
 
-== Considerations for unmirrored aggregates for maintenance requiring power shutdown
+== Unmirrored aggregates and maintenance that requires power shutdown
 
-If you are performing negotiated switchover for maintenance that requires a site-wide power shutdown, you should first manually take offline any unmirrored aggregates owned by the disaster site.
+If you perform a negotiated switchover for maintenance that requires a site-wide power shutdown, you should first manually offline any unmirrored aggregates owned by the disaster site.
 
 If you don't offline the unmirrored aggregates owned by the disaster site, nodes at the surviving site might go down due to multi-disk panics. This might occur if switched-over unmirrored aggregates go offline or are missing because of the loss of connectivity to storage at the disaster site if there's a power shutdown or loss of ISLs.
 
-== Unmirrored aggregates and CRS metadata volume and data SVM root volumes
+== Unmirrored aggregates, CRS metadata volumes, and data SVM root volumes
 
-The configuration replication service (CRS) metadata volume and data SVM root volumes must be on a mirrored aggregate. You cannot move these volumes to an unmirrored aggregate. If they are on an unmirrored aggregate, negotiated switchover and switchback operations are vetoed. The `metrocluster check` command returns a warning if this occurs.
+The configuration replication service (CRS) metadata volume and data SVM root volumes must be on a mirrored aggregate. You cannot move these volumes to an unmirrored aggregate. If they are on an unmirrored aggregate, negotiated switchover and switchback operations are vetoed and the `metrocluster check` command returns a warning.
 
 == Unmirrored aggregates and SVMs
 
-You should configure SVMs on mirrored aggregates only or on unmirrored aggregates only. Configuring SVMs on a mix of unmirrored and mirrored aggregates can result in a switchover operation that exceeds 120 seconds. If the the unmirrored aggregates do not come online, this causes a data outage.
+You should configure SVMs on mirrored aggregates only or on unmirrored aggregates only. Configuring SVMs on a mix of both unmirrored and mirrored aggregates can result in a switchover operation that exceeds 120 seconds. If the the unmirrored aggregates don't come online, this causes a data outage.
 
 == Unmirrored aggregates and SAN
 
