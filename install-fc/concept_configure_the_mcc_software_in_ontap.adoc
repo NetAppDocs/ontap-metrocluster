@@ -2,14 +2,14 @@
 permalink: install-fc/concept_configure_the_mcc_software_in_ontap.html
 sidebar: sidebar
 keywords: configure, configuring, metrocluster, software, ontap
-summary: 'You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites. The steps for systems with native disk shelves are slightly different from those for systems with array LUNs.'
+summary: 'You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites.'
 ---
 = Configuring the MetroCluster software in ONTAP
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites. The steps for systems with native disk shelves are slightly different from those for systems with array LUNs.
+You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites. 
 
 image::../media/workflow_high_level_node_and_cluster_configuration_software.gif[]
 
@@ -2025,9 +2025,9 @@ link:https://docs.netapp.com/us-en/ontap/volumes/index.html[Logical storage mana
 
 You must create a mirrored data aggregate on each node in the DR group.
 
-* You should know what drives or array LUNs will be used in the new aggregate.
+* You should know what drives will be used in the new aggregate.
 * If you have multiple drive types in your system (heterogeneous storage), you should understand how you can ensure that the correct drive type is selected.
-* Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
+* Drives are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
 See link:https://docs.netapp.com/us-en/ontap/disks-aggregates/index.html[Disk and aggregate management^].
 
@@ -2045,7 +2045,7 @@ If you are logged in to the cluster on the cluster management interface, you can
 You can specify the following options:
 
 * Aggregate's home node (that is, the node that owns the aggregate in normal operation)
-* List of specific drives or array LUNs that are to be added to the aggregate
+* List of specific drives that are to be added to the aggregate
 * Number of drives to include
 
 NOTE: In the minimum-supported configuration, in which a limited number of drives are available, you must use the `force-small-aggregate` option to allow the creation of a three disk RAID-DP aggregate.
@@ -2055,7 +2055,7 @@ NOTE: In the minimum-supported configuration, in which a limited number of drive
 * Size of drives to use
 * Drive speed to use
 * RAID type for RAID groups on the aggregate
-* Maximum number of drives or array LUNs that can be included in a RAID group
+* Maximum number of drives that can be included in a RAID group
 * Whether drives with different RPM are allowed
 --
 
@@ -2083,12 +2083,12 @@ You can optionally create unmirrored data aggregates for data that does not requ
 
 .Before you begin
 
-* You should know what drives or array LUNs will be used in the new aggregate.
+* Verify that you know what drives will be used in the new aggregate.
 * If you have multiple drive types in your system (heterogeneous storage), you should understand how you can verify that the correct drive type is selected.
 
 IMPORTANT: In MetroCluster FC configurations, the unmirrored aggregates will only be online after a switchover if the remote disks in the aggregate are accessible. If the ISLs fail, the local node may be unable to access the data in the unmirrored remote disks. The failure of an aggregate can lead to a reboot of the local node.
 
-* Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
+* Drives are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 
 NOTE: The unmirrored aggregates must be local to the node owning them.
 
@@ -2112,14 +2112,14 @@ If you are logged in to the cluster on the cluster management interface, you can
 You can specify the following options:
 
  ** Aggregate's home node (that is, the node that owns the aggregate in normal operation)
- ** List of specific drives or array LUNs that are to be added to the aggregate
+ ** List of specific drives that are to be added to the aggregate
  ** Number of drives to include
  ** Checksum style to use for the aggregate
  ** Type of drives to use
  ** Size of drives to use
  ** Drive speed to use
  ** RAID type for RAID groups on the aggregate
- ** Maximum number of drives or array LUNs that can be included in a RAID group
+ ** Maximum number of drives that can be included in a RAID group
  ** Whether drives with different RPM are allowed
 
 For more information about these options, see the storage aggregate create man page.
