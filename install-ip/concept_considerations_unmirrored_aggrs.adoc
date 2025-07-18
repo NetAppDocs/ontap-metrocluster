@@ -4,33 +4,39 @@ sidebar: sidebar
 keywords: differences, eight-node, four-node, fabric-attached, stretch, metrocluster ip, storage, bridges, fc-to-sas, atto, fibrebridge, SAS, local HA, auso, automatic unplanned switchover, array luns, mediator, tiebreaker
 summary: If your configuration includes unmirrored aggregates, you must be aware of potential access issues after switchover operations.
 ---
-= Using unmirrored aggregates
+= Learn about unmirrored aggregates in MetroCluster IP configurations
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 If your configuration includes unmirrored aggregates, you must be aware of potential access issues after switchover operations.
 
-== Considerations for unmirrored aggregates and hierarchical namespaces
+== Unmirrored aggregates and hierarchical namespaces
 
 If you are using hierarchical namespaces, you should configure the junction path so that all of the volumes in that path are either on mirrored aggregates only or on unmirrored aggregates only. Configuring a mix of unmirrored and mirrored aggregates in the junction path might prevent access to the unmirrored aggregates after the switchover operation.
 
-== Considerations for unmirrored aggregates and CRS metadata volume and data SVM root volumes
+== Unmirrored aggregates and maintenance that requires power shutdown
 
-The configuration replication service (CRS) metadata volume and data SVM root volumes must be on a mirrored aggregate. You cannot move these volumes to unmirrored aggregate. If they are on unmirrored aggregate, negotiated switchover and switchback operations are vetoed. The metrocluster check command provides a warning if this is the case.
+If you perform a negotiated switchover for maintenance that requires a site-wide power shutdown, you should first manually offline any unmirrored aggregates owned by the disaster site.
 
-== Considerations for unmirrored aggregates and SVMs
+If you don't offline the unmirrored aggregates owned by the disaster site, nodes at the surviving site might go down due to multi-disk panics. This might occur if switched-over unmirrored aggregates go offline or are missing because of the loss of connectivity to storage at the disaster site if there's a power shutdown or loss of ISLs.
 
-SVMs should be configured on mirrored aggregates only or on unmirrored aggregates only. Configuring a mix of unmirrored and mirrored aggregates can result in a switchover operation that exceeds 120 seconds and result in a data outage if the unmirrored aggregates do not come online.
+== Unmirrored aggregates, CRS metadata volumes, and data SVM root volumes
 
-== Considerations for unmirrored aggregates and SAN
+The configuration replication service (CRS) metadata volume and data SVM root volumes must be on a mirrored aggregate. You cannot move these volumes to an unmirrored aggregate. If they are on an unmirrored aggregate, negotiated switchover and switchback operations are vetoed and the `metrocluster check` command returns a warning.
 
-Prior to ONTAP 9.9.1, a LUN should not be located on an unmirrored aggregate. Configuring a LUN on an unmirrored aggregate can result in a switchover operation that exceeds 120 seconds and a data outage.
+== Unmirrored aggregates and SVMs
+
+You should configure SVMs on mirrored aggregates only or on unmirrored aggregates only. Configuring SVMs on a mix of both unmirrored and mirrored aggregates can result in a switchover operation that exceeds 120 seconds. This can lead to a data outage if the unmirrored aggregates don't come online.
+
+== Unmirrored aggregates and SAN
+
+Before ONTAP 9.9.1, a LUN should not be located on an unmirrored aggregate. Configuring a LUN on an unmirrored aggregate can result in a switchover operation that exceeds 120 seconds and a data outage.
 // BURT 1397232
 
-== Considerations for adding storage shelves for unmirrored aggregates
+== Add storage shelves for unmirrored aggregates
 
-NOTE: If you are adding shelves that will be used for unmirrored aggregates in a MetroCluster IP configuration, you must do the following:
+If you add shelves and want to use them for unmirrored aggregates in a MetroCluster IP configuration, you must do the following:
 
 . Before starting the procedure to add the shelves, issue the following command:
 +
