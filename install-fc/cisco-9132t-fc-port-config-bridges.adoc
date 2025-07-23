@@ -1,0 +1,240 @@
+---
+permalink: install-fc/cisco-9132t-fc-port-config-bridges.html
+sidebar: sidebar
+keywords:  ONTAP, FAS, FC, Cisco, metrocluster
+summary: 'The following tables show port usage on Brocade switches.'
+---
+= Cisco 9132T port usage for FC-to-SAS bridges in a MetroCluster FC configuration
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Learn about the port assignments required to cable Cisco 9132T FC switches to FC-to-SAS bridges using both FC ports.
+
+NOTE: Only one (1) bridge stack is supported using Cisco 9132T switches with 1xLEM Module.
+ 
+== MetroCluster 1 or DR group 1
+
+The following table shows the supported shelf configurations in MetroCluster 1 or DR group 1 for FibreBridge 7500N or 7600N bridges using both FC ports (FC1 and FC2) on Cisco 9132T switches. You should be aware of the following when using this configuration table:
+
+* In four-node configurations, you can cable additional bridges to ports LEM2-1 through LEM2-8 on Cisco 9132T switches with 2xLEMs. 
+
+[cols="2a,2a,2a,2a,2a,2a,2a" options="header"]
+
+|===
+
+2+^| *Component*
+| *Port* 
+| *Connects to FC_switch...* 
+| *9132T 1x LEM (Four-node)* 
+| *9132T 2x LEM (Four-node)* 
+| *9132T 2x LEM (Eight-node)* 
+
+
+.4+a|
+Stack 1
+.2+a|
+bridge_x_1a
+a|
+FC1
+a|
+1
+a|
+LEM1-13
+a|
+LEM1-13
+a|
+LEM1-9
+a|
+FC2
+a|
+2
+a|
+LEM1-13
+a|
+LEM1-13
+a|
+LEM1-9
+.2+a|
+bridge_x_1b
+a|
+FC1
+a|
+1
+a|
+LEM1-14
+a|
+LEM1-14
+a|
+LEM1-10
+a|
+FC2
+a|
+2
+a|
+LEM1-14
+a|
+LEM1-14
+a|
+LEM1-10
+.4+a|
+Stack 2
+.2+a|
+bridge_x_2a
+a|
+FC1
+a|
+1
+a|
+n/a
+a|
+LEM1-15
+a|
+LEM1-11
+a|
+FC2
+a|
+2
+a|
+n/a 
+a|
+LEM1-15
+a|
+LEM1-11
+.2+a|
+bridge_x_2b
+a|
+FC1
+a|
+1
+a|
+n/a
+a|
+LEM1-16
+a|
+LEM1-12
+a|
+FC2
+a|
+2
+a|
+n/a
+a|
+LEM1-16
+a|
+LEM1-12
+|===
+
+
+== MetroCluster 2 or DR group 2
+
+The following table shows the supported shelf configurations in MetroCluster 2 or DR group 2 for FibreBridge 7500N or 7600N bridges using both FC ports (FC1 and FC2) on Cisco 9132T switches. You should be aware of the following when using this configuration table:
+
+* In eight-node configurations, you can cable additional bridges to ports LEM2-13 through LEM2-16 on Cisco 9132T switches with 2x LEMs.
+
+
+[cols="2a,2a,2a,2a,2a,2a,2a" options="header"]
+
+|===
+
+2+^| *Component*
+| *Port* 
+| *Connects to FC_switch...* 
+| *9132T 1x LEM (Four-node)* 
+| *9132T 2x LEM (Four-node)* 
+| *9132T 2x LEM (Eight-node)*  
+
+
+.4+a|
+Stack 1
+.2+a|
+bridge_x_1a
+a|
+FC1
+a|
+1
+a|
+n/a
+a|
+n/a
+a|
+LEM1-9
+a|
+FC2
+a|
+2
+a|
+n/a
+a|
+n/a
+a|
+LEM1-9
+.2+a|
+bridge_x_1b
+a|
+FC1
+a|
+1
+a|
+n/a
+a|
+n/a
+a|
+LEM1-10
+a|
+FC2
+a|
+2
+a|
+n/a
+a|
+n/a
+a|
+LEM1-10
+.4+a|
+Stack 2
+.2+a|
+bridge_x_2a
+a|
+FC1
+a|
+1
+a|
+n/a
+a|
+n/a
+a|
+LEM1-11
+a|
+FC2
+a|
+2
+a|
+n/a 
+a|
+n/a
+a|
+LEM1-11
+.2+a|
+bridge_x_2b
+a|
+FC1
+a|
+1
+a|
+n/a
+a|
+n/a
+a|
+LEM1-12
+a|
+FC2
+a|
+2
+a|
+n/a
+a|
+n/a
+a|
+LEM1-12
+|===
