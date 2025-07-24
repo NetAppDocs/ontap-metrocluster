@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: MetroCluster configurations
 summary: 'You must configure each of the Brocade switch fabrics in the MetroCluster configuration.'
 ---
-= Configuring the Brocade FC switches manually
+= Configure the Brocade FC switches manually
 :icons: font
 :imagesdir: ../media/
 
@@ -57,7 +57,7 @@ Metro-E means Ethernet framing or signaling occurs either natively over a Metro 
 * The Brocade Virtual Fabric (VF) feature is not supported.
 * FC zoning based on domain port is supported, but zoning based on worldwide name (WWN) is not supported.
 
-== Reviewing Brocade license requirements
+== Review Brocade license requirements
 
 You need certain licenses for the switches in a MetroCluster configuration. You must install these licenses on all four switches.
 
@@ -90,7 +90,7 @@ Run the command `license --show`.
 +
 If you do not have these licenses, you should contact your sales representative before proceeding.
 
-== Setting the Brocade FC switch values to factory defaults
+== Set the Brocade FC switch values to factory defaults
 
 You must set the switch to its factory defaults to ensure a successful configuration. You must also assign each switch a unique name.
 
@@ -269,7 +269,7 @@ The following example shows the command on FC_switch_B_1:
 FC_switch_B_1:admin> reboot
 ----
 
-== Configuring basic switch settings
+== Configure basic switch settings
 
 You must configure basic global settings, including the domain ID, for Brocade switches.
 
@@ -407,7 +407,7 @@ FC_switch_A_1:admin> iodshow
 NOTE: When configuring ONTAP on the controller modules, OOD must be explicitly configured on each controller module in the MetroCluster configuration.
 +
 
-https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Configuring in-order delivery or out-of-order delivery of frames on ONTAP software]
+https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Configure in-order delivery or out-of-order delivery of frames on ONTAP software]
 
 . Verify that the switch is using the dynamic port licensing method.
 
@@ -563,7 +563,7 @@ On FC_switch_B_1:
 FC_switch_B_1:admin> switchcfgpersistentenable
 ----
 
-== Configuring basic switch settings on a Brocade DCX 8510-8 switch
+== Configure basic switch settings on a Brocade DCX 8510-8 switch
 
 You must configure basic global settings, including the domain ID, for Brocade switches.
 
@@ -650,7 +650,7 @@ switchenable
 
 link:concept_prepare_for_the_mcc_installation.html[Requirements for using a Brocade DCX 8510-8 switch]
 
-== Configuring E-ports on Brocade FC switches using FC ports
+== Configure E-ports on Brocade FC switches using FC ports
 
 For Brocade switches on which the Inter-Switch Links (ISL) are configured using FC ports, you must configure the switch ports on each switch fabric that connect the ISL. These ISL ports are also known as E-ports.
 
@@ -746,7 +746,7 @@ ISL port 4
 a|
 ge11 (10-Gbps)
 .4+|
-Brocade G610
+Brocade G610, G710
 a|
 ISL port 1
 a|
@@ -1040,7 +1040,7 @@ FC_switch_B_1:admin> trunkshow
 
 .Related information
 
-link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches when using ONTAP 9.1 and later]
+link:concept_port_assignments_for_fc_switches_when_using_ontap_9_1_and_later.html[Port assignments for FC switches]
 
 == Configuring 10 Gbps VE ports on Brocade FC 7840 switches
 
@@ -1175,7 +1175,7 @@ FC_switch_A_1:root> portshow fcipcircuit all
                  ARL a=Auto r=Reset s=StepDown t=TimedStepDown  S=SLA
 ----
 
-== Configuring 40 Gbps VE-ports on Brocade 7810 and 7840 FC switches
+== Configure 40 Gbps VE-ports on Brocade 7810 and 7840 FC switches
 
 When using the two 40 GbE VE-ports (which use FCIP) for ISLs, you must create IP interfaces on each port, and configure FCIP tunnels and circuits in each tunnel.
 
@@ -1305,7 +1305,7 @@ FC_switch_A_1:root> portshow fcipcircuit all
                  ARL a=Auto r=Reset s=StepDown t=TimedStepDown  S=SLA
 ----
 
-== Configuring the non-E-ports on the Brocade switch
+== Configure the non-E-ports on the Brocade switch
 
 You must configure the non-E-ports on the FC switch. In a MetroCluster configuration, these are the ports that connect the switch to the HBA initiators, FC-VI interconnects, and FC-to-SAS bridges. These steps must be done for each port.
 
@@ -1385,7 +1385,7 @@ Fault Delay                         0   0   0   0   0   0   0   0   0
 Non-DFE                             ..  ..  ..  ..  ..  ..  ..  ..  ..
 ----
 
-== Configuring compression on ISL ports on a Brocade G620 switch
+== Configure compression on ISL ports on a Brocade G620 switch
 
 If you are using Brocade G620 switches and enabling compression on the ISLs, you must configure it on each E-port on the switches.
 
@@ -1445,11 +1445,11 @@ Port   Configured    Active   Configured   Active  Speed
   0	   Yes	          Yes	     Yes	         Yes	    16G
 ----
 
-== Configuring zoning on Brocade FC switches
+== Configure zoning on Brocade FC switches
 
 You must assign the switch ports to separate zones to separate controller and storage traffic. 
 
-=== Zoning for FC-VI ports
+=== Zone the FC-VI ports
 
 For each DR group in the MetroCluster, you must configure two zones for the FC-VI connections that allow controller-to-controller traffic. These zones contain the FC switch ports connecting to the controller module FC-VI ports. These zones are Quality of Service (QoS) zones.
 
@@ -1563,7 +1563,7 @@ a| QOSH2_MC1_FAB_2_FCVI (6520)
 a| 6,48;6,49;6,52;6,53;8,48;8,49;8,52;8,53
 |===
 
-=== Zoning for FibreBridge 7500N or 7600N bridges using one FC port
+=== Zone FibreBridge 7500N or 7600N bridges using one FC port
 // BURT 1382518
 
 If you are using FibreBridge 7500N or 7600N bridges using only one of the two FC ports, you need to create storage zones for the bridge ports. You should understand the zones and associated ports before you configure the zones.
@@ -1809,7 +1809,7 @@ h| Fabric h| Zone name h| Member ports
 | 6,2;6,3;6,6;6,7;8,2;8,3;8,6;8,7;8,9
 |===
 
-=== Zoning for FibreBridge 7500N bridges using both FC ports
+=== Zone FibreBridge 7500N bridges using both FC ports
 
 If you are using FibreBridge 7500N bridges with both FC ports, you need to create storage zones for the bridge ports. You should understand the zones and associated ports before you configure the zones.
 
@@ -1872,7 +1872,7 @@ Example bridge names for one stack group on each site:
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610/ G620 port h| 6520 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 /G710 / G620 port h| 6520 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -1922,7 +1922,7 @@ a| 5,2;5,6;7,2;7,6;5,8
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -1976,7 +1976,7 @@ a| 5,3;5,7;7,3;7,7;5,9
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 h| 6520 h| G620 h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 h| 6520 h| G620 h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2032,7 +2032,7 @@ a| 6,2;6,6;8,2;8,6;6,8
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 h| 6520 h| G620 h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 h| 6520 h| G620 h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2090,7 +2090,7 @@ a| 6,3;6,7;8,3;8,7;6,9
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2145,7 +2145,7 @@ a| 5,2;5,6;7,2;7,6;5,10
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2200,7 +2200,7 @@ a| 5,3;5,7;7,3;7,7;5,11
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2255,7 +2255,7 @@ a| 6,2;6,6;8,2;8,6;6,10
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2312,7 +2312,7 @@ a| 6,3;6,7;8,3;8,7;6,11
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2367,7 +2367,7 @@ a| 5,2;5,6;7,2;7,6;7,8
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2422,7 +2422,7 @@ a| 5,3;5,7;7,3;7,7;7,9
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2475,7 +2475,7 @@ a| 6,2;6,6;8,2;8,6;8,8
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2532,7 +2532,7 @@ a| 6,3;6,7;8,3;8,7;8,9
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2587,7 +2587,7 @@ a| 5,2;5,6;7,2;7,6;7,10
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_1
 a| A
@@ -2642,7 +2642,7 @@ a| 5,3;5,7;7,3;7,7;7,11
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2697,7 +2697,7 @@ a| 6,2;6,6;8,2;8,6;8,10
 
 |===
 
-h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 port h| 6520 port h| G620 port h| Connects to...
+h| FC switch h| Site h| Switch domain h| 6505 / 6510 / G610 / G710 port h| 6520 port h| G620 port h| Connects to...
 
 a| FC_switch_A_2
 a| A
@@ -2820,7 +2820,7 @@ a| MC1_INIT_GRP_2_SITE_B_STK_GRP_2_BOT_FC2
 a| 6,3;6,7;8,3;8,7;8,11
 |===
 
-=== Configuring zoning on Brocade FC switches
+=== Zone the Brocade FC switches
 
 You must assign the switch ports to separate zones to separate controller and storage traffic, with zones for the FC-VI ports and zones for the storage ports.
 
@@ -2925,7 +2925,7 @@ zone: MC1_INIT_GRP_1_SITE_A_STK_GRP_1_TOP_FC1
 # - Invalid usage of broadcast zone
 ----
 
-== Setting ISL encryption on Brocade 6510 or G620 switches
+== Set ISL encryption on Brocade 6510 or G620 switches
 
 On Brocade 6510 or G620 switches, you can optionally use the Brocade encryption feature on the ISL connections. If you want to use the encryption feature, you must perform additional configuration steps on each switch in the MetroCluster configuration.
 
@@ -2943,7 +2943,7 @@ NOTE: Support for ISL encryption on Brocade G620 switches is only supported on O
 
 The steps must be performed on both the switches in the same fabric.
 
-=== Disabling virtual fabric
+=== Disable virtual fabric
 
 In order to set the ISL encryption, you must disable the virtual fabric on all the four switches being used in a MetroCluster configuration.
 
@@ -2955,7 +2955,7 @@ In order to set the ISL encryption, you must disable the virtual fabric on all t
 
 . Reboot the switch.
 
-=== Setting the payload
+=== Set the payload
 
 After disabling the virtual fabric, you must set the payload or the data field size on both switches in the fabric.
 
@@ -2978,7 +2978,7 @@ The data field size must not exceed 2048.
  .. Set the other parameters, such as Domain, WWN-based persistent PID, and so on.
  .. Set the data field size: `2048`
 
-=== Setting the authentication policy
+=== Set the authentication policy
 
 You must set the authentication policy and associated parameters.
 
@@ -3062,7 +3062,7 @@ ARE YOU SURE  (yes, y, no, n): [no] yes
 Auth Policy is set to ON
 ----
 
-=== Enabling ISL encryption on Brocade switches
+=== Enable ISL encryption on Brocade switches
 
 After setting the authentication policy and the authentication secret, you must enable ISL encryption on the ports for it to take effect.
 
