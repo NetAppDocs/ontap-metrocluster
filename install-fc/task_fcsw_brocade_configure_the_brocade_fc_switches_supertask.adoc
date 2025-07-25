@@ -409,21 +409,13 @@ NOTE: When configuring ONTAP on the controller modules, OOD must be explicitly c
 
 https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-in-order-delivery-or-out-of-order-delivery-of-frames-on-ontap-software[Configure in-order delivery or out-of-order delivery of frames on ONTAP software]
 
-. Verify that the switch is using the dynamic port licensing method.
+. If you are running a version earlier than FOS 9.0, verify that the switch is using the dynamic Port on Demand (POD) licensing method.
++
+NOTE: In Fabric OS 9.0 and later, the license method is dynamic by default. The static license method is not supported.
 
 .. Run the license command:
 +
-[role="tabbed-block"]
-====
-.For Fabric OS 8.2.x and earlier
---
-Run the command `licenseport --show`.
---
-.For Fabric OS 9.0 and later
---
-Run the command `license --show -port`.
---
-====
+`licenseport --show`
 +
 ----
 FC_switch_A_1:admin> license --show -port
@@ -463,8 +455,6 @@ FC_switch_A_1:admin> licenseport --method dynamic
 The POD method has been changed to dynamic.
 Please reboot the switch now for this change to take effect
 ----
-+
-NOTE: In Fabric OS 9.0 and later, the license method is dynamic by default. The static license method is not supported. 
 
 
 

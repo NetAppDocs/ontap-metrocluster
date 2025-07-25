@@ -104,25 +104,15 @@ FC_switch_A_1:admin> portcfgdefault <port number>
 +
 You must complete this step for each port.
 
-. Verify that the switch is using the dynamic Port on Demand (POD) method.
+. If you are running a version earlier than FOS 9.0, verify that the switch is using the dynamic Port on Demand (POD) method.
++
+NOTE: In Fabric OS 9.0 and later, the license method is dynamic by default. The static license method is not supported.
 +
 For Brocade Fabric OS versions before 8.0, you run the following commands as admin, and for versions 8.0 and later, you run them as root.
-+ 
-NOTE: In Fabric OS 9.0 and later, you can skip this step because the license method is dynamic by default. The static license method is not supported.  
-
++  
 .. Run the license command:
 +
-[role="tabbed-block"]
-====
-.For Fabric OS 8.2.x and earlier
---
-Run the command `licenseport --show`.
---
-.For Fabric OS 9.0 and later
---
-Run the command `license --show -port`.
---
-====
+`licenseport --show`.
 +
 ----
 FC_switch_A_1:admin> license --show -port
@@ -140,17 +130,7 @@ FC_switch_A_1:admin> rootaccess --set consoleonly
 
 .. Run the license command:
 +
-[role="tabbed-block"]
-====
-.For Fabric OS 8.2.x and earlier
---
-Run the command `licenseport --show`.
---
-.For Fabric OS 9.0 and later
---
-Run the command `license --show -port`.
---
-====
+`licenseport --show`.
 +
 ----
 FC_switch_A_1:root> license --show -port
