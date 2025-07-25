@@ -18,6 +18,40 @@ For details about known issues, limitations, and upgrade cautions affecting ONTA
 |===
 | Supported features in MetroCluster configuration| Description and where to learn more| Available beginning
 a|
+MetroCluster IP support for end-to-end encryption
+a|
+End-to-end encryption is supported on the following systems to encrypt back-end traffic, such as NVlog and storage replication data, between the sites in a MetroCluster IP configuration.
+
+* AFF A800, AFF C800
+* AFF A20, AFF A30, AFF C30, AFF A50, AFF C60
+* AFF A70, AFF A90, AFF A1K, AFF C80
+* FAS50, FAS70, FAS90
+
+link:../maintain/task-configure-encryption.html[Configure end-to-end encryption in a MetroCluster IP configuration]
+a|
+ONTAP 9.17.1
+a|
+Limit changes for MetroCluster IP configurations
+a|
+ONTAP 9.17.1 includes the following limit updates for four-node MetroCluster IP configurations: 
+
+* AFF C800, AFF A800, AFF A900, AFF A90, and AFF A1K systems have the following updated limits: 
+** FlexVol volume limits per node: 1250 
+** SVM limits: 64 SVMs per cluster
+** LIF count: 256 LIFs per cluster
+
+* AFF A400, AFF C400, ASA A400, ASA C400, AFF C80, AFF A70, and AFF A50 systems have the following updated limits:
+
+** FlexVol volume limits per aggregate (single or multiple): 625
+** FlexVol volume limits per node: 1250
+** FlexVol volume limits per high-availability (HA) pair: 2500
+** FlexVol volume limits per MetroCluster cluster: 5000
+** SVM limits: 64 SVMs per cluster
+** LIF count: 256 LIFs per cluster
+
+a|
+ONTAP 9.17.1
+a|
 Fibrebridge firmware update using credentials
 a|
 You can update the firmware on Fibrebridge bridges using credentials if they are required by the server to download the firmware package.
@@ -60,7 +94,7 @@ In four-node MetroCluster IP configurations, the following volume limits for AFF
 
 * The maximum number of FlexVol volumes per aggregate increased from 200 to 625.
 * The maximum number of FlexVol volumes per node increased from 800 to 1250.
-* The maximum number of FlexVol volumes per high-availability (HA) pair increased from 1600 to 2500.
+* The maximum number of FlexVol volumes per HA pair increased from 1600 to 2500.
 a|
 ONTAP 9.15.1
 a|
@@ -78,7 +112,7 @@ In four-node MetroCluster IP configurations, the following volume limits for AFF
 
 * The maximum number of FlexVol volumes per aggregate increased from 200 to 625.
 * The maximum number of FlexVol volumes per node increased from 800 to 1250.
-* The maximum number of FlexVol volumes per high-availability (HA) pair increased from 1600 to 2500.
+* The maximum number of FlexVol volumes per HA pair increased from 1600 to 2500.
 a|
 ONTAP 9.14.1
 a|

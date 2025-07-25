@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: metrocluster, upgrade, nondisruptive, controller, switchover, switchback, fc, configuration, net, boot, root, aggregate, mcc
 summary: 'You can use the MetroCluster switchover operation to provide nondisruptive service to clients while the controller modules on the partner cluster are upgraded. Other components (such as storage shelves or switches) cannot be upgraded as part of this procedure.'
 ---
-= Upgrading controllers in a MetroCluster FC configuration using switchover and switchback
+= Upgrade controllers in a MetroCluster FC configuration using switchover and switchback
 :icons: font
 :imagesdir: ../media/
 
@@ -73,13 +73,15 @@ include::../_include/console-logging.adoc[]
 
 // 2024 Aug 13, ONTAPDOC-1988
 
-== Preparing for the upgrade
+== Prepare for the upgrade
 
 Before making any changes to the existing MetroCluster configuration, you must check the health of the configuration, prepare the new platforms, and perform other miscellaneous tasks.
 
-=== Verifying the health of the MetroCluster configuration
+=== Verify the health of the MetroCluster configuration
 
-You must verify the health and connectivity of the MetroCluster configuration prior to performing the upgrade.
+You verify the health and connectivity of the MetroCluster configuration before performing the upgrade.
+
+CAUTION: After you upgrade the controllers at the first site and before you upgrade the second, running `metrocluster check run` followed by `metrocluster check show` returns an error in the `config-replication` field. This error indicates an NVRAM size mismatch between the nodes at each site and it's the expected behavior when there are different platform models on both sites. You can ignore the error until the controller upgrade is completed for all nodes in the DR group.
 
 .Steps
 
@@ -147,7 +149,7 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
 
 .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 
-=== Mapping ports from the old nodes to the new nodes
+=== Map ports from the old nodes to the new nodes
 
 You must plan the mapping of the LIFs on physical ports on the old nodes to the physical ports on the new nodes.
 
@@ -171,7 +173,7 @@ e3a, e3b
 
 a|
 No matching port. After the upgrade, recreate the cluster ports.
-link:task_prepare_cluster_ports_on_the_exist_controller.html[Preparing cluster ports on an existing controller module]
+link:task_prepare_cluster_ports_on_the_exist_controller.html[Prepare cluster ports on an existing controller module]
 
 a|
 e0c, e0d
@@ -372,7 +374,7 @@ a|
 
 |===
 
-=== Gathering information before the upgrade
+=== Gather information before the upgrade
 
 Before upgrading, you must gather information for each of the old nodes, and, if necessary, adjust the network broadcast domains, remove any VLANs and interface groups, and gather encryption information.
 
@@ -467,7 +469,7 @@ You will need the passphrase later in the upgrade procedure.
 +
 `security key-manager key query`
 
-=== Removing the existing configuration from the Tiebreaker or other monitoring software
+=== Remove the existing configuration from the Tiebreaker or other monitoring software
 
 If the existing configuration is monitored with the MetroCluster Tiebreaker configuration or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the Tiebreaker or other software prior to transition.
 
@@ -475,13 +477,13 @@ If the existing configuration is monitored with the MetroCluster Tiebreaker conf
 
 . Remove the existing MetroCluster configuration from the Tiebreaker software.
 +
-link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#removing-metrocluster-configurations[Removing MetroCluster configurations]
+link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#removing-metrocluster-configurations[Remove MetroCluster configurations]
 
 . Remove the existing MetroCluster configuration from any third-party application that can initiate switchover.
 +
 Refer to the documentation for the application.
 
-=== Sending a custom AutoSupport message prior to maintenance
+=== Send a custom AutoSupport message prior to maintenance
 
 Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
 
@@ -502,7 +504,7 @@ This task must be performed on each MetroCluster site.
 
 .. Repeat the command on the partner cluster.
 
-== Switching over the MetroCluster configuration
+== Switch over the MetroCluster configuration
 
 You must switch over the configuration to site_A so that the platforms on site_B can be upgraded.
 
@@ -576,7 +578,7 @@ cluster_A::> metrocluster operation show
      Errors: -
 ----
 
-== Preparing the network configuration of the old controllers
+== Prepare the network configuration of the old controllers
 
 To ensure that the networking resumes cleanly on the new controllers, you must move LIFs to a common port and then remove the networking configuration of the old controllers.
 
@@ -656,7 +658,7 @@ network port ifgrp remove-port -node node1 -ifgrp a1a -port e0d
 +
 This step must be performed on both nodes.
 
-== Removing the old platforms
+== Remove the old platforms
 
 The old controllers must be removed from the configuration.
 
@@ -674,11 +676,11 @@ This task is performed on site_B.
 
 . Remove the node_B_1-old and node_B_2-old controllers from the rack.
 
-== Configuring the new controllers
+== Configure the new controllers
 
 You must rack and install the controllers, perform required setup in Maintenance mode, and then boot the controllers, and verify the LIF configuration on the controllers.
 
-=== Setting up the new controllers
+=== Set up the new controllers
 
 You must rack and cable the new controllers.
 
@@ -706,7 +708,7 @@ https://docs.netapp.com/platstor/index.jsp[ONTAP Hardware Systems Documentation^
 
 . Power up the new nodes and press Ctrl-C when prompted to display the LOADER prompt.
 
-=== Netbooting the new controllers
+=== Netboot the new controllers
 
 After you install the new nodes, you need to netboot to ensure the new nodes are running the same version of ONTAP as the original nodes. The term netboot means you are booting from an ONTAP image stored on a remote server. When preparing for netboot, you must put a copy of the ONTAP 9 boot image onto a web server that the system can access.
 
@@ -717,13 +719,13 @@ include::../_include/netboot_steps.adoc[]
 // end include reference
 
 
-=== Clearing the configuration on a controller module
+=== Clear the configuration on a controller module
 
 // include reference
 include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 // end include reference
 
-=== Restoring the HBA configuration
+=== Restore the HBA configuration
 
 Depending on the presence and configuration of HBA cards in the controller module, you need to configure them correctly for your site's usage.
 
@@ -782,7 +784,7 @@ a|
 `fcadmin show`
 |===
 
-=== Setting the HA state on the new controllers and chassis
+=== Set the HA state on the new controllers and chassis
 
 
 You must verify the HA state of the controllers and chassis, and, if necessary, update the state to match your system configuration.
@@ -831,7 +833,7 @@ a|
 `ha-config modify chassis mcc`
 |===
 
-=== Reassigning root aggregate disks
+=== Reassign root aggregate disks
 
 
 Reassign the root aggregate disks to the new controller module, using the sysids gathered earlier
@@ -840,7 +842,7 @@ Reassign the root aggregate disks to the new controller module, using the sysids
 
 This task is performed in Maintenance mode.
 
-The old system IDs were identified in link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Gathering information before the upgrade].
+The old system IDs were identified in link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Gather information before the upgrade].
 
 The examples in this procedure use controllers with the following system IDs:
 
@@ -939,7 +941,7 @@ aggr0_node_b_1-root    online      raid_dp, aggr    root, nosnap=on,
 
 . Repeat the above steps on the partner node (node_B_2-new).
 
-=== Booting up the new controllers
+=== Boot up the new controllers
 
 You must reboot the controllers from the boot menu to update the controller flash image. Additional steps are required if encryption is configured.
 
@@ -1104,7 +1106,7 @@ If either node is in takeover mode, perform a giveback:
 
 .. Add any ports to a broadcast domain as needed.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Adding or removing ports from a broadcast domain]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58A3-46C9-BF0C-BA1D1D1475F9.html[Add or remove ports from a broadcast domain]
 
 .. Add the physical port that will host the intercluster LIFs to the corresponding Broadcast domain.
 .. Modify intercluster LIFs to use the new physical port as home port.
@@ -1112,15 +1114,15 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58
 +
 You might need to reconfigure cluster peering.
 +
-link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Creating a cluster peer relationship]
+link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#peering-the-clusters[Create a cluster peer relationship]
 
 .. Recreate VLANs and interface groups as needed.
 +
 VLAN and interface group membership might be different than that of the old node.
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Creating a VLAN^]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-8929FCE2-5888-4051-B8C0-E27CAF3F2A63.html[Create a VLAN^]
 +
-https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combining physical ports to create interface groups^]
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-DBC9DEE2-EAB7-430A-A773-4E3420EE2AA1.html[Combine physical ports to create interface groups^]
 . If encryption is used, restore the keys using the correct command for your key management configuration.
 +
 
@@ -1144,7 +1146,7 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 |===
 
 // BURT 1437371, 29 NOV 2021
-=== Verifying LIF configuration
+=== Verify LIF configuration
 
 
 Verify that LIFs are hosted on appropriate node/ports prior to switchback. The following steps need to be performed
@@ -1181,7 +1183,7 @@ Before the switchback operation, you must install licenses for the new controlle
 .Steps
 . link:task_install_licenses_on_the_new_controller_module_cluster_mode.html[Installing licenses for the new controller module]
 
-== Switching back the MetroCluster configuration
+== Switch back the MetroCluster configuration
 
 After the new controllers have been configured, you switch back the MetroCluster configuration to return the configuration to normal operation.
 
@@ -1235,7 +1237,7 @@ Remote: cluster_A         Configuration state configured
 +
 If a switchback takes a long time to finish, you can check on the status of in-progress baselines by using the `metrocluster config-replication resync-status show` command. This command is at the advanced privilege level.
 
-== Checking the health of the MetroCluster configuration
+== Check the health of the MetroCluster configuration
 
 After upgrading the controller modules you must verify the health of the MetroCluster configuration.
 
@@ -1267,16 +1269,16 @@ Failed to validate the node and cluster components before the switchover operati
 +
 This is expected behavior due to a controller mismatch during the upgrade process and the error message can be safely ignored.
 
-== Upgrading the nodes on cluster_A
+== Upgrade the nodes on cluster_A
 
 You must repeat the upgrade tasks on cluster_A.
 
 .Step
-. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Preparing for the upgrade].
+. Repeat the steps to upgrade the nodes on cluster_A, beginning with link:task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html[Prepare for the upgrade].
 +
-As you perform the tasks, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
+When you repeat the procedure, all example references to the clusters and nodes are reversed. For example, when the example is given to switchover from cluster_A, you will switchover from cluster_B.
 
-== Sending a custom AutoSupport message after maintenance
+== Send a custom AutoSupport message after maintenance
 
 After completing the upgrade, you should send an AutoSupport message indicating the end of maintenance, so automatic case creation can resume.
 
@@ -1287,12 +1289,13 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 `system node autosupport invoke -node * -type all -message MAINT=end`
 .. Repeat the command on the partner cluster.
 
-== Restoring Tiebreaker monitoring
+== Restore Tiebreaker monitoring
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
-. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Adding MetroCluster configurations^] in _MetroCluster Tiebreaker Installation and Configuration_.
+. Use the steps in http://docs.netapp.com/ontap-9/topic/com.netapp.doc.hw-metrocluster-tiebreaker/GUID-7259BCA4-104C-49C6-BAD0-1068CA2A3DA5.html[Add MetroCluster configurations^] in _MetroCluster Tiebreaker Installation and Configuration_.
 
+// 2025 Apr 24, ONTAPDOC-2651
 // 2023 JULY 5, ONTAPDOC-1083
 // BURT 1391601, 23 FEB 2022
 // BURT 1485050, 2022-06-21
