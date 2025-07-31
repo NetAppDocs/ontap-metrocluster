@@ -78,7 +78,7 @@ NOTE: Root aggregates are not deleted.
 * FCP interfaces used for block access (SAN) cannot be migrated or moved between the nodes. Create new FCP interfaces as needed.
 
 * iSCSI SAN LIFs need to be down before the home node and home port can be updated.
-===
+====
 
 
 .. Transfer epsilon to a node in another DR group if required.
@@ -140,10 +140,11 @@ cluster_A::*>
 ----
 . Repeat the previous step on the partner cluster.
 
-. Perform the following checks on the nodes of the old DR group:
+. Perform the following on the nodes of the old DR group:
+.. Confirm that aggregates are unmirrored:
+`storage aggregate show is-mirrored false`
 .. Verify that unmirrored aggregates do not have disks in remote plexes.
-.. Confirm that aggregates are unmirrored.
-.. Verify that there are no disks assigned to Pool1.
+.. Remove ownership of pool1 disks or partitions that are owned by the nodes that are to be unjoined.
 .. Disable storage failover: 
 +
 `storage failover modify -node <node-name> -enable false`
