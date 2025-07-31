@@ -56,25 +56,30 @@ ClusterB::> aggr delete -aggregate aggregate_name
 +
 NOTE: Root aggregates are not deleted.
 
- .. Move the data LIFs offline.
- `network interface modify -vserver _svm-name_ -lif _data-lif_ -status-admin down`
-
- .. Migrate all data LIFs to home nodes in another DR group.
+ .. Migrate all NAS data LIFs used for NFS and CIFS (SMB) to home nodes in another DR group.
  +
-`network interface show -home-node _old_node_`
+`network interface show -home-node <old_node>`
 +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-node _new_node_ -home-port _port-id_`
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-node <new_node> -home-port <port-id>`
 
- .. Move the data LIFs back online.
- `network interface modify -vserver _svm-name_ -lif _data-lif_ -status-admin up`
+ .. Move the data LIFs to the new home node in another DR group.
+ `network interface modify -vserver <svm-name> -lif <data-lif> -home-node <new_node> -home-port <port>`
 
  .. Migrate the cluster management LIF to a home node in another DR group.
 +
 `network interface show -role cluster-mgmt`
 +
-`network interface modify -vserver _svm-name_ -lif _cluster_mgmt_ -home-node _new_node_ -home-port _port-id_`
+`network interface modify -vserver <svm-name> -lif <cluster_mgmt> -home-node <new_node> -home-port <port-id>`
 +
-Node management and inter-cluster LIFs are not migrated.
+[NOTE]
+====
+* Node management and inter-cluster LIFs are not migrated. Create new node management and inter-cluster LIFs on nodes of the DR group as required.
+
+* FCP interfaces used for block access (SAN) cannot be migrated or moved between the nodes. Create new FCP interfaces as needed.
+
+* iSCSI SAN LIFs need to be down before the home node and home port can be updated.
+===
+
 
 .. Transfer epsilon to a node in another DR group if required.
 +
@@ -134,16 +139,45 @@ Do you want to continue? {y|n}: y
 cluster_A::*>
 ----
 . Repeat the previous step on the partner cluster.
+
+. Perform the following checks on the nodes of the old DR group:
+.. Verify that unmirrored aggregates do not have disks in remote plexes.
+.. Confirm that aggregates are unmirrored.
+.. Verify that there are no disks assigned to Pool1.
+.. Disable storage failover: 
++
+`storage failover modify -node <node-name> -enable false`
+
 . If in a MetroCluster IP configuration, remove the MetroCluster connections on the nodes of the old DR group.
 +
 These commands can be issued from either cluster and apply to the entire DR group spanning both the clusters.
 
 .. Disconnect the connections:
 +
-`metrocluster configuration-settings connection disconnect _dr-group-id_`
+`metrocluster configuration-settings connection disconnect -dr-group-id <dr_group_id>`
++
+Example output:
++
+----
+cluster_A::*> metrocluster configuration-settings connection disconnect -dr-group-id 1
+
+Warning: For the nodes in the DR group 1, this command will remove the existing connections that are used to mirror NV logs and access remote storage.
+Do you want to continue? {y|n}: y
+
+Warning: Before proceeding with disconnect, you must verify the following:
+      1. Unmirrored aggregates do not have disks in remote plexes.
+      2. Aggregates are not mirrored.
+      3. No disks are assigned in Pool1.
+      4. Storage failover is not enabled.
+      Follow the "MetroCluster Installation and Configuration guide" for detailed instructions to verify this.
+Do you want to continue? {y|n}: y
+----
 .. Delete the MetroCluster interfaces on the nodes of the old DR group:
 +
+NOTE: This step must be repeated on each node of the DR group.
++
 `metrocluster configuration-settings interface delete`
+
 .. Delete the old DR group's configuration.
  +
 `metrocluster configuration-settings dr-group delete`
@@ -155,18 +189,15 @@ You must perform this step on each cluster.
 .. Set the advanced privilege level:
 +
 `set -privilege advanced`
-.. Disable the storage failover:
-+
-`storage failover modify -node _node-name_ -enable false`
-// BURT 1419399, 2021-11-18
+
 .. Unjoin the node:
  +
-`cluster unjoin -node _node-name_`
+`cluster unjoin -node <node-name>`
 +
 Repeat this step for the other local node in the old DR group.
 
 .. Set the admin privilege level:
- +
++
 `set -privilege admin`
 
 . Re-enable cluster HA in the new DR group:
@@ -180,3 +211,4 @@ You must perform this step on each cluster.
 // 2022 SEPT 26 BURT 1501656
 // 2022-NOV-15 GitHub issue 232, 234 
 // 2024-02-13, GitHub issue 233
+// BURT 1419399, 2021-11-18
