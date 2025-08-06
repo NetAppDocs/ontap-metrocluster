@@ -2445,9 +2445,9 @@ node_A_1 SVM 4 snmpv3user     snmp        usm                   10.10.10.13
 ====
 .Brocade switches (FOS 9.0 and later)
 --
-`snmpconfig --add snmpv3`
+`snmpconfig --add snmpv3 -index <index> -user <user_name> -groupname <rw/ro> -auth_proto <auth_protocol> -auth_passwd <auth_password> -priv_proto <priv_protocol> -priv_passwd <priv_password>`
 --
-.Brocade switches (FOS 8.2 and earlier)
+.Brocade switches (FOS 8.x and earlier)
 --
 
 `snmpconfig --set snmpv3`
@@ -2459,7 +2459,7 @@ node_A_1 SVM 4 snmpv3user     snmp        usm                   10.10.10.13
 --
 ====
 +
-If you require RO access, after "User (ro):" specify the "snmpv3user". The following example uses Brocade switches:
+If you require RO access, after "User (ro):" specify the "snmpv3user". The following example uses Brocade switches running 8.x and earlier:
 +
 ----
 Switch-A1:admin> snmpconfig --set snmpv3
