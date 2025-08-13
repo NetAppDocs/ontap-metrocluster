@@ -1,0 +1,352 @@
+---
+permalink: tiebreaker/tb-17-install.html
+sidebar: sidebar
+keywords: install, tiebreaker, software, monitor, capabilities, capability, cluster, storage, environment, snmp, notification, event, node, connectivity, issue, site, disaster, system, install, upgrade, upgrading, software, dependencies, dependency, package, ntp, requirements, requirements for tiebreaker, tiebreaker requirements, mysql, mariadb, autostart, database
+summary: Perform a new installation or upgrade to Tiebreaker 1.6 on your host Linux operating system to monitor MetroCluster configurations. 
+---
+= Install MetroCluster Tiebreaker 1.7 
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Perform a new installation or upgrade to Tiebreaker 1.7 on your host Linux operating system to monitor MetroCluster configurations. 
+
+.About this task
+
+* Your storage system must be running ONTAP 9.12.1 or later.
+* You can only upgrade to Tiebreaker 1.7 from Tiebreaker 1.6P1. Refer to link:tiebreaker/tb-16-install.html[Install Tiebreaker 1.6 or 1.6P1] to install or upgrade to Tiebreaker 1.6P1.
+
+* You can install MetroCluster Tiebreaker as a non-root user with sufficient administrative privileges to perform the Tiebreaker installation, create tables and users, and set the user password. 
+
+.Steps
+
+. Download the MetroCluster Tiebreaker 1.7 software.
++
+https://mysupport.netapp.com/site/products/all/details/metrocluster-tiebreaker/downloads-tab[MetroCluster Tiebreaker (Downloads) - NetApp Support Site^]
+
+. Log in to the host as the root user.
+
+. If you are performing an upgrade, verify the version of Tiebreaker that you are running:
++
+The following example shows Tiebreaker 1.6P1
++
+----
+[root@mcctb ~] # netapp-metrocluster-tiebreaker-software-cli
+NetApp MetroCluster Tiebreaker :> version show
+NetApp MetroCluster Tiebreaker 1.6P1: Sun Mar 13 09:59:02 IST 2022
+NetApp MetroCluster Tiebreaker :> exit
+----
+
+. Install or upgrade the Tiebreaker software.
++
+[role="tabbed-block"]
+====
+.Install Tiebreaker 1.7
+--
+Use the following steps for a new installation of Tiebreaker 1.6P1. 
+
+.Steps
+
+. Run the following command at the `[root@mcctb ~] #` prompt to begin the installation:
++
+[source,cli]
+sh MetroClusterTiebreakerInstall-1.6P1
++
+The system displays the following output for a successful installation:
++
+.Example
+[%collapsible%open]
+=====
+----
+Extracting the MetroCluster Tiebreaker installation/upgrade archive
+Install digest hash is Ok
+Performing the MetroCluster Tiebreaker code signature check
+Install code signature is Ok
+Enter unix user account to use for the installation:
+mcctbadminuser
+Unix user account "mcctbadminuser" doesn't exist. Do you wish to create "mcctbadminuser" user account? [Y/N]: y
+useradd: warning: the home directory already exists.
+Not copying any file from skel directory into it.
+Creating mailbox file: File exists
+Unix account "mcctbadminuser" created.
+Changing password for user mcctbadminuser.
+New password:
+Retype new password:
+passwd: all authentication tokens updated successfully.
+MetroCluster Tiebreaker requires unix user account "mcctbadminuser" to be added to the group "mcctbgrp" for admin access.
+Do you wish to add ? [Y/N]: y
+Unix user account "mcctbadminuser" added to "mcctbgrp".
+Do you wish to generate your own public-private key pair for encrypting audit log? [Y/N]: y
+Generating public-private key pair...
+Configuring Vault...
+Starting vault server...
+==> Vault server configuration:
+
+             Api Address: <api_address>
+                     Cgo: disabled
+         Cluster Address: <cluster_address>
+   Environment Variables: BASH_FUNC_which%%, DBUS_SESSION_BUS_ADDRESS, GODEBUG, HISTCONTROL, HISTSIZE, HOME, HOSTNAME, HOST_ACCOUNT, LANG, LESSOPEN, LOGNAME, LS_COLORS, MAIL, PATH, PWD, SHELL, SHLVL, SSH_CLIENT, SSH_CONNECTION, SSH_TTY, STAF_TEMP_DIR, TERM, USER, VAULT_ADDR, VAULT_TOKEN, XDG_RUNTIME_DIR, XDG_SESSION_ID, _, vault_Addr, which_declare
+              Go Version: go1.20.5
+              Listener 1: tcp (addr: "0.0.0.0:8200", cluster address: "0.0.0.0:8201", max_request_duration: "1m30s", max_request_size: "33554432", tls: "enabled")
+               Log Level:
+                   Mlock: supported: true, enabled: true
+           Recovery Mode: false
+                 Storage: file
+                 Version: Vault v1.14.0, built 2023-06-19T11:40:23Z
+             Version Sha: 13a649f860186dffe3f3a4459814d87191efc321
+
+==> Vault server started! Log data will stream in below:
+
+2023-11-23T15:14:28.532+0530 [INFO]  proxy environment: http_proxy="" https_proxy="" no_proxy=""
+2023-11-23T15:14:28.577+0530 [INFO]  core: Initializing version history cache for core
+2023-11-23T15:14:38.552+0530 [INFO]  core: security barrier not initialized
+2023-11-23T15:14:38.552+0530 [INFO]  core: seal configuration missing, not initialized
+2023-11-23T15:14:38.554+0530 [INFO]  core: security barrier not initialized
+2023-11-23T15:14:38.555+0530 [INFO]  core: security barrier initialized: stored=1 shares=5 threshold=3
+2023-11-23T15:14:38.556+0530 [INFO]  core: post-unseal setup starting
+2023-11-23T15:14:38.577+0530 [INFO]  core: loaded wrapping token key
+2023-11-23T15:14:38.577+0530 [INFO]  core: successfully setup plugin catalog: plugin-directory=""
+2023-11-23T15:14:38.577+0530 [INFO]  core: no mounts; adding default mount table
+2023-11-23T15:14:38.578+0530 [INFO]  core: successfully mounted: type=cubbyhole version="v1.14.0+builtin.vault" path=cubbyhole/ namespace="ID: root. Path: "
+2023-11-23T15:14:38.578+0530 [INFO]  core: successfully mounted: type=system version="v1.14.0+builtin.vault" path=sys/ namespace="ID: root. Path: "
+2023-11-23T15:14:38.578+0530 [INFO]  core: successfully mounted: type=identity version="v1.14.0+builtin.vault" path=identity/ namespace="ID: root. Path: "
+2023-11-23T15:14:38.581+0530 [INFO]  core: successfully mounted: type=token version="v1.14.0+builtin.vault" path=token/ namespace="ID: root. Path: "
+2023-11-23T15:14:38.581+0530 [INFO]  rollback: starting rollback manager
+2023-11-23T15:14:38.581+0530 [INFO]  core: restoring leases
+2023-11-23T15:14:38.582+0530 [INFO]  expiration: lease restore complete
+2023-11-23T15:14:38.582+0530 [INFO]  identity: entities restored
+2023-11-23T15:14:38.582+0530 [INFO]  identity: groups restored
+2023-11-23T15:14:38.583+0530 [INFO]  core: Recorded vault version: vault version=1.14.0 upgrade time="2023-11-23 09:44:38.582881162 +0000 UTC" build date=2023-06-19T11:40:23Z
+2023-11-23T15:14:38.583+0530 [INFO]  core: usage gauge collection is disabled
+2023-11-23T15:14:38.998+0530 [INFO]  core: post-unseal setup complete
+2023-11-23T15:14:38.999+0530 [INFO]  core: root token generated
+2023-11-23T15:14:38.999+0530 [INFO]  core: pre-seal teardown starting
+2023-11-23T15:14:38.999+0530 [INFO]  rollback: stopping rollback manager
+2023-11-23T15:14:38.999+0530 [INFO]  core: pre-seal teardown complete
+2023-11-23T15:14:39.311+0530 [INFO]  core.cluster-listener.tcp: starting listener: listener_address=0.0.0.0:8201
+2023-11-23T15:14:39.311+0530 [INFO]  core.cluster-listener: serving cluster requests: cluster_listen_address=[::]:8201
+2023-11-23T15:14:39.312+0530 [INFO]  core: post-unseal setup starting
+2023-11-23T15:14:39.312+0530 [INFO]  core: loaded wrapping token key
+2023-11-23T15:14:39.312+0530 [INFO]  core: successfully setup plugin catalog: plugin-directory=""
+2023-11-23T15:14:39.313+0530 [INFO]  core: successfully mounted: type=system version="v1.14.0+builtin.vault" path=sys/ namespace="ID: root. Path: "
+2023-11-23T15:14:39.313+0530 [INFO]  core: successfully mounted: type=identity version="v1.14.0+builtin.vault" path=identity/ namespace="ID: root. Path: "
+2023-11-23T15:14:39.313+0530 [INFO]  core: successfully mounted: type=cubbyhole version="v1.14.0+builtin.vault" path=cubbyhole/ namespace="ID: root. Path: "
+2023-11-23T15:14:39.314+0530 [INFO]  core: successfully mounted: type=token version="v1.14.0+builtin.vault" path=token/ namespace="ID: root. Path: "
+2023-11-23T15:14:39.314+0530 [INFO]  rollback: starting rollback manager
+2023-11-23T15:14:39.314+0530 [INFO]  core: restoring leases
+2023-11-23T15:14:39.314+0530 [INFO]  identity: entities restored
+2023-11-23T15:14:39.314+0530 [INFO]  expiration: lease restore complete
+2023-11-23T15:14:39.314+0530 [INFO]  identity: groups restored
+2023-11-23T15:14:39.315+0530 [INFO]  core: usage gauge collection is disabled
+2023-11-23T15:14:39.316+0530 [INFO]  core: post-unseal setup complete
+2023-11-23T15:14:39.316+0530 [INFO]  core: vault is unsealed
+Success! Uploaded policy: mcctb-policy
+2023-11-23T15:14:39.795+0530 [INFO]  core: enabled credential backend: path=approle/ type=approle version=""
+Success! Enabled approle auth method at: approle/
+2023-11-23T15:14:39.885+0530 [INFO]  core: successful mount: namespace="" path=mcctb/ type=kv version=""
+Success! Enabled the kv secrets engine at: mcctb/
+Success! Data written to: auth/approle/role/mcctb-app
+Installing the NetApp-MetroCluster-Tiebreaker-Software-1.7-1.x86_64.rpm
+Preparing...                          # ############################### # [100%]
+
+Updating / installing...
+
+1:NetApp-MetroCluster-Tiebreaker-So# ############################### # [100%]
+Performing file integrity check
+etc/cron.weekly/metrocluster-tiebreaker-support is Ok
+etc/cron.weekly/metrocluster-tiebreaker-support-cov is Ok
+etc/init.d/netapp-metrocluster-tiebreaker-software is Ok
+etc/init.d/netapp-metrocluster-tiebreaker-software-cov is Ok
+etc/logrotate.d/mcctb is Ok
+opt/netapp/mcctb/lib/common/activation-1.1.1.jar is Ok
+opt/netapp/mcctb/lib/common/aopalliance.jar is Ok
+opt/netapp/mcctb/lib/common/args4j.jar is Ok
+opt/netapp/mcctb/lib/common/aspectjrt.jar is Ok
+opt/netapp/mcctb/lib/common/aspectjweaver.jar is Ok
+opt/netapp/mcctb/lib/common/asup.jar is Ok
+opt/netapp/mcctb/lib/common/bcpkix-jdk15on.jar is Ok
+opt/netapp/mcctb/lib/common/bcprov-jdk15on.jar is Ok
+opt/netapp/mcctb/lib/common/bcprov-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/bctls-fips-1.0.13.jar is Ok
+opt/netapp/mcctb/lib/common/bctls-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/bcutil-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/cglib.jar is Ok
+opt/netapp/mcctb/lib/common/commons-codec.jar is Ok
+opt/netapp/mcctb/lib/common/commons-collections4.jar is Ok
+opt/netapp/mcctb/lib/common/commons-compress.jar is Ok
+opt/netapp/mcctb/lib/common/commons-daemon.jar is Ok
+opt/netapp/mcctb/lib/common/commons-daemon.src.jar is Ok
+opt/netapp/mcctb/lib/common/commons-dbcp2.jar is Ok
+opt/netapp/mcctb/lib/common/commons-io.jar is Ok
+opt/netapp/mcctb/lib/common/commons-lang3.jar is Ok
+opt/netapp/mcctb/lib/common/commons-logging.jar is Ok
+opt/netapp/mcctb/lib/common/commons-pool2.jar is Ok
+opt/netapp/mcctb/lib/common/guava.jar is Ok
+opt/netapp/mcctb/lib/common/httpclient.jar is Ok
+opt/netapp/mcctb/lib/common/httpcore.jar is Ok
+opt/netapp/mcctb/lib/common/jakarta.activation.jar is Ok
+opt/netapp/mcctb/lib/common/jakarta.xml.bind-api.jar is Ok
+opt/netapp/mcctb/lib/common/java-xmlbuilder.jar is Ok
+opt/netapp/mcctb/lib/common/javax.inject.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-api-2.3.1.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-core.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-impl.jar is Ok
+opt/netapp/mcctb/lib/common/jline.jar is Ok
+opt/netapp/mcctb/lib/common/jna.jar is Ok
+opt/netapp/mcctb/lib/common/joda-time.jar is Ok
+opt/netapp/mcctb/lib/common/jsch.jar is Ok
+opt/netapp/mcctb/lib/common/json.jar is Ok
+opt/netapp/mcctb/lib/common/jsvc.zip is Ok
+opt/netapp/mcctb/lib/common/junixsocket-common.jar is Ok
+opt/netapp/mcctb/lib/common/junixsocket-native-common.jar is Ok
+opt/netapp/mcctb/lib/common/logback-classic.jar is Ok
+opt/netapp/mcctb/lib/common/logback-core.jar is Ok
+opt/netapp/mcctb/lib/common/mail-1.6.2.jar is Ok
+opt/netapp/mcctb/lib/common/mariadb-java-client.jar is Ok
+opt/netapp/mcctb/lib/common/mcctb-mib.jar is Ok
+opt/netapp/mcctb/lib/common/mcctb.jar is Ok
+opt/netapp/mcctb/lib/common/mockito-core.jar is Ok
+opt/netapp/mcctb/lib/common/slf4j-api.jar is Ok
+opt/netapp/mcctb/lib/common/snmp4j.jar is Ok
+opt/netapp/mcctb/lib/common/spring-aop.jar is Ok
+opt/netapp/mcctb/lib/common/spring-beans.jar is Ok
+opt/netapp/mcctb/lib/common/spring-context-support.jar is Ok
+opt/netapp/mcctb/lib/common/spring-context.jar is Ok
+opt/netapp/mcctb/lib/common/spring-core.jar is Ok
+opt/netapp/mcctb/lib/common/spring-expression.jar is Ok
+opt/netapp/mcctb/lib/common/spring-web.jar is Ok
+opt/netapp/mcctb/lib/common/vault-java-driver.jar is Ok
+opt/netapp/mcctb/lib/common/xz.jar is Ok
+opt/netapp/mcctb/lib/org.jacoco.agent-0.8.8-runtime.jar is Ok
+opt/netapp/mcctb/bin/mcctb-asup-invoke is Ok
+opt/netapp/mcctb/bin/mcctb_postrotate is Ok
+opt/netapp/mcctb/bin/netapp-metrocluster-tiebreaker-software-cli is Ok
+/
+
+Synchronizing state of netapp-metrocluster-tiebreaker-software.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable netapp-metrocluster-tiebreaker-software
+Created symlink /etc/systemd/system/multi-user.target.wants/netapp-metrocluster-tiebreaker-software.service → /etc/systemd/system/netapp-metrocluster-tiebreaker-software.service.
+
+Attempting to start NetApp MetroCluster Tiebreaker software services
+Started NetApp MetroCluster Tiebreaker software services
+Successfully installed NetApp MetroCluster Tiebreaker software version 1.7.
+----
+
+=====
+
+--
+.Upgrade 1.6P1 to 1.7
+--
+Use the following steps to upgrade the Tiebreaker 1.6P1 software version to Tiebreaker 1.7.
+
+NOTE: After you upgrade to Tiebreaker 1.7 from 1.6P1, you remove the existing monitors and re-add the MetroCluster configuration for monitoring.
+
+.Steps
+
+. Run the following command at the `[root@mcctb ~] #` prompt to upgrade the software:
++
+[source,cli]
+sh MetroClusterTiebreakerInstall-1.6P1
++
+The system displays the following output for a successful upgrade:
++
+.Example
+[%collapsible%open]
+=====
+----
+Extracting the MetroCluster Tiebreaker installation/upgrade archive
+Install digest hash is Ok
+Performing the MetroCluster Tiebreaker code signature check
+Install code signature is Ok
+NetApp-MetroCluster-Tiebreaker-Software-1.6P1-1.x86_64
+Upgrading... to NetApp-MetroCluster-Tiebreaker-Software-1.7-1.x86_64.rpm
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:NetApp-MetroCluster-Tiebreaker-So################################# [ 50%]
+Performing file integrity check
+etc/cron.weekly/metrocluster-tiebreaker-support is Ok
+etc/cron.weekly/metrocluster-tiebreaker-support-cov is Ok
+etc/init.d/netapp-metrocluster-tiebreaker-software is Ok
+etc/init.d/netapp-metrocluster-tiebreaker-software-cov is Ok
+etc/logrotate.d/mcctb is Ok
+opt/netapp/mcctb/lib/common/aopalliance.jar is Ok
+opt/netapp/mcctb/lib/common/args4j.jar is Ok
+opt/netapp/mcctb/lib/common/aspectjrt.jar is Ok
+opt/netapp/mcctb/lib/common/aspectjweaver.jar is Ok
+opt/netapp/mcctb/lib/common/asup.jar is Ok
+opt/netapp/mcctb/lib/common/bcpkix-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/bcprov-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/bctls-fips-1.0.19.jar is Ok
+opt/netapp/mcctb/lib/common/bctls-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/bcutil-jdk18on.jar is Ok
+opt/netapp/mcctb/lib/common/cglib.jar is Ok
+opt/netapp/mcctb/lib/common/commons-codec.jar is Ok
+opt/netapp/mcctb/lib/common/commons-collections4.jar is Ok
+opt/netapp/mcctb/lib/common/commons-compress.jar is Ok
+opt/netapp/mcctb/lib/common/commons-daemon.jar is Ok
+opt/netapp/mcctb/lib/common/commons-daemon.src.jar is Ok
+opt/netapp/mcctb/lib/common/commons-dbcp2.jar is Ok
+opt/netapp/mcctb/lib/common/commons-io.jar is Ok
+opt/netapp/mcctb/lib/common/commons-lang3.jar is Ok
+opt/netapp/mcctb/lib/common/commons-logging.jar is Ok
+opt/netapp/mcctb/lib/common/commons-pool2.jar is Ok
+opt/netapp/mcctb/lib/common/guava.jar is Ok
+opt/netapp/mcctb/lib/common/httpclient.jar is Ok
+opt/netapp/mcctb/lib/common/httpcore.jar is Ok
+opt/netapp/mcctb/lib/common/jakarta.activation.jar is Ok
+opt/netapp/mcctb/lib/common/jakarta.mail-2.0.1.jar is Ok
+opt/netapp/mcctb/lib/common/jakarta.xml.bind-api.jar is Ok
+opt/netapp/mcctb/lib/common/java-xmlbuilder.jar is Ok
+opt/netapp/mcctb/lib/common/javax.inject.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-api-2.3.1.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-core.jar is Ok
+opt/netapp/mcctb/lib/common/jaxb-impl.jar is Ok
+opt/netapp/mcctb/lib/common/jline.jar is Ok
+opt/netapp/mcctb/lib/common/jna.jar is Ok
+opt/netapp/mcctb/lib/common/joda-time.jar is Ok
+opt/netapp/mcctb/lib/common/jsch.jar is Ok
+opt/netapp/mcctb/lib/common/json.jar is Ok
+opt/netapp/mcctb/lib/common/jsvc.zip is Ok
+opt/netapp/mcctb/lib/common/junixsocket-common.jar is Ok
+opt/netapp/mcctb/lib/common/junixsocket-native-common.jar is Ok
+opt/netapp/mcctb/lib/common/logback-classic.jar is Ok
+opt/netapp/mcctb/lib/common/logback-core.jar is Ok
+opt/netapp/mcctb/lib/common/mail-1.6.2.jar is Ok
+opt/netapp/mcctb/lib/common/mariadb-java-client.jar is Ok
+opt/netapp/mcctb/lib/common/mcctb-mib.jar is Ok
+opt/netapp/mcctb/lib/common/mcctb.jar is Ok
+opt/netapp/mcctb/lib/common/mockito-core.jar is Ok
+opt/netapp/mcctb/lib/common/slf4j-api.jar is Ok
+opt/netapp/mcctb/lib/common/snmp4j.jar is Ok
+opt/netapp/mcctb/lib/common/spring-aop.jar is Ok
+opt/netapp/mcctb/lib/common/spring-beans.jar is Ok
+opt/netapp/mcctb/lib/common/spring-context-support.jar is Ok
+opt/netapp/mcctb/lib/common/spring-context.jar is Ok
+opt/netapp/mcctb/lib/common/spring-core.jar is Ok
+opt/netapp/mcctb/lib/common/spring-expression.jar is Ok
+opt/netapp/mcctb/lib/common/spring-web.jar is Ok
+opt/netapp/mcctb/lib/common/vault-java-driver.jar is Ok
+opt/netapp/mcctb/lib/common/xz.jar is Ok
+opt/netapp/mcctb/lib/org.jacoco.agent-0.8.8-runtime.jar is Ok
+opt/netapp/mcctb/bin/mcctb-asup-invoke is Ok
+opt/netapp/mcctb/bin/mcctb_postrotate is Ok
+opt/netapp/mcctb/bin/netapp-metrocluster-tiebreaker-software-cli is Ok
+/
+
+
+Attempting to start NetApp MetroCluster Tiebreaker software services
+Started NetApp MetroCluster Tiebreaker software services
+Successfully upgraded NetApp MetroCluster Tiebreaker software to version 1.7.
+Cleaning up / removing...
+   2:NetApp-MetroCluster-Tiebreaker-So################################# [100%]
+----
+=====
+
+-- 
+====
+
+
+
+// 2025 March 26, ONTAPDOC-2905
+// 2024 Sep 12, ONTAPDOC-2244
+// 2024 Apr 23, ONTAPDOC-1752, ONTAPDOC-1753
