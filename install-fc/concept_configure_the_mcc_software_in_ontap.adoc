@@ -2445,22 +2445,15 @@ node_A_1 SVM 4 snmpv3user     snmp        usm                   10.10.10.13
 ====
 .Brocade switches (FOS 9.0 and later)
 --
-`snmpconfig --add snmpv3`
+`snmpconfig --add snmpv3 -index <index> -user <user_name> -groupname <rw/ro> -auth_proto <auth_protocol> -auth_passwd <auth_password> -priv_proto <priv_protocol> -priv_passwd <priv_password>`
 --
 .Brocade switches (FOS 8.x and earlier)
 --
 
 `snmpconfig --set snmpv3`
 
---
-.Cisco switches
---
-`snmp-server user <user_name>  auth [md5/sha/sha-256] <auth_password> priv (aes-128) <priv_password>`
---
-====
-+
-If you require RO access, after "User (ro):" specify the "snmpv3user". The following example uses Brocade switches running 8.x and earlier:
-+
+If you require RO access, after "User (ro):" specify the "snmpv3user". 
+
 ----
 Switch-A1:admin> snmpconfig --set snmpv3
 SNMP Informs Enabled (true, t, false, f): [false] true
@@ -2473,10 +2466,17 @@ User (ro): [snmpuser2] snmpv3user
 Auth Protocol [MD5(1)/SHA(2)/noAuth(3)]: (1..3) [2]
 Priv Protocol [DES(1)/noPriv(2)/AES128(3)/AES256(4)]): (2..2) [3]
 ----
-+
+
 The example shows how to configure a read-only user. You can adjust the RW users if needed.
+
+--
+.Cisco switches
+--
+`snmp-server user <user_name>  auth [md5/sha/sha-256] <auth_password> priv (aes-128) <priv_password>`
+--
+====
 +
-You should also set passwords on unused accounts to secure them and use the best encryption available in your ONTAP release.
+NOTE: You should also set passwords on unused accounts to secure them and use the best encryption available in your ONTAP release.
 
 . Configure encryption and passwords on the remaining switch users as required on your site.
 
