@@ -157,7 +157,7 @@ These steps need to be performed for both nodes in the HA pair at each site.
 +
 `storage aggregate plex delete -aggregate <root_aggr_name> -plex <plex_from_previous_step>`
 
-.. Capture a list of remote disks owned by the nodes in the DR group.
+.. Identify the remote disks owned by the nodes in the DR group.
 +
 The commands you use depend on whether you are using partitioned/shared disks or whole disks:
 +
@@ -195,17 +195,17 @@ The commands you use depend on whether you are using partitioned/shared disks or
 +
 `run -node <node_name>`
 +
-... Display the spare disks:
+... Identify the pool1 disks:
 +
 `aggr status -s` 
 +
 All spare disks are displayed, including the pool0 and pool1 spare disks owned by the node.
 
-... Remove disk ownership for each Pool1 spare disk:
+... Remove disk ownership for each pool1 spare disk:
 +
 `disk remove_ownership <disk_name>`
 +
-For partitioned disks, after removing partition ownership, remove the container disk ownership.
+For partitioned disks, remove partition ownership and then remove the container disk ownership.
 
 . If in a MetroCluster IP configuration, remove the MetroCluster connections on the nodes of the old DR group.
 +
