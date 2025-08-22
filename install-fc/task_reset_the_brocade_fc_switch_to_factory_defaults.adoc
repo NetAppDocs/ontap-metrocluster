@@ -104,23 +104,15 @@ FC_switch_A_1:admin> portcfgdefault <port number>
 +
 You must complete this step for each port.
 
-. Verify that the switch is using the dynamic Port on Demand (POD) method.
+. If you are running a version earlier than FOS 9.0, verify that the switch is using the dynamic Port on Demand (POD) method.
 +
-NOTE: For Brocade Fabric OS versions before 8.0, you run the following commands as admin, and for versions 8.0 and later, you run them as root.
-
+NOTE: In Fabric OS 9.0 and later, the license method is dynamic by default. The static license method is not supported.
++
+For Brocade Fabric OS versions before 8.0, you run the following commands as admin, and for versions 8.0 and later, you run them as root.
++  
 .. Run the license command:
 +
-[role="tabbed-block"]
-====
-.For Fabric OS 8.2.x and earlier
---
-Run the command `licenseport --show`.
---
-.For Fabric OS 9.0 and later
---
-Run the command `license --show -port`.
---
-====
+`licenseport --show`.
 +
 ----
 FC_switch_A_1:admin> license --show -port
@@ -138,17 +130,7 @@ FC_switch_A_1:admin> rootaccess --set consoleonly
 
 .. Run the license command:
 +
-[role="tabbed-block"]
-====
-.For Fabric OS 8.2.x and earlier
---
-Run the command `licenseport --show`.
---
-.For Fabric OS 9.0 and later
---
-Run the command `license --show -port`.
---
-====
+`licenseport --show`.
 +
 ----
 FC_switch_A_1:root> license --show -port
@@ -166,8 +148,7 @@ FC_switch_A_1:admin> licenseport --method dynamic
 The POD method has been changed to dynamic.
 Please reboot the switch now for this change to take effect
 ----
-+
-NOTE: In Fabric OS 9.0 and later, the license method is dynamic by default. The static license method is not supported. 
+
 
 . Reboot the switch:
 +
@@ -192,5 +173,5 @@ You can set the IP address with the following command, if required:
 `ipAddrSet`
 
 
-
+// 2025 Aug 21, ONTAPDOC-2573
 // 2023 Jun 07, BURT 1411208
