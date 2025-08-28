@@ -707,19 +707,31 @@ Not applicable
 
 === Disk assignment on FAS50 systems with Flash Cache
 
-CAUTION: You cannot have both data and Flash Cache drives on the internal shelf.
+Beginning with ONTAP 9.18.1, Flash Cache is supported on FAS50 systems for MetroCluster IP configurations. 
+
+[CAUTION] 
+====
+* You cannot have data aggregates and the root aggregate with Flash Cache drives on the internal shelf.
+* Slots 0 and 23 are used for Flash Cache drives.
+====
 
 |===
 
 h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
 
-|
+.2+|
 Minimum recommended drives (per site)
+a|
+48 drives (external drives only, no internal drives)
+a|
+The drives on each external shelf are divided into two equal groups (halves). Each half-shelf is automatically assigned to a separate pool.
+a|
+Not applicable
 
-a| 48 drives (data on the external shelf and root aggregate on the internal drives)
+a| 36 drives (12 internal drives and 24 external drives – with the data aggregates on the external shelf and the root aggregate on the internal shelf)
 a| The internal drives are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are divided into four equal groups (quarters). Each quarter-shelf is automatically assigned to a separate pool. 
 
-*Note:* If you are using internal and external drives, you first need to install ONTAP and configure the local cluster with only the internal drives. You then manually connect the external shelf after you complete your installation or setup task. A minimum of 12 internal drives is required for the root aggregate. The root internal drives should be placed from slot 1. For example, for 12 internal drives, use slots 1-3, 6-8, 12-14, and 18-20. FlashCache drives should be placed in slot 0 and slot 23.
+*Note:* If you are using internal and external drives, you first need to install ONTAP and configure the local cluster with only the internal drives. You then manually connect the external shelf after you complete your installation or setup task. A minimum of 12 internal drives is required for the root aggregate. The root internal drives should be placed from slot 1. For example, for 12 internal drives, use slots 1-3, 6-8, 12-14, and 18-20. 
 
 a|
 Not applicable
@@ -736,7 +748,7 @@ Not applicable
 |===
 
 
-
+// 2025 Aug 28, ONTAPDOC-3042
 // 2024 Dec 09, ONTAPDOC-2349
 // 2024 Jun 19, GH issue 401
 // 2024 MAR 20, ONTAPDOC-1572
