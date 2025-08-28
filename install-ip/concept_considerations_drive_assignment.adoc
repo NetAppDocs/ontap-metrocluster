@@ -707,6 +707,8 @@ Not applicable
 
 === Disk assignment on FAS50 systems with Flash Cache
 
+CAUTION: You cannot have both data and Flash Cache drives on the internal shelf.
+
 |===
 
 h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
@@ -714,10 +716,10 @@ h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root
 |
 Minimum recommended drives (per site)
 
-a| 48 drives (data on the external shelf and root on the internal drives)
-a| The internal drives are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are divided into four equal groups (quarters). Each quarter-shelf is automatically assigned to a separate pool. You cannot have both data and Flash Cache drives on the internal shelf.
+a| 48 drives (data on the external shelf and root aggregate on the internal drives)
+a| The internal drives are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are divided into four equal groups (quarters). Each quarter-shelf is automatically assigned to a separate pool. 
 
-*Note:* If you are using internal and external drives, you first need to install ONTAP and configure the local cluster with only the internal drives. You then manually connect the external shelf after you complete your installation or setup task. A minimum of 12 internal drives is required for the root. The root internal drives should be placed from slot 1. For example, for 12 internal drives, use slots 1-3, 6-8, 12-14, and 18-20. 
+*Note:* If you are using internal and external drives, you first need to install ONTAP and configure the local cluster with only the internal drives. You then manually connect the external shelf after you complete your installation or setup task. A minimum of 12 internal drives is required for the root aggregate. The root internal drives should be placed from slot 1. For example, for 12 internal drives, use slots 1-3, 6-8, 12-14, and 18-20. FlashCache drives should be placed in slot 0 and slot 23.
 
 a|
 Not applicable
@@ -728,7 +730,6 @@ a|
 a|
 The drives are divided into four equal groups. Each quarter-shelf is automatically assigned to a separate pool.
 
-*Note:* FlashCache drives should be placed in slot 0 and slot 23.
 a|
 Not applicable
 
