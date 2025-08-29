@@ -135,8 +135,6 @@ NOTE: All disks in the disaster recovery group must use the same type of connect
 +
 https://hwu.netapp.com[NetApp Hardware Universe^]
 
-* A mix of IOM12 modules and IOM3 modules is not supported within the same storage stack. A mix of IOM12 modules and IOM6 modules is supported within the same storage stack if your system is running a supported version of ONTAP.
-
 [NOTE]
 ====
 In-band ACP is supported without additional cabling in the following shelves and FibreBridge 7500N or 7600N bridge:
@@ -410,18 +408,7 @@ You are prompted to restart the bridge.
 link:../maintain/index.html[Maintain MetroCluster Components]
 
 
-=== Cable disk shelves to the bridges
-
-You must use the correct FC-to-SAS bridges for cabling your disk shelves.
-
-.Choices
-
-* <<cabling_fb_7600N_7500N_with_iom12,Cable a FibreBridge 7600N or 7500N bridge with disk shelves using IOM12 modules>>
-
-* <<cabling_fb_7600N_7500N_with_iom6_iom3,Cable a FibreBridge 7600N or 7500N bridge with disk shelves using IOM6 or IOM3 modules>>
-
-[[cabling_fb_7600N_7500N_with_iom12]]
-==== Cable a FibreBridge 7600N or 7500N bridge with disk shelves using IOM12 modules
+=== Cable a FibreBridge 7600N or 7500N bridge with disk shelves using IOM12 modules
 
 After configuring the bridge, you can start cabling your new system.
 
@@ -445,7 +432,7 @@ The _Installation and Service Guide_ for your disk shelf model provides detailed
 . Cable disk shelves to the FibreBridge bridges.
 .. For the first stack of disk shelves, cable IOM A of the first shelf to SAS port A on FibreBridge A, and cable IOM B of the last shelf to SAS port A on FibreBridge B.
 .. For additional shelf stacks, repeat the previous step using the next available SAS port on the FibreBridge bridges, using port B for the second stack, port C for the third stack, and port D for the fourth stack.
-.. During cabling, attach the stacks based on IOM12 and IOM3/IOM6 modules to the same bridge as long as they are connected to separate SAS ports.
+.. During cabling, attach the stacks based on IOM12 modules to the same bridge as long as they are connected to separate SAS ports.
 +
 --
 
@@ -455,41 +442,6 @@ The following illustration shows disk shelves connected to a pair of FibreBridge
 
 image::../media/mcc_cabling_bridge_and_sas3_stack_with_7500n_and_multiple_stacks.gif[]
 --
-
-[[cabling_fb_7600N_7500N_with_iom6_iom3]]
-==== Cable a FibreBridge 7600N or 7500N bridge with shelves using IOM6 or IOM3 modules
-
-After configuring the bridge, you can start cabling your new system. The FibreBridge 7600N or 7500N bridge uses mini-SAS connectors and supports shelves that use IOM6 or IOM3 modules.
-
-.About this task
-
-IOM3 modules are not supported with FibreBridge 7600N bridges.
-
-For disk shelves, you insert a SAS cable connector with the pull tab oriented down (on the underside of the connector).
-
-.Steps
-
-. Daisy-chain the shelves in each stack.
-+
---
-
-.. For the first stack of shelves, cable IOM A square port of the first shelf to SAS port A on FibreBridge A.
-.. For the first stack of shelves, cable IOM B circle port of the last shelf to SAS port A on FibreBridge B.
-
-The _Installation and Service Guide_ for your shelf model provides detailed information about daisy-chaining shelves.
-
-https://library.netapp.com/ecm/ecm_download_file/ECMP1119629[SAS Disk Shelves Installation and Service Guide for DS4243, DS2246, DS4486, and DS4246^]
-
-The following illustration shows a set of bridges cabled to a stack of shelves:
-
-image::../media/mcc_cabling_bridge_and_sas_stack_with_7500n_and_single_stack.gif[]
---
-
-. For additional shelf stacks, repeat the previous steps using the next available SAS port on the FibreBridge bridges, using port B for a second stack, port C for a third stack, and port D for a fourth stack.
-+
-The following illustration shows four stacks connected to a pair of FibreBridge 7600N or 7500N bridges.
-+
-image::../media/mcc_cabling_bridge_and_sas_stack_with_7500n_four_stacks.gif[]
 
 === Verify bridge connectivity and cable the FC-to-SAS bridges to the controller FC ports
 
