@@ -31,9 +31,38 @@ CAUTION: Beginning with ONTAP 9.12.1, you can enable the MetroCluster automatic 
 
 .Steps
 
-. Add ONTAP Mediator to ONTAP:
+. Add ONTAP Mediator to ONTAP. The steps depend on whether you want to use an IPv4 or IPv6 address.
 +
-`metrocluster configuration-settings mediator add -mediator-address _ip-address-of-mediator-host_`
+NOTE: You must be running ONTAP 9.18.1 and ONTAP Mediator 1.11 to use IPv6 with ONTAP Mediator in a MetroCluster IP configuration.
++
+[role="tabbed-block"]
+====
+.Use IPv4
+--
+
+.. Run the following command to add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address>`
+--
+.Use IPv6
+--
+
+.. Run the following command on both clusters:
++
+`network options ipv6 modify -enabled true`
+
+
+.. Configure the node-mgmt IP address with IPv6 addresses on all four nodes.
+
+.. Add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ipv6_ip_address>`
+--
+====
+
+Beginning with ONTAP 9.18.1, IPv6 is supported in ONTAP Mediator 1.11. 
++
+
 +
 NOTE: You will be prompted for the username and password for the Mediator admin user account.
 
