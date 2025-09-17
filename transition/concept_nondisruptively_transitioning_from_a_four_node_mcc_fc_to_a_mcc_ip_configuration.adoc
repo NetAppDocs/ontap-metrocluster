@@ -31,11 +31,16 @@ If you have a two-node MetroCluster FC configuration, see link:concept_choosing_
 
 .Important information
 
-During the transition, refresh, and expansion procedures, you might add a new platform model to your MetroCluster configuration. At any stage during these procedures, if your existing MetroCluster configuration contains a platform that uses *shared cluster/HA ports*, you cannot add a platform that uses *shared MetroCluster/HA ports* to the configuration without upgrading your ONTAP version to ONTAP 9.15.1P11 or ONTAP 9.16.1P4 or later. 
+The following guidance is for an uncommon scenario where you need to add an older platform model (platforms released before ONTAP 9.15.1) to an existing MetroCluster configuration that contains a newer platform model (platforms released in ONTAP 9.15.1 or later). 
 
-Before you decide to use this procedure, review the information in the following table carefully. If your existing platform is listed in the first column, and the platform you want to add to the configuration is listed in the second column, all nodes in the configuration must be running ONTAP 9.15.1P11 or ONTAP 9.16.1P4 or later to support this procedure. 
+At any stage during the transition, refresh, and expansion procedures, if your existing MetroCluster configuration contains a platform that uses *shared cluster/HA ports* (platforms released in ONTAP 9.15.1 or later), you cannot add a platform that uses *shared MetroCluster/HA ports* (platforms released before ONTAP 9.15.1) without upgrading all nodes in the configuration to ONTAP 9.15.1P11 or ONTAP 9.16.1P4 or later. 
 
-CAUTION: If your combination is affected, all controllers must be running ONTAP 9.15.1P11 or ONTAP 9.16.1P4 or later in order to add the DR group. 
+[CAUTION] 
+====
+Adding an older platform model that uses *shared/MetroCluster HA ports* to a MetroCluster containing an newer platform model that uses *shared cluster/HA ports* is an uncommon scenario and most combinations are not affected. 
+==== 
+
+Use the following table to verify whether your combination is affected. If your existing platform is listed in the first column, and the platform you want to add to the configuration is listed in the second column, all nodes in the configuration must be running ONTAP 9.15.1P11 or ONTAP 9.16.1P4 or later to add the new DR group.
 
 [cols="20,20,20,20,20" options="header"]
 |===
