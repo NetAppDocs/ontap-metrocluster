@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: plan, metrocluster, ip, configuration, planning, require, hardware, software, clarity, conventions, component, documentation, naming, name, requirement, support, redundancy, switch, ontap, cluster, controller, module, gigabit, ethernet, adapter, pool, drive, drive, location, consideration, partial, populate, shelves, shelf, aff, a800, internal, iom12, iom, module, stack, four-node, raid-dp, raid4, AFF A800 internal drives
 summary: When planning your MetroCluster IP configuration, you must understand the required and supported hardware and software components. For convenience and clarity, you should also understand the naming conventions used for components in examples throughout the documentation.
 ---
-= Required MetroCluster IP components and naming conventions
+= Required MetroCluster IP configuration components and naming conventions
 :icons: font
 :imagesdir: ../media/
 
@@ -88,7 +88,13 @@ Onboard ports are built into the controller hardware (Slot 0) and can't be repla
 
 h| Platform model h| Required Gigabit Ethernet adapter h| Required slot for adapter h| Ports
 
-| AFF A900, ASA A900, and FAS9500 | X91146A | Slot 5, Slot 7 | e5b, e7b
+a| AFF A900, ASA A900, and FAS9500 
+a| X91146A 
+a| Slot 5, Slot 7 
+a| e5b, e7b
+
+*Note:* Ports e5a and e7a can only be used for intercluster LIFs. You cannot use these ports for a data LIF. 
+
 a|
 AFF A700 and FAS9000
 a|
@@ -214,7 +220,9 @@ In a minimum supported configuration, each pool has the following drive layout:
 
 In a minimum supported configuration, at least one shelf is needed per site.
 
-MetroCluster configurations support RAID-DP and RAID4.
+MetroCluster configurations support RAID-DP, RAID4, and RAID-TEC.
+
+NOTE: Beginning with ONTAP 9.4, MetroCluster IP configurations support new installations using automatic disk assignment and ADP (Advanced Drive Partitioning). Refer to link:../install-ip/concept_considerations_drive_assignment.html[Considerations for automatic drive assignment and ADP systems] for more information.
 
 == Drive location considerations for partially populated shelves
 
@@ -248,12 +256,10 @@ If this system is populated with 16 drives, they must be symmetrically distribut
 * Four drives in the third quarter: 12, 13, 14, 15
 * Four drives in the fourth quarter: 18, 19, 20, 21
 
-== Mixing IOM12 and IOM 6 modules in a stack
 
-Your version of ONTAP must support shelf mixing. Refer to the https://imt.netapp.com/matrix/[NetApp Interoperability Matrix Tool (IMT)^] to see if your version of ONTAP supports shelf mixing.
 
-For further details on shelf mixing, see https://docs.netapp.com/platstor/topic/com.netapp.doc.hw-ds-mix-hotadd/home.html[Hot-adding shelves with IOM12 modules to a stack of shelves with IOM6 modules^]
-
+// 2025 May 29, GH 473
+//2025 May 22, ONTAPDOC-1003
 // 2024 Dec 09, ONTAPDOC-2349
 // 2024 Dec 05, ONTAPDOC 2512
 // 2024 Nov 14, ONTAPDOC 2512

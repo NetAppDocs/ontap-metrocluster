@@ -249,7 +249,7 @@ After the site is powered off, you can begin maintenance work. The procedure is 
 
 . Verify that the cabling for all components is carefully recorded so that it can be correctly reconnected at the new location.
 
-. Physically relocate all the hardware, storage controllers, IP switches, FibreBridges, and storage shelves.
+. Physically relocate all the hardware, storage controllers, IP switches, and storage shelves.
 
 . Configure the ISL ports and verify the intersite connectivity.
 
@@ -291,16 +291,24 @@ CAUTION: Don't power up the shelves before you power up the controllers. This pr
 
 . Power on the shelves, allowing enough time for them to power on completely.
 
-. Verify that the storage is visible.
-.. Verify that the storage is visible from the surviving site. Bring the offline plexes back online to restart the resync operation and reestablish the SyncMirror.
-.. Verify that the local storage is visible from the node in Maintenance mode:
+. Verify that the storage is visible from maintenance mode.
+.. Boot into maintenance mode:
++
+`boot_ontap maint`
+.. Verify that the storage is visible from the surviving site. 
+.. Verify that the local storage is visible from the node in maintenance mode:
 +
 `disk show -v`
+
+. Halt the nodes:
++
+`halt`
 
 . Reestablish the MetroCluster configuration.
 +
 Follow the instructions in link:../disaster-recovery/task_recover_from_a_non_controller_failure_mcc_dr.html#verifying-that-your-system-is-ready-for-a-switchback[Verifying that your system is ready for a switchback] to perform healing and switchback operations according to your MetroCluster configuration.
 
+// 2025 June 05, ONTAPDOC-2894
 // 2025 Feb 13, ONTAPDOC-2534
 // 2024 May 03, ONTAPDOC-1854
 // BURT 1382414, 09 DEC 2021

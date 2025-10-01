@@ -88,25 +88,33 @@ Follow the steps in the section for your switch vendor:
  ** link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCFs]
 
 
-== Perform system prechecks 
+== Start the controller replacement operation 
 
-Before the prechecks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, or if prechecks fail or you choose not to proceed with the upgrade, you must manually link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[re-configure the ONTAP Mediator service].
+When you start the automated controller replacement operation, the operation issues a series of prechecks and then pauses so that you can manually collect the configuration related information.
+
+.About this task
+
+Before the MetroCluster checks start, if ONTAP Mediator is installed, it is automatically detected and removed. To confirm the removal, you are prompted to enter a username and password. When you complete the upgrade, if prechecks fail, or you choose not to proceed with the upgrade, you must manually link:../install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html[re-configure the ONTAP Mediator service].
 
 At any stage during the upgrade, you can run the `system controller replace show` or `system controller replace show-details` command from site A to check the status. If the commands return a blank output, wait for a few minutes and rerun the command.
 
 .Steps
 
-. Start the automated controller replacement procedure from site A to replace the controllers at site B:
+. Run the following command from site A to replace the controllers at site B:
 +
 `system controller replace start -nso true`
 +
-The automated operation executes the prechecks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
-+
-[NOTE]
+[NOTE] 
 ====
-* If you do not run the `system controller replace start -nso true` command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
-
-* The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes are booted up. To bring the cluster back to a healthy state, you need to follow the manual recovery procedure.
+* If you don't use the `-nso true` parameter in the command, the controller upgrade procedure chooses NSO based automated switchover and switchback as the default procedure on MetroCluster IP systems.
+* If you're repeating the procedure at one site, after already replacing the controllers at the other site, an error occurs due to a mismatch between the nodes at each site. This is the expected behavior when there are different platform models on both sites. 
++
+If only the mismatch error is returned, you can use the `-skip-metrocluster-check true` option with the `system controller replace start` command to skip the MetroCluster checks.
+====
++
+The automated operation executes the checks. If no issues are found, the operation pauses so you can manually collect the configuration related information.
++
+The current source system and all compatible target systems are displayed. If you have replaced the source controller with a controller that has a different ONTAP version or a non-compatible platform, the automation operation halts and reports an error after the new nodes boot. To bring the cluster back to a healthy state, follow the manual recovery procedure.
 +
 The `system controller replace start` command might report the following precheck error:
 +
@@ -118,10 +126,9 @@ Node-A-1    Failed         MetroCluster check failed. Reason : MCC check showed 
 ----
 +
 Check if this error occurred because you have unmirrored aggregates or due to another aggregate issue. Verify that all mirrored aggregates are healthy and not degraded or mirror-degraded. If this error is due to unmirrored aggregates only, you can override this error by selecting the `-skip-metrocluster-check true` option on the `system controller replace start` command. If remote storage is accessible, the unmirrored aggregates come online after switchover. If the remote storage link fails, the unmirrored aggregates fail to come online.
-====
+
 
 .	Manually collect the configuration information by logging in at site B and following the commands listed in the console message under the `system controller replace show` or `system controller replace show-details` command.
-
 
 == Gather information before the upgrade
 
@@ -255,4 +262,5 @@ Refer to the documentation for the application.
 .What's next?
 link:upgrade-mcc-ip-system-controller-replace-prepare-network-configuration.html[Prepare the network configuration of the old controllers].
 
+// 2025 Apr 24, ONTAPDOC-2651
 // 2024 Nov 12, ONTAPDOC-2351

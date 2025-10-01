@@ -2,14 +2,14 @@
 permalink: install-fc/concept_configure_the_mcc_software_in_ontap.html
 sidebar: sidebar
 keywords: configure, configuring, metrocluster, software, ontap
-summary: 'You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites. The steps for systems with native disk shelves are slightly different from those for systems with array LUNs.'
+summary: 'You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites.'
 ---
 = Configuring the MetroCluster software in ONTAP
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites. The steps for systems with native disk shelves are slightly different from those for systems with array LUNs.
+You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites. 
 
 image::../media/workflow_high_level_node_and_cluster_configuration_software.gif[]
 
@@ -2025,9 +2025,9 @@ link:https://docs.netapp.com/us-en/ontap/volumes/index.html[Logical storage mana
 
 You must create a mirrored data aggregate on each node in the DR group.
 
-* You should know what drives or array LUNs will be used in the new aggregate.
+* You should know what drives will be used in the new aggregate.
 * If you have multiple drive types in your system (heterogeneous storage), you should understand how you can ensure that the correct drive type is selected.
-* Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
+* Drives are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
 See link:https://docs.netapp.com/us-en/ontap/disks-aggregates/index.html[Disk and aggregate management^].
 
@@ -2045,7 +2045,7 @@ If you are logged in to the cluster on the cluster management interface, you can
 You can specify the following options:
 
 * Aggregate's home node (that is, the node that owns the aggregate in normal operation)
-* List of specific drives or array LUNs that are to be added to the aggregate
+* List of specific drives that are to be added to the aggregate
 * Number of drives to include
 
 NOTE: In the minimum-supported configuration, in which a limited number of drives are available, you must use the `force-small-aggregate` option to allow the creation of a three disk RAID-DP aggregate.
@@ -2055,7 +2055,7 @@ NOTE: In the minimum-supported configuration, in which a limited number of drive
 * Size of drives to use
 * Drive speed to use
 * RAID type for RAID groups on the aggregate
-* Maximum number of drives or array LUNs that can be included in a RAID group
+* Maximum number of drives that can be included in a RAID group
 * Whether drives with different RPM are allowed
 --
 
@@ -2083,12 +2083,12 @@ You can optionally create unmirrored data aggregates for data that does not requ
 
 .Before you begin
 
-* You should know what drives or array LUNs will be used in the new aggregate.
+* Verify that you know what drives will be used in the new aggregate.
 * If you have multiple drive types in your system (heterogeneous storage), you should understand how you can verify that the correct drive type is selected.
 
 IMPORTANT: In MetroCluster FC configurations, the unmirrored aggregates will only be online after a switchover if the remote disks in the aggregate are accessible. If the ISLs fail, the local node may be unable to access the data in the unmirrored remote disks. The failure of an aggregate can lead to a reboot of the local node.
 
-* Drives and array LUNs are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
+* Drives are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 
 NOTE: The unmirrored aggregates must be local to the node owning them.
 
@@ -2112,14 +2112,14 @@ If you are logged in to the cluster on the cluster management interface, you can
 You can specify the following options:
 
  ** Aggregate's home node (that is, the node that owns the aggregate in normal operation)
- ** List of specific drives or array LUNs that are to be added to the aggregate
+ ** List of specific drives that are to be added to the aggregate
  ** Number of drives to include
  ** Checksum style to use for the aggregate
  ** Type of drives to use
  ** Size of drives to use
  ** Drive speed to use
  ** RAID type for RAID groups on the aggregate
- ** Maximum number of drives or array LUNs that can be included in a RAID group
+ ** Maximum number of drives that can be included in a RAID group
  ** Whether drives with different RPM are allowed
 
 For more information about these options, see the storage aggregate create man page.
@@ -2387,6 +2387,8 @@ Controller_A_1::> security login create -user-or-group-name snmpv3user -applicat
 
 . Respond to the following prompts as required at your site:
 +
+NOTE: For EngineID, press *ENTER* to assign the default value.
++
 ----
 
 Enter the authoritative entity's EngineID [remote EngineID]:
@@ -2441,18 +2443,17 @@ node_A_1 SVM 4 snmpv3user     snmp        usm                   10.10.10.13
 +
 [role="tabbed-block"]
 ====
-.Brocade switches
+.Brocade switches (FOS 9.0 and later)
 --
+`snmpconfig --add snmpv3 -index <index> -user <user_name> -groupname <rw/ro> -auth_proto <auth_protocol> -auth_passwd <auth_password> -priv_proto <priv_protocol> -priv_passwd <priv_password>`
+--
+.Brocade switches (FOS 8.x and earlier)
+--
+
 `snmpconfig --set snmpv3`
---
-.Cisco switches
---
-`snmp-server user <user_name>  auth [md5/sha/sha-256] <auth_password> priv (aes-128) <priv_password>`
---
-====
-+
-If you require RO access, after "User (ro):" specify the "snmpv3user". The following example uses Brocade switches:
-+
+
+The example shows how to configure a read-only user. You can adjust the RW users if needed. If you require RO access, after "User (ro):" specify the "snmpv3user". 
+
 ----
 Switch-A1:admin> snmpconfig --set snmpv3
 SNMP Informs Enabled (true, t, false, f): [false] true
@@ -2465,10 +2466,15 @@ User (ro): [snmpuser2] snmpv3user
 Auth Protocol [MD5(1)/SHA(2)/noAuth(3)]: (1..3) [2]
 Priv Protocol [DES(1)/noPriv(2)/AES128(3)/AES256(4)]): (2..2) [3]
 ----
+
+--
+.Cisco switches
+--
+`snmp-server user <user_name>  auth [md5/sha/sha-256] <auth_password> priv (aes-128) <priv_password>`
+--
+====
 +
-The example shows how to configure a read-only user. You can adjust the RW users if needed.
-+
-You should also set passwords on unused accounts to secure them and use the best encryption available in your ONTAP release.
+NOTE: You should also set passwords on unused accounts to secure them and use the best encryption available in your ONTAP release.
 
 . Configure encryption and passwords on the remaining switch users as required on your site.
 
@@ -2866,6 +2872,7 @@ You can provide additional protection for the cluster configuration backup files
 +
 The https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[Cluster Management with the CLI] contains additional information under the section _Managing configuration backups_.
 
+// 2025 Aug 21, ONTAPDOC-2573
 // 2024 Dec 16, ONTAPDOC-2525
 // 2024 Jul 17, ONTAPDOC-1958
 // 2024 May 15, GH issue 333, ONTAPDOC-1866
@@ -2874,4 +2881,4 @@ The https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html[Cl
 // 2030-FEB-14, GH issue 138
 // 2023-MAR-20, internal GH issue 221
 // 2023-MAR-14, BURT 1533609
-
+// 2025-MAY-29, ONTAPDOC-2742 - yos
