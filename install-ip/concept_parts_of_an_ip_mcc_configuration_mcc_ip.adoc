@@ -33,7 +33,7 @@ This is the same cluster switch functionality used in non-MetroCluster switched 
 +
 The cluster peering network provides connectivity for mirroring of the cluster configuration, which includes storage virtual machine (SVM) configuration. The configuration of all of the SVMs on one cluster is mirrored to the partner cluster.
 
-image::../media/mcc_ip_hardware_architecture_mcc_ip.gif[]
+image::../media/mcc_ip_hardware_architecture_mcc_ip.gif["MetroCluster IP hardware architecture"]
 
 == Disaster Recovery (DR) groups
 
@@ -41,7 +41,7 @@ A MetroCluster IP configuration consists of one DR group of four nodes.
 
 The following illustration shows the organization of nodes in a four-node MetroCluster configuration:
 
-image::../media/mcc_dr_groups_4_node.gif[]
+image::../media/mcc_dr_groups_4_node.gif["MetroCluster DR groups in a four node configuration"]
 
 == Illustration of the local HA pairs in a MetroCluster configuration
 
@@ -49,7 +49,7 @@ Each MetroCluster site consists of storage controllers configured as an HA pair.
 
 Local HA failover and giveback operations are performed with the storage failover commands, in the same manner as a non-MetroCluster configuration.
 
-image::../media/mcc_ip_hardware_architecture_ha_pairs.gif[]
+image::../media/mcc_ip_hardware_architecture_ha_pairs.gif["MetroCluster IP hardware architecture HA pairs"]
 
 .Related information
 
@@ -59,7 +59,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-concepts/home.html[O
 
 ONTAP clusters typically include a cluster interconnect network for traffic between the nodes in the cluster. In MetroCluster IP configurations, this network is also used for carrying data replication traffic between the MetroCluster sites.
 
-image::../media/mcc_ip_hardware_architecture_ip_interconnect.png[]
+image::../media/mcc_ip_hardware_architecture_ip_interconnect.png["MetroCluster IP hardware architecture IP interconnect"]
 
 Each node in the MetroCluster IP configuration has dedicated interfaces for connection to the back-end IP network:
 
@@ -68,7 +68,7 @@ Each node in the MetroCluster IP configuration has dedicated interfaces for conn
 
 The following illustration shows these interfaces. The port usage shown is for an AFF A700 or FAS9000 system.
 
-image::../media/mcc_ip_lif_usage.gif[]
+image::../media/mcc_ip_lif_usage.gif["MetroCluster IP LIF usage"]
 
 .Related information
 
@@ -80,7 +80,7 @@ The two clusters in the MetroCluster configuration are peered through a customer
 
 Intercluster LIFs must be configured on each node in the MetroCluster configuration, and the clusters must be configured for peering. The ports with the intercluster LIFs are connected to the customer-provided cluster peering network. Replication of the SVM configuration is carried out over this network through the Configuration Replication Service.
 
-image::../media/mcc_ip_hardware_architecture_cluster_peering_network.gif[]
+image::../media/mcc_ip_hardware_architecture_cluster_peering_network.gif["MetroCluster IP hardware architecture cluster peering network"]
 
 .Related information
 
