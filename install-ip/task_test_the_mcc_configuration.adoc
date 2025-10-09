@@ -17,7 +17,7 @@ You can test the negotiated (planned) switchover operation to confirm uninterrup
 
 .About this task
 
-This test validates that data availability is not affected (except for Microsoft Server Message Block (SMB) and Solaris Fibre Channel protocols) by switching the cluster over to the second data center.
+This test validates that data availability is not affected (except for SMB and Fibre Channel protocols) by switching the cluster over to the second data center.
 
 This test should take about 30 minutes.
 
@@ -81,8 +81,6 @@ Remote: cluster_B               not-reachable          -
 `metrocluster operation show`
 +
 ----
-cluster_A::>  metrocluster operation show
-
 cluster_A::> metrocluster operation show
   Operation: switchover
       State: successful
@@ -149,7 +147,7 @@ Group Cluster Node               State          Mirroring Mode
               node_A_1         configured     enabled   heal roots completed
       cluster_B
               node_B_2         unreachable    -         switched over
-42 entries were displayed.metrocluster operation show
+42 entries were displayed.
 ----
 +
 If the automatic healing operation fails for any reason, you must issue the `metrocluster heal` commands manually as done in ONTAP versions prior to ONTAP 9.5. You can use the `metrocluster operation show` and `metrocluster operation history show -instance` commands to monitor the status of healing and determine the cause of a failure.
@@ -622,4 +620,5 @@ node_A_2_root
                                                                    resyncing
 ----
 
+// 2025 Oct 09, ONTAPDOC-3315, ONTAPDOC-3313
 // GH issue 156, July 4th 2022
