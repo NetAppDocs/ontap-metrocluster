@@ -15,7 +15,7 @@ You can test failure scenarios to confirm the correct operation of the MetroClus
 
 You can test a negotiated (planned) switchover operation to confirm uninterrupted data availability.
 
-This test validates that data availability is not affected (except for Microsoft Server Message Block (SMB) and Solaris Fibre Channel protocols) by switching the cluster over to the second data center.
+This test validates that data availability is not affected (except for SMB and Fibre Channel protocols) by switching the cluster over to the second data center.
 
 This test should take about 30 minutes.
 
@@ -78,8 +78,6 @@ Remote: cluster_B               not-reachable          -
 `metrocluster operation show`
 +
 ----
-cluster_A::>  metrocluster operation show
-
 cluster_A::> metrocluster operation show
   Operation: switchover
       State: successful
@@ -114,7 +112,7 @@ Group Cluster Node               State          Mirroring Mode
               node_A_1         configured     enabled   heal roots completed
       cluster_B
               node_B_2         unreachable    -         switched over
-42 entries were displayed.metrocluster operation show
+42 entries were displayed.
 ----
 
 . Verify that all aggregates are `mirrored`:
@@ -624,4 +622,5 @@ node_A_2_root
                                                                    resyncing
 ----
 
+// 2025 Oct 09, ONTAPDOC-3315, ONTAPDOC-3313
 // BURT 1448684, 20 JAN 2022
