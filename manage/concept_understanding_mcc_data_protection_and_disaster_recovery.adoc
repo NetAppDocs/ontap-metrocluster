@@ -27,7 +27,7 @@ The two clusters in the peered network provide bidirectional disaster recovery, 
 
 The following illustration shows a MetroCluster FC configuration. The HA functionality is the same in MetroCluster IP configurations, except that the HA interconnect is provided by the cluster switches.
 
-image::../media/mcc_hw_architecture_local_ha.gif[]
+image::../media/mcc_hw_architecture_local_ha.gif["Local HA in a MetroCluster configuration"]
 
 .Related information
 
@@ -69,11 +69,11 @@ In a successful switchover from cluster B to cluster A, SVM_cluster_B is stopped
 +
 In a successful switchover from cluster A to cluster B, SVM_cluster_A is stopped and SVM_cluster_A-mc is activated and begins serving data from cluster B.
 
-image::../media/mcc_mirroring_of_svms.gif[]
+image::../media/mcc_mirroring_of_svms.gif["MetroCluster mirroring of SVMs"]
 
 If a switchover occurs, the remote plex on the surviving cluster comes online and the secondary SVM begins serving the data.
 
-image::../media/mcc_svms_after_switchover.gif[]
+image::../media/mcc_svms_after_switchover.gif["MetroCluster SVMs after switchover"]
 
 The availability of remote plexes after switchover depends on the MetroCluster configuration type:
 
@@ -143,7 +143,7 @@ The following illustration shows how disk pools are mirrored between the partner
 
 IMPORTANT: If hybrid aggregates are used, performance degradation can occur after a SyncMirror plex has failed due to the solid-state disk (SSD) layer filling up.
 
-image::../media/mcc_mirroring_of_pools.gif[]
+image::../media/mcc_mirroring_of_pools.gif["MetroCluster mirroring of storage pools"]
 
 === How NVRAM or NVMEM cache mirroring and dynamic mirroring work in MetroCluster configurations
 
@@ -159,10 +159,10 @@ In a four-node MetroCluster configuration, the nonvolatile cache of each storage
 h| In a MetroCluster configuration h| In a non-MetroCluster HA pair
 
 a|
-image:../media/mcc_nvram_quartering.gif[]
+image:../media/mcc_nvram_quartering.gif["Nonvolatile cache quartering in MetroCluster configuration"]
 
 a|
-image:../media/mcc_nvram_split_in_non_mcc_ha_pair.gif[]
+image:../media/mcc_nvram_split_in_non_mcc_ha_pair.gif["Nonvolatile cache split in non-MetroCluster HA pair"]
 
 |===
 
@@ -185,7 +185,7 @@ In a two-node MetroCluster configuration, there is no DR auxiliary partner parti
 
 For example, the local cache of a node (node_A_1) is mirrored both locally and remotely at the MetroCluster sites. The following illustration shows that the local cache of node_A_1 is mirrored to the HA partner (node_A_2) and DR partner (node_B_1):
 
-image::../media/mcc_nvram_mirroring_example.gif[]
+image::../media/mcc_nvram_mirroring_example.gif["MetroCluster NVRAM mirroring example"]
 
 ==== Dynamic mirroring in event of a local HA takeover
 
@@ -193,7 +193,7 @@ If a local HA takeover occurs in a four-node MetroCluster configuration, the tak
 
 For example, node_B_1 fails and is taken over by node_B_2. The local cache of node_A_1 can no longer be mirrored to node_B_1. The mirroring switches to the DR auxiliary partner, node_B_2.
 
-image::../media/mcc_nvram_mirroring_example_dynamic_dr_aux.gif[]
+image::../media/mcc_nvram_mirroring_example_dynamic_dr_aux.gif["MetroCluster NVRAM mirroring with DR auxiliary"]
 
 == Types of disasters and recovery methods
 
@@ -470,7 +470,7 @@ ID of the original owner of the disk within the MetroCluster configuration.
 
 The following illustration and table provide an example of how ownership changes, for a disk in node_A_1's disk pool1, physically located in cluster_B.
 
-image::../media/mcc_disk_ownership.gif[]
+image::../media/mcc_disk_ownership.gif["MetroCluster disk ownership"]
 
 |===
 
@@ -693,7 +693,7 @@ This feature applies to MetroCluster IP configurations running ONTAP 9.5 and lat
 
 The manual healing commands are still required on MetroCluster IP configurations running ONTAP 9.4 and earlier.
 
-image::../media/mcc_so_sb_with_autoheal.gif[]
+image::../media/mcc_so_sb_with_autoheal.gif["MetroCluster switchover and switchback with autoheal"]
 
 === Automatic healing after unscheduled switchover (beginning with ONTAP 9.6)
 
@@ -715,7 +715,7 @@ If the disaster sites remained up, they are immediately moved to the "`Waiting f
 +
 You can confirm the status of the disaster site nodes, and that healing operations succeeded, by using the `metrocluster operation show` command.
 
-image::../media/mcc_uso_with_autoheal.gif[]
+image::../media/mcc_uso_with_autoheal.gif["MetroCluster unscheduled switchover with autoheal"]
 
 === If automatic healing fails
 

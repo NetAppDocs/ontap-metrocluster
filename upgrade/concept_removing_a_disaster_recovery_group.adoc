@@ -4,26 +4,14 @@ sidebar: sidebar
 keywords:
 summary: 'Beginning with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.'
 ---
-= Removing a Disaster Recovery group
+= Remove a DR group from a MetroCluster configuration
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-Beginning with ONTAP 9.8, you can remove a DR group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.
+Beginning with ONTAP 9.8, you can remove a disaster recovery (DR) group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.
 
-This procedure is supported on ONTAP 9.8 and later. For systems running ONTAP 9.7 or earlier, see the Knowledge Base article
-
-link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/How_to_remove_a_DR-Group_from_a_MetroCluster[How to remove a DR group from a MetroCluster configuration]
-
-https://mysupport.netapp.com/site/global/dashboard[NetApp Support]
-
-An eight-node configuration includes eight-nodes organized as two four-node DR groups.
-
-image::../media/mcc_dr_groups_8_node.gif[]
-
-By removing a DR Group, four nodes remain in the configuration.
-
-image::../media/mcc_dr_groups_4_node.gif[]
+NOTE: You use these steps during the transition and system refresh workflows. 
 
 == Enable console logging
 
@@ -31,7 +19,19 @@ include::../_include/console-logging.adoc[]
 
 // 2024 Aug 13, ONTAPDOC-1988
 
-== Removing the DR group nodes from each cluster
+== Remove the DR group nodes from each cluster
+
+This procedure is supported beginning with ONTAP 9.8. For systems running ONTAP 9.7 or earlier, see the Knowledge Base article: link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/How_to_remove_a_DR-Group_from_a_MetroCluster[How to remove a DR group from a MetroCluster configuration^].
+
+.About this task
+
+An eight-node configuration includes eight-nodes organized as two four-node DR groups.
+
+image::../media/mcc_dr_groups_8_node.gif["MetroCluster configuration with eight nodes in two DR groups"]
+
+When you remove a DR group, four nodes remain in the configuration.
+
+image::../media/mcc_dr_groups_4_node.gif["MetroCluster configuration with four nodes after DR group removal"]
 
 .Before you begin
 
@@ -40,12 +40,12 @@ include::../_include/console-logging.adoc[]
 
 .Steps
 
-. Prepare for the removal of the DR group, if you haven't already.
+. Prepare to remove the DR group if you have not already.
  .. Move all data volumes to another DR group.
- .. If the DR group to be removed contains load-sharing mirror volumes, they cannot be moved.  Re-create all load-sharing mirror volumes in another DR group and then delete the load-sharing mirror volumes in the DR group to be removed.
+ .. If the DR group to be removed has load-sharing mirror volumes, re-create all load-sharing mirror volumes in another DR group and delete them from the DR group to be removed.
  .. Move all MDV_CRS metadata volumes to another DR group by following the link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_move_a_metadata_volume_in_mcc_configurations.html[Moving a metadata volume in MetroCluster configurations] procedure.
  .. Delete all MDV_aud metadata volumes that might exist in the DR group to be removed.
- .. Delete all data aggregates in the DR group to be removed as shown in the following example:
+ .. Delete all data aggregates in the DR group to be removed:
 +
 ----
 ClusterA::> storage aggregate show -node ClusterA-01, ClusterA-02 -fields aggregate ,node
@@ -56,25 +56,30 @@ ClusterB::> aggr delete -aggregate aggregate_name
 +
 NOTE: Root aggregates are not deleted.
 
- .. Move the data LIFs offline.
- `network interface modify -vserver _svm-name_ -lif _data-lif_ -status-admin down`
-
- .. Migrate all data LIFs to home nodes in another DR group.
+ .. Migrate all NAS data LIFs that you use for NFS and CIFS (SMB) to home nodes in another DR group.
  +
-`network interface show -home-node _old_node_`
+`network interface show -home-node <old_node>`
 +
-`network interface modify -vserver _svm-name_ -lif _data-lif_ -home-node _new_node_ -home-port _port-id_`
+`network interface migrate -vserver <svm_name> -lif <data_lif> -destination-node <new_node> -destination-port <port>`
 
- .. Move the data LIFs back online.
- `network interface modify -vserver _svm-name_ -lif _data-lif_ -status-admin up`
+ .. Move the data LIFs to the new home node in another DR group.
+ `network interface modify -vserver <svm-name> -lif <data-lif> -home-node <new_node> -home-port <port>`
 
  .. Migrate the cluster management LIF to a home node in another DR group.
 +
 `network interface show -role cluster-mgmt`
 +
-`network interface modify -vserver _svm-name_ -lif _cluster_mgmt_ -home-node _new_node_ -home-port _port-id_`
+`network interface modify -vserver <svm-name> -lif <cluster_mgmt> -home-node <new_node> -home-port <port-id>`
 +
-Node management and inter-cluster LIFs are not migrated.
+[NOTE]
+====
+* Node management and inter-cluster LIFs are not migrated. Create new node management and inter-cluster LIFs on nodes of the DR group as required.
+
+* You cannot migrate or move FCP interfaces used for block access (SAN) between the nodes. Create new FCP interfaces as needed.
+
+* iSCSI SAN LIFs need to be down before the home node and home port can be updated.
+====
+
 
 .. Transfer epsilon to a node in another DR group if required.
 +
@@ -101,6 +106,9 @@ ClusterB::*> set admin
 +
 The following example shows the removal of the DR group configuration on cluster_A.
 +
+.Example
+[%collapsible]
+=====
 ----
 cluster_A::*>
 
@@ -133,50 +141,143 @@ Do you want to continue? {y|n}: y
 
 cluster_A::*>
 ----
+=====
 . Repeat the previous step on the partner cluster.
-. If in a MetroCluster IP configuration, remove the MetroCluster connections on the nodes of the old DR group.
+
+
+. Disable storage failover on the nodes of the old DR group: 
 +
-These commands can be issued from either cluster and apply to the entire DR group spanning both the clusters.
+`storage failover modify -node <node-name> -enable false`
+
+. If you are in a MetroCluster IP configuration, perform the following steps to delete the remote plexes of the root aggregates and remove disk ownership on the nodes of the old DR group.
++
+These steps need to be performed for both nodes in the HA pair at each site.
++
+..  Display the remote plexes of root aggregates on the nodes in the DR group that is to be deleted:
++
+`storage aggregate plex show -aggregate <root_aggr_name> -pool 1`
+
+.. Delete the remote plexes:
++
+`storage aggregate plex delete -aggregate <root_aggr_name> -plex <plex_from_previous_step>`
+
+.. Identify the remote disks owned by the nodes in the DR group.
++
+The commands you use depend on whether you are using partitioned/shared disks or whole disks:
++
+NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify the node names in the DR group that is to be deleted.
++
+[role="tabbed-block"]
+====
+.Partitioned/shared disks:
+--
+... Set the privilege level to advanced:
++
+`set advanced`
+
+... Display the remote disks:
++
+`storage disk show -pool Pool1 -owner <node_names> -partition-ownership`
+--
+.Whole disks:
+--
+... Set the privilege level to advanced:
++
+`set advanced`
+
+... Display the remote disks:
++
+`storage disk show -pool Pool1 -owner <node_names>`
+--
+====
+
+.. Disable disk auto assignment:
++
+`disk option modify -node <node_names_in_the_DR_group_to_be_deleted>  -autoassign off`
+
+.. Remove ownership of pool1 disks on each DR group node to be deleted. Perform these steps on each node to be removed.
++
+... Go to the nodeshell:
++
+`run -node <node_name>`
++
+... Identify the pool1 disks:
++
+`aggr status -s` 
++
+All spare disks are displayed, including the pool0 and pool1 spare disks owned by the node.
+
+... Remove disk ownership for each pool1 spare disk:
++
+`disk remove_ownership <disk_name>`
++
+For partitioned disks, remove partition ownership and then remove the container disk ownership.
+
+. If you are in a MetroCluster IP configuration, remove the MetroCluster connections on the nodes of the old DR group.
++
+These commands can be issued from either cluster and apply to the entire DR group spanning both of the clusters.
 
 .. Disconnect the connections:
 +
-`metrocluster configuration-settings connection disconnect _dr-group-id_`
+`metrocluster configuration-settings connection disconnect -dr-group-id <dr_group_id>`
++
+.Example
++
+[%collapsible]
+=====
+----
+cluster_A::*> metrocluster configuration-settings connection disconnect -dr-group-id 1
+
+Warning: For the nodes in the DR group 1, this command will remove the existing connections that are used to mirror NV logs and access remote storage.
+Do you want to continue? {y|n}: y
+
+Warning: Before proceeding with disconnect, you must verify the following:
+      1. Unmirrored aggregates do not have disks in remote plexes.
+      2. Aggregates are not mirrored.
+      3. No disks are assigned in Pool1.
+      4. Storage failover is not enabled.
+      Follow the "MetroCluster Installation and Configuration guide" for detailed instructions to verify this.
+Do you want to continue? {y|n}: y
+----
+=====
 .. Delete the MetroCluster interfaces on the nodes of the old DR group:
 +
+NOTE: This step must be repeated on each node of the DR group.
++
 `metrocluster configuration-settings interface delete`
+
 .. Delete the old DR group's configuration.
  +
 `metrocluster configuration-settings dr-group delete`
 
 . Unjoin the nodes in the old DR group.
 +
-You must perform this step on each cluster.
+Perform this step on each cluster.
 
 .. Set the advanced privilege level:
 +
 `set -privilege advanced`
-.. Disable the storage failover:
-+
-`storage failover modify -node _node-name_ -enable false`
-// BURT 1419399, 2021-11-18
+
 .. Unjoin the node:
  +
-`cluster unjoin -node _node-name_`
+`cluster unjoin -node <node-name>`
 +
 Repeat this step for the other local node in the old DR group.
 
 .. Set the admin privilege level:
- +
++
 `set -privilege admin`
 
-. Re-enable cluster HA in the new DR group:
+. Check that cluster HA is enabled in the new DR group. If required, re-enable cluster HA:
 +
 `cluster ha modify -configured true`
 +
-You must perform this step on each cluster.
+Perform this step on each cluster.
 
 . Halt, power down, and remove the old controller modules and storage shelves.
 
+// 2025 Sept 16, ONTAPDOC-3201
 // 2022 SEPT 26 BURT 1501656
 // 2022-NOV-15 GitHub issue 232, 234 
 // 2024-02-13, GitHub issue 233
+// BURT 1419399, 2021-11-18
