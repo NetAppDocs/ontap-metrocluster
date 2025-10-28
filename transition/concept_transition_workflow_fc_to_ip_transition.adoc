@@ -18,45 +18,45 @@ You must follow the specific workflow to ensure a successful nondisruptive trans
 
 The transition process begins with a healthy four-node MetroCluster FC configuration.
 
-image::../media/transition_dr_group_1_fc_nodes.png[]
+image::../media/transition_dr_group_1_fc_nodes.png["Transition FC nodes in DR group 1"]
 
 The new MetroCluster IP nodes are added as a second DR group.
 
-image::../media/transition_dr_groups_fc_and_ip.png[]
+image::../media/transition_dr_groups_fc_and_ip.png["Transition DR group with both FC and IP nodes present"]
 
 Data is transferred from the old DR group to the new DR group, and then the old nodes and their storage are removed from the configuration and decommissioned. The process ends with a four-node MetroCluster IP configuration.
 
-image::../media/transition_dr_group_2_ip.png[]
+image::../media/transition_dr_group_2_ip.png["Transition DR group 2 IP nodes"]
 
 == Eight-node FC configuration transition workflow
 
 The transition process begins with a healthy eight-node MetroCluster FC configuration.
 
-image::../media/mcc_dr_group_c1.png[]
+image::../media/mcc_dr_group_c1.png["Eight-node MetroCluster FC configuration before transition"]
 
 
 The new MetroCluster IP nodes are added as a third DR group.
 
-image::../media/mcc_dr_group_c2.png[]
+image::../media/mcc_dr_group_c2.png["Eight-node configuration with IP nodes added as third DR group"]
 
 Data is transferred from DR_group_1-FC to DR_group_1-IP, and then the old nodes and their storage are removed from the configuration and decommissioned. 
 
 NOTE: If you want to transition from an eight-node FC configuration to a four-node IP configuration, you must transition all the data in DR_group_1-FC and DR_group_2-FC to the new IP DR group (DR_group_1-IP). You can then decommission both FC DR groups. After the FC DR groups have been removed, the process ends with a four-node MetroCluster IP configuration.
 
-image::../media/mcc_dr_group_c8.png[]
+image::../media/mcc_dr_group_c8.png["Eight-node configuration after first DR group transition"]
 
 Add the remaining MetroCluster IP nodes to the existing MetroCluster configuration. Repeat the process to transfer data from the DR_group_2-FC nodes to the DR_group_2-IP nodes.
 
-image::../media/mcc_dr_group_c7.png[]
+image::../media/mcc_dr_group_c7.png["Eight-node configuration with remaining IP nodes added"]
 
 After removing DR_group_2-FC, the process ends with an eight-node MetroCluster IP configuration.
 
-image::../media/mcc_dr_group_c6.png[] 
+image::../media/mcc_dr_group_c6.png["Eight-node MetroCluster IP configuration after transition"]
 
 == Transition process workflow
 
 You will use the following workflow to transition the MetroCluster configuration.
 
-image::../media/workflow_4n_transition_nondisruptive.png[]
+image::../media/workflow_4n_transition_nondisruptive.png["Workflow for nondisruptive four-node transition"]
 
 // 2023 APR 17, BURT 1544621
