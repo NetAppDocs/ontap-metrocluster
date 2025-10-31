@@ -206,6 +206,10 @@ NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for
 network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true
 ----
 
+. Bring all LIFs to their home port:
++
+`network interface revert -vserver * -lif *`
+
 . Optionally, move the NS224 shelves.
 +
 If you are reconfiguring a MetroCluster IP configuration that does not connect NS224 shelves to the MetroCluster IP switches, use the appropriate procedure to add or move the NS224 shelves:
