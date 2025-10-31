@@ -210,7 +210,13 @@ Do you want to use this configuration? {yes, no} [yes]: yes
 .. Join the second MetroCluster IP node (node_A_4-IP) to the existing MetroCluster FC configuration.
 
 . Repeat these steps to join node_B_3-IP and node_B_4-IP to cluster_B.
-. If you are using the Onboard Key Manager, refer to link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/enable-onboard-key-management-new-nodes-concept.html[Enable onboard key management in newly added nodes] to synchronize the key manager configuration for the new nodes.
+. If you are using the Onboard Key Manager, perform the following steps from the cluster where you've added a new node:
++
+.. Synchronize the key manager configuration:
++
+`security key-manager onboard sync`
+
+.. Enter the Onboard Key Manager passphrase when prompted.
 
 
 == Configuring intercluster LIFs, creating the MetroCluster interfaces, and mirroring root aggregates
