@@ -78,7 +78,7 @@ To enable seamless monitoring in Tiebreaker 1.6 or later, you need to import the
 * This task is required in Tiebreaker 1.6 or later. 
 * You perform this task after you have successfully added a MetroCluster configuration to Tiebreaker or if your certificates expire.
 
-.Step
+.Steps
 
 . Run the following command for each certificate you need to import (SSL server, intermediate, or root).
 +
@@ -95,6 +95,9 @@ The following example shows how to import a root certificate with the file name 
 /opt/netapp/java/bin/keytool -import -trustcacerts -file ssl_cert.crt -keystore "/opt/netapp/java/lib/security/cacerts" -alias ssl_cert
 ----
 
+. Restart the Tiebreaker software:
++
+`systemctl restart netapp-metrocluster-tiebreaker-software`
 
 == Commands for modifying MetroCluster Tiebreaker configurations
 
