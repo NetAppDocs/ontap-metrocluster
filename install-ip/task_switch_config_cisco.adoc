@@ -15,7 +15,221 @@ You must configure the Cisco IP switches for use as the cluster interconnect and
 
 Several of the procedures in this section are independent procedures and you only need to execute those you are directed to or are relevant to your task.
 
-== Resetting the Cisco IP switch to factory defaults
+== Migrate cluster LIFs before upgrading the switch firmware or RCF
+
+When you upgrade the switch firmware or reference configuration file (RCF), you migrate cluster LIFs to the partner switch to enable non-disruptive cluster operations during the upgrade. 
+
+.About this task
+
+* You must perform this task before you upgrade or downgrade switch firmware, or replace the switch reference configuration file (RCF).
+* The task requires you to use both ONTAP commands and switch commands; ONTAP commands are used unless otherwise indicated.
+* In this the examples in this procedure, IP_switch_B1 is being updated so you need to migrate the cluster LIFs to IP_switch_A1.
+
+.Steps
+
+. Display the cluster ports on each node that are connected to the cluster switches:
++
+`network device-discovery show`
++
+.Show example 
+[%collapsible]
+====
+[subs=+quotes]
+----
+cluster1::*> *network device-discovery show*
+Node/       Local  Discovered
+Protocol    Port   Device (LLDP: ChassisID)  Interface         Platform
+----------- ------ ------------------------- ----------------  --------
+cluster1-01/cdp
+            e0a    IP_switch_A1              Ethernet1/7       N3K-C3232C
+            e0d    IP_switch_B1              Ethernet1/7       N3K-C3232C
+cluster1-02/cdp
+            e0a    IP_switch_A1              Ethernet1/8       N3K-C3232C
+            e0d    IP_switch_B1              Ethernet1/8       N3K-C3232C
+cluster1-03/cdp
+            e0a    IP_switch_A1              Ethernet1/1/1     N3K-C3232C
+            e0b    IP_switch_B1              Ethernet1/1/1     N3K-C3232C
+cluster1-04/cdp
+            e0a    IP_switch_A1              Ethernet1/1/2     N3K-C3232C
+            e0b    IP_switch_B1              Ethernet1/1/2     N3K-C3232C
+cluster1::*>
+----
+====
+
+. Check the administrative and operational status of each cluster port.
+
+.. Verify that all the cluster ports are up with a healthy status:
++
+`network port show –role cluster`
++
+.Show example 
+[%collapsible]
+====
+[subs=+quotes]
+----
+cluster1::*> *network port show -role cluster*
+Node: cluster1-01
+                                                                       Ignore
+                                                  Speed(Mbps) Health   Health
+Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
+--------- ------------ ---------------- ---- ---- ----------- -------- ------
+e0a       Cluster      Cluster          up   9000  auto/100000 healthy false
+e0d       Cluster      Cluster          up   9000  auto/100000 healthy false
+Node: cluster1-02
+                                                                       Ignore
+                                                  Speed(Mbps) Health   Health
+Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
+--------- ------------ ---------------- ---- ---- ----------- -------- ------
+e0a       Cluster      Cluster          up   9000  auto/100000 healthy false
+e0d       Cluster      Cluster          up   9000  auto/100000 healthy false
+8 entries were displayed.
+Node: cluster1-03
+   Ignore
+                                                  Speed(Mbps) Health   Health
+Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
+--------- ------------ ---------------- ---- ---- ----------- -------- ------
+e0a       Cluster      Cluster          up   9000  auto/10000 healthy  false
+e0b       Cluster      Cluster          up   9000  auto/10000 healthy  false
+Node: cluster1-04
+                                                                       Ignore
+                                                  Speed(Mbps) Health   Health
+Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
+--------- ------------ ---------------- ---- ---- ----------- -------- ------
+e0a       Cluster      Cluster          up   9000  auto/10000 healthy  false
+e0b       Cluster      Cluster          up   9000  auto/10000 healthy  false
+cluster1::*>
+----
+====
+
+.. Verify that all the cluster interfaces (LIFs) are on the home port:
++
+`network interface show -role cluster`
++
+.Show example 
+[%collapsible]
+====
+[subs=+quotes]
+----
+cluster1::*> *network interface show -role cluster*
+            Logical            Status     Network           Current      Current Is
+Vserver     Interface          Admin/Oper Address/Mask      Node         Port    Home
+----------- ------------------ ---------- ----------------- ------------ ------- ----
+Cluster
+            cluster1-01_clus1  up/up     169.254.3.4/23     cluster1-01  e0a     true
+            cluster1-01_clus2  up/up     169.254.3.5/23     cluster1-01  e0d     true
+            cluster1-02_clus1  up/up     169.254.3.8/23     cluster1-02  e0a     true
+            cluster1-02_clus2  up/up     169.254.3.9/23     cluster1-02  e0d     true
+            cluster1-03_clus1  up/up     169.254.1.3/23     cluster1-03  e0a     true
+            cluster1-03_clus2  up/up     169.254.1.1/23     cluster1-03  e0b     true
+            cluster1-04_clus1  up/up     169.254.1.6/23     cluster1-04  e0a     true
+            cluster1-04_clus2  up/up     169.254.1.7/23     cluster1-04  e0b     true
+8 entries were displayed.
+cluster1::*>
+----
+====
+
+.. Verify that the cluster displays information for both cluster switches:
++
+`system cluster-switch show -is-monitoring-enabled-operational true`
++
+.Show example 
+[%collapsible]
+====
+[subs=+quotes]
+----
+cluster1::*> *system cluster-switch show -is-monitoring-enabled-operational true*
+Switch                      Type               Address          Model
+--------------------------- ------------------ ---------------- ---------------
+IP_switch_A1                cluster-network    10.233.205.92    NX3232C
+     Serial Number: FOXXXXXXXGS
+      Is Monitored: true
+            Reason: None
+  Software Version: Cisco Nexus Operating System (NX-OS) Software, Version
+                    9.3(4)
+    Version Source: CDP
+IP_switch_B1                cluster-network    10.233.205.92    NX3232C
+     Serial Number: FOXXXXXXXGD
+      Is Monitored: true
+            Reason: None
+  Software Version: Cisco Nexus Operating System (NX-OS) Software, Version
+                    9.3(4)
+    Version Source: CDP
+2 entries were displayed.
+----
+====
+
+. Disable auto-revert on the cluster LIFs.
++
+.Show example 
+[%collapsible]
+====
+[subs=+quotes]
+----
+cluster1::*> *network interface modify -vserver Cluster -lif * -auto-revert false*
+----
+====
+
+. On cluster switch IP_switch_B1, shut down the ports connected to the cluster ports of the nodes.
++
+.Show example 
+[%collapsible]
+====
+[subs=+quotes]
+----
+IP_switch_B1(config)# *interface eth1/1/1-2,eth1/7-8*
+IP_switch_B1(config-if-range)# *shutdown*
+----
+====
+
+. Verify that the cluster ports have migrated to the ports hosted on cluster switch IP_switch_A1. This might take a few seconds.
++
+`network interface show -role cluster`
++
+.Show example 
+[%collapsible]
+====
+[subs=+quotes]
+----
+cluster1::*> *network interface show -role cluster*
+            Logical           Status     Network            Current       Current Is
+Vserver     Interface         Admin/Oper Address/Mask       Node          Port    Home
+----------- ----------------- ---------- ------------------ ------------- ------- ----
+Cluster
+            cluster1-01_clus1 up/up      169.254.3.4/23     cluster1-01   e0a     true
+            cluster1-01_clus2 up/up      169.254.3.5/23     cluster1-01   e0a     false
+            cluster1-02_clus1 up/up      169.254.3.8/23     cluster1-02   e0a     true
+            cluster1-02_clus2 up/up      169.254.3.9/23     cluster1-02   e0a     false
+            cluster1-03_clus1 up/up      169.254.1.3/23     cluster1-03   e0a     true
+            cluster1-03_clus2 up/up      169.254.1.1/23     cluster1-03   e0a     false
+            cluster1-04_clus1 up/up      169.254.1.6/23     cluster1-04   e0a     true
+            cluster1-04_clus2 up/up      169.254.1.7/23     cluster1-04   e0a     false
+8 entries were displayed.
+cluster1::*>
+----
+====
+
+. Verify that the cluster is healthy:
++
+`cluster show`
++
+.Show example 
+[%collapsible]
+====
+[subs=+quotes]
+----
+cluster1::*> *cluster show*
+Node                 Health  Eligibility   Epsilon
+-------------------- ------- ------------  -------
+cluster1-01          true    true          false
+cluster1-02          true    true          false
+cluster1-03          true    true          true
+cluster1-04          true    true          false
+4 entries were displayed.
+cluster1::*>
+----
+====
+
+== Reset the Cisco IP switch to factory defaults
 
 Before installing any RCF file, you must erase the Cisco switch configuration and perform basic configuration. This procedure is required when you want to reinstall the same RCF file after a previous installation failed, or if you want to install a new version of an RCF file.
 
@@ -149,7 +363,7 @@ IP_switch_A_1#
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-== Downloading and installing the Cisco switch NX-OS software
+== Download and install the Cisco switch NX-OS software
 
 You must download the switch operating system file and RCF file to each switch in the MetroCluster IP configuration.
 
@@ -400,7 +614,7 @@ Module 1 EPLD upgrade is successful.
 
 . Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
 
-== Downloading and installing the Cisco IP RCF files
+== Download and install the Cisco IP RCF files
 
 You must generate and install the RCF file to each switch in the MetroCluster IP configuration.
 
@@ -555,7 +769,7 @@ IP_switch_A_1# reload
 
 
 
-== Setting Forward Error Correction for systems using 25-Gbps connectivity
+== Set Forward Error Correction for systems using 25-Gbps connectivity
 // BURT 1369575 //redoing this
 
 If your system is configured using 25-Gbps connectivity, you need to set the Forward Error Correction (fec) parameter manually to off after applying the RCF file. The RCF file does not apply this setting.
