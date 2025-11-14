@@ -77,10 +77,11 @@ To enable seamless monitoring in Tiebreaker 1.6 or later, you need to import the
 
 * This task is required in Tiebreaker 1.6 or later. 
 * You perform this task after you have successfully added a MetroCluster configuration to Tiebreaker or if your certificates expire.
+* As part of this task, you perform a switchover simulation to check if you need to import a certificate. If the switchover simulation fails, you need to import certificates from ONTAP to the the key store in the Java Virtual Machine (JVM).
 
 .Step
 
-. Perform switchover simulation status checks:
+. Check if you need to import a certificate:
 +
 .. Check the Tiebreaker monitoring status:
 `monitor show -status`
@@ -124,8 +125,10 @@ MetroCluster: A700
 +
 `monitor switchover-simulate -monitor-name <system_name> -cluster <cluster_name>`
 +
+The command returns the following output if you need to import certificates to Tiebreaker:
++
 ----
-Successfully triggered Switchover Simulation. Please check the status of the Switchover Simulation on the ONTAP cluster using command "metrocluster operation history show"
+Failed to trigger Switchover Simulation. Please check Metrocluster Tiebreaker logs for further information or contact NetApp support.
 ----
 
 . Run the following command for each certificate you need to import (SSL server, intermediate, or root).
