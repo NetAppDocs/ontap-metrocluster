@@ -9,7 +9,7 @@ summary: ONTAP Mediator must be configured on the ONTAP node for use in a MetroC
 :imagesdir: ../media/
 
 [.lead]
-ONTAP Mediator must be configured on the ONTAP node for use in a MetroCluster IP configuration.
+You must configure the ONTAP Mediator on the ONTAP node to use it in a MetroCluster IP configuration.
 
 .Before you begin
 
@@ -27,15 +27,47 @@ CAUTION: Beginning with ONTAP 9.12.1, you can enable the MetroCluster automatic 
 
 * This task enables automatic unplanned switchover by default.
 * This task can be performed on the ONTAP interface of any node in the MetroCluster IP configuration.
-* A single installation of ONTAP Mediator can be configured with up to five MetroCluster IP configurations.
+* Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance can manage up to ten MetroCluster configurations simultaneously. In earlier releases, ONTAP Mediator can support up to five MetroCluster configurations simultaneously.
 
 .Steps
 
-. Add ONTAP Mediator to ONTAP:
+. Add ONTAP Mediator to ONTAP. The steps depend on whether you want to use an IPv4 or IPv6 address.
 +
-`metrocluster configuration-settings mediator add -mediator-address _ip-address-of-mediator-host_`
+[NOTE]
+====
+* You must be running ONTAP 9.18.1 or later and ONTAP Mediator 1.11 or later to use IPv6.
+* If you enable IPv6 on a cluster, you cannot disable it later. 
+====
 +
-NOTE: You will be prompted for the username and password for the Mediator admin user account.
+[role="tabbed-block"]
+====
+.Use IPv4 
+--
+
+.. Run the following command to add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address>`
++
+NOTE: You are prompted for the username and password for the Mediator admin user account.
+--
+.Use IPv6
+--
+
+.. Run the following command on both clusters:
++
+`network options ipv6 modify -enabled true`
+
+
+.. Configure the node-mgmt IP address with IPv6 addresses on all four nodes.
+
+.. Add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ipv6_ip_address>`
++
+NOTE: You are prompted for the username and password for the Mediator admin user account.
+--
+====
+
 
 . Verify that the automatic switchover feature is enabled:
 +
