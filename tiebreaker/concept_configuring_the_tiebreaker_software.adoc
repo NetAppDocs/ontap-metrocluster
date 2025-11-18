@@ -79,9 +79,14 @@ To enable seamless monitoring in Tiebreaker 1.6 or later, you need to import the
 * You perform this task after you have successfully added a MetroCluster configuration to Tiebreaker or if your certificates expire.
 * In Tiebreaker 1.7 or later, you can perform a switchover simulation to check if you need to import a certificate. If the switchover simulation fails, you need to import certificates from ONTAP to the key store in the Java Virtual Machine (JVM).
 
+[role="tabbed-block"]
+======
+.Tiebreaker 1.7 or later
+--
+
 .Steps
 
-. In Tiebreaker 1.7 or later, run a switchover simulation to check if you need to import certificates. In Tiebreaker 1.6 or earlier, skip to <<tb_import_certificates, Step 2>> and import all of the certificates that you have in ONTAP. 
+. Run a switchover simulation to check if you need to import certificates. 
 +
 .. Check the Tiebreaker monitoring status:
 `monitor show -status`
@@ -121,6 +126,7 @@ MetroCluster: A700
                 State: normal
 ----
 =====
+
 .. Trigger a switchover simulation:
 +
 `monitor switchover-simulate -monitor-name <monitor_name> -cluster <cluster_name>`
@@ -131,7 +137,6 @@ The command returns the following output if you need to import certificates to t
 Failed to trigger Switchover Simulation. Please check Metrocluster Tiebreaker logs for further information or contact NetApp support.
 ----
 
-[tb_import_certificates]
 . Run the following command for each certificate you need to import (SSL server, intermediate, or root).
 +
 `/opt/netapp/java/bin/keytool -import -trustcacerts -file <certificate_file_name> -keystore "/opt/netapp/java/lib/security/cacerts" -alias <certificate>`
@@ -151,7 +156,7 @@ The following example shows how to import a root certificate with the file name 
 +
 `systemctl restart netapp-metrocluster-tiebreaker-software`
 
-. In Tiebreaker 1.7 or later, perform the switchover simulation checks again:
+. Perform the switchover simulation checks again:
 +
 .. Check the Tiebreaker monitoring status:
 `monitor show -status`
@@ -198,7 +203,33 @@ MetroCluster: A700
 ----
 Successfully triggered Switchover Simulation. Please check the status of the Switchover Simulation on the ONTAP cluster using command "metrocluster operation history show"
 ----
+--
+.Tiebreaker 1.6 or 1.6P1
+--
 
+.Steps
+
+. Import all certificates from ONTAP. Run the following command for each certificate you need to import (SSL server, intermediate, or root).
++
+`/opt/netapp/java/bin/keytool -import -trustcacerts -file <certificate_file_name> -keystore "/opt/netapp/java/lib/security/cacerts" -alias <certificate>`
++
+* The `<certificate_file_name>` value specifies the file name of the certificate that you want to import.
+* The `-alias <certificate>` value specifies the name that you want to store the certificate under after it is imported to the JVM.
++
+The following example shows how to import a root certificate with the file name `root.crt` and an SSL server certificate with the file name `ssl_cert.crt`:
++
+----
+/opt/netapp/java/bin/keytool -import -trustcacerts -file root.crt -keystore "/opt/netapp/java/lib/security/cacerts" -alias root
+
+/opt/netapp/java/bin/keytool -import -trustcacerts -file ssl_cert.crt -keystore "/opt/netapp/java/lib/security/cacerts" -alias ssl_cert
+----
+
+. Restart the Tiebreaker software:
++
+`systemctl restart netapp-metrocluster-tiebreaker-software`
+--
+
+======
 
 
 == Commands for modifying MetroCluster Tiebreaker configurations
