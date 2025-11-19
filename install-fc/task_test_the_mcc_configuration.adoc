@@ -17,7 +17,7 @@ You can test the negotiated (planned) switchover operation to confirm uninterrup
 
 .About this task
 
-This test validates that data availability is not affected (except for Microsoft Server Message Block (SMB) and Solaris Fibre Channel protocols) by switching the cluster over to the second data center.
+This test validates that data availability is not affected (except for SMB and Fibre Channel protocols) by switching the cluster over to the second data center.
 
 This test should take about 30 minutes.
 
@@ -81,8 +81,6 @@ Remote: cluster_B               not-reachable          -
 `metrocluster operation show`
 +
 ----
-cluster_A::>  metrocluster operation show
-
 cluster_A::> metrocluster operation show
   Operation: switchover
       State: successful
@@ -120,7 +118,7 @@ Group Cluster Node               State          Mirroring Mode
               node_A_1         configured     enabled   heal roots completed
       cluster_B
               node_B_2         unreachable    -         switched over
-42 entries were displayed.metrocluster operation show
+42 entries were displayed.
 ----
 
 . Verify that all aggregates are mirrored:

@@ -153,6 +153,7 @@ You must perform this task on both clusters.
 .Steps
 
 . Add the MetroCluster IP nodes to the existing MetroCluster configuration.
+
 .. Join the first MetroCluster IP node (node_A_3-IP) to the existing MetroCluster FC configuration.
 +
 ....
@@ -207,7 +208,16 @@ Do you want to use this configuration? {yes, no} [yes]: yes
 ....
 
 .. Join the second MetroCluster IP node (node_A_4-IP) to the existing MetroCluster FC configuration.
+
 . Repeat these steps to join node_B_3-IP and node_B_4-IP to cluster_B.
+. If you are using the Onboard Key Manager, perform the following steps from the cluster where you've added a new node:
++
+.. Synchronize the key manager configuration:
++
+`security key-manager onboard sync`
+
+.. Enter the Onboard Key Manager passphrase when prompted.
+
 
 == Configuring intercluster LIFs, creating the MetroCluster interfaces, and mirroring root aggregates
 

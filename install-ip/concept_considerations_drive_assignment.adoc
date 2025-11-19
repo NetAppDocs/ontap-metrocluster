@@ -4,14 +4,14 @@ sidebar: sidebar
 keywords: drive auto-assignment, drive, adp, advanced disk partitioning, root disk, unmirrored root, data partition, root partition, shelf-by-shelf, AFF A320, AFF A220, AFF A250, C250, AFF A300, AFF A400, C400, AFF A700, AFF A800, FAS2750, FAS8200, FAS500f, FAS9000
 summary: Beginning with ONTAP 9.4, MetroCluster IP configurations support new installations with AFF systems using ADP (Advanced Drive Partitioning).
 ---
-= MetroCluster IP considerations for automatic drive assignment and ADP systems
+= MetroCluster IP requirements for automatic drive assignment and ADP systems
 :icons: font
 :imagesdir: ../media/ 
 
 [.lead]
 Beginning with ONTAP 9.4, MetroCluster IP configurations support new installations using automatic disk assignment and ADP (Advanced Drive Partitioning).
 
-You should be aware of the following considerations when using ADP with MetroCluster IP configurations: 
+You should be aware of the following when using ADP with MetroCluster IP configurations: 
 
 * ONTAP 9.4 and later is required to use ADP with MetroCluster IP configurations on AFF and ASA systems.
 * ADPv2 is supported in MetroCluster IP configurations. 
@@ -184,9 +184,11 @@ The operation of Advanced Drive Partitioning (ADP) and automatic disk assignment
 
 NOTE: In systems using ADP, aggregates are created using partitions in which each drive is partitioned in to P1, P2 and P3 partitions. The root aggregate is created using P3 partitions.
 
-You must meet the MetroCluster limits for the maximum number of supported drives and other guidelines.
+Review the following requirements before using the tables:
 
-https://hwu.netapp.com[NetApp Hardware Universe]
+* You must meet the MetroCluster limits for the maximum number of supported drives and other guidelines. Refer to the https://hwu.netapp.com[NetApp Hardware Universe].
+
+* If you are reusing an external disk shelf, verify that disk ownership on the external disk shelf has been removed before you attach it to the controller. Refer to link:https://docs.netapp.com/us-en/ontap/disks-aggregates/remove-ownership-disk-task.html[Remove ONTAP ownership from a disk^].
 
 === ADP and disk assignment on AFF A320 systems
 
@@ -703,8 +705,55 @@ Not applicable
 
 |===
 
+=== Disk assignment on FAS50 systems with Flash Cache
+
+Beginning with ONTAP 9.18.1, Flash Cache is supported on FAS50 systems for MetroCluster IP configurations. 
+
+[CAUTION] 
+====
+* You cannot have both data aggregates and the root aggregate with Flash Cache drives on the internal shelf.
+* Slots 0 and 23 are used for Flash Cache drives.
+* If you are reusing an external disk shelf, verify that disk ownership on the external disk shelf has been removed before you attach it to the controller. Refer to link:https://docs.netapp.com/us-en/ontap/disks-aggregates/remove-ownership-disk-task.html[Remove ONTAP ownership from a disk].
+====
+
+|===
+
+h| Guideline h| Drives per site h| Drive assignment rules h| ADP layout for root partition
+
+.2+|
+Minimum recommended drives (per site)
+a|
+48 drives (external drives only, no internal drives)
+a|
+The drives on each external shelf are divided into two equal groups (halves). Each half-shelf is automatically assigned to a separate pool.
+a|
+Not applicable
+
+a| 36 drives (12 internal drives and 24 external drives – with the data aggregates on the external shelf and the root aggregate on the internal shelf)
+a| The internal drives are divided into four equal groups (quarters). Each quarter is automatically assigned to a separate pool. The drives on the external shelves are divided into four equal groups (quarters). Each quarter-shelf is automatically assigned to a separate pool. 
+
+*Notes:* 
+
+* If you are using internal and external drives, you first need to install ONTAP and configure the local cluster with only the internal drives. You then manually connect the external shelf after you complete your installation or setup task.
+
+*  A minimum of 12 internal drives is required for the root aggregate. You should place the root internal drives from slot 1. For example, for 12 internal drives, use slots 1-3, 6-8, 12-14, and 18-20. 
+
+a|
+Not applicable
+
+a|Minimum supported drives (per site)
+a|
+24 external drives
+a|
+The drives are divided into four equal groups. Each quarter-shelf is automatically assigned to a separate pool.
+
+a|
+Not applicable
+
+|===
 
 
+// 2025 Aug 28, ONTAPDOC-3042
 // 2024 Dec 09, ONTAPDOC-2349
 // 2024 Jun 19, GH issue 401
 // 2024 MAR 20, ONTAPDOC-1572

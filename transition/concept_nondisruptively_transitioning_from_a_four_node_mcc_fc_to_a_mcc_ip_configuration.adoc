@@ -13,9 +13,9 @@ You can perform nondisruptive transitions of workloads and data from an existing
 
 Beginning with ONTAP 9.13.1, this procedure is supported in MetroCluster IP configurations in which the MetroCluster and the drive shelves are connected to the same IP switches (a shared storage switch configuration). 
 
-Beginning with ONTAP 9.13.1, you can perform a nondisruptive transition of workloads and data from an existing eight-node MetroCluster FC configuration to a new MetroCluster IP configuration.
+Beginning with ONTAP 9.13.1, you can perform a nondisruptive transition of workloads and data from an existing eight-node MetroCluster FC configuration to a new eight-node MetroCluster IP configuration. You use this procedure to transition one four-node FC DR group, remove the empty FC DR group, and then repeat the procedure for the second FC DR group. 
 
-Beginning with ONTAP 9.8, you can perform a nondisruptive transition of workloads and data from an existing four-node MetroCluster FC configuration to a new MetroCluster IP configuration.
+Beginning with ONTAP 9.8, you can perform a nondisruptive transition of workloads and data from an existing four-node MetroCluster FC configuration to a new four-node MetroCluster IP configuration.  After you complete the transition, you can expand to an eight-node MetroCluster IP configuration if required. See link:../upgrade/task_expand_a_four_node_mcc_ip_configuration.html[Expand a MetroCluster IP configuration].
 
 * This procedure is nondisruptive.
 +
@@ -26,10 +26,12 @@ The MetroCluster configuration can continue to serve data during the operation.
 If you have a two-node MetroCluster FC configuration, see link:concept_choosing_your_transition_procedure_mcc_transition.html[Choosing your transition procedure].
 
 * This procedure describes the steps required to transition one four-node FC DR group. If you have an eight-node configuration (two FC DR groups), you must repeat the entire procedure for each FC DR group.
++
+NOTE: When you add or remove a DR group as part of this procedure, you must verify that the DR group removal or addition was successful before adding or removing another DR group.
 
 * You must meet all requirements and follow all steps in the procedure.
 
-.Important information
+.Important information if you are adding an older platform model
 
 The following guidance is for an uncommon scenario where you need to add an older platform model (platforms released before ONTAP 9.15.1) to an existing MetroCluster configuration that contains a newer platform model (platforms released in ONTAP 9.15.1 or later). For an eight-node FC to IP transition, this guidance applies if you have transitioned your first FC DR group to a platform model introduced in ONTAP 9.15.1 or later and plan to transition the second DR group to a platform introduced before ONTAP 9.15.1.
 
@@ -98,4 +100,5 @@ Before you add the new platform to your existing MetroCluster configuration, upg
 
 |===
 
+// 2025 Oct 09, GH 506
 // 2025 June 06, ONTAPDOC-2897
