@@ -26,7 +26,17 @@ This is the password that you specified for the database user during installatio
 
 After installing the NetApp MetroCluster Tiebreaker software, you can add more MetroCluster configurations, one at a time.
 
-You must have installed the MetroCluster configuration in an ONTAP environment and enabled the settings in the software.
+.About this task
+* You must have installed the MetroCluster configuration in an ONTAP environment and enabled the settings in the software.
+
+* The steps and expected command output depends on the version of Tiebreaker that you are running. 
+
+[role="tabbed-block"]
+======
+.Tiebreaker 1.5 or earlier
+--
+
+.Steps
 
 . Use the Tiebreaker command-line interface (CLI) monitor add command to add MetroCluster configurations.
 +
@@ -38,10 +48,10 @@ The following example shows the configuration of cluster_A:
 
 NetApp MetroCluster Tiebreaker :> monitor add wizard
 Enter monitor Name: cluster_A
-Enter Cluster IP Address: 10.222.196.130
+Enter Cluster IP Address: <cluster_ip_value>
 Enter Cluster Username: admin
 Enter Cluster Password:
-Enter Peer Cluster IP Address: 10.222.196.40
+Enter Cluster IP Address: <peer_cluster_ip_value>
 Enter Peer Cluster Username: admin
 Enter Peer Cluster Password:
 Successfully added monitor to NetApp MetroCluster Tiebreaker software.
@@ -64,6 +74,97 @@ Warning: If you are turning observer-mode to false, make sure to review the 'ris
 as described in the MetroCluster Tiebreaker installation and configuration.
 Are you sure you want to enable automatic switchover capability for monitor "8pack"? [Y/N]: y
 ----
+
+--
+.Tiebreaker 1.6 or later
+-- 
+.Steps
+
+. Use the Tiebreaker command-line interface (CLI) monitor add command to add MetroCluster configurations.
++
+If you are using the host name, it must be the fully qualified domain name (FQDN).
++
+The following example shows the configuration of cluster_A:
++
+----
+
+NetApp MetroCluster Tiebreaker :> monitor add wizard
+
+Enter Monitor Name: cluster_A
+
+Enter Cluster IP Address: <cluster_ip_value>
+
+Enter Cluster Username: admin
+
+Enter Cluster Password:
+
+Enter Peer Cluster IP Address: <peer_cluster_ip_value>
+
+Enter Peer Cluster Username: admin
+
+Enter Peer Cluster Password:
+
+ NOTE: Before enabling automatic switchover capability, make sure to review the 'risks and limitations' as described in the MetroCluster Tiebreaker Installation and Configuration Guide.
+
+Do you want to enable automatic switchover capability for monitor(Y/N): y
+
+Successfully added monitor to NetApp MetroCluster Tiebreaker software.
+
+Verifying SSL certificate chain from cluster_A...
+
+=============================================== Warning missing SSL certificates ===============================================
+
+Cluster: cluster_A
+
+IP Address: <cluster_ip_value>
+
+ 
+
+Result:
+
+The MetroCluster Tiebreaker is unable to verify the SSL certificate chain.
+
+ 
+
+Recommended Actions:
+
+ 
+
+Run the following command to identify missing certificates:
+
+monitor switchover-simulate
+
+ 
+
+Import any missing certificates as indicated by the command output.
+
+For detailed instructions, please refer to the MetroCluster Tiebreaker documentation, or contact NetApp Support for assistance.
+
+ 
+
+Note:
+
+Missing certificates will prevent the MetroCluster Tiebreaker from issuing a switchover request in the event of a site failure.
+
+================================================================================================================================
+
+
+Verifying SSL certificate chain from cluster_B...
+
+SSL certificate chain is valid
+----
+
+. Confirm that the MetroCluster configuration was added properly by using the Tiebreaker CLI `monitor show -status` command.
++
+----
+
+NetApp MetroCluster Tiebreaker :> monitor show -status
+----
+
+. Import the missing certificates by performing the steps for your Tiebreaker version in <<Import Certificates>>.
+
+--
+======
 
 .Related information
 

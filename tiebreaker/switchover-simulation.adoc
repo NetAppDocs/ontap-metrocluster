@@ -1,0 +1,67 @@
+---
+permalink: tiebreaker/switchover-simulation.html
+sidebar: sidebar
+keywords: metrocluster, configuration, operation, netapp, documentation, additional, information, miscellaneous, guide, tiebreaker, switchover, simulation
+summary: Beginning with Tiebreaker 1.7, you can simulate a switchover to verify Tiebreaker operation.
+---
+= Simulate a switchover using MetroCluster Tiebreaker
+:icons: font
+:imagesdir: ../media/
+
+[.lead]
+Beginning with Tiebreaker 1.7, you can simulate a switchover to test the MetroCluster Tiebreaker switchover functionality.
+
+.About this task
+
+* The switchover simulation CLI command is only supported in Tiebreaker 1.7 or later.
+
+.Steps
+
+. Check the Tiebreaker monitoring status:
+`monitor show -status`
++
+.Example
+[%collapsible]
+=====
+----
+NetApp MetroCluster Tiebreaker :> monitor show -status
+MetroCluster: A700
+    Disaster: false
+    Monitor State: Normal
+    Observer Mode: false
+    Silent Period: 5
+    Override Vetoes: false
+    Cluster: ClusterA_siteA(UUID:713e5ab2-b4e8-11f0-91aa-00a098ef36a2)
+        Reachable: true
+        Intersite Connectivity Available: true
+            Node: node_A1(UUID:9f6cecbf-b4e4-11f0-9d0f-00a098ef36a2)
+                Reachable: true
+                Intersite Connectivity Available: true
+                State: normal
+            Node: node_A2(UUID:2719bb56-b4e7-11f0-996c-00a09897caa3)
+                Reachable: true
+                Intersite Connectivity Available: true
+                State: normal
+    Cluster: ClusterB_siteB(UUID:72839591-b4e8-11f0-b688-00a09897cb73)
+        Reachable: true
+        Intersite Connectivity Available: true
+            Node: node_B1(UUID:abfeab89-b4e4-11f0-a077-00a09897cb73)
+                Reachable: true
+                Intersite Connectivity Available: true
+                State: normal
+            Node: node_B2(UUID:31e395bf-b4e7-11f0-bf99-00a09897cb2f)
+                Reachable: true
+                Intersite Connectivity Available: true
+                State: normal
+----
+=====
+
+. Perform a switchover simulation:
++
+`monitor switchover-simulate -monitor-name <monitor_name> -cluster <cluster_name>`
++
+The command returns the following output for a successful operation:
++
+----
+Successfully triggered Switchover Simulation. Please check the status of the Switchover Simulation on the ONTAP cluster using command "metrocluster operation history show"
+----
