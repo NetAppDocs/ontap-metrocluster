@@ -541,24 +541,22 @@ Gather the output of the following commands:
  ** `iscsi interface show`
  ** `ucadmin show`
 
-. If the root volume is encrypted or the system has NSE or SED drives, collect and save the passphrase used for the key manager:
-+
-`security key-manager backup show`
-
-. If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
-+
-For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Back up onboard key management information manually].
+. If the MetroCluster nodes are using encryption for volumes or aggregates, or if the system has locked SED drives, copy information about the keys and passphrases.
 
  .. If Onboard Key Manager is configured:
  +
 `security key-manager onboard show-backup`
 +
 You need the passphrase later in the upgrade procedure.
++
+For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Back up onboard key management information manually].
 
- .. If enterprise key management (KMIP) is configured, issue the following commands:
+ .. If external key management (KMIP) is configured, issue the following commands:
 +
 `security key-manager external show -instance`
++
 `security key-manager key query`
+... For external key management, copy the key management configuration file to a secure location. 
 
 . Gather the system IDs of the existing nodes:
 +
