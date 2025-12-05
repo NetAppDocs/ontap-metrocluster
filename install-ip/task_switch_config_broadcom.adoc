@@ -25,7 +25,7 @@ When you upgrade the switch firmware or reference configuration file (RCF), you 
 
 * You must perform this task before you upgrade or downgrade switch firmware, or replace the switch reference configuration file (RCF).
 * The task requires you to use both ONTAP commands and switch commands; ONTAP commands are used unless otherwise indicated.
-* In this the examples in this procedure, IP_switch_B1 is being updated so you need to migrate the cluster LIFs to IP_switch_A1.
+* In this the examples in this procedure, IP_switch_A1 is being updated so you need to migrate the cluster LIFs to IP_switch_A2.
 
 .Steps
 
@@ -44,16 +44,16 @@ Protocol    Port   Device (LLDP: ChassisID)  Interface         Platform
 ----------- ------ ------------------------- ----------------  --------
 cluster1-01/cdp
             e0a    IP_switch_A1              0/2               BES-53248
-            e0b    IP_switch_B1              0/2               BES-53248
+            e0b    IP_switch_A2              0/2               BES-53248
 cluster1-02/cdp
             e0a    IP_switch_A1              0/1               BES-53248
-            e0b    IP_switch_B1              0/1               BES-53248
+            e0b    IP_switch_A2              0/1               BES-53248
 cluster1-03/cdp
             e0a    IP_switch_A1              0/4               BES-53248
-            e0b    IP_switch_B1              0/4               BES-53248
+            e0b    IP_switch_A2              0/4               BES-53248
 cluster1-04/cdp
             e0a    IP_switch_A1              0/3               BES-53248
-            e0b    IP_switch_B1              0/3               BES-53248
+            e0b    IP_switch_A2              0/3               BES-53248
 cluster1::*>
 ----
 ====
@@ -153,14 +153,14 @@ system switch ethernet show -is-monitoring-enabled-operational true
 cluster1::*> system switch ethernet show -is-monitoring-enabled-operational true
 Switch                      Type               Address          Model
 --------------------------- ------------------ ---------------- ---------------
-cs1                         cluster-network    10.228.143.200   BES-53248
+IP_switch_A1                 cluster-network    10.228.143.200   BES-53248
            Serial Number: QTWCU22510008
             Is Monitored: true
                   Reason: None
         Software Version: 3.10.0.3
           Version Source: CDP/ISDP
 
-cs2                         cluster-network    10.228.143.202   BES-53248
+IP_switch_A2                 cluster-network    10.228.143.202   BES-53248
            Serial Number: QTWCU22510009
             Is Monitored: true
                   Reason: None
@@ -183,14 +183,14 @@ system cluster-switch show -is-monitoring-enabled-operational true
 cluster1::*> system cluster-switch show -is-monitoring-enabled-operational true
 Switch                      Type               Address          Model
 --------------------------- ------------------ ---------------- ---------------
-cs1                         cluster-network    10.228.143.200   BES-53248
+IP_switch_A1                cluster-network    10.228.143.200   BES-53248
            Serial Number: QTWCU22510008
             Is Monitored: true
                   Reason: None
         Software Version: 3.10.0.3
           Version Source: CDP/ISDP
 
-cs2                         cluster-network    10.228.143.202   BES-53248
+IP_switch_A2               cluster-network    10.228.143.202   BES-53248
            Serial Number: QTWCU22510009
             Is Monitored: true
                   Reason: None
@@ -214,19 +214,19 @@ cluster1::*> *network interface modify -vserver Cluster -lif * -auto-revert fals
 ----
 ====
 
-. On cluster switch IP_switch_B1, shut down the ports connected to the cluster ports of the nodes.
+. On cluster switch IP_switch_A1, shut down the ports connected to the cluster ports of the nodes.
 +
 .Show example 
 [%collapsible]
 ====
 [subs=+quotes]
 ----
-IP_switch_B1(config)# *interface eth1/1/1-2,eth1/7-8*
-IP_switch_B1(config-if-range)# *shutdown*
+IP_switch_A1(config)# *interface eth1/1/1-2,eth1/7-8*
+IP_switch_A1(config-if-range)# *shutdown*
 ----
 ====
 
-. Verify that the cluster ports have migrated to the ports hosted on cluster switch IP_switch_A1. This might take a few seconds.
+. Verify that the cluster ports have migrated to the ports hosted on cluster switch IP_switch_A2. This might take a few seconds.
 +
 `network interface show -role cluster`
 +

@@ -23,7 +23,7 @@ When you upgrade the switch firmware or reference configuration file (RCF), you 
 
 * You must perform this task before you upgrade or downgrade switch firmware, or replace the switch reference configuration file (RCF).
 * The task requires you to use both ONTAP commands and switch commands; ONTAP commands are used unless otherwise indicated.
-* In this the examples in this procedure, IP_switch_B1 is being updated so you need to migrate the cluster LIFs to IP_switch_A1.
+* In this the examples in this procedure, IP_switch_A1 is being updated so you need to migrate the cluster LIFs to IP_switch_A2.
 
 .Steps
 
@@ -42,16 +42,16 @@ Protocol    Port   Device (LLDP: ChassisID)  Interface         Platform
 ----------- ------ ------------------------- ----------------  --------
 cluster1-01/cdp
             e0a    IP_switch_A1              Ethernet1/7       N3K-C3232C
-            e0d    IP_switch_B1              Ethernet1/7       N3K-C3232C
+            e0d    IP_switch_A2              Ethernet1/7       N3K-C3232C
 cluster1-02/cdp
             e0a    IP_switch_A1              Ethernet1/8       N3K-C3232C
-            e0d    IP_switch_B1              Ethernet1/8       N3K-C3232C
+            e0d    IP_switch_A2              Ethernet1/8       N3K-C3232C
 cluster1-03/cdp
             e0a    IP_switch_A1              Ethernet1/1/1     N3K-C3232C
-            e0b    IP_switch_B1              Ethernet1/1/1     N3K-C3232C
+            e0b    IP_switch_A2              Ethernet1/1/1     N3K-C3232C
 cluster1-04/cdp
             e0a    IP_switch_A1              Ethernet1/1/2     N3K-C3232C
-            e0b    IP_switch_B1              Ethernet1/1/2     N3K-C3232C
+            e0b    IP_switch_A2              Ethernet1/1/2     N3K-C3232C
 cluster1::*>
 ----
 ====
@@ -147,7 +147,7 @@ IP_switch_A1                cluster-network    10.233.205.92    NX3232C
   Software Version: Cisco Nexus Operating System (NX-OS) Software, Version
                     9.3(4)
     Version Source: CDP
-IP_switch_B1                cluster-network    10.233.205.92    NX3232C
+IP_switch_A1                cluster-network    10.233.205.92    NX3232C
      Serial Number: FOXXXXXXXGD
       Is Monitored: true
             Reason: None
@@ -169,19 +169,19 @@ cluster1::*> *network interface modify -vserver Cluster -lif * -auto-revert fals
 ----
 ====
 
-. On cluster switch IP_switch_B1, shut down the ports connected to the cluster ports of the nodes.
+. On cluster switch IP_switch_A1, shut down the ports connected to the cluster ports of the nodes.
 +
 .Show example 
 [%collapsible]
 ====
 [subs=+quotes]
 ----
-IP_switch_B1(config)# *interface eth1/1/1-2,eth1/7-8*
-IP_switch_B1(config-if-range)# *shutdown*
+IP_switch_A1(config)# *interface eth1/1/1-2,eth1/7-8*
+IP_switch_A1(config-if-range)# *shutdown*
 ----
 ====
 
-. Verify that the cluster ports have migrated to the ports hosted on cluster switch IP_switch_A1. This might take a few seconds.
+. Verify that the cluster ports have migrated to the ports hosted on cluster switch IP_switch_A2. This might take a few seconds.
 +
 `network interface show -role cluster`
 +
