@@ -31,7 +31,36 @@ NOTE: When you add or remove a DR group as part of this procedure, you must veri
 
 * You must meet all requirements and follow all steps in the procedure.
 
-.Important information if you are adding an older platform model
+== Transition scenarios supported by this procedure
+
+Review the following table to learn about the transition scenarios supported by this procedure.
+
+[cols="2" options="header"]
+|===
+| For this transition scenario...
+| Perform the following...
+
+a| Four-node FC to four-node IP configuration
+a| Follow this procedure as written. 
+
+a| Four-node FC to eight-node IP configuration
+a| Requires adding one MetroCluster IP DR group. You need to check the overall health of the cluster and repeat the steps for the second MetroCluster IP DR group.
+
+a| Eight-node FC to four-node IP configuration
+a| Follow this procedure as written.
+
+a| Eight-node FC to eight-node IP configuration
+a| Requires adding one MetroCluster IP DR group. You need to check the overall health of the cluster, move data, and unjoin the empty MetroCluste FC DR groups. You then add the second MetroCluster IP DR group. 
+
+At any time during the transition, the number of nodes in the MetroCluster configuration does not exceed twelve.
+|===
+
+
+
+
+
+
+== Important information when adding an older platform model
 
 The following guidance is for an uncommon scenario where you need to add an older platform model (platforms released before ONTAP 9.15.1) to an existing MetroCluster configuration that contains a newer platform model (platforms released in ONTAP 9.15.1 or later). For an eight-node FC to IP transition, this guidance applies if you have transitioned your first FC DR group to a platform model introduced in ONTAP 9.15.1 or later and plan to transition the second DR group to a platform introduced before ONTAP 9.15.1.
 
