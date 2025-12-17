@@ -547,8 +547,8 @@ Gather the output of the following commands:
 ====
 .Onboard Key Manager
 --
- .. Run the following command:
- +
+.. Run the following command:
++
 `security key-manager onboard show-backup`
 +
 You'll need the passphrase later in the upgrade procedure.
@@ -557,53 +557,13 @@ For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp
 --
 .External key manager
 --
-Perform the following steps to gather the external key management information that you'll need later in the procedure to restore the configuration.
+Gather the external key management information you need to restore the key manager configuration later in the procedure.
 
-. Obtain the primary key server port and address for the admin SVM by running the following command:
-+
-`security key-manager external show -instance`
-+
-----
-cluster_B::> security key-manager external show -instance
-Vserver: datavs
-       Client Certificate: datavsClientCert
-   Server CA Certificates: datavsServerCaCert1, datavsServerCaCert2
-       Primary Key Server: keyserver.datavs.com:5696
-                  Timeout: 25
-                 Username: datavsuser
-          Security Policy: IBM_Key_Lore
-    Secondary Key Servers:
-Vserver: cluster_B
-       Client Certificate: AdminClientCert
-   Server CA Certificates: AdminServerCaCert
-       Primary Key Server: 10.0.0.10:1234
-                  Timeout: 25
-                 Username:
-          Security Policy:
-    Secondary Key Servers: ks1.local, ks2.local
-Vserver: cluster_B
-       Client Certificate: AdminClientCert
-   Server CA Certificates: AdminServerCaCert
-       Primary Key Server: fd20:8b1e:b255:814e:32bd:f35c:832c:5a09:1234
-                  Timeout: 25
-                 Username:
-          Security Policy:
-    Secondary Key Servers:
-Vserver: cluster_B
-       Client Certificate: AdminClientCert
-   Server CA Certificates: AdminServerCaCert
-       Primary Key Server: ks1.local:1234
-                  Timeout: 45
-                 Username:
-          Security Policy:
-    Secondary Key Servers:
-4 entries were displayed.
-----
-
-. Obtain the keystore UUID for the admin SVM.
-.. Display information about the admin SVM:
+.. Display the name of the admin SVM (cluster). 
 +
 `vserver show -type admin`
++
+In this example, the admin SVM name is cluster_B:
 +
 ----
 cluster_B::*> vserver show -type admin
@@ -614,7 +574,26 @@ cluster_B
             admin   -          -          -           -          -
 ----
 
-.. Get the keystore UUID of the admin SVM:
+.. Obtain the primary key server port and address for the admin SVM (cluster) by running the following command:
++
+`security key-manager external show -instance -vserver <admin_svm_name>`
++
+----
+cluster_B::> security key-manager external show -instance -vserver cluster_B
+
+                  Vserver: cluster_B
+       Client Certificate: NTAPKM_C
+   Server CA Certificates: NTAPKM_I, NTAPKM_R
+       Primary Key Server: 172.18.27.34:12014
+                  Timeout: 25
+                 Username:
+              Policy name: -
+    Secondary Key Servers: -
+    Create/Remove Timeout: 10
+
+----
+
+.. Obtain the keystore UUID for the admin SVM.
 +
 `security key-manager show-key-store -vserver <admin_svm_name> -fields uuid`
 +
@@ -627,7 +606,7 @@ cluster_B        f281aa55-d635-11f0-93bc-005056bb68f2
 cluster_B::*
 ----
 
-. Save the information you gathered in a secure location for use later in the proecedure. You should now have gathered the following information:
+.. Save the information you gathered in a secure location for use later in the procedure. You should now have gathered the following information:
 * Primary key server address and port for the admin SVM
 * Keystore UUID for the admin SVM
 
