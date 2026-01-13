@@ -9,7 +9,7 @@ summary: Beginning with ONTAP 9.7, ONTAP Mediator can assist the MetroCluster IP
 :imagesdir: ../media/
 
 [.lead]
-Your environment must meet certain requirements. 
+Verify that your environment meets the requirements to install ONTAP Mediator in a MetroCluster IP configuration.
 
 The following requirements apply to one disaster recovery group (DR group). Learn more about link:concept_parts_of_an_ip_mcc_configuration_mcc_ip.html#disaster-recovery-dr-groups[DR groups].
 
@@ -26,6 +26,20 @@ The connectivity between the ONTAP Mediator and each site must be two separate f
 * Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance can manage up to ten MetroCluster configurations simultaneously. In earlier releases, ONTAP Mediator can support up to five MetroCluster configurations simultaneously.
 
 * Beginning with ONTAP 9.18.1, IPv6 is supported for ONTAP Mediator 1.11 or later in a MetroCluster IP configuration.
+
+== Requirements to install ONTAP Mediator on an AWS EC2 instance
+
+Beginning with ONTAP 9.18.1GA, you can deploy ONTAP Mediator on an Amazon Web Services (AWS) EC2 instance in a MetroCluster IP configuration. Installing ONTAP Mediator on an AWS EC2 instance is similar to on-premises and SCS deployments, but there are certain requirements for cloud deployments that you must be aware of before you begin the installation. 
+
+* ONTAP Mediator AWS EC2 instance deployments are supported on the following host operating systems:
+** RHEL 10.x and later 
+** Rocky Linux 10 and later 
+* The AWS EC2 instance type must be at least t3.large (2 vCPU and 8GiB Memory)
+* The AWS EC2 instance must have at least 5GB of available storage
+* AWS EC2 instances use security groups to control inbound and outbound traffic. You need to explicitly allow the required ports (such as 22, 31784, and 3260) to enable secure communication between ONTAP Mediator and your ONTAP clusters.
+* During installation, the AWS EC2 instance needs access to either the internet or your organization’s internal package repository to download necessary software dependencies. This can be achieved by configuring outbound rules in the security group or by setting up access to an in-house repository.
+* You must place the AWS EC2 instance in a VPC that has network connectivity to your ONTAP clusters.
+* You must select a subnet that has routes to ONTAP cluster management and node management LIFs.
 
 == Network requirements for using ONTAP Mediator in a MetroCluster configuration
 
@@ -82,7 +96,8 @@ The following table lists the ports that you must allow in your firewall:
 [NOTE] 
 ====
 * The iSCSI port is only required in a MetroCluster IP configuration.
-* The 22/tcp port is not required for normal operation but you can enable it temporarily for maintenance and disable it when the maintenance session has finished. 
+* The 22/tcp port is not required for normal operation but you can enable it temporarily for maintenance and disable it when the maintenance session has finished.
+* The EC2 instance port is only required when you want to install ONTAP Mediator on an AWS EC2 instance. Refer to <<Requirements to install ONTAP Mediator on an AWS EC2 instance>> for more information.
 ====
 
 |===
@@ -120,6 +135,17 @@ a|
 ONTAP Mediator iSCSI targets
 a|
 iSCSI data connection for mailboxes
+
+a| 
+443/https
+a|
+EC2 instance
+a|
+Outbound
+a|
+Linux repositories or internet
+a|
+Package installation
 |===
 
 == Guidelines for upgrading ONTAP Mediator in a MetroCluster configuration
