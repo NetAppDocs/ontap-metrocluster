@@ -206,6 +206,10 @@ NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for
 network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true
 ----
 
+. Revert all cluster LIFs that are not currently on their home ports to their home ports:
++
+`network interface revert -vserver * -lif *`
+
 . Optionally, move the NS224 shelves.
 +
 If you are reconfiguring a MetroCluster IP configuration that does not connect NS224 shelves to the MetroCluster IP switches, use the appropriate procedure to add or move the NS224 shelves:
@@ -214,6 +218,7 @@ If you are reconfiguring a MetroCluster IP configuration that does not connect N
 * link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-cluster-dat-storage.html[Migrate from a switchless cluster with direct-attached storage^]
 * link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-configuration-sat-storage.html[Migrate from a switchless configuration with switch-attached storage by reusing the storage switches^]
 
+// 2025 Nov 21, ONTAPDOC-3280
 // 2022 Apr 13, BURT 1536708
 // 2022 May 04, Issue 235
 // 2023 Dec 14, ONTAPDOC-1502

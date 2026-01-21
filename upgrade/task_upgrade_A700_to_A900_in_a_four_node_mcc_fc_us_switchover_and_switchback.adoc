@@ -642,11 +642,17 @@ Always use netboot to update the new node to the desired image. If you use anoth
 `\http://<web_server_ip/path_to_web-accessible_directory>/<ontap_version>_image.tgz`
 .	Complete the following substeps to reboot the controller module:
 ..	Enter `n` to skip the backup recovery when you see the following prompt:
-`Do you want to restore the backup configuration now? {y|n}`
++
+----
+Do you want to restore the backup configuration now? {y|n} n
+----
 ..	Enter `y` to reboot when you see the following prompt:
-`The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n}`
++
+`The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n} y`
 +
 The controller module reboots but stops at the boot menu because the boot device was reformatted, and the configuration data needs to be restored.
++
+NOTE: You must reboot the node in order to use the newly installed software. 
 .	At the prompt, run the `wipeconfig` command to clear any previous configuration on the boot media:
 ..	When you see the message below, answer `yes`:
 `This will delete critical system configuration, including cluster membership.
@@ -1162,7 +1168,7 @@ After completing the upgrade, you should send an AutoSupport message indicating 
 
 If the MetroCluster configuration was previously configured for monitoring by the Tiebreaker software, you can restore the Tiebreaker connection.
 
-. Use the steps in: link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#add-metrocluster-configurations[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
+. Use the steps in: link:../tiebreaker/concept_configuring_the_tiebreaker_software.html#add-mcc-config-tb[Adding MetroCluster configurations] in the _MetroCluster Tiebreaker Installation and Configuration_ section.
 
 // 2025 Apr 24, ONTAPDOC-2651
 // 2023 JULY 5, ONTAPDOC-1083
