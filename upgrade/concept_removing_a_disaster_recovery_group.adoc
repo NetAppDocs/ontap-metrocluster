@@ -33,10 +33,9 @@ When you remove a DR group, four nodes remain in the configuration.
 
 image::../media/mcc_dr_groups_4_node.gif["MetroCluster configuration with four nodes after DR group removal"]
 
-.Before you begin
+.About this task
 
 * You must perform this step on both clusters.
-* The `metrocluster remove-dr-group` command is supported only on ONTAP 9.8 and later.
 
 .Steps
 
@@ -103,6 +102,8 @@ ClusterB::*> set admin
 .. Remove the DR group nodes:
  +
 `metrocluster remove-dr-group -dr-group-id 1`
++
+NOTE: The `metrocluster remove-dr-group` command is supported only on ONTAP 9.8 and later.
 +
 The following example shows the removal of the DR group configuration on cluster_A.
 +
@@ -207,7 +208,9 @@ NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify t
 +
 All spare disks are displayed, including the pool0 and pool1 spare disks owned by the node.
 
-... Remove disk ownership for each pool1 spare disk:
+... Set the privilege level to advanced and remove disk ownership for each pool1 spare disk:
++
+`priv set advanced`
 +
 `disk remove_ownership <disk_name>`
 +
