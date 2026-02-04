@@ -9,11 +9,11 @@ summary:
 :imagesdir: ../media/
 
 [.lead]
-MetroCluster IP nodes access ONTAP Mediator mailbox disks using iSCSI sessions, which have a default connection timeout of 10 seconds, including a single retry after 5 seconds. Depending on your ONTAP version, if the network latency in your environment exceeds 10 seconds, you can increase the mailbox timeout to a maximum of 60 seconds to avoid disruption to Mediator-assisted unplanned switchover (MAUSO).
+MetroCluster IP nodes access ONTAP Mediator mailbox disks using iSCSI sessions, which have a default connection timeout of 10 seconds, including a single retry after 5 seconds. Depending on your ONTAP version and environment, you can increase the mailbox timeout to a maximum of 60 seconds to avoid disruption to Mediator-assisted unplanned switchover (MAUSO).
 
-NetApp recommends that you increase the default timeout if you are using network redundancy protocols (such as HSRP or VRRP), loop-avoidance protocols (such as STP), or if the network latency in your environment exceeds the default timeout of 10 seconds.  
+NetApp recommends that you increase the default mailbox connection timeout if you are using network redundancy protocols (such as HSRP or VRRP), loop-avoidance protocols (such as STP), or if the network latency in your environment exceeds the default timeout of 10 seconds.  
 
-CAUTION: You should only consider changing the default timeout value if it takes the MetroCluster IP nodes longer than 10 seconds to connect to ONTAP Mediator. 
+CAUTION: You should only consider changing the default mailbox connection timeout value if it takes the MetroCluster IP nodes longer than 10 seconds to connect to ONTAP Mediator. 
 
 .About this task
 
@@ -22,8 +22,8 @@ CAUTION: You should only consider changing the default timeout value if it takes
 ** 9.16.1P10
 ** 9.17.1P3
 ** ONTAP 9.18.1GA or later
-* Increasing the mailbox timeout value is supported on all versions of ONTAP Mediator. 
-* You must repeat the steps to increase the default timeout value each time you upgrade to a new ONTAP version. 
+* Increasing the mailbox timeout is supported on all versions of ONTAP Mediator. 
+* You must repeat the steps to increase the default timeout each time you upgrade to a new ONTAP version. 
 * The supported range for the timeout value is from 10 to 60 seconds. If you specify an out-of-range value, ONTAP automatically changes it back to the default value of 10 seconds.
 * If it takes longer than 10 seconds for the MetroCluster nodes to reconnect to the ONTAP Mediator, you should set the timeout value to be a few seconds longer than the time it takes the nodes to connect. 
 
