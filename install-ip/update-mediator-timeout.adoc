@@ -9,9 +9,11 @@ summary:
 :imagesdir: ../media/
 
 [.lead]
-MetroCluster IP nodes access ONTAP Mediator mailbox disks using iSCSI sessions, which have a default connection timeout of 10 seconds, including a single retry after 5 seconds. Depending on your ONTAP version, if the network latency in your environment exceeds 10 seconds, you can increase the mailbox timeout to a maximum of 60 seconds to ensure that Mediator-assisted unplanned switchover (MAUSO) is not disabled prematurely.
+MetroCluster IP nodes access ONTAP Mediator mailbox disks using iSCSI sessions, which have a default connection timeout of 10 seconds, including a single retry after 5 seconds. Depending on your ONTAP version, if the network latency in your environment exceeds 10 seconds, you can increase the mailbox timeout to a maximum of 60 seconds to avoid disruption to Mediator-assisted unplanned switchover (MAUSO).
 
 NetApp recommends that you increase the default timeout if you are using network redundancy protocols (such as HSRP or VRRP), loop-avoidance protocols (such as STP), or if the network latency in your environment exceeds the default timeout of 10 seconds.  
+
+CAUTION: You should only consider changing the default timeout value if it takes the MetroCluster IP nodes longer than 10 seconds to connect to ONTAP Mediator. 
 
 .About this task
 
@@ -30,5 +32,5 @@ NetApp recommends that you increase the default timeout if you are using network
 . To increase the default ONTAP Mediator mailbox timeout, refer to the link:https://kb.netapp.com/on-prem/ontap/mc/MC-KBs/How_to_Increase_Mediator_Mailbox_Timeout_for_environments_where_network_latency_exceeds_10_seconds[NetApp Knowledge Base article: How to Increase Mediator Mailbox Timeout for environments where network latency exceeds 10 seconds^]
 
 .Related information
-link:concept-ontap-mediator-supports-automatic-unplanned-switchover.html[How the ONTAP Mediator supports automatic unplanned switchover in MetroCluster IP configurations]
+link:concept-ontap-mediator-supports-automatic-unplanned-switchover.html[Learn more about how the ONTAP Mediator supports automatic unplanned switchover in MetroCluster IP configurations.]
  
