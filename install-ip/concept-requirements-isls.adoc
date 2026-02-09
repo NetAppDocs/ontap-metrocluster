@@ -21,9 +21,12 @@ The following applies to ISLs on all MetroCluster IP configurations:
 * The maximum supported difference in distance between fabric 1 and fabric 2 is 20km or 0.2ms.
 * The ISLs must have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they must all use WDM.
 * The minimum required ISL speed depends on the platform model:
-** Beginning with ONTAP 9.18.1, platforms with a MetroCluster IP backend port speed of 100G require a minimum ISL link speed of 100Gbps. Using a different ISL speed requires a Feature Variance Request (FPVR). To file an FPVR, please contact your NetApp sales team.
+** Beginning with ONTAP 9.18.1, platforms with a MetroCluster IP backend port speed of 100Gbps require a minimum ISL link speed of 100Gbps. Using a different ISL speed requires a Feature Variance Request (FPVR). To file an FPVR, please contact your NetApp sales team.
++
+CAUTION: If you are upgrading to ONTAP 9.18.1 and your platform does not meet the 100Gbps ISL requirement, you can still proceed with the upgrade. However, NetApp strongly recommends that you transition to 100Gbps ISL connectivity to maintain expected performance and availability levels.
+
 ** On all other platforms, the minimum supported ISL link speed is 10Gbps.
-* There must be least one 10Gbps ISL port per fabric.
+* There must be at least one 10Gbps ISL port per fabric.
 
 // 2025, Dec 08, ONTAPDOC-3504
 // 2025 Oct 23, ONTAPDOC-3396
