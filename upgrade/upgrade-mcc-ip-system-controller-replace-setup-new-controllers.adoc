@@ -42,7 +42,10 @@ a|
 * An AFF A220 to an AFF A20 system  | Controller to external shelf conversion
 a|
 * An AFF A800 to an AFF A90 system 
-* An AFF C800 to an AFF C80 system | Controller module replacement
+* An AFF C800 to an AFF C80 system
+* An AFF A250 to an AFF A30 system
+* An AFF C250 to an AFF C30 system
+* An AFF A70 to an AFF A90 system | Controller module replacement
 | Any other controller upgrade combinations | All other upgrades
 |===
 +
@@ -129,17 +132,19 @@ You do not need to extract the `ontap-version_image.tgz` file.
 Enter username/password if applicable, or press Enter to continue.
 ....
 
-. Be sure to enter `n` to skip the backup recovery when you see a prompt similar to the following:
+. Enter `n` to skip the backup recovery when you see a prompt similar to the following:
 +
 ....
-Do you want to restore the backup configuration now? {y|n}
+Do you want to restore the backup configuration now? {y|n} n
 ....
 
 . Reboot by entering `y` when you see a prompt similar to the following:
 +
 ....
-The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n}
+The node must be rebooted to start using the newly installed software. Do you want to reboot now? {y|n} y
 ....
++
+NOTE: You must reboot the node in order to use the newly installed software. 
 
 == Clear the configuration on a controller module
 
@@ -149,4 +154,5 @@ include::../_include/steps_clear_config_boot_to_maint_mode.adoc[]
 .What's next?
 link:upgrade-mcc-ip-system-controller-replace-restore-hba-set-ha.html[Restore the HBA configuration and set the HA state].
 
+// 2025 Jan 28, ONTAPDOC-3179
 // 2024 Nov 12, ONTAPDOC-2351
