@@ -77,15 +77,40 @@ a|
 Perform the suggested fix provided in the output of the `metrocluster operation show` command.
 |===
 
-*Post-switchback testing*
+. From the DR cluster, check if a switchover from the surviving cluster to the DR cluster is possible:
++
+`metrocluster switchover -simulate`
++
 
-You are recommended to perform the following tests, which can provide additional reassurance that your switchback has completed successfully.
+. From the surviving cluster, check if a switchover from the DR cluster to the surviving cluster is possible:
++
+`metrocluster switchover -simulate`
++
 
-*Steps*
+. From either side of the metrocluster, confirm that that all outputs are ok: 
 
-. Run `metrocluster switchover -simulate` on the DR cluster to check if a switchover from the surviving cluster to the DR cluster is possible.
-. Run `metrocluster switchover -simulate` on the surviving cluster to check if a switchover from the DR cluster to the surviving cluster is possible.
-. Run `metrocluster check show` from either side of the metrocluster and confirm that that all outputs are 'ok'. **Note:** In a non-MetroCluster IP environment,  "not-applicable" should display under 'connections' in the command output.
++
+`metrocluster check show`
++
+
+For a successful switchback, the command output should appear similar to the following: 
+
+----
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+clusters            ok
+connections         ok
+volumes             ok
+
+7 entries were displayed.
+
+----
+
+**Note:** In a non-MetroCluster IP environment, 'connections' should show as "not-applicable"  in the command output.
 
 // 2026 Feb 12, ONTAPDOC-3583
 // 2024 Dec 16, ONTAPDOC-2384
