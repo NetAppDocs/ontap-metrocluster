@@ -77,8 +77,17 @@ a|
 Perform the suggested fix provided in the output of the `metrocluster operation show` command.
 |===
 
-You must repeat the previous sections to perform the switchback in the opposite direction. If site_A did a switchover of site_B, have site_B do a switchover of site_A.
+*Post-switchback testing*
 
+You are recommended to perform the following tests, which can provide additional reassurance that your switchback has completed successfully.
+
+*Steps*
+
+. Run `metrocluster switchover -simulate` on the DR cluster to check if a switchover from the surviving cluster to the DR cluster is possible.
+. Run `metrocluster switchover -simulate` on the surviving cluster to check if a switchover from the DR cluster to the surviving cluster is possible.
+. Run `metrocluster check show` from either side of the metrocluster and confirm that that all outputs are 'ok'. **Note:** In a non-MetroCluster IP environment,  "not-applicable" should display under 'connections' in the command output.
+
+// 2026 Feb 12, ONTAPDOC-3583
 // 2024 Dec 16, ONTAPDOC-2384
 // BURT 1448684, 03 FEB 2022
 // BURT 1485050, 2022-06-29
