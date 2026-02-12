@@ -403,9 +403,15 @@ a|
 Perform the suggested fix provided in the output of the `metrocluster operation show` command.
 |===
 
-.After you finish
+*Post-switchback testing*
 
-You must repeat the previous sections to perform the switchback in the opposite direction. If site_A did a switchover of site_B, have site_B do a switchover of site_A.
+You should perform these recommended tests for added reassurance that your switchback has completed successfully.
+
+*Steps*
+
+. Run `metrocluster switchover -simulate` on the DR cluster to check if a switchover from the surviving cluster to the DR cluster is possible.
+. Run `metrocluster switchover -simulate` on the surviving cluster to check if a switchover from the DR cluster to the surviving cluster is possible.
+. Run `metrocluster check show` from either side of the metrocluster and confirm that that all outputs are 'ok'. **Note:** In a non-MetroCluster IP environment,  connections should display "not-applicable" in the command output.
 
 == Deleting stale aggregate listings after switchback
 
