@@ -403,23 +403,24 @@ a|
 Perform the suggested fix provided in the output of the `metrocluster operation show` command.
 |===
 
-. From the DR cluster, check if a switchover from the surviving cluster to the DR cluster is possible:
+. Perform the following checks to confirm that switchover is operational between the two clusters:
+
+* From the DR cluster, check if a switchover from the surviving cluster to the DR cluster is possible:
 +
 `metrocluster switchover -simulate`
 +
 
-. From the surviving cluster, check if a switchover from the DR cluster to the surviving cluster is possible:
+* From the surviving cluster, check if a switchover from the DR cluster to the surviving cluster is possible:
 +
 `metrocluster switchover -simulate`
 +
 
-. From either side of the metrocluster, confirm that that all outputs are ok: 
-
+* From either side of the metrocluster, confirm that that all outputs are ok: 
 +
 `metrocluster check show`
 +
 
-For a successful switchback, the command output should appear similar to the following: 
+For a successful switchover, the command output should appear similar to the following: 
 +
 ----
 Component           Result
