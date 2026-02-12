@@ -36,7 +36,7 @@ This task must be performed on all the new controllers.
 `setenv bootarg.kmip.init.interface <interface-id>`
 . Display the boot menu:
 +
-`boot_ontap menu`
+`boot_ontap menu` 
 . If root encryption is used, select the boot menu option for your key management configuration.
 +
 
@@ -73,8 +73,21 @@ Rebooting to load the restored env file...
 ----
 +
 During one of the reboots after option "`6`", the confirmation prompt `Override system ID? {y|n}` appears. Enter `y`.
-. If root encryption is used, select the boot menu option again for your key management configuration.
+
+. At the `LOADER` prompt, verify the bootarg values and update the values as needed.
 +
+Use the steps in link:upgrade-mcc-ip-system-controller-replace-apply-rcf-set-bootarg.html#set-the-metrocluster-ip-bootarg-variables[Set the MetroCluster IP bootarg variables].
+
+. Verify that the partner-sysid is the correct:
++
+`printenv partner-sysid`
++
+If the partner-sysid is not correct, set it:
++
+`setenv partner-sysid <partner-sysID>`
+
+. If root encryption is used, select the boot menu option again for your key management configuration.
++ 
 
 |===
 
