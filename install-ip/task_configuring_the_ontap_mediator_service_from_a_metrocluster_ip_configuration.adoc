@@ -27,30 +27,35 @@ CAUTION: Beginning with ONTAP 9.12.1, you can enable the MetroCluster automatic 
 
 * This task enables automatic unplanned switchover by default.
 * This task can be performed on the ONTAP interface of any node in the MetroCluster IP configuration.
+* Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can use configure a HTTPS based Mediator to monitor your MetroCluster configuration.
 * Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance can manage up to ten MetroCluster configurations simultaneously. In earlier releases, ONTAP Mediator can support up to five MetroCluster configurations simultaneously.
+
 
 .Steps
 
-. Add ONTAP Mediator to ONTAP. The steps depend on whether you want to use an IPv4 or IPv6 address.
+. Add ONTAP Mediator to ONTAP. The steps depend on whether you want to use an IPv4 or IPv6 address and whether you want to use the HTTPS or iSCSI protocol.
 +
 [NOTE]
 ====
 * You must be running ONTAP 9.18.1 or later and ONTAP Mediator 1.11 or later to use IPv6.
 * If you enable IPv6 on a cluster, you cannot disable it later. 
+* You must be running ONTAP 9.19.1 or later and ONTAP Mediator 1.12 or later to use HTTPS.
+* If you don't specify the `-type` parameter in the command, the default iSCSI protocol is used. 
 ====
 +
 [role="tabbed-block"]
 ====
-.Use IPv4 
+.Use IPv4 with iSCSI
 --
 
 .. Run the following command to add the ONTAP Mediator:
 +
-`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address>`
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address> -type iscsi-mediator`
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
+
 --
-.Use IPv6
+.Use IPv6 with iSCSI
 --
 
 .. Run the following command on both clusters:
@@ -62,9 +67,37 @@ NOTE: You are prompted for the username and password for the Mediator admin user
 
 .. Add the ONTAP Mediator:
 +
-`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ipv6_ip_address>`
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ipv6_ip_address> -type iscsi-mediator`
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
+
+--
+.Use IPv4 with HTTPS
+--
+
+.. Run the following command to add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address> -type https-mediator`
++
+NOTE: You are prompted for the username and password for the Mediator admin user account.
+
+--
+.Use IPv6 with HTTPS
+--
+
+.. Run the following command on both clusters:
++
+`network options ipv6 modify -enabled true`
+
+
+.. Configure the node-mgmt IP address with IPv6 addresses on all four nodes.
+
+.. Add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ipv6_ip_address> -type https-mediator`
++
+NOTE: You are prompted for the username and password for the Mediator admin user account.
+
 --
 ====
 
