@@ -27,7 +27,7 @@ CAUTION: Beginning with ONTAP 9.12.1, you can enable the MetroCluster automatic 
 
 * This task enables automatic unplanned switchover by default.
 * This task can be performed on the ONTAP interface of any node in the MetroCluster IP configuration.
-* Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can use configure a HTTPS based Mediator to monitor your MetroCluster configuration.
+* Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure a HTTPS based Mediator to monitor your MetroCluster configuration.
 * Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance can manage up to ten MetroCluster configurations simultaneously. In earlier releases, ONTAP Mediator can support up to five MetroCluster configurations simultaneously.
 
 
@@ -54,6 +54,69 @@ CAUTION: Beginning with ONTAP 9.12.1, you can enable the MetroCluster automatic 
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
 
+.. Verify that the automatic switchover feature is enabled:
++
+`metrocluster show`
+.. Verify that the Mediator is now running.
+
+... Show the Mediator virtual disks:
++
+`storage disk show -container-type mediator`
++
+....
+ cluster_A::> storage disk show -container-type mediator
+                        Usable           Disk    Container   Container
+ Disk                   Size Shelf Bay Type    Type        Name      Owner
+ ---------------- ---------- ----- --- ------- ----------- --------- --------
+ NET-1.5                   -     -   - VMDISK  mediator    -         node_A_2
+ NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
+ NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
+ NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
+....
+
+... Set the privilege mode to advanced:
++
+`set advanced`
++
+....
+ cluster_A::> set advanced
+....
+
+... Display the initiators labelled as mediator:
++
+`storage iscsi-initiator show -label mediator`
++
+....
+ cluster_A::*> storage iscsi-initiator show -label mediator
+   (storage iscsi-initiator show)
+  +                                                                     Status
+ Node Type Label    Target Portal      Target Name                      Admin/Op
+ ---- ---- -------- ------------------ -------------------------------- --------
+ node_A_1
+      mailbox
+           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
+ node_A_2
+      mailbox
+           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
+....
+... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
++
+`metrocluster show`
++
+NOTE: The following example output applies to ONTAP 9.13.1 and later. For ONTAP 9.12.1 and earlier, the AUSO failure domain state should be `auso-on-cluster-disaster`.
++
+----
+cluster_A::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+Local: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+Remote: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+----
+
 --
 .Use IPv6 with iSCSI
 --
@@ -71,6 +134,69 @@ NOTE: You are prompted for the username and password for the Mediator admin user
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
 
+.. Verify that the automatic switchover feature is enabled:
++
+`metrocluster show`
+.. Verify that the Mediator is now running.
+
+... Show the Mediator virtual disks:
++
+`storage disk show -container-type mediator`
++
+....
+ cluster_A::> storage disk show -container-type mediator
+                        Usable           Disk    Container   Container
+ Disk                   Size Shelf Bay Type    Type        Name      Owner
+ ---------------- ---------- ----- --- ------- ----------- --------- --------
+ NET-1.5                   -     -   - VMDISK  mediator    -         node_A_2
+ NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
+ NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
+ NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
+....
+
+... Set the privilege mode to advanced:
++
+`set advanced`
++
+....
+ cluster_A::> set advanced
+....
+
+... Display the initiators labelled as mediator:
++
+`storage iscsi-initiator show -label mediator`
++
+....
+ cluster_A::*> storage iscsi-initiator show -label mediator
+   (storage iscsi-initiator show)
+  +                                                                     Status
+ Node Type Label    Target Portal      Target Name                      Admin/Op
+ ---- ---- -------- ------------------ -------------------------------- --------
+ node_A_1
+      mailbox
+           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
+ node_A_2
+      mailbox
+           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
+....
+... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
++
+`metrocluster show`
++
+NOTE: The following example output applies to ONTAP 9.13.1 and later. For ONTAP 9.12.1 and earlier, the AUSO failure domain state should be `auso-on-cluster-disaster`.
++
+----
+cluster_A::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+Local: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+Remote: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+----
+
 --
 .Use IPv4 with HTTPS
 --
@@ -80,6 +206,69 @@ NOTE: You are prompted for the username and password for the Mediator admin user
 `metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address> -type https-mediator`
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
+
+.. Verify that the automatic switchover feature is enabled:
++
+`metrocluster show`
+.. Verify that the Mediator is now running.
+
+... Show the Mediator virtual disks:
++
+`storage disk show -container-type mediator`
++
+....
+ cluster_A::> storage disk show -container-type mediator
+                        Usable           Disk    Container   Container
+ Disk                   Size Shelf Bay Type    Type        Name      Owner
+ ---------------- ---------- ----- --- ------- ----------- --------- --------
+ NET-1.5                   -     -   - VMDISK  mediator    -         node_A_2
+ NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
+ NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
+ NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
+....
+
+... Set the privilege mode to advanced:
++
+`set advanced`
++
+....
+ cluster_A::> set advanced
+....
+
+... Display the initiators labelled as mediator:
++
+`storage iscsi-initiator show -label mediator`
++
+....
+ cluster_A::*> storage iscsi-initiator show -label mediator
+   (storage iscsi-initiator show)
+  +                                                                     Status
+ Node Type Label    Target Portal      Target Name                      Admin/Op
+ ---- ---- -------- ------------------ -------------------------------- --------
+ node_A_1
+      mailbox
+           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
+ node_A_2
+      mailbox
+           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
+....
+... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
++
+`metrocluster show`
++
+NOTE: The following example output applies to ONTAP 9.13.1 and later. For ONTAP 9.12.1 and earlier, the AUSO failure domain state should be `auso-on-cluster-disaster`.
++
+----
+cluster_A::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+Local: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+Remote: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+----
 
 --
 .Use IPv6 with HTTPS
@@ -98,16 +287,12 @@ NOTE: You are prompted for the username and password for the Mediator admin user
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
 
---
-====
-
-
-. Verify that the automatic switchover feature is enabled:
+.. Verify that the automatic switchover feature is enabled:
 +
 `metrocluster show`
-. Verify that the Mediator is now running.
+.. Verify that the Mediator is now running.
 
-.. Show the Mediator virtual disks:
+... Show the Mediator virtual disks:
 +
 `storage disk show -container-type mediator`
 +
@@ -122,7 +307,7 @@ NOTE: You are prompted for the username and password for the Mediator admin user
  NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
 ....
 
-.. Set the privilege mode to advanced:
+... Set the privilege mode to advanced:
 +
 `set advanced`
 +
@@ -130,7 +315,7 @@ NOTE: You are prompted for the username and password for the Mediator admin user
  cluster_A::> set advanced
 ....
 
-.. Display the initiators labelled as mediator:
+... Display the initiators labelled as mediator:
 +
 `storage iscsi-initiator show -label mediator`
 +
@@ -147,7 +332,7 @@ NOTE: You are prompted for the username and password for the Mediator admin user
       mailbox
            mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
 ....
-.. Verify the state of the automatic unplanned switchover (AUSO) failure domain:
+... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
 +
 `metrocluster show`
 +
@@ -164,6 +349,10 @@ Remote: cluster_B         Configuration state configured
                           Mode                normal
                           AUSO Failure Domain auso-on-dr-group-disaster 
 ----
+
+--
+====
+
 
 . Optionally, configure MetroCluster automatic forced switchover.  
 +
