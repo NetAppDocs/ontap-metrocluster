@@ -27,266 +27,281 @@ CAUTION: Beginning with ONTAP 9.12.1, you can enable the MetroCluster automatic 
 
 * This task enables automatic unplanned switchover by default.
 * This task can be performed on the ONTAP interface of any node in the MetroCluster IP configuration.
-* Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure a HTTPS based Mediator to monitor your MetroCluster configuration.
 * Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance can manage up to ten MetroCluster configurations simultaneously. In earlier releases, ONTAP Mediator can support up to five MetroCluster configurations simultaneously.
+* If you don't specify the `-type` parameter in the command, the default iSCSI protocol is used. 
+
+[role="tabbed-block"]
+=====
+.Configure an ONTAP Mediator with HTTPS
+--
+
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure a HTTPS based Mediator to monitor your MetroCluster configuration. 
+
+.Steps 
+
+. Locate the ONTAP Mediator CA certificates from the ONTAP Mediator Linux VM/host software installation location:
++
+`[root@ontap-mediator ~] cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`
++
+You should see output similar to the following example:
++
+----
+1-ontap-mediator.rules  intermediate.crt   make_self_signed_certs.sh      ontap_mediator_server_chain.crt  ontap_mediator.user_config.yaml  root_ca.crt
+config_migration        intermediate.key   netapp_sudoers                 ontap_mediator_server.crt        openssl_ca.cnf                   root_ca.key
+config.pyc              intermediate.srl   ontap_mediator.config.yaml     ontap_mediator_server.csr        openssl_intermediate.cnf
+__init__.pyc            logging.conf.yaml  ontap_mediator.constants.yaml  ontap_mediator_server.key        openssl_server.cnf
+----
+
+. Display the contents of the root CA certificate:
++
+`[root@ontap-mediator ~] cat root_ca.crt`
++
+----
+-----BEGIN CERTIFICATE-----
+<certificate_value>
+-----END CERTIFICATE-----
+-----
+----
+
+. Display the contents of the intermediate CA certificate:
++
+`[root@ontap-mediator ~] cat intermediate.crt`
++
+----
+-----BEGIN CERTIFICATE-----
+<certificate_value>
+-----END CERTIFICATE-----
+-----
+----
 
 
-.Steps
+. Install the root and intermediate CA certificates on site A:
+.. Install the root CA certificate:
++
+`security certificate install -type server-ca`
++
+Enter the `root.crt` when prompted as shown in the following example:
++
+----
+cluster_A::*> security certificate install -type server-ca
 
-. Add ONTAP Mediator to ONTAP. The steps depend on whether you want to use an IPv4 or IPv6 address and whether you want to use the HTTPS or iSCSI protocol.
+        Enter certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+<certificate_value>
+-----END CERTIFICATE-----
+
+You should keep a copy of the CA-signed digital certificate for future
+reference.
+
+The installed certificate's CA and serial number for reference:
+CA: ONTAP Mediator CA
+serial: <serial_value>
+
+The certificate's generated name for reference: ONTAPMediatorCA
+
+cluster_A::*>
+
+----
+. Install the intermediate CA certificate:
++
+`security certificate install -type server-ca`
++
+Enter the `intermediate.crt` when prompted as shown in the following example:
++
+----
+cluster_A::*> security certificate install -type server-ca
+
+        Enter certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+<certificate_value>
+-----END CERTIFICATE-----
+
+You should keep a copy of the CA-signed digital certificate for future
+reference.
+
+The installed certificate's CA and serial number for reference:
+CA: ONTAP Mediator CA
+serial: <serial_value>
+
+The certificate's generated name for reference: ONTAPMediatorCA
+
+cluster_A::*>
+
+----
+
+. Repeat the previous step to install the root and intermediate CA certificates on site B.
+
+. Verify the server certificate details and expiration dates:
++
+`security certificate show -type server-ca -ca "ONTAP Mediator CA"`
++
+You should see output similar to the following example:
++
+----
+   security certificate show -type server-ca -ca "ONTAP Mediator CA"
+Vserver    Serial Number   Certificate Name                       Type
+---------- --------------- -------------------------------------- ------------
+cluster_A 4011FFF4CC072A0C3DF0D16E36218839031DA04B ONTAPMediatorCA server-ca
+    Certificate Authority: ONTAP Mediator CA
+          Expiration Date: Thu Nov 28 05:26:07 2030
+
+cluster_A ED7F60A4BEE9D3D96AE15EE5819335EC9332C461 ONTAPMediatorCA_ED7F60A4BEE9D3D96AE15EE5819335EC9332C461 server-ca
+    Certificate Authority: ONTAP Mediator CA
+          Expiration Date: Thu Nov 28 05:26:07 2030
+
+2 entries were displayed.
+----
+
+. Add ONTAP Mediator to ONTAP. The steps depend on whether you want to use an IPv4 or IPv6 address.
 +
 [NOTE]
 ====
 * You must be running ONTAP 9.18.1 or later and ONTAP Mediator 1.11 or later to use IPv6.
 * If you enable IPv6 on a cluster, you cannot disable it later. 
-* You must be running ONTAP 9.19.1 or later and ONTAP Mediator 1.12 or later to use HTTPS.
-* If you don't specify the `-type` parameter in the command, the default iSCSI protocol is used. 
 ====
-+
-[role="tabbed-block"]
-====
-.Use IPv4 with iSCSI
---
 
-.. Run the following command to add the ONTAP Mediator:
-+
-`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address> -type iscsi-mediator`
-+
-NOTE: You are prompted for the username and password for the Mediator admin user account.
-
-.. Verify that the automatic switchover feature is enabled:
-+
-`metrocluster show`
-.. Verify that the Mediator is now running.
-
-... Show the Mediator virtual disks:
-+
-`storage disk show -container-type mediator`
-+
-....
- cluster_A::> storage disk show -container-type mediator
-                        Usable           Disk    Container   Container
- Disk                   Size Shelf Bay Type    Type        Name      Owner
- ---------------- ---------- ----- --- ------- ----------- --------- --------
- NET-1.5                   -     -   - VMDISK  mediator    -         node_A_2
- NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
- NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
- NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
-....
-
-... Set the privilege mode to advanced:
-+
-`set advanced`
-+
-....
- cluster_A::> set advanced
-....
-
-... Display the initiators labelled as mediator:
-+
-`storage iscsi-initiator show -label mediator`
-+
-....
- cluster_A::*> storage iscsi-initiator show -label mediator
-   (storage iscsi-initiator show)
-  +                                                                     Status
- Node Type Label    Target Portal      Target Name                      Admin/Op
- ---- ---- -------- ------------------ -------------------------------- --------
- node_A_1
-      mailbox
-           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
- node_A_2
-      mailbox
-           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
-....
-... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
-+
-`metrocluster show`
-+
-NOTE: The following example output applies to ONTAP 9.13.1 and later. For ONTAP 9.12.1 and earlier, the AUSO failure domain state should be `auso-on-cluster-disaster`.
-+
-----
-cluster_A::> metrocluster show
-Cluster                   Entry Name          State
-------------------------- ------------------- -----------
-Local: cluster_A         Configuration state configured
-                          Mode                normal
-                          AUSO Failure Domain auso-on-dr-group-disaster 
-Remote: cluster_B         Configuration state configured
-                          Mode                normal
-                          AUSO Failure Domain auso-on-dr-group-disaster 
-----
-
---
-.Use IPv6 with iSCSI
---
-
-.. Run the following command on both clusters:
+.. If you want to use IPv6, complete the following steps:
+... Run the following command on both clusters:
 +
 `network options ipv6 modify -enabled true`
 
+... Configure the node-mgmt IP address with IPv6 addresses on all four nodes.
 
-.. Configure the node-mgmt IP address with IPv6 addresses on all four nodes.
-
-.. Add the ONTAP Mediator:
-+
-`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ipv6_ip_address> -type iscsi-mediator`
-+
-NOTE: You are prompted for the username and password for the Mediator admin user account.
-
-.. Verify that the automatic switchover feature is enabled:
-+
-`metrocluster show`
-.. Verify that the Mediator is now running.
-
-... Show the Mediator virtual disks:
-+
-`storage disk show -container-type mediator`
-+
-....
- cluster_A::> storage disk show -container-type mediator
-                        Usable           Disk    Container   Container
- Disk                   Size Shelf Bay Type    Type        Name      Owner
- ---------------- ---------- ----- --- ------- ----------- --------- --------
- NET-1.5                   -     -   - VMDISK  mediator    -         node_A_2
- NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
- NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
- NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
-....
-
-... Set the privilege mode to advanced:
-+
-`set advanced`
-+
-....
- cluster_A::> set advanced
-....
-
-... Display the initiators labelled as mediator:
-+
-`storage iscsi-initiator show -label mediator`
-+
-....
- cluster_A::*> storage iscsi-initiator show -label mediator
-   (storage iscsi-initiator show)
-  +                                                                     Status
- Node Type Label    Target Portal      Target Name                      Admin/Op
- ---- ---- -------- ------------------ -------------------------------- --------
- node_A_1
-      mailbox
-           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
- node_A_2
-      mailbox
-           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
-....
-... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
-+
-`metrocluster show`
-+
-NOTE: The following example output applies to ONTAP 9.13.1 and later. For ONTAP 9.12.1 and earlier, the AUSO failure domain state should be `auso-on-cluster-disaster`.
-+
-----
-cluster_A::> metrocluster show
-Cluster                   Entry Name          State
-------------------------- ------------------- -----------
-Local: cluster_A         Configuration state configured
-                          Mode                normal
-                          AUSO Failure Domain auso-on-dr-group-disaster 
-Remote: cluster_B         Configuration state configured
-                          Mode                normal
-                          AUSO Failure Domain auso-on-dr-group-disaster 
-----
-
---
-.Use IPv4 with HTTPS
---
-
-.. Run the following command to add the ONTAP Mediator:
-+
-`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address> -type https-mediator`
-+
-NOTE: You are prompted for the username and password for the Mediator admin user account.
-
-.. Verify that the automatic switchover feature is enabled:
-+
-`metrocluster show`
-.. Verify that the Mediator is now running.
-
-... Show the Mediator virtual disks:
-+
-`storage disk show -container-type mediator`
-+
-....
- cluster_A::> storage disk show -container-type mediator
-                        Usable           Disk    Container   Container
- Disk                   Size Shelf Bay Type    Type        Name      Owner
- ---------------- ---------- ----- --- ------- ----------- --------- --------
- NET-1.5                   -     -   - VMDISK  mediator    -         node_A_2
- NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
- NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
- NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
-....
-
-... Set the privilege mode to advanced:
-+
-`set advanced`
-+
-....
- cluster_A::> set advanced
-....
-
-... Display the initiators labelled as mediator:
-+
-`storage iscsi-initiator show -label mediator`
-+
-....
- cluster_A::*> storage iscsi-initiator show -label mediator
-   (storage iscsi-initiator show)
-  +                                                                     Status
- Node Type Label    Target Portal      Target Name                      Admin/Op
- ---- ---- -------- ------------------ -------------------------------- --------
- node_A_1
-      mailbox
-           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
- node_A_2
-      mailbox
-           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
-....
-... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
-+
-`metrocluster show`
-+
-NOTE: The following example output applies to ONTAP 9.13.1 and later. For ONTAP 9.12.1 and earlier, the AUSO failure domain state should be `auso-on-cluster-disaster`.
-+
-----
-cluster_A::> metrocluster show
-Cluster                   Entry Name          State
-------------------------- ------------------- -----------
-Local: cluster_A         Configuration state configured
-                          Mode                normal
-                          AUSO Failure Domain auso-on-dr-group-disaster 
-Remote: cluster_B         Configuration state configured
-                          Mode                normal
-                          AUSO Failure Domain auso-on-dr-group-disaster 
-----
-
---
-.Use IPv6 with HTTPS
---
-
-.. Run the following command on both clusters:
-+
-`network options ipv6 modify -enabled true`
-
-
-.. Configure the node-mgmt IP address with IPv6 addresses on all four nodes.
-
-.. Add the ONTAP Mediator:
+... Add the ONTAP Mediator:
 +
 `metrocluster configuration-settings mediator add -mediator-address <mediator_host_ipv6_ip_address> -type https-mediator`
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
 
+.. If you want to use IPv4, complete the following step:
++
+... Add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address> -type https-mediator`
++
+NOTE: You are prompted for the username and password for the Mediator admin user account.
+
+
+. Verify the connection status and the ONTAP Mediator type:
++
+`metrocluster configuration-settings mediator show`
++
+You should see output similar to the following example:
++
+----
+cluster_A::*> metrocluster configuration-settings mediator show
+        Mediator IP     Port    Type              Node                    Configuration Connection
+                                                  Status                  Status
+        --------------- ------- ----------------- ----------------------- ------------- -----------
+        10.101.101.101
+                        31784   https-mediator    cluster1_node_01        true          true
+                                                  cluster1_node_02        true          true
+                                                  cluster2_node_01        true          true
+                                                  cluster2_node_02        true          true
+----
+
+
+.. Verify that the automatic switchover feature is enabled:
++
+`metrocluster show`
+.. Verify that the Mediator is now running.
+
+... Show the Mediator virtual disks:
++
+`storage disk show -container-type mediator`
++
+....
+ cluster_A::> storage disk show -container-type mediator
+                        Usable           Disk    Container   Container
+ Disk                   Size Shelf Bay Type    Type        Name      Owner
+ ---------------- ---------- ----- --- ------- ----------- --------- --------
+ NET-1.5                   -     -   - VMDISK  mediator    -         node_A_2
+ NET-1.6                   -     -   - VMDISK  mediator    -         node_B_1
+ NET-1.7                   -     -   - VMDISK  mediator    -         node_B_2
+ NET-1.8                   -     -   - VMDISK  mediator    -         node_A_1
+....
+
+... Set the privilege mode to advanced:
++
+`set advanced`
++
+....
+ cluster_A::> set advanced
+....
+
+... Display the initiators labelled as mediator:
++
+`storage iscsi-initiator show -label mediator`
++
+....
+ cluster_A::*> storage iscsi-initiator show -label mediator
+   (storage iscsi-initiator show)
+  +                                                                     Status
+ Node Type Label    Target Portal      Target Name                      Admin/Op
+ ---- ---- -------- ------------------ -------------------------------- --------
+ node_A_1
+      mailbox
+           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
+ node_A_2
+      mailbox
+           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
+....
+... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
++
+`metrocluster show`
++
+NOTE: The following example output applies to ONTAP 9.13.1 and later. For ONTAP 9.12.1 and earlier, the AUSO failure domain state should be `auso-on-cluster-disaster`.
++
+----
+cluster_A::> metrocluster show
+Cluster                   Entry Name          State
+------------------------- ------------------- -----------
+Local: cluster_A         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+Remote: cluster_B         Configuration state configured
+                          Mode                normal
+                          AUSO Failure Domain auso-on-dr-group-disaster 
+----
+
+-- 
+.Configure an ONTAP Medaitor with iSCSI
+--
+
+.Steps
+
+. Add ONTAP Mediator to ONTAP. The steps depend on whether you want to use an IPv4 or IPv6 address.
++
+[NOTE]
+====
+* You must be running ONTAP 9.18.1 or later and ONTAP Mediator 1.11 or later to use IPv6.
+* If you enable IPv6 on a cluster, you cannot disable it later. 
+====
+
+.. If you want to use IPv6, complete the following steps:
+
+... Run the following command on both clusters:
++
+`network options ipv6 modify -enabled true`
+
+
+... Configure the node-mgmt IP address with IPv6 addresses on all four nodes.
+
+... Add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ipv6_ip_address> -type iscsi-mediator`
++
+NOTE: You are prompted for the username and password for the Mediator admin user account.
+
+.. If you want to use IPv4, complete the following step:
+
+... Add the ONTAP Mediator:
++
+`metrocluster configuration-settings mediator add -mediator-address <mediator_host_ip_address> -type iscsi-mediator`
++
+NOTE: You are prompted for the username and password for the Mediator admin user account.
+
+
 .. Verify that the automatic switchover feature is enabled:
 +
 `metrocluster show`
@@ -351,21 +366,7 @@ Remote: cluster_B         Configuration state configured
 ----
 
 --
-====
-
-
-. Optionally, configure MetroCluster automatic forced switchover.  
-+
-You can only use the following command in advanced privilege level.
-+
-IMPORTANT: Before using this command, review the link:concept-ontap-mediator-supports-automatic-unplanned-switchover.html#mauso-9-12-1[Risks and limitations of using MetroCluster automatic forced switchover].
-+
-`metrocluster modify -allow-auto-forced-switchover true`
-+
-.Example
-....
-cluster_A::*> metrocluster modify -allow-auto-forced-switchover true
-....
+=====
 
 // 2024 FEB 20, ONTAPDOC-1168
 // 2023 Sep 11, GH issue 322
