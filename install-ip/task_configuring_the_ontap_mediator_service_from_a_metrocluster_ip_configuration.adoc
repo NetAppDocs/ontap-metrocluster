@@ -161,6 +161,8 @@ cluster_A ED7F60A4BEE9D3D96AE15EE5819335EC9332C461 ONTAPMediatorCA_ED7F60A4BEE9D
 ====
 
 .. If you want to use IPv6, complete the following steps:
++
+If you want to use IPv4, go to <<https_ipv4_step8b, Step 8 (b)>>
 ... Run the following command on both clusters:
 +
 `network options ipv6 modify -enabled true`
@@ -173,7 +175,7 @@ cluster_A ED7F60A4BEE9D3D96AE15EE5819335EC9332C461 ONTAPMediatorCA_ED7F60A4BEE9D
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
 
-.. If you want to use IPv4, complete the following step:
+[[https_ipv4_step8b]].. If you want to use IPv4, complete the following step:
 +
 ... Add the ONTAP Mediator:
 +
@@ -204,6 +206,7 @@ cluster_A::*> metrocluster configuration-settings mediator show
 .. Verify that the automatic switchover feature is enabled:
 +
 `metrocluster show`
+
 .. Verify that the Mediator is now running.
 
 ... Show the Mediator virtual disks:
@@ -229,23 +232,50 @@ cluster_A::*> metrocluster configuration-settings mediator show
  cluster_A::> set advanced
 ....
 
-... Display the initiators labelled as mediator:
+... Show the ONTAP Mediator mailbox disks:
 +
-`storage iscsi-initiator show -label mediator`
+`storage failover mailbox-disk show`
 +
-....
- cluster_A::*> storage iscsi-initiator show -label mediator
-   (storage iscsi-initiator show)
-  +                                                                     Status
- Node Type Label    Target Portal      Target Name                      Admin/Op
- ---- ---- -------- ------------------ -------------------------------- --------
- node_A_1
-      mailbox
-           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68- 00a098cbca9e:1 up/up
- node_A_2
-      mailbox
-           mediator 1.1.1.1       iqn.2012-05.local:mailbox.target.6616cd3f-9ef1-11e9-aada-00a098ccf5d8:a05e1ffb-9ef1-11e9-8f68-00a098cbca9e:1 up/up
-....
+----
+ cluster_A::*> storage failover mailbox-disk show
+                  Mailbox
+Node             Owner     Disk Name        Disk UUID
+---------------- --------- ---------------- ----------------
+node_A1
+                 local     1.0.6.P3         674A3830:57C03745:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     1.0.7.P3         674A3830:57C03749:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     1.0.8.P3         674A3830:57C03880:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     NET-1.4          34383535:30666163:00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000 
+                 local     2.0.22.P3        66483030:54A01201:00253845:00000002:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     2.0.21.P3        66483030:54A00871:00253845:00000002:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     2.0.23.P3        66483030:54B01401:00253841:00000002:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   1.0.0.P3         674A3830:57C03879:00253845:00000011:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   1.0.1.P3         674A3830:57C04249:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   1.0.2.P3         674A3830:57C04244:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   2.0.15.P3        674A3830:57C04252:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   2.0.13.P3        674A3830:57C04253:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   2.0.17.P3        674A3830:57C02798:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   NET-1.1          37636232:61373335:00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000 
+node_A2
+                 local     1.0.0.P3         674A3830:57C03879:00253845:00000011:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     1.0.1.P3         674A3830:57C04249:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     1.0.2.P3         674A3830:57C04244:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     2.0.15.P3        674A3830:57C04252:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     2.0.13.P3        674A3830:57C04253:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     2.0.17.P3        674A3830:57C02798:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 local     NET-1.1          37636232:61373335:00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000  
+                 partner   1.0.6.P3         674A3830:57C03745:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   1.0.7.P3         674A3830:57C03749:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   1.0.8.P3         674A3830:57C03880:00253845:0000000F:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   NET-1.4          34383535:30666163:00000000:00000000:00000000:00000000:00000000:00000000:00000000:00000000  
+                 partner   2.0.22.P3        66483030:54A01201:00253845:00000002:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   2.0.21.P3        66483030:54A00871:00253845:00000002:500A0981:00000003:00000000:00000000:00000000:00000000
+                 partner   2.0.23.P3        66483030:54B01401:00253841:00000002:500A0981:00000003:00000000:00000000:00000000:00000000
+28 entries were displayed.
+
+cluster_A::*> 
+----
+
 ... Verify the state of the automatic unplanned switchover (AUSO) failure domain:
 +
 `metrocluster show`
@@ -264,6 +294,24 @@ Remote: cluster_B         Configuration state configured
                           AUSO Failure Domain auso-on-dr-group-disaster 
 ----
 
+. From the ONTAP Mediator host, verify that disks on the sqlite database are populated with the reservation owner:
++
+`[root@ontap-mediator ~]# sqlite3 /opt/netapp/lib/ontap_mediator/db/ontap_mediator.sqlite.db`
++
+You should see output similar to the following example:
++
+----
+[root@ontap-mediator ~]# sqlite3 /opt/netapp/lib/ontap_mediator/db/ontap_mediator.sqlite.db
+SQLite version 3.34.1 2021-01-20 14:10:07
+Enter ".help" for usage hints.
+sqlite> 
+sqlite> SELECT DISTINCT disk, reservation_owner FROM mediator_table;  
+disk-info-66114f8d-d43a-11f0-|
+disk-mb-66114f8d-d43a-11f0--1| 
+disk-mb-66114f8d-d43a-11f0--2| 
+disk-mb-66114f8d-d43a-11f0--3| 
+disk-mb-66114f8d-d43a-11f0--4|
+----
 -- 
 .Configure an ONTAP Medaitor with iSCSI
 --
@@ -279,7 +327,7 @@ Remote: cluster_B         Configuration state configured
 ====
 
 .. If you want to use IPv6, complete the following steps:
-
+If you want to use IPv4, go to <<iscsi_ipv4_step8b, Step 8 (b)>>
 ... Run the following command on both clusters:
 +
 `network options ipv6 modify -enabled true`
@@ -293,7 +341,7 @@ Remote: cluster_B         Configuration state configured
 +
 NOTE: You are prompted for the username and password for the Mediator admin user account.
 
-.. If you want to use IPv4, complete the following step:
+[[iscsi_ipv4_step8b]].. If you want to use IPv4, complete the following step:
 
 ... Add the ONTAP Mediator:
 +
