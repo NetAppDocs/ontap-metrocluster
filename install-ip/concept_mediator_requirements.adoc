@@ -76,61 +76,9 @@ Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure a HTTPS-b
 
 NOTE: You can only configure a HTTPS-based ONTAP Mediator using the CLI. System Manager is not supported. 
 
-== Firewall requirements for ONTAP Mediator
+== Networking and firewall requirements for ONTAP Mediator
 
-ONTAP Mediator uses a number of ports to communicate with specific services.
-
-If you are using a third-party firewall:
-
-* HTTPS access must be enabled.
-* It must be configured to allow access on ports 31784 and 3260.
-+
-When using the default Red Hat or CentOS firewall, the firewall is automatically configured during Mediator installation.
-
-The following table lists the ports that you must allow in your firewall:
-
-[NOTE] 
-====
-* The iSCSI port is only required in a MetroCluster IP configuration.
-* The 22/tcp port is not required for normal operation but you can enable it temporarily for maintenance and disable it when the maintenance session has finished. 
-====
-
-|===
-
-h| Port/services h| Source h| Direction h|  Destination h| Purpose 
-
-a| 
-22/tcp
-a|
-Management host
-a|
-Inbound
-a|
-ONTAP Mediator
-a|
-SSH / ONTAP Mediator management
-a|
-31784/tcp
-a|
-cluster-mgmt and node-mgmt LIFs
-//ontap-metrocluster/issues/34
-a|
-Inbound
-a|
-ONTAP Mediator web server
-a|
-REST API (HTTPS)
-a|
-3260/tcp
-a|
-node-mgmt LIFs
-a|
-Inbound
-a|
-ONTAP Mediator iSCSI targets
-a|
-iSCSI data connection for mailboxes
-|===
+ONTAP Mediator uses a number of ports to communicate with specific services. Refer to link:https://review.docs.netapp.com/us-en/ontap_aoife-mediator-https/mediator/index.html#firewall-and-networking-requirements[ONTAP Mediator firewall and networking requirements^] for the the ports that you must allow in your firewall.
 
 // 2026 Feb 12, GH 504
 

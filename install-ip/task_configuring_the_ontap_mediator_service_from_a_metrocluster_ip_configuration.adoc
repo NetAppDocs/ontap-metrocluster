@@ -131,21 +131,21 @@ cluster_A::*>
 
 . Repeat the previous step to install the root and intermediate CA certificates on site B.
 
-. Verify the server certificate details and expiration dates:
+. View the self-signed CA certificates installed using the generated name of the certificates:
 +
-`security certificate show -type server-ca -ca "ONTAP Mediator CA"`
+`security certificate show -common-name <common_name>`
 +
 You should see output similar to the following example:
 +
 ----
-   security certificate show -type server-ca -ca "ONTAP Mediator CA"
+   security certificate show -common-name ONTAPMediatorCA
 Vserver    Serial Number   Certificate Name                       Type
 ---------- --------------- -------------------------------------- ------------
-cluster_A 4011FFF4CC072A0C3DF0D16E36218839031DA04B ONTAPMediatorCA server-ca
+cluster_A <serial_number_value> ONTAPMediatorCA                   server-ca
     Certificate Authority: ONTAP Mediator CA
           Expiration Date: Thu Nov 28 05:26:07 2030
 
-cluster_A ED7F60A4BEE9D3D96AE15EE5819335EC9332C461 ONTAPMediatorCA_ED7F60A4BEE9D3D96AE15EE5819335EC9332C461 server-ca
+cluster_A <serial_number_value> ONTAPMediatorCA                   server-ca 
     Certificate Authority: ONTAP Mediator CA
           Expiration Date: Thu Nov 28 05:26:07 2030
 
