@@ -11,7 +11,10 @@ summary:
 [.lead]
 MetroCluster IP nodes can access ONTAP Mediator mailbox disks using iSCSI sessions, which have a default connection timeout of 10 seconds, including a single retry after 5 seconds. Depending on your ONTAP version and environment, you can increase the mailbox timeout to a maximum of 60 seconds to avoid disruption to Mediator-assisted unplanned switchover (MAUSO).
 
-NetApp recommends that you increase the default mailbox connection timeout if you are using network redundancy protocols (such as HSRP or VRRP), loop-avoidance protocols (such as STP), or if the network latency in your environment exceeds the default timeout of 10 seconds.  
+NetApp recommends that you increase the default mailbox connection timeout if any of the following applies to your environment:
+
+* You are using network redundancy protocols (such as HSRP or VRRP) or loop-avoidance protocols (such as STP).
+* The network reconvergence time (for example, routing protocols stabilizing or HSRP/VRRP becoming active after a re-election) can exceed the default timeout of 10 seconds.
 
 
 .Before you begin
@@ -38,4 +41,5 @@ If connectivity is independently maintained from each site and the outage at one
 .Related information
 link:concept-ontap-mediator-supports-automatic-unplanned-switchover.html[Learn more about how the ONTAP Mediator supports automatic unplanned switchover in MetroCluster IP configurations.]
  
+// 2026 Mar 05, GH 534
 // 2026 Feb 26, ONTAPDOC-3681
