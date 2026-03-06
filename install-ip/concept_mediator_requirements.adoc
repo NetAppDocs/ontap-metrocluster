@@ -69,16 +69,10 @@ You must ensure that the configuration meets several host requirements.
 
 By default, MetroCluster IP nodes access ONTAP Mediator mailbox LUNs using iSCSI sessions. ONTAP Mediator relies on the SCST package to provide iSCSI. iSCSI sessions are authenticated using the Challenge Handshake Authentication Protocol (CHAP) with an obfuscated, machine-generated per-shared key, but are not fully encrypted.
 
-Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an HTTPS-based Mediator to monitor your MetroCluster IP configuration. HTTPS is a secure protocol for communication. Configuring an HTTPS-based Mediator has the following benefits:
- 
-* No special kernel packages are required during the ONTAP Mediator installation.
-* HTTPS encrypts entire sessions using SSL/TLS making it more secure than using iSCSI. 
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator that uses HTTPS instead of iSCSI. HTTPS is a secure protocol for communication. HTTPS encrypts entire sessions using SSL/TLS, providing increased security when compared with using iSCSI. 
 
-NOTE: You can only configure an HTTPS-based ONTAP Mediator using the CLI. System Manager is not supported. 
+NOTE: You can only configure an ONTAP Mediator that uses HTTPS using the CLI. System Manager is not supported. 
 
-== Firewall requirements for ONTAP Mediator
-
-ONTAP Mediator uses a number of ports to communicate with specific services. Refer to link:https://review.docs.netapp.com/us-en/ontap_aoife-mediator-https/mediator/index.html#firewall-and-networking-requirements[ONTAP Mediator firewall and networking requirements^] for the the ports that you must allow in your firewall.
 
 // 2026 Feb 12, GH 504
 
