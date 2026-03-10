@@ -71,12 +71,13 @@ NOTE: In a MetroCluster IP configuration, the AUSO Failure Domain is already set
           Errors: -
 ----
 
-. Halt the nodes:
+. Halt the nodes at both sites:
 +
 `*halt*`
 +
 ----
-system node halt -node node1_SiteA -inhibit-takeover true -ignore-quorum-warnings true
+cluster_A::*>system node halt -node * -inhibit-takeover true -ignore-quorum-warnings true
+cluster_B::*>system node halt -node * -inhibit-takeover true -ignore-quorum-warnings true
 ----
 
 . Power off the following equipment at the site:
@@ -95,5 +96,7 @@ To verify the configuration, repeat step 1.
  .. Start any sync-source SVMs that are not online:
  +
 `*vserver start*`
+
+// 2026 Mar 10, GH issu 532
 
 // 2023 May 11, GH issue 282
