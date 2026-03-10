@@ -216,14 +216,14 @@ All spare disks are displayed, including the pool0 and pool1 spare disks owned b
 
 ... Remove disk ownership for each pool1 spare disk:
 +
-You must first run the following command for each partitioned disk, and then remove the container disk ownership:
+If your configuration contains partitioned disks, you first remove ownership of each partitioned disk, and then remove the container disk ownership:
 +
 `disk remove_ownership <disk_name>`
 +
-In the following example, ownership of partitioned disk `0n.9P2` is removed before the ownership of the container disk `0n.9` is removed:
+In the following example, the ownership of partitioned disk `0n.9P2` is removed before the ownership of the container disk `0n.9` is removed:
 +
 ----
-*> disk remove_ownership 0n.9P3
+*> disk remove_ownership 0n.9P2
 Volumes must be taken offline. Are all impacted volumes offline(y/n)?? y
 Removing the ownership of aggregate disks may lead to partition of aggregates between high-availability pair.
 Do you want to continue(y/n)? y
