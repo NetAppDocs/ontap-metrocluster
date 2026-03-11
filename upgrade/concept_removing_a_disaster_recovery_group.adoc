@@ -208,7 +208,14 @@ NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify t
 +
 `aggr status -s` 
 +
-All spare disks are displayed, including the pool0 and pool1 spare disks owned by the node. The output should be similar to the following example.
+All spare disks are displayed, including the pool0 and pool1 spare disks owned by the node. You should see output similar to the following:
++
+----
+0n.7         node_A1(538300171)    Pool0  S7J8NE0W600508        node_A1(538300171)
+0n.7P1       node_A2(538299967)    Pool0  S7J8NE0W600508NP001   node_A2(538299967)
+0n.7P2       node_A1(538300171)    Pool1  S7J8NE0W600508NP002   node_A1(538300171)
+0n.7P3       node_A1(538300171)    Pool0  S7J8NE0W600508NP003   node_A1(538300171)
+----
 
 ... Set the privilege level to advanced:
 +
@@ -220,14 +227,14 @@ If your configuration contains partitioned disks, you first remove ownership of 
 +
 `disk remove_ownership <disk_name>`
 +
-In the following example, the ownership of partitioned disk `0n.9P2` is removed before the ownership of the container disk `0n.9` is removed:
+In the following example, the ownership of partitioned disk `0n.7P2` is removed before the ownership of the container disk `0n.7` is removed:
 +
 ----
-*> disk remove_ownership 0n.9P2
+*> disk remove_ownership 0n.7P2 
 Volumes must be taken offline. Are all impacted volumes offline(y/n)?? y
 Removing the ownership of aggregate disks may lead to partition of aggregates between high-availability pair.
 Do you want to continue(y/n)? y
-*> disk remove_ownership 0n.9
+*> disk remove_ownership 0n.7
 Volumes must be taken offline. Are all impacted volumes offline(y/n)?? y
 *>
 ----
