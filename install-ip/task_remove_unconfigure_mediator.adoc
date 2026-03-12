@@ -26,6 +26,15 @@ You must have successfully installed and configured ONTAP Mediator on a network 
 You are prompted for the user name and password for the ONTAP Mediator admin user account.
 +
 NOTE: If the ONTAP Mediator is down, the `metrocluster configuration-settings mediator remove` command still prompts you to enter the user name and password for the ONTAP Mediator admin user account and removes ONTAP Mediator from the MetroCluster configuration.
+ .. Check if there are any broken disks by using the following command:
++
+`disk show -broken`
++
+*Example*
++
+....
+There are no entries matching your query.
+....
 
 . If you are using an ONTAP Mediator that uses HTTPS for communication, delete the CA certificates after you remove the ONTAP Mediator:
 
@@ -38,15 +47,6 @@ NOTE: If the ONTAP Mediator is down, the `metrocluster configuration-settings me
 +
 `security certificate  delete -vserver cluster-A -common-name ONTAPMediatorCA -cert-name <intermediate_certificate_name>  -type server-ca -ca "ONTAP Mediator CA`
 
-.. Check if there are any broken disks by using the following command:
-+
-`disk show -broken`
-+
-*Example*
-+
-....
-There are no entries matching your query.
-....
 
 . Confirm that ONTAP Mediator has been removed from the MetroCluster configuration by running the following commands on both clusters:
 +
