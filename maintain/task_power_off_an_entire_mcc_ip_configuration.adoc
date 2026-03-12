@@ -9,11 +9,11 @@ summary: 'You must power off the entire MetroCluster IP configuration and all of
 :imagesdir: ../media/
 
 [.lead]
-You must power off the entire MetroCluster IP configuration and all of the equipment before maintenance or relocation can begin.
+Power off the entire MetroCluster IP configuration and all of the equipment before starting maintenance or relocation.
 
 NOTE: Beginning with ONTAP 9.8, the `*storage switch*` command is replaced with `*system switch*`. The following steps show the `*storage switch*` command, but if you are running ONTAP 9.8 or later, the `*system switch*` command is preferred.
 
-. Verify the MetroCluster configuration from both sites in the MetroCluster configuration.
+. Verify the MetroCluster configuration from both sites.
  .. Confirm that the MetroCluster configuration and operational mode are normal.
  +
 `*metrocluster show*`
@@ -55,7 +55,7 @@ NOTE: Beginning with ONTAP 9.8, the `*storage switch*` command is replaced with 
 cluster_A_site_A::*>metrocluster modify -auto-switchover-failure-domain auso-disabled
 ----
 +
-NOTE: In a MetroCluster IP configuration, the AUSO Failure Domain is already set to 'auso-disabled' unless the configuration is configured with ONTAP Mediator.
+NOTE: In a MetroCluster IP configuration, the AUSO Failure Domain is already set to 'auso-disabled' unless the configuration uses ONTAP Mediator.
 
 . Verify the change using the command
 +
@@ -95,6 +95,6 @@ To verify the configuration, repeat step 1.
  +
 `*vserver start*`
 
-// 2026 Mar 10, GH issu 532
+// 2026 Mar 10, GH issue 532
 
 // 2023 May 11, GH issue 282
