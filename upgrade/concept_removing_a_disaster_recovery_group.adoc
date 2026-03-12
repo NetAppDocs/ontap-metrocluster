@@ -198,23 +198,27 @@ NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify t
 +
 `disk option modify -node <node_names_in_the_DR_group_to_be_deleted>  -autoassign off`
 
-.. Remove ownership of pool1 disks on each DR group node to be deleted. Perform these steps on each node to be removed.
+.. Remove ownership of pool1 disks on each DR group node to be deleted. Perform these steps on each node to be removed. In the examples used in this step, node_A1 is being removed.
 +
 ... Go to the nodeshell:
 +
 `run -node <node_name>`
 +
+----
+run -node node_A1
+----
++
 ... Identify the pool1 disks:
 +
 `aggr status -s` 
 +
-All spare disks are displayed, including the pool0 and pool1 spare disks owned by the node. You should see output similar to the following:
+All spare disks are displayed, including the pool0 and pool1 spare disks owned by the node. The following example shows truncated output where 0n.7 disks are assigned to Pool1. The output will vary depending on your configuration.
 +
 ----
 0n.7         node_A1(538300171)    Pool1  S7J8NE0W600508        node_A1(538300171)
-0n.7P1       node_A2(538299967)    Pool1  S7J8NE0W600508NP001   node_A2(538299967)
+0n.7P1       node_A1(538299967)    Pool1  S7J8NE0W600508NP001   node_A2(538299967)
 0n.7P2       node_A1(538300171)    Pool1  S7J8NE0W600508NP002   node_A1(538300171)
-0n.7P3       node_A1(538300171)    Pool1 S7J8NE0W600508NP003   node_A1(538300171)
+0n.7P3       node_A1(538300171)    Pool1  S7J8NE0W600508NP003   node_A1(538300171)
 ----
 
 ... Set the privilege level to advanced:
