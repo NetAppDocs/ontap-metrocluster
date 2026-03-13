@@ -13,7 +13,7 @@ Inter-Switch Links (ISLs) carrying MetroCluster traffic on all MetroCluster IP c
 
 == MetroCluster ISL requirements
 
-The following applies to ISLs on all MetroCluster IP configurations:
+These requirements apply to ISLs on all MetroCluster IP configurations:
 
 * Both fabrics must have the same number of ISLs.
 * ISLs on one fabric must all be the same speed and length.
@@ -21,7 +21,7 @@ The following applies to ISLs on all MetroCluster IP configurations:
 * The maximum supported difference in distance between fabric 1 and fabric 2 is 20km or 0.2ms.
 * The ISLs must have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they must all use WDM.
 * The minimum required ISL speed depends on the platform model:
-** Beginning with ONTAP 9.18.1, platforms with a MetroCluster IP backend port speed of 100Gbps require a minimum ISL link speed of 100Gbps. Using a different ISL speed requires a Feature Product Variance Request (FPVR). To file an FPVR, contact your NetApp sales team.
+** Beginning with ONTAP 9.18.1, platforms with a MetroCluster IP backend port speed of 100Gbps require a minimum ISL link speed of 100Gbps. Using a different ISL speed requires a Feature Policy Variance Request (FPVR). To file an FPVR, contact your NetApp sales team.
 +
 CAUTION: Upgrades to ONTAP 9.18.1 and later on platforms that do not currently meet the 100Gbps ISL requirement are not blocked and can proceed. However, NetApp strongly recommends that customers transition to 100Gbps ISL connectivity to maintain expected performance and availability levels.
 
@@ -47,8 +47,6 @@ The following applies to round-trip traffic between the MetroCluster IP switches
 
 * The supported jitter value is 3ms for round trip (or 1.5ms for one-way).
 * The network should allocate and maintain the SLA amount of bandwidth required for MetroCluster traffic, regardless of microbursts and spikes in the traffic.
-
-* If you are using ONTAP 9.7 or later, the intermediate network between the two sites must provide a minimum bandwidth of 4.5Gbps for the MetroCluster IP configuration.
 
 == Transceiver and cable considerations
 
