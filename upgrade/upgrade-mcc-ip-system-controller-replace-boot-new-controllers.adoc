@@ -34,6 +34,14 @@ This task must be performed on all the new controllers.
 `setenv bootarg.kmip.init.gateway <gateway-address>`
 +
 `setenv bootarg.kmip.init.interface <interface-id>`
+. Check if the partner-sysid is correct:
++
+`printenv partner-sysid`
++
+If the partner-sysid is not correct, set it:
++
+`setenv partner-sysid <partner-sysID>`
+
 . Display the boot menu:
 +
 `boot_ontap menu`
@@ -73,6 +81,19 @@ Rebooting to load the restored env file...
 ----
 +
 During one of the reboots after option "`6`", the confirmation prompt `Override system ID? {y|n}` appears. Enter `y`.
+
+. At the `LOADER` prompt, verify the bootarg values and update the values as needed.
++
+Use the steps in link:upgrade-mcc-ip-system-controller-replace-apply-rcf-set-bootarg.html#set-the-metrocluster-ip-bootarg-variables[Set the MetroCluster IP bootarg variables].
+
+. Verify that the partner-sysid is correct:
++
+`printenv partner-sysid`
++
+If the partner-sysid is not correct, set it:
++
+`setenv partner-sysid <partner-sysID>`
+
 . If root encryption is used, select the boot menu option again for your key management configuration.
 +
 
@@ -121,7 +142,7 @@ https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-nmg/GUID-003BDFCD-58
 
 .. Add the physical port that will host the intercluster LIFs to the corresponding broadcast domain.
 .. Modify intercluster LIFs to use the new physical port as home port.
-.. After the intercluster LIFs are up, check the cluster peer status and re-establish cluster peering as needed.
+.. After the intercluster LIFs are up, check the cluster peer status and reestablish cluster peering as needed.
 +
 You might need to reconfigure cluster peering.
 +
@@ -220,4 +241,5 @@ Perform this step on all SVMs as required.
 .What's next?
 link:upgrade-mcc-ip-system-controller-replace-complete-upgrade.html[Complete the controller upgrade].
 
+//2026 Feb 26, ONTAPDOC-3716
 // 2024 Nov 12, ONTAPDOC-2351
