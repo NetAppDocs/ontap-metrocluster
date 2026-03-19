@@ -4,12 +4,12 @@ sidebar: sidebar
 keywords: configure, configuring, metrocluster, software, ontap
 summary: 'You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites.'
 ---
-= Configuring the MetroCluster software in ONTAP
+= Configure the MetroCluster FC software in ONTAP
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-You must set up each node in the MetroCluster configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites. 
+You must set up each node in the MetroCluster FC configuration in ONTAP, including the node-level configurations and the configuration of the nodes into two sites. You must also implement the MetroCluster relationship between the two sites. 
 
 image::../media/workflow_high_level_node_and_cluster_configuration_software.gif["Workflow for high level node and cluster configuration"]
 
@@ -83,7 +83,7 @@ h| Type of information h| Your values
 a|
 Cluster name
 
-Example used in this guide: site_A
+Example used in this procedure: site_A
 
 a|
 
@@ -116,7 +116,7 @@ h| Node h| Port h| IP address h| Network mask h| Default gateway
 a|
 Node 1
 
-Example used in this guide: controller_A_1
+Example used in this procedure: controller_A_1
 
 a|
 
@@ -131,7 +131,7 @@ Node 2
 
 Not required if using two-node MetroCluster configuration (one node at each site).
 
-Example used in this guide: controller_A_2
+Example used in this procedure: controller_A_2
 
 a|
 
@@ -366,7 +366,7 @@ h| Type of information h| Your values
 a|
 Cluster name
 
-Example used in this guide: site_B
+Example used in this procedure: site_B
 
 a|
 
@@ -399,7 +399,7 @@ h| Node h| Port h| IP address h| Network mask h| Default gateway
 a|
 Node 1
 
-Example used in this guide: controller_B_1
+Example used in this procedure: controller_B_1
 
 a|
 
@@ -414,7 +414,7 @@ Node 2
 
 Not required for two-node MetroCluster configurations (one node at each site).
 
-Example used in this guide: controller_B_2
+Example used in this procedure: controller_B_2
 
 a|
 
@@ -2030,6 +2030,7 @@ You must create a mirrored data aggregate on each node in the DR group.
 * Drives are owned by a specific node; when you create an aggregate, all drives in that aggregate must be owned by the same node, which becomes the home node for that aggregate.
 * Aggregate names should conform to the naming scheme you determined when you planned your MetroCluster configuration.
 See link:https://docs.netapp.com/us-en/ontap/disks-aggregates/index.html[Disk and aggregate management^].
+* Aggregate names must be unique across the MetroCluster sites. This means that you cannot have two different aggregates with the same name on site A and site B.
 
 .Steps
 
