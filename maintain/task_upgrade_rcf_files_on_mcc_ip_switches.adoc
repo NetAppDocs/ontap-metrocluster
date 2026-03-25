@@ -71,9 +71,9 @@ volumes             ok
 +
 Follow the steps depending on your switch vendor:
 +
-* link:../install-ip/task_switch_config_cisco.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Migrate cluster LIFs before a Cisco switch or RCF upgrade]
-* link:../install-ip/task_switch_config_broadcom.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Migrate cluster LIFs before a Broadcom switch or RCF upgrade]
-* link:../install-ip/install-ip/task_switch_config_nvidia.html#migrate-the-cluster-lifs-before-a-switch-or-rcf-upgrade[Migrate cluster LIFs before a NVIDIA switch or RCF upgrade]
+* link:../install-ip/task_switch_config_cisco.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Move cluster LIFs before a Cisco switch or RCF upgrade]
+* link:../install-ip/task_switch_config_broadcom.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Move cluster LIFs before a Broadcom switch or RCF upgrade]
+* link:../install-ip/install-ip/task_switch_config_nvidia.html#migrate-the-cluster-lifs-before-a-switch-or-rcf-upgrade[Move cluster LIFs before a NVIDIA switch or RCF upgrade]
 
 . Prepare the IP switches for the application of the new RCF files.
 +
@@ -94,6 +94,15 @@ Follow the steps for your switch vendor:
 * link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-nvidia-rcf-files[Download and install the NVIDIA IP RCF files]
 +
 NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switchport mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
+
+. Modify all cluster LIFs to re-enable auto-revert: 
++
+`network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true`
+
+
+. Revert all cluster LIFs that are not currently on their home ports to their home ports:
++
+`network interface revert -vserver * -lif *`
 
 // 2025 Mar 05, ONTAPDOC-2286, 1587
 // 2025 Jan 17, GH issue 449

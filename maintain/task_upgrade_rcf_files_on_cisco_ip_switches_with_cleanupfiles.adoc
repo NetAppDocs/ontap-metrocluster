@@ -58,9 +58,9 @@ NOTE: You must update the switches in the following order: Switch_A_1, Switch_B_
 
 .Steps
 
-. Migrate the cluster LIFs before you start the upgrade:
+. Disable the p the cluster LIFs before you start the upgrade:
 +
-* link:../install-ip/task_switch_config_cisco.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Migrate cluster LIFs before a Cisco switch or RCF upgrade]
+* link:../install-ip/task_switch_config_cisco.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Move cluster LIFs before a Cisco switch or RCF upgrade]
 
 . Determine the current RCF file version, and which ports and VLANs are used: `IP_switch_A_1# show banner motd`
 +
@@ -324,6 +324,15 @@ IP_switch_A_1# copy running-config startup-config
 
 IP_switch_A_1# reload
 ----
+
+. Modify all cluster LIFs to re-enable auto-revert: 
++
+`network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true`
+
+
+. Revert all cluster LIFs that are not currently on their home ports to their home ports:
++
+`network interface revert -vserver * -lif *`
 
 // 2024 Mar 13, ONTAPDOC-1529
 // 2024 Feb 28, ONTAPDOC-1669

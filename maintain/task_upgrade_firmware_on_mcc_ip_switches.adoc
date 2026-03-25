@@ -137,9 +137,9 @@ volumes             ok
 +
 Follow the steps depending on your switch vendor:
 +
-* link:../install-ip/task_switch_config_cisco.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Migrate cluster LIFs before a Cisco switch or RCF upgrade]
-* link:../install-ip/task_switch_config_broadcom.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Migrate cluster LIFs before a Broadcom switch or RCF upgrade]
-* link:../install-ip/install-ip/task_switch_config_nvidia.html#migrate-the-cluster-lifs-before-a-switch-or-rcf-upgrade[Migrate cluster LIFs before a NVIDIA switch or RCF upgrade]
+* link:../install-ip/task_switch_config_cisco.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Move cluster LIFs before a Cisco switch or RCF upgrade]
+* link:../install-ip/task_switch_config_broadcom.html#migrate-cluster-lifs-before-a-switch-or-rcf-upgrade[Move cluster LIFs before a Broadcom switch or RCF upgrade]
+* link:../install-ip/install-ip/task_switch_config_nvidia.html#migrate-the-cluster-lifs-before-a-switch-or-rcf-upgrade[Move cluster LIFs before a NVIDIA switch or RCF upgrade]
 
 . Install the software on the first switch.
 +
@@ -154,6 +154,15 @@ Follow the steps for installing switch software in the relevant topic depending 
 * link:../install-ip/task_switch_config_nvidia.html#download-and-install-the-cumulus-software[Download and install the NVIDIA SN2100 switch Cumulus software]
 
 . Repeat the previous step for each of the switches.
+
+. Modify all cluster LIFs to re-enable auto-revert: 
++
+`network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true`
+
+
+. Revert all cluster LIFs that are not currently on their home ports to their home ports:
++
+`network interface revert -vserver * -lif *`
 
 
 . Repeat <<step_1_fw_upgrade,Step 1>> to check the health of the configuration.
