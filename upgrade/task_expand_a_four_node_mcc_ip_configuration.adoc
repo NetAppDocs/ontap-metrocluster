@@ -562,9 +562,260 @@ Do you want to use this configuration? {yes, no} [yes]: yes
 .. Join the second new MetroCluster IP node (node_A_2-new) to the existing MetroCluster IP configuration.
 . Repeat these steps to join node_B_1-new and node_B_2-new to cluster_B.
 
-== Configuring intercluster LIFs, creating the MetroCluster interfaces, and mirroring root aggregates
+== Configuring intercluster LIFs for cluster peering
 
-You must create cluster peering LIFs, create the MetroCluster interfaces on the new MetroCluster IP nodes.
+You must create intercluster LIFs on ports used for communication between the MetroCluster partner clusters. You can use dedicated ports or ports that also have data traffic.
+
+[role="tabbed-block"]
+====
+.Configure intercluster LIFs on dedicated ports
+--
+
+You can configure intercluster LIFs on dedicated ports. Doing so typically increases the available bandwidth for replication traffic.
+
+.Steps
+
+. List the ports in the cluster:
++
+`network port show`
++
+For complete command syntax, see the man page.
++
+The following example shows the network ports in "cluster01":
++
+----
+
+cluster01::> network port show
+                                                             Speed (Mbps)
+Node   Port      IPspace      Broadcast Domain Link   MTU    Admin/Oper
+------ --------- ------------ ---------------- ----- ------- ------------
+cluster01-01
+       e0a       Cluster      Cluster          up     1500   auto/1000
+       e0b       Cluster      Cluster          up     1500   auto/1000
+       e0c       Default      Default          up     1500   auto/1000
+       e0d       Default      Default          up     1500   auto/1000
+       e0e       Default      Default          up     1500   auto/1000
+       e0f       Default      Default          up     1500   auto/1000
+cluster01-02
+       e0a       Cluster      Cluster          up     1500   auto/1000
+       e0b       Cluster      Cluster          up     1500   auto/1000
+       e0c       Default      Default          up     1500   auto/1000
+       e0d       Default      Default          up     1500   auto/1000
+       e0e       Default      Default          up     1500   auto/1000
+       e0f       Default      Default          up     1500   auto/1000
+----
+
+. Determine which ports are available to dedicate to intercluster communication:
++
+`network interface show -fields home-port,curr-port`
++
+For complete command syntax, see the man page.
++
+The following example shows that ports "e0e" and "e0f" have not been assigned LIFs:
++
+----
+
+cluster01::> network interface show -fields home-port,curr-port
+vserver lif                  home-port curr-port
+------- -------------------- --------- ---------
+Cluster cluster01-01_clus1   e0a       e0a
+Cluster cluster01-01_clus2   e0b       e0b
+Cluster cluster01-02_clus1   e0a       e0a
+Cluster cluster01-02_clus2   e0b       e0b
+cluster01
+        cluster_mgmt         e0c       e0c
+cluster01
+        cluster01-01_mgmt1   e0c       e0c
+cluster01
+        cluster01-02_mgmt1   e0c       e0c
+----
+
+. Create a failover group for the dedicated ports:
++
+`network interface failover-groups create -vserver <system_svm> -failover-group <failover_group> -targets <physical_or_logical_ports>`
++
+The following example assigns ports "e0e" and" e0f" to failover group "intercluster01" on system "SVMcluster01":
++
+----
+cluster01::> network interface failover-groups create -vserver cluster01 -failover-group
+intercluster01 -targets
+cluster01-01:e0e,cluster01-01:e0f,cluster01-02:e0e,cluster01-02:e0f
+----
+
+. Verify that the failover group was created:
++
+`network interface failover-groups show`
++
+For complete command syntax, see the man page.
++
+----
+cluster01::> network interface failover-groups show
+                                  Failover
+Vserver          Group            Targets
+---------------- ---------------- --------------------------------------------
+Cluster
+                 Cluster
+                                  cluster01-01:e0a, cluster01-01:e0b,
+                                  cluster01-02:e0a, cluster01-02:e0b
+cluster01
+                 Default
+                                  cluster01-01:e0c, cluster01-01:e0d,
+                                  cluster01-02:e0c, cluster01-02:e0d,
+                                  cluster01-01:e0e, cluster01-01:e0f
+                                  cluster01-02:e0e, cluster01-02:e0f
+                 intercluster01
+                                  cluster01-01:e0e, cluster01-01:e0f
+                                  cluster01-02:e0e, cluster01-02:e0f
+----
+
+. Create intercluster LIFs on the system SVM and assign them to the failover group.
++
+`network interface create -vserver <system_svm> -lif <lif_name> -service-policy default-intercluster -home-node <node_name> -home-port <port_name> -address <port_ip_address> -netmask <netmask_address> -failover-group <failover_group>`
++
+The following example creates intercluster LIFs "cluster01_icl01" and "cluster01_icl02" in failover group "intercluster01":
++
+----
+cluster01::> network interface create -vserver cluster01 -lif cluster01_icl01 -service-
+policy default-intercluster -home-node cluster01-01 -home-port e0e -address 192.168.1.201
+-netmask 255.255.255.0 -failover-group intercluster01
+
+cluster01::> network interface create -vserver cluster01 -lif cluster01_icl02 -service-
+policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.168.1.202
+-netmask 255.255.255.0 -failover-group intercluster01
+----
+
+. Verify that the intercluster LIFs were created:
++
+`network interface show -service-policy default-intercluster`
++
+----
+cluster01::> network interface show -service-policy default-intercluster
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+cluster01
+            cluster01_icl01
+                       up/up      192.168.1.201/24   cluster01-01  e0e     true
+            cluster01_icl02
+                       up/up      192.168.1.202/24   cluster01-02  e0f     true
+----
+
+. Verify that the intercluster LIFs are redundant:
++
+`network interface show -service-policy default-intercluster -failover`
++
+The following example shows that the intercluster LIFs "cluster01_icl01", and "cluster01_icl02" on the "SVMe0e" port will fail over to the "e0f" port.
++
+----
+cluster01::> network interface show -service-policy default-intercluster –failover
+         Logical         Home                  Failover        Failover
+Vserver  Interface       Node:Port             Policy          Group
+-------- --------------- --------------------- --------------- --------
+cluster01
+         cluster01_icl01 cluster01-01:e0e   local-only      intercluster01
+                            Failover Targets:  cluster01-01:e0e,
+                                               cluster01-01:e0f
+         cluster01_icl02 cluster01-02:e0e   local-only      intercluster01
+                            Failover Targets:  cluster01-02:e0e,
+                                               cluster01-02:e0f
+----
+
+--
+.Configuring intercluster LIFs on shared data ports
+--
+
+You can configure intercluster LIFs on ports shared with the data network. Doing so reduces the number of ports you need for intercluster networking.
+
+.Steps
+
+. List the ports in the cluster:
++
+`network port show`
++
+For complete command syntax, see the man page.
++
+The following example shows the network ports in "cluster01":
++
+----
+
+cluster01::> network port show
+                                                             Speed (Mbps)
+Node   Port      IPspace      Broadcast Domain Link   MTU    Admin/Oper
+------ --------- ------------ ---------------- ----- ------- ------------
+cluster01-01
+       e0a       Cluster      Cluster          up     1500   auto/1000
+       e0b       Cluster      Cluster          up     1500   auto/1000
+       e0c       Default      Default          up     1500   auto/1000
+       e0d       Default      Default          up     1500   auto/1000
+cluster01-02
+       e0a       Cluster      Cluster          up     1500   auto/1000
+       e0b       Cluster      Cluster          up     1500   auto/1000
+       e0c       Default      Default          up     1500   auto/1000
+       e0d       Default      Default          up     1500   auto/1000
+----
+
+. Create intercluster LIFs on the system SVM:
++
+`network interface create -vserver <system_svm> -lif <lif_name> -service-policy default-intercluster -home-node <node_name> -home-port <port_name> -address <port_ip_address> -netmask <netmask>`
++
+The following example creates intercluster LIFs "cluster01_icl01" and "cluster01_icl02":
++
+----
+
+cluster01::> network interface create -vserver cluster01 -lif cluster01_icl01 -service-
+policy default-intercluster -home-node cluster01-01 -home-port e0c -address 192.168.1.201
+-netmask 255.255.255.0
+
+cluster01::> network interface create -vserver cluster01 -lif cluster01_icl02 -service-
+policy default-intercluster -home-node cluster01-02 -home-port e0c -address 192.168.1.202
+-netmask 255.255.255.0
+----
+
+. Verify that the intercluster LIFs were created:
++
+`network interface show -service-policy default-intercluster`
++
+You should see output like the following example:
++
+----
+cluster01::> network interface show -service-policy default-intercluster
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+cluster01
+            cluster01_icl01
+                       up/up      192.168.1.201/24   cluster01-01  e0c     true
+            cluster01_icl02
+                       up/up      192.168.1.202/24   cluster01-02  e0c     true
+----
+
+. Verify that the intercluster LIFs are redundant:
++
+`network interface show –service-policy default-intercluster -failover`
++
+The following example shows that intercluster LIFs "cluster01_icl01" and "cluster01_icl02" on the "e0c" port will fail over to the "e0d" port.
++
+----
+cluster01::> network interface show -service-policy default-intercluster –failover
+         Logical         Home                  Failover        Failover
+Vserver  Interface       Node:Port             Policy          Group
+-------- --------------- --------------------- --------------- --------
+cluster01
+         cluster01_icl01 cluster01-01:e0c   local-only      192.168.1.201/24
+                            Failover Targets: cluster01-01:e0c,
+                                              cluster01-01:e0d
+         cluster01_icl02 cluster01-02:e0c   local-only      192.168.1.201/24
+                            Failover Targets: cluster01-02:e0c,
+                                              cluster01-02:e0d
+----
+
+--
+
+====
+
+== Creating the MetroCluster interfaces, and mirroring root aggregates
+
+You must create the MetroCluster interfaces on the new MetroCluster IP nodes and mirror root aggregates.
 
 .About this task
 
@@ -574,11 +825,15 @@ You must create cluster peering LIFs, create the MetroCluster interfaces on the 
 
 .Steps
 
-. On the new MetroCluster IP nodes, configure the intercluster LIFs using the following procedures:
+. On each site, add the new intercluster LIFs configured to the peer relationship.
 +
-link:../install-ip/task_sw_config_configure_clusters.html#peering-the-clusters[Configuring intercluster LIFs on dedicated ports]
+From cluster_A, run the following command:
 +
-link:../install-ip/task_sw_config_configure_clusters.html#peering-the-clusters[Configuring intercluster LIFs on shared data ports]
+`cluster peer modify -cluster cluster_B -peer-addrs`
++
+From cluster_B, run the following command:
++
+`cluster peer modify -cluster cluster_A -peer-addrs`
 
 . On each site, verify that cluster peering is configured:
 +
