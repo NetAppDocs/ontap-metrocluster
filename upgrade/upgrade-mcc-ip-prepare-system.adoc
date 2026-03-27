@@ -542,23 +542,23 @@ Gather the output of the following commands:
  ** `iscsi interface show`
  ** `ucadmin show`
 
-. If the MetroCluster nodes are configured with a key manager for the admin SVM (cluster), copy information about the keys and passphrases.
+. If the MetroCluster nodes are configured with an external key manager for the admin SVM (cluster), copy information about the keys. If the Onboard Key Manager is configured, copy the backup information and passphrase to a secure location.
 + 
 [role="tabbed-block"]
 ====
 .Onboard Key Manager
 --
-.. Run the following command:
+.. Run the following command to display the Onboard Key Manager backup:
 +
 `security key-manager onboard show-backup`
 +
-You'll need the passphrase later in the upgrade procedure.
+You'll need the most up-to-date passphrase later in the upgrade procedure. 
 +
 For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Back up onboard key management information manually].
 --
 .External key manager
 --
-Gather the external key management information you need to restore the key manager configuration later in the procedure.
+Gather the external key management information that you'll need to restore the key manager configuration later in the procedure.
 
 .. Display the name of the admin SVM (cluster). 
 +
@@ -608,7 +608,7 @@ cluster_B::*
 ----
 
 .. Save the information you gathered in a secure location for use later in the procedure. You should now have gathered the following information:
-* Primary key server address and port for the admin SVM
+* The primary key server addresses and ports for the admin SVM
 * Keystore UUID for the admin SVM
 
 --

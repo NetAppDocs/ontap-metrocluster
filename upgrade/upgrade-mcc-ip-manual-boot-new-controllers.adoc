@@ -41,7 +41,7 @@ If the partner-sysid is not correct, set it:
 +
 `boot_ontap menu`
 
-. If the MetroCluster nodes are configured with a key manager for the admin SVM (cluster), select the correct boot menu option for your key management configuration.  
+. If the admin SVM of the MetroCluster system is configured with a key manager, select the correct boot menu option for your key management configuration.  
 +
 |===
 
@@ -53,6 +53,8 @@ a|
 Option `10`
 
 Follow the prompts to provide the required inputs to recover and restore the key manager configuration.
+
+*Note:* You'll need the Onboard Key Manager backup and passphrase that you gathered earlier in the procedure.
 a|
 External key management
 a|
@@ -60,7 +62,7 @@ Option `11`
 
 Follow the prompts to provide the required inputs to recover and restore the key manager configuration.
 
-*Note:* You'll need the port number and address of the primary key server for the admin SVM and the admin SVM UUID to restore the key manager configuration.
+*Note:* You'll need the port numbers and addresses of the primary keys for the admin SVM and the admin SVM UUID that you gathered earlier in the procedure.
 |===
 
 
@@ -89,7 +91,7 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid <partner-sysID>`
 
-. If root encryption is used, select the boot menu option again for your key management configuration.
+. If root volume encryption is used, select the boot menu option again for your key management configuration.
 +
 |===
 
@@ -101,6 +103,8 @@ a|
 Option `10`
 
 Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+
+*Note:* You'll need the Onboard Key Manager backup and passphrase that you gathered earlier in the procedure.
 a|
 External key management
 a|
@@ -111,7 +115,7 @@ Follow the prompts to provide the required inputs to recover and restore the key
 *Note:* You'll need the port number and address of the primary key server for the admin SVM and the admin SVM UUID to restore the key manager configuration.
 |===
 +
-Depending on the key manager setting, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
+Depending on the key manager type, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
 
 . Wait for the replaced nodes to boot.
 +
