@@ -83,13 +83,13 @@ NOTE: Root aggregates are not deleted.
 .. Transfer epsilon to a node in another DR group if required.
 +
 ----
-ClusterA::> set advanced
+ClusterA::> set advanced -prompt-timestamp
 ClusterA::*> cluster show
 Move epsilon if needed
 ClusterA::*> cluster modify -node nodename -epsilon false
 ClusterA::*> cluster modify -node nodename -epsilon true
 
-ClusterB::> set advanced
+ClusterB::> set advanced -prompt-timestamp
 ClusterB::*> cluster show
 ClusterB::*> cluster modify -node nodename -epsilon false
 ClusterB::*> cluster modify -node nodename -epsilon true
@@ -176,7 +176,7 @@ NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify t
 --
 ... Set the privilege level to advanced:
 +
-`set advanced`
+`set advanced -prompt-timestamp`
 
 ... Display the remote disks:
 +
@@ -186,7 +186,7 @@ NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify t
 --
 ... Set the privilege level to advanced:
 +
-`set advanced`
+`set advanced -prompt-timestamp`
 
 ... Display the remote disks:
 +
@@ -296,7 +296,7 @@ Perform this step on each cluster.
 
 .. Set the advanced privilege level:
 +
-`set -privilege advanced`
+`set -privilege advanced -prompt-timestamp`
 
 .. Remove the node:
  +
