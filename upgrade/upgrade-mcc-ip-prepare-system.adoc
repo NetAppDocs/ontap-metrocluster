@@ -542,7 +542,7 @@ Gather the output of the following commands:
  ** `iscsi interface show`
  ** `ucadmin show`
 
-. If the MetroCluster nodes are configured with an external key manager for the admin SVM (cluster), copy the information needed to retrieve keys from a key server to a secure location. If the Onboard Key Manager is configured, copy the backup information and passphrase to a secure location.
+. If the MetroCluster nodes are configured with an external key manager for the admin SVM (cluster), copy the key server information to a secure location. If the Onboard Key Manager is configured, copy the backup information and passphrase to a secure location.
 + 
 [role="tabbed-block"]
 ====
@@ -552,7 +552,7 @@ Gather the output of the following commands:
 +
 `security key-manager onboard show-backup`
 +
-You'll also need the most up-to-date passphrase later in the upgrade procedure. 
+You'll also need the most up-to-date Onboard Key Manager passphrase later in the upgrade procedure. 
 +
 For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Back up onboard key management information manually].
 --
@@ -575,9 +575,9 @@ cluster_B
             admin   -          -          -           -          -
 ----
 
-.. Obtain the primary key server addresses and port numbers for the admin SVM (cluster) by running the following command:
+.. Obtain the primary key server address and port number for the admin SVM (cluster) by running the following command:
 +
-NOTE: The admin SVM can have up to four primary key servers.
+NOTE: The admin SVM can have up to four primary key servers but you'll only need the port number and address of one of the primary key servers to restore the key management configuration later in the procedure. If there is a username and password associated with the primary key server you choose, you'll also need that information for the recovery process. 
 +
 `security key-manager external show -instance -vserver <admin_svm_name>`
 +
@@ -611,8 +611,8 @@ cluster_B::*
 ----
 
 .. Save the information you gathered in a secure location for use later in the procedure. You should now have gathered the following information:
-* The primary key server addresses and port numbers for the admin SVM
-* Keystore UUID for the admin SVM
+* The port number and address of one of the primary key servers for the admin SVM
+* The keystore UUID for the admin SVM
 
 --
 ====
