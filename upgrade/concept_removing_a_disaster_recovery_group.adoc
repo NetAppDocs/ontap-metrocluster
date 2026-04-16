@@ -197,7 +197,7 @@ NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify t
 +
 `disk option modify -node <node_names_in_the_DR_group_to_be_deleted>  -autoassign off`
 
-.. Remove ownership of pool1 disks on each DR group node to be deleted. Perform these steps on each node to be removed. In the examples used in this step, node_A1 is being removed.
+.. Remove ownership of pool1 disks on each DR group node to be deleted. Perform these steps on each node to be removed. In the examples used in this step, node_A_1 is being removed.
 +
 ... Go to the nodeshell:
 +
@@ -207,7 +207,7 @@ NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify t
 +
 `disk show` 
 +
-All spare disks are displayed, including the Pool1 spare disks owned by the node. The following example shows truncated output where 0n.4 disks are assigned to Pool1. The output will vary depending on your configuration.
+All spare disks are displayed, including the Pool1 spare disks owned by the node. The following example shows truncated output where disk 0n.4 and its partitions are assigned to Pool1. The output will vary depending on your configuration.
 +
 ----
   DISK       OWNER                 POOL   SERIAL NUMBER         HOME                    DR HOME
@@ -228,7 +228,7 @@ If your configuration contains partitioned disks, you first remove ownership of 
 +
 `disk remove_ownership <disk_name>`
 +
-In the following example, ownership of the partitioned disks are removed before the ownership of the container disk `0n.4` is removed:
+In the following example, the ownership of the partitioned disks is removed before the ownership of the container disk `0n.4` is removed:
 +
 ----
 *> disk remove_ownership 0n.4P1
