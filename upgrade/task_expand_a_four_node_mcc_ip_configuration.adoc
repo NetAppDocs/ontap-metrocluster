@@ -382,7 +382,7 @@ Refer to the product documentation.
 +
 Refer to the documentation for the application.
 
-== Preparing the new controller modules
+== Prepare the new controller modules
 
 You must prepare the four new MetroCluster nodes and install the correct ONTAP version.
 
@@ -407,7 +407,22 @@ In these steps, you clear the configuration on the nodes and clear the mailbox r
 .. link:../install-ip/task_sw_config_restore_defaults.html[Restore system defaults on a controller module]
 .. link:../install-ip/task_sw_config_verify_haconfig.html[Verify the ha-config state of components]
 .. link:../install-ip/task_sw_config_assign_pool0.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assign drives for pool 0 (ONTAP 9.4 and later)]
-. From Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the boot_ontap command to boot the system and get to cluster setup.
+. From Maintenance mode, issue the halt command to exit Maintenance mode:
++
+`halt`
+
+. Check if the partner-sysid is correct:
++
+`printenv partner-sysid`
+
+
+. If the partner-sysid is not correct, set it:
++
+`setenv partner-sysid <partner-sysID>`
+
+. Boot the system and get to cluster setup.
++
+`boot_ontap`
 +
 Do not complete the cluster wizard or node wizard at this time.
 
@@ -993,14 +1008,6 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 .. Enter advanced privilege mode:
 +
 `set -privilege advanced`
-
-.. Verify that the partner-sysid is the correct:
-+
-`printenv partner-sysid`
-+
-If the partner-sysid is not correct, set it:
-+
-`setenv partner-sysid <partner-sysID>`
 
 .. Refresh the MetroCluster configuration on any of the newly added nodes:
 +
