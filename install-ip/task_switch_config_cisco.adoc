@@ -39,23 +39,75 @@ NOTE: If you are configuring the switches for the first time, you can skip this 
 ====
 [subs=+quotes]
 ----
-cluster1::*> *network device-discovery show*
+cluster_A::*> network device-discovery show
 Node/       Local  Discovered
 Protocol    Port   Device (LLDP: ChassisID)  Interface         Platform
------------ ------ ------------------------- ----------------  --------
-cluster1-01/cdp
-            e0a    IP_switch_A1              Ethernet1/7       N3K-C3232C
-            e0d    IP_switch_A2              Ethernet1/7       N3K-C3232C
-cluster1-02/cdp
-            e0a    IP_switch_A1              Ethernet1/8       N3K-C3232C
-            e0d    IP_switch_A2              Ethernet1/8       N3K-C3232C
-cluster1-03/cdp
-            e0a    IP_switch_A1              Ethernet1/1/1     N3K-C3232C
-            e0b    IP_switch_A2              Ethernet1/1/1     N3K-C3232C
-cluster1-04/cdp
-            e0a    IP_switch_A1              Ethernet1/1/2     N3K-C3232C
-            e0b    IP_switch_A2              Ethernet1/1/2     N3K-C3232C
-cluster1::*>
+----------- ------ ------------------------- ----------------  ----------------
+node_A_2/cdp
+            e10b   IP_switch_A_2
+                                             Ethernet1/18      N9K-C9336C-FX2
+            e2a    IP_switch_A_1
+                                             Ethernet1/18      N9K-C9336C-FX2
+            e4a    IP_switch_A_1
+                                             Ethernet1/2       N9K-C9336C-FX2
+            e4b    IP_switch_A_2
+                                             Ethernet1/2       N9K-C9336C-FX2
+            e5b    IP_switch_A_1
+                                             Ethernet1/10      N9K-C9336C-FX2
+            e7b    IP_switch_A_2
+                                             Ethernet1/10      N9K-C9336C-FX2
+            e9a    local_network_switch
+                                             Ethernet1/5       N9K-C9372PX
+            e9b    local_network_switch
+                                             Ethernet1/6       N9K-C9372PX
+node_A_2/lldp
+            e0M    mgmt_switch (00:08:2f:16:8e:02)
+                                             Eth121/1/1        -
+            e10b   IP_switch_A_2 (cc:90:70:e8:73:a0)
+                                             Ethernet1/18      -
+            e2a    IP_switch_A_1 (cc:90:70:e8:50:48)
+                                             Ethernet1/18      -
+            e5b    IP_switch_A_1 (cc:90:70:e8:50:28)
+                                             Ethernet1/10      -
+            e7b    IP_switch_A_2 (cc:90:70:e8:73:80)
+                                             Ethernet1/10      -
+            e9a    local_network_switch (88:f0:31:86:fe:a8)
+                                             Ethernet1/5       -
+            e9b    local_network_switch (88:f0:31:86:fe:a9)
+                                             Ethernet1/6       -
+node_A_1/cdp
+            e10b   IP_switch_A_2
+                                             Ethernet1/17      N9K-C9336C-FX2
+            e2a    IP_switch_A_1
+                                             Ethernet1/17      N9K-C9336C-FX2
+            e4a    IP_switch_A_1
+                                             Ethernet1/1       N9K-C9336C-FX2
+            e4b    IP_switch_A_2
+                                             Ethernet1/1       N9K-C9336C-FX2
+            e5b    IP_switch_A_1
+                                             Ethernet1/9       N9K-C9336C-FX2
+            e7b    IP_switch_A_2
+                                             Ethernet1/9       N9K-C9336C-FX2
+            e9a    local_network_switch
+                                             Ethernet1/3       N9K-C9372PX
+            e9b    local_network_switch
+                                             Ethernet1/4       N9K-C9372PX
+node_A_1/lldp
+            e0M    mgmt_switch (00:08:2f:16:8e:03)
+                                             Eth121/1/2        -
+            e10b   IP_switch_A_2 (cc:90:70:e8:73:9c)
+                                             Ethernet1/17      -
+            e2a    IP_switch_A_1 (cc:90:70:e8:50:44)
+                                             Ethernet1/17      -
+            e5b    IP_switch_A_1 (cc:90:70:e8:50:24)
+                                             Ethernet1/9       -
+            e7b    IP_switch_A_2 (cc:90:70:e8:73:7c)
+                                             Ethernet1/9       -
+            e9a    local_network_switch (88:f0:31:86:fe:a6)
+                                             Ethernet1/3       -
+            e9b    local_network_switch (88:f0:31:86:fe:a7)
+                                             Ethernet1/4       -
+30 entries were displayed.
 ----
 ====
 
@@ -70,37 +122,24 @@ cluster1::*>
 ====
 [subs=+quotes]
 ----
-cluster1::*> *network port show -role cluster*
-Node: cluster1-01
+cluster_A::*> network port show -role cluster
+
+Node: node_A_1
                                                                        Ignore
                                                   Speed(Mbps) Health   Health
 Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
 --------- ------------ ---------------- ---- ---- ----------- -------- ------
-e0a       Cluster      Cluster          up   9000  auto/100000 healthy false
-e0d       Cluster      Cluster          up   9000  auto/100000 healthy false
-Node: cluster1-02
+e4a       Cluster      Cluster          up   9000  auto/40000 healthy  false
+e4b       Cluster      Cluster          up   9000  auto/40000 healthy  false
+
+Node: node_A_2
                                                                        Ignore
                                                   Speed(Mbps) Health   Health
 Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
 --------- ------------ ---------------- ---- ---- ----------- -------- ------
-e0a       Cluster      Cluster          up   9000  auto/100000 healthy false
-e0d       Cluster      Cluster          up   9000  auto/100000 healthy false
-8 entries were displayed.
-Node: cluster1-03
-   Ignore
-                                                  Speed(Mbps) Health   Health
-Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
---------- ------------ ---------------- ---- ---- ----------- -------- ------
-e0a       Cluster      Cluster          up   9000  auto/10000 healthy  false
-e0b       Cluster      Cluster          up   9000  auto/10000 healthy  false
-Node: cluster1-04
-                                                                       Ignore
-                                                  Speed(Mbps) Health   Health
-Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status   Status
---------- ------------ ---------------- ---- ---- ----------- -------- ------
-e0a       Cluster      Cluster          up   9000  auto/10000 healthy  false
-e0b       Cluster      Cluster          up   9000  auto/10000 healthy  false
-cluster1::*>
+e4a       Cluster      Cluster          up   9000  auto/40000 healthy  false
+e4b       Cluster      Cluster          up   9000  auto/40000 healthy  false
+4 entries were displayed.
 ----
 ====
 
@@ -113,21 +152,18 @@ cluster1::*>
 ====
 [subs=+quotes]
 ----
-cluster1::*> *network interface show -role cluster*
-            Logical            Status     Network           Current      Current Is
-Vserver     Interface          Admin/Oper Address/Mask      Node         Port    Home
------------ ------------------ ---------- ----------------- ------------ ------- ----
+cluster_A::*> network interface show -role cluster
+            Logical        Status     Network            Current       Current Is
+Vserver     Interface      Admin/Oper Address/Mask       Node          Port    Home
+----------- -------------- ---------- ------------------ ------------- ------- ----
 Cluster
-            cluster1-01_clus1  up/up     169.254.3.4/23     cluster1-01  e0a     true
-            cluster1-01_clus2  up/up     169.254.3.5/23     cluster1-01  e0d     true
-            cluster1-02_clus1  up/up     169.254.3.8/23     cluster1-02  e0a     true
-            cluster1-02_clus2  up/up     169.254.3.9/23     cluster1-02  e0d     true
-            cluster1-03_clus1  up/up     169.254.1.3/23     cluster1-03  e0a     true
-            cluster1-03_clus2  up/up     169.254.1.1/23     cluster1-03  e0b     true
-            cluster1-04_clus1  up/up     169.254.1.6/23     cluster1-04  e0a     true
-            cluster1-04_clus2  up/up     169.254.1.7/23     cluster1-04  e0b     true
-8 entries were displayed.
-cluster1::*>
+            node_A_1_clus1 up/up      192.168.204.88/18  node_A_1      e4a     true
+            node_A_1_clus2 up/up      192.168.204.93/18  node_A_1      e4b     true
+            node_A_2_clus1 up/up      192.168.204.96/18  node_A_2      e4a     true
+            node_A_2_clus2 up/up      192.168.204.97/18  node_A_2      e4b     true
+4 entries were displayed.
+
+cluster_A::*>
 ----
 ====
 
@@ -140,24 +176,28 @@ cluster1::*>
 ====
 [subs=+quotes]
 ----
-cluster1::*> *system cluster-switch show -is-monitoring-enabled-operational true*
+cluster_A::*> system cluster-switch show -is-monitoring-enabled-operational true
 Switch                      Type               Address          Model
 --------------------------- ------------------ ---------------- ---------------
-IP_switch_A1                cluster-network    10.233.205.92    NX3232C
-     Serial Number: FOXXXXXXXGS
+IP_switch_A_1               cluster-network    10.231.7.251     N9K-C9336C-FX2
+     Serial Number: FDO26020KLJ
       Is Monitored: true
             Reason: None
   Software Version: Cisco Nexus Operating System (NX-OS) Software, Version
-                    9.3(4)
-    Version Source: CDP
-IP_switch_A1                cluster-network    10.233.205.92    NX3232C
-     Serial Number: FOXXXXXXXGD
+                    10.5(4)
+    Version Source: CDP/ISDP
+
+IP_switch_A_2               cluster-network    10.231.7.252     N9K-C9336C-FX2
+     Serial Number: FDO26020KGL
       Is Monitored: true
             Reason: None
   Software Version: Cisco Nexus Operating System (NX-OS) Software, Version
-                    9.3(4)
-    Version Source: CDP
+                    10.5(4)
+    Version Source: CDP/ISDP
+
 2 entries were displayed.
+
+cluster_A::*>
 ----
 ====
 
@@ -168,7 +208,15 @@ IP_switch_A1                cluster-network    10.233.205.92    NX3232C
 ====
 [subs=+quotes]
 ----
-cluster1::*> *network interface modify -vserver Cluster -lif * -auto-revert false*
+cluster_A::*> network interface modify -vserver Cluster -lif * -auto-revert false
+
+Warning: Disabling the auto-revert feature of the cluster logical interface may
+         effect the availability of your cluster network. Are you sure you want
+         to continue? {y|n}: y
+
+Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
+         sure you want to continue? {y|n}: y
+4 entries were modified.
 ----
 ====
 
@@ -179,8 +227,19 @@ cluster1::*> *network interface modify -vserver Cluster -lif * -auto-revert fals
 ====
 [subs=+quotes]
 ----
-IP_switch_A1(config)# *interface eth1/1/1-2,eth1/7-8*
-IP_switch_A1(config-if-range)# *shutdown*
+IP_switch_A_1(config)# sh int eth1/1,eth1/2 brief
+
+--------------------------------------------------------------------------------
+Ethernet        VLAN    Type Mode   Status  Reason                 Speed     Port
+Interface                                                                    Ch
+#
+--------------------------------------------------------------------------------
+Eth1/1          101     eth  access up      none                      40G(D) --
+Eth1/2          101     eth  access up      none                      40G(D) --
+IP_switch_A_1(config)#
+IP_switch_A_1(config)# int eth1/1,eth1/2
+IP_switch_A_1(config-if-range)# shut
+IP_switch_A_1(config-if-range)#
 ----
 ====
 
@@ -193,21 +252,16 @@ IP_switch_A1(config-if-range)# *shutdown*
 ====
 [subs=+quotes]
 ----
-cluster1::*> *network interface show -role cluster*
-            Logical           Status     Network            Current       Current Is
-Vserver     Interface         Admin/Oper Address/Mask       Node          Port    Home
------------ ----------------- ---------- ------------------ ------------- ------- ----
+cluster_A::*> network interface show -role cluster
+            Logical        Status     Network            Current       Current Is
+Vserver     Interface      Admin/Oper Address/Mask       Node          Port    Home
+----------- -------------- ---------- ------------------ ------------- ------- ----
 Cluster
-            cluster1-01_clus1 up/up      169.254.3.4/23     cluster1-01   e0a     true
-            cluster1-01_clus2 up/up      169.254.3.5/23     cluster1-01   e0a     false
-            cluster1-02_clus1 up/up      169.254.3.8/23     cluster1-02   e0a     true
-            cluster1-02_clus2 up/up      169.254.3.9/23     cluster1-02   e0a     false
-            cluster1-03_clus1 up/up      169.254.1.3/23     cluster1-03   e0a     true
-            cluster1-03_clus2 up/up      169.254.1.1/23     cluster1-03   e0a     false
-            cluster1-04_clus1 up/up      169.254.1.6/23     cluster1-04   e0a     true
-            cluster1-04_clus2 up/up      169.254.1.7/23     cluster1-04   e0a     false
-8 entries were displayed.
-cluster1::*>
+            node_A_1_clus1 up/up      192.168.204.88/18  node_A_1      e4b     false
+            node_A_1_clus2 up/up      192.168.204.93/18  node_A_1      e4b     true
+            node_A_2_clus1 up/up      192.168.204.96/18  node_A_2      e4b     false
+            node_A_2_clus2 up/up      192.168.204.97/18  node_A_2      e4b     true
+4 entries were displayed.
 ----
 ====
 
@@ -220,15 +274,12 @@ cluster1::*>
 ====
 [subs=+quotes]
 ----
-cluster1::*> *cluster show*
+cluster_A::*> cluster show
 Node                 Health  Eligibility   Epsilon
--------------------- ------- ------------  -------
-cluster1-01          true    true          false
-cluster1-02          true    true          false
-cluster1-03          true    true          true
-cluster1-04          true    true          false
-4 entries were displayed.
-cluster1::*>
+-------------------- ------- ------------  ------------
+node_A_1             true    true          false
+node_A_2             true    true          false
+2 entries were displayed.
 ----
 ====
 
