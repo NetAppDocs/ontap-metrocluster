@@ -11,7 +11,7 @@ summary: 'Beginning with ONTAP 9.8, you can remove a DR group from an eight-node
 [.lead]
 Beginning with ONTAP 9.8, you can remove a disaster recovery (DR) group from an eight-node MetroCluster configuration to create a four-node MetroCluster configuration.
 
-NOTE: You use these steps during the transition and system refresh workflows. 
+NOTE: You use these steps during the transition and system refresh workflows. You might have already completed some steps in this procedure as part of these workflows.
 
 == Enable console logging
 
@@ -207,7 +207,7 @@ NOTE: Use a comma-separated list in the `-owner <node_names>` field to specify t
 +
 `disk show` 
 +
-All spare disks are displayed, including the Pool1 spare disks owned by the node. The following example shows truncated output where disk 0n.4 and its partitions are assigned to Pool1. The output will vary depending on your configuration.
+All disks are displayed, including the Pool1 disks owned by the node. The following example shows truncated output where disk 0n.4 and its partitions are assigned to Pool1. The output will vary depending on your configuration.
 +
 ----
   DISK       OWNER                 POOL   SERIAL NUMBER         HOME                    DR HOME
@@ -222,7 +222,7 @@ All spare disks are displayed, including the Pool1 spare disks owned by the node
 +
 `set -privilege advanced -prompt-timestamp above`
 
-... Remove disk ownership for each pool1 spare disk:
+... Remove disk ownership for each pool1 disk:
 +
 If your configuration contains partitioned disks, you first remove ownership of each partitioned disk, and then remove the container disk ownership:
 +
