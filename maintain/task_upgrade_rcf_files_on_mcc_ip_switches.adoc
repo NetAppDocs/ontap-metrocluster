@@ -97,12 +97,60 @@ NOTE: If you have an L2 shared or L3 network configuration, you might need to ad
 
 . Modify all cluster LIFs to re-enable auto-revert: 
 +
-`network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true`
+`network interface modify -vserver Cluster -lif * -auto-revert true`
++
+----
+cluster_A::*> network interface modify -vserver Cluster -lif * -auto-revert true
+
+Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
+         sure you want to continue? {y|n}: y
+4 entries were modified.
+
+cluster_A::*>
+----
 
 
 . Revert all cluster LIFs that are not currently on their home ports to their home ports:
 +
-`network interface revert -vserver * -lif *`
+`network interface revert -vserver Cluster -lif *`
++
+Wait a few minutes for the LIFs to revert to their home port:
+
+. Confirm that all LIFs are on their home ports:
++
+----
+cluster_A::*> network interface show -role cluster
+            Logical        Status     Network            Current       Current Is
+Vserver     Interface      Admin/Oper Address/Mask       Node          Port    Home
+----------- -------------- ---------- ------------------ ------------- ------- ----
+Cluster
+            node_A_1_clus1 up/up      192.168.204.88/18  node_A_1      e4a     true
+            node_A_1_clus2 up/up      192.168.204.93/18  node_A_1      e4b     true
+            node_A_2_clus1 up/up      192.168.204.96/18  node_A_2      e4a     true
+            node_A_2_clus2 up/up      192.168.204.97/18  node_A_2      e4b     true
+4 entries were displayed.
+----
+
+. Verify the state of the MetroCluster nodes:
++
+`metrocluster node show`
++
+----
+cluster_A::*> metrocluster node show
+
+DR                               Configuration  DR
+Group Cluster Node               State          Mirroring Mode
+----- ------- ------------------ -------------- --------- --------------------
+1     cluster_A
+              node_A_1           configured     enabled   normal
+              node_A_2           configured     enabled   normal
+      cluster_B
+              node_B_1           configured     enabled   normal
+              node_B_2           configured     enabled   normal
+4 entries were displayed.
+
+cluster_A::*>`
+----
 
 // 2025 Mar 05, ONTAPDOC-2286, 1587
 // 2025 Jan 17, GH issue 449
