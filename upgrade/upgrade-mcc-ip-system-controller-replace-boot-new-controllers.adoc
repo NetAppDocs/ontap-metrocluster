@@ -45,9 +45,8 @@ If the partner-sysid is not correct, set it:
 . Display the boot menu:
 +
 `boot_ontap menu`
-. If root encryption is used, select the boot menu option for your key management configuration.
+. If the admin SVM of the MetroCluster system is configured with a key manager, select the correct boot menu option for your key management configuration.  
 +
-
 |===
 
 h| If you are using... h| Select this boot menu option...
@@ -55,16 +54,25 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-Option "`10`"
+Option `10`
 
-Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+Follow the prompts to provide the required inputs to recover and restore the key manager configuration.
+
+*Note:* You'll need the Onboard Key Manager backup and passphrase that you gathered earlier in the procedure.
 a|
 External key management
 a|
-Option "`11`"
+Option `11`
 
-Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+Follow the prompts to provide the following inputs to recover and restore the key manager configuration:
+
+* The port number and address of one of the primary key servers for the admin SVM
+* The username and password if one is associated with the chosen primary key server
+* The keystore UUID for the admin SVM
+
+*Note:* Although the admin SVM can have up to four primary key servers, only information for one primary key server can be specified during the recovery process. 
 |===
+
 
 
 . From the boot menu, run option "`6`".
@@ -94,9 +102,8 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid <partner-sysID>`
 
-. If root encryption is used, select the boot menu option again for your key management configuration.
+. If root volume encryption is used, select the boot menu option again for your key management configuration.
 +
-
 |===
 
 h| If you are using... h| Select this boot menu option...
@@ -104,15 +111,23 @@ h| If you are using... h| Select this boot menu option...
 a|
 Onboard key management
 a|
-Option "`10`"
+Option `10`
 
-Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+Follow the prompts to provide the required inputs to recover and restore the key manager configuration.
+
+*Note:* You'll need the Onboard Key Manager backup and passphrase that you gathered earlier in the procedure.
 a|
 External key management
 a|
-Option "`11`"
+Option `11`
 
-Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+Follow the prompts to provide the following inputs to recover and restore the key manager configuration:
+
+* The port number and address of one of the primary key servers for the admin SVM
+* The username and password if one is associated with the chosen primary key server
+* The keystore UUID for the admin SVM
+
+*Note:* Although the admin SVM can have up to four primary key servers, only information for one primary key server can be specified during the recovery process. 
 |===
 +
 Depending on the key manager setting, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option "`6`" at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).

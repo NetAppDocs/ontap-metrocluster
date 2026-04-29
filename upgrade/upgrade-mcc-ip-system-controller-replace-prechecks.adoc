@@ -223,24 +223,82 @@ You should gather the output of the following commands:
  ** `iscsi interface show`
  ** `ucadmin show`
 
-. If the root volume is encrypted, collect and save the passphrase used for key-manager:
-+
-`security key-manager backup show`
-. If the MetroCluster nodes are using encryption for volumes or aggregates, copy information about the keys and passphrases.
-+
-For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Back up onboard key management information manually^].
-
-.. If Onboard Key Manager is configured:
+. If the MetroCluster nodes are configured with an external key manager for the admin SVM (cluster), copy the key server information to a secure location. If the Onboard Key Manager is configured, copy the backup information and passphrase to a secure location.
++ 
+[role="tabbed-block"]
+====
+.Onboard Key Manager
+--
+.. Run the following command to display the Onboard Key Manager backup:
 +
 `security key-manager onboard show-backup`
 +
-You will need the passphrase later in the upgrade procedure.
+You'll also need the most up-to-date Onboard Key Manager passphrase later in the upgrade procedure. 
++
+For additional information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-1677AE0A-FEF7-45FA-8616-885AA3283BCF.html[Back up onboard key management information manually].
+--
+.External key manager
+--
+Gather the external key management information that you'll need to restore the key manager configuration later in the procedure.
 
-.. If enterprise key management (KMIP) is configured, issue the following commands:
+.. Display the name of the admin SVM (cluster). 
 +
-`security key-manager external show -instance`
+`vserver show -type admin`
 +
-`security key-manager key query`
+In this example, the admin SVM name is cluster_B:
++
+----
+cluster_B::*> vserver show -type admin
+                               Admin      Operational Root
+Vserver     Type    Subtype    State      State       Volume     Aggregate
+----------- ------- ---------- ---------- ----------- ---------- ----------
+cluster_B
+            admin   -          -          -           -          -
+----
+
+.. Obtain the address and port number of a primary key server associated with the external key manager configured on the admin SVM  (cluster):
++
+NOTE: The admin SVM can have up to four primary key servers but you'll only need the port number and address of one of the primary key servers to restore the key management configuration later in the procedure. If there is a username and password associated with the primary key server you choose, you'll also need that information for the recovery process. 
++
+`security key-manager external show -instance -vserver <admin_svm_name>`
++
+----
+cluster_B::> security key-manager external show -instance -vserver cluster_B
+
+                  Vserver: cluster_B
+       Client Certificate: NTAPKM_C
+   Server CA Certificates: NTAPKM_I, NTAPKM_R
+       Primary Key Server: 172.18.27.34:12014
+                  Timeout: 25
+                 Username:
+              Policy name: -
+    Secondary Key Servers: -
+    Create/Remove Timeout: 10
+
+----
+
+
+.. Obtain the keystore UUID for the admin SVM.
++
+`security key-manager show-key-store -vserver <admin_svm_name> -fields uuid`
++
+----
+cluster_B::*>  security key-manager show-key-store -vserver cluster_B -fields uuid
+vserver         uuid
+--------------- ------------------------------------
+cluster_B        f281aa55-d635-11f0-93bc-005056bb68f2
+
+cluster_B::*
+----
+
+
+.. Save the information you gathered in a secure location for use later in the procedure. You should now have gathered the following information:
+* The port number and address of one of the primary key servers for the admin SVM
+* The user name and password if one is associated with the chosen primary key server
+* The keystore UUID for the admin SVM
+
+--
+====
 
 . After you finish collecting the configuration information, resume the operation:
 +
