@@ -192,7 +192,7 @@ The following table shows the supported platform combinations for expanding an A
 
 image::../media/8node_comb_ip_asa.png[Platform combinations for 8 node configurations]
 
-== Sending a custom AutoSupport message prior to maintenance
+== Send a custom AutoSupport message prior to maintenance
 
 Before performing the maintenance, you should issue an AutoSupport message to notify NetApp technical support that maintenance is underway. Informing technical support that maintenance is underway prevents them from opening a case on the assumption that a disruption has occurred.
 
@@ -226,7 +226,7 @@ include::../_include/models_supporting_vlan-id.adoc[]
 
 // 2025 Mar 24, ONTAPDOC-2840, FAS50
 
-== Verifying the health of the MetroCluster configuration
+== Verify the health of the MetroCluster configuration
 
 You must verify the health and connectivity of the MetroCluster configuration prior to performing the expansion.
 
@@ -348,7 +348,7 @@ Cluster
 cluster_A::>
 ----
 
-== Removing the configuration from monitoring applications
+== Remove the configuration from monitoring applications
 
 If the existing configuration is monitored with the MetroCluster Tiebreaker software, the ONTAP Mediator or other third-party applications (for example, ClusterLion) that can initiate a switchover, you must remove the MetroCluster configuration from the monitoring software prior to upgrade.
 
@@ -382,7 +382,7 @@ Refer to the product documentation.
 +
 Refer to the documentation for the application.
 
-== Preparing the new controller modules
+== Prepare the new controller modules
 
 You must prepare the four new MetroCluster nodes and install the correct ONTAP version.
 
@@ -407,7 +407,21 @@ In these steps, you clear the configuration on the nodes and clear the mailbox r
 .. link:../install-ip/task_sw_config_restore_defaults.html[Restore system defaults on a controller module]
 .. link:../install-ip/task_sw_config_verify_haconfig.html[Verify the ha-config state of components]
 .. link:../install-ip/task_sw_config_assign_pool0.html#manually-assigning-drives-for-pool-0-ontap-9-4-and-later[Manually assign drives for pool 0 (ONTAP 9.4 and later)]
-. From Maintenance mode, issue the halt command to exit Maintenance mode, and then issue the boot_ontap command to boot the system and get to cluster setup.
+. From Maintenance mode, issue the halt command to exit Maintenance mode:
++
+`halt`
+
+. Check if the partner-sysid is correct:
++
+`printenv partner-sysid`
+
+. If the partner-sysid is not correct, set it:
++
+`setenv partner-sysid <partner-sysID>`
+
+. Boot the system and get to cluster setup:
++
+`boot_ontap`
 +
 Do not complete the cluster wizard or node wizard at this time.
 
@@ -562,7 +576,7 @@ Do you want to use this configuration? {yes, no} [yes]: yes
 .. Join the second new MetroCluster IP node (node_A_2-new) to the existing MetroCluster IP configuration.
 . Repeat these steps to join node_B_1-new and node_B_2-new to cluster_B.
 
-== Configuring intercluster LIFs for cluster peering
+== Configure intercluster LIFs for cluster peering
 
 You must create intercluster LIFs on ports used for communication between the MetroCluster partner clusters. You can use dedicated ports or ports that also have data traffic.
 
@@ -721,7 +735,7 @@ cluster01
 ----
 
 --
-.Configuring intercluster LIFs on shared data ports
+.Configure intercluster LIFs on shared data ports
 --
 
 You can configure intercluster LIFs on ports shared with the data network. Doing so reduces the number of ports you need for intercluster networking.
@@ -813,7 +827,7 @@ cluster01
 
 ====
 
-== Creating the MetroCluster interfaces, and mirroring root aggregates
+== Create the MetroCluster interfaces and mirror root aggregates
 
 You must create the MetroCluster interfaces on the new MetroCluster IP nodes and mirror root aggregates.
 
@@ -1238,7 +1252,7 @@ aggr_data_a2
                                                                    mirrored,
 ----
 
-== Finalizing the addition of the new nodes
+== Finalize the addition of the new nodes
 
 You must incorporate the new DR group into the MetroCluster configuration and create mirrored data aggregates on the new nodes.
 
@@ -1248,6 +1262,7 @@ You must incorporate the new DR group into the MetroCluster configuration and cr
 .. Enter advanced privilege mode:
 +
 `set -privilege advanced`
+
 .. Refresh the MetroCluster configuration on any of the newly added nodes:
 +
 [cols="30,70"]
