@@ -648,7 +648,7 @@ cluster01
 +
 `network interface failover-groups create -vserver <system_svm> -failover-group <failover_group> -targets <physical_or_logical_ports>`
 +
-The following example assigns ports "e0e" and "e0f" to failover group "intercluster01" on system "SVMcluster01":
+The following example assigns ports "e0e" and "e0f" to failover group "intercluster01" on SVM "cluster01":
 +
 ----
 cluster01::> network interface failover-groups create -vserver cluster01 -failover-group
@@ -814,10 +814,10 @@ cluster01::> network interface show -service-policy default-intercluster -failov
 Vserver  Interface       Node:Port             Policy          Group
 -------- --------------- --------------------- --------------- --------
 cluster01
-         cluster01_icl01 cluster01-01:e0c   local-only         intercluster01
+         cluster01_icl01 cluster01-01:e0c   local-only         Default
                             Failover Targets: cluster01-01:e0c,
                                               cluster01-01:e0d
-         cluster01_icl02 cluster01-02:e0c   local-only         intercluster01
+         cluster01_icl02 cluster01-02:e0c   local-only         Default
                             Failover Targets: cluster01-02:e0c,
                                               cluster01-02:e0d
 ----
