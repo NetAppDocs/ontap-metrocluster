@@ -623,7 +623,7 @@ cluster01-02
 +
 `network interface show -fields home-port,curr-port`
 +
-For complete command syntax, see the man page.
+For complete command syntax, see the link:https://docs.netapp.com/us-en/ontap-cli[ONTAP command reference^].
 +
 The following example shows that ports "e0e" and "e0f" have not been assigned LIFs:
 +
@@ -660,8 +660,7 @@ cluster01-01:e0e,cluster01-01:e0f,cluster01-02:e0e,cluster01-02:e0f
 +
 `network interface failover-groups show`
 +
-For complete command syntax, see the man page.
-+
+For complete command syntax, see the link:https://docs.netapp.com/us-en/ontap-cli[ONTAP command reference^].
 ----
 cluster01::> network interface failover-groups show
                                   Failover
@@ -746,7 +745,7 @@ You can configure intercluster LIFs on ports shared with the data network. Doing
 +
 `network port show`
 +
-For complete command syntax, see the man page.
+For complete command syntax, see the link:https://docs.netapp.com/us-en/ontap-cli[ONTAP command reference^].
 +
 The following example shows the network ports in "cluster01":
 +
@@ -815,10 +814,10 @@ cluster01::> network interface show -service-policy default-intercluster -failov
 Vserver  Interface       Node:Port             Policy          Group
 -------- --------------- --------------------- --------------- --------
 cluster01
-         cluster01_icl01 cluster01-01:e0c   local-only      Default
+         cluster01_icl01 cluster01-01:e0c   local-only         intercluster01
                             Failover Targets: cluster01-01:e0c,
                                               cluster01-01:e0d
-         cluster01_icl02 cluster01-02:e0c   local-only      Default
+         cluster01_icl02 cluster01-02:e0c   local-only         intercluster01
                             Failover Targets: cluster01-02:e0c,
                                               cluster01-02:e0d
 ----
