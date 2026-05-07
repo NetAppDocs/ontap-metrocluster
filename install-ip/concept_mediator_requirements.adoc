@@ -23,7 +23,9 @@ The connectivity between the ONTAP Mediator and each site must be two separate f
 
 * Automatic unplanned switchover is supported in ONTAP 9.7 and later.
 
-* Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance can manage up to ten MetroCluster configurations simultaneously. In earlier releases, ONTAP Mediator can support up to five MetroCluster configurations simultaneously.
+* Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator that uses HTTPS for communication instead of iSCSI. When ONTAP Mediator is configured with HTTPS, only one MetroCluster IP configuration per ONTAP Mediator instance can be monitored. For more information, see <<Select a communication protocol for ONTAP Mediator>>.
+
+* Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance configured with iSCSI can manage up to ten MetroCluster configurations simultaneously. In ONTAP 9.17.1 and ONTAP Mediator 1.10 and earlier, an ONTAP Mediator configured with iSCSI can support up to five MetroCluster configurations simultaneously.
 
 * Beginning with ONTAP 9.18.1, IPv6 is supported for ONTAP Mediator 1.11 or later in a MetroCluster IP configuration.
 
@@ -65,62 +67,24 @@ You must ensure that the configuration meets several host requirements.
 +
 **  Each DR group requires up to 200MB of disk space.
 
+== Select a communication protocol for ONTAP Mediator
 
-== Firewall requirements for ONTAP Mediator
+By default, MetroCluster IP nodes access ONTAP Mediator mailbox LUNs using iSCSI sessions. ONTAP Mediator relies on the SCST package to provide iSCSI. iSCSI sessions are authenticated using the Challenge Handshake Authentication Protocol (CHAP) with an obfuscated, machine-generated pre-shared key, but are not fully encrypted.
 
-ONTAP Mediator uses a number of ports to communicate with specific services.
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI. HTTPS is a secure protocol for communication that encrypts entire sessions using SSL/TLS, providing increased security when compared with iSCSI. 
 
-If you are using a third-party firewall:
+You can only configure an ONTAP Mediator that uses HTTPS using the CLI. System Manager is not supported. 
 
-* HTTPS access must be enabled.
-* It must be configured to allow access on ports 31784 and 3260.
-+
-When using the default Red Hat or CentOS firewall, the firewall is automatically configured during Mediator installation.
-
-The following table lists the ports that you must allow in your firewall:
-
-[NOTE] 
+[CAUTION]
 ====
-* The iSCSI port is only required in a MetroCluster IP configuration.
-* The 22/tcp port is not required for normal operation but you can enable it temporarily for maintenance and disable it when the maintenance session has finished. 
+* If you configure ONTAP Mediator with HTTPS, a single ONTAP Mediator instance can only monitor one MetroCluster IP configuration. Monitoring multiple MetroCluster IP configurations simultaneously is not supported. 
+
+* If you need ONTAP Mediator configured with HTTPS to monitor multiple MetroCluster IP configurations, you must configure separate ONTAP Mediator instances for each MetroCluster IP configuration. You must carefully evaluate the requirements for your MetroCluster IP environment before you choose to configure ONTAP Mediator with HTTPS for MetroCluster IP. 
+
+* If you want to use a single ONTAP Mediator instance to monitor more than one MetroCluster IP configurations, you should configure ONTAP Mediator using iSCSI instead of HTTPS. 
 ====
 
-|===
-
-h| Port/services h| Source h| Direction h|  Destination h| Purpose 
-
-a| 
-22/tcp
-a|
-Management host
-a|
-Inbound
-a|
-ONTAP Mediator
-a|
-SSH / ONTAP Mediator management
-a|
-31784/tcp
-a|
-cluster-mgmt and node-mgmt LIFs
-//ontap-metrocluster/issues/34
-a|
-Inbound
-a|
-ONTAP Mediator web server
-a|
-REST API (HTTPS)
-a|
-3260/tcp
-a|
-node-mgmt LIFs
-a|
-Inbound
-a|
-ONTAP Mediator iSCSI targets
-a|
-iSCSI data connection for mailboxes
-|===
+For more information, see link:https://docs.netapp.com/us-en/ontap/mediator/index.html#https-iscsi-installation[HTTPS and iSCSI installation options for ONTAP Mediator^].
 
 // 2026 Feb 12, GH 504
 
