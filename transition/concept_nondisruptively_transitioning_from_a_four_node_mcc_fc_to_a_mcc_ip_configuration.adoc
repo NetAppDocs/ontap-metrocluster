@@ -51,10 +51,15 @@ a| Requires adding one MetroCluster IP DR group. After you add the first MetroCl
 When you are applying the RCF as part of this procedure, you can apply the four-node FC to eight-node IP RCF before you add the second DR group. You do not have to apply the four-node FC to four-node IP RCF first.
 
 a| Eight-node FC to four-node IP configuration
-a| Follow this procedure as written.
+a| Follow this procedure as written. During the transition, the MetroCluster configuration will expand from eight-nodes to twelve-nodes.
+After the transition is complete and all MetroCluster FC nodes are unjoined, the final configuration will be a four-node MetroCluster IP configuration.
 
 a| Eight-node FC to eight-node IP configuration
-a| Requires adding one MetroCluster IP DR group. After you add the first MetroCluster IP DR group, you need to check the overall health of the cluster, move data to the newly added DR group, and unjoin the empty MetroCluster FC DR group. You then add the second MetroCluster IP DR group and continue the transition.  
+a| This transition requires adding one MetroCluster IP DR group to the cluster.
+
+After you confirm the health of the twelve-node configuration, move data and LIFs (as required) from one of the MetroCluster FC DR groups to the MetroCluster IP DR group. When one of the MetroCluster FC DR groups is empty, remove that DR group and unjoin those nodes. The resulting configuration is an eight-node cluster consisting of one MetroCluster FC and one MetroCluster IP DR group. 
+
+Then, add the second MetroCluster IP DR group to the cluster and transition data and LIFs (as required). When the last remaining MetroCluster FC DR group is empty, remove it and unjoin those nodes.  
 
 At any time during the transition, the number of nodes in the MetroCluster configuration does not exceed twelve.
 |===
