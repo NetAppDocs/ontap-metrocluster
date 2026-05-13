@@ -7,21 +7,22 @@ summary: You must only configure MACsec encryption on the WAN ISL ports that run
 = Configure MACsec encryption on Cisco 9336C switches in a MetroCluster IP site
 :icons: font
 :imagesdir: ../media/
-//burt 1354395
+
 [.lead]
-You can configure MACsec encryption on the WAN ISL ports that run between the sites. You must configure MACsec after applying the correct RCF file.
+If required, you can configure MACsec encryption on the WAN ISL ports that run between the sites. If you choose to use MACsec encryption, you must configure it after applying the correct RCF file.
 
-NOTE: MACsec encryption can only be applied to the WAN ISL ports.
+[NOTE] 
+====
+* MACsec encryption can only be applied to the WAN ISL ports.
+* Configuring MACsec encryption is optional when configuring Cisco 9336C switches.
+====
 
-== Configure MACsec encryption on Cisco 9336C switches
 
-You must only configure MACsec encryption on the WAN ISL ports that run between the sites. You must configure MACsec after applying the correct RCF file.
-
-=== Licensing requirements for MACsec
+== Licensing requirements for MACsec
 
 MACsec requires a security license. For a complete explanation of the Cisco NX-OS licensing scheme and how to obtain and apply for licenses, see the https://www.cisco.com/c/en/us/td/docs/switches/datacenter/sw/nx-os/licensing/guide/b_Cisco_NX-OS_Licensing_Guide/b_Cisco_NX-OS_Licensing_Guide_chapter_01.html[Cisco NX-OS Licensing Guide^]
 
-=== Enable Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
+== Enable Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
 
 You can enable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
 
@@ -54,7 +55,7 @@ IP_switch_A_1(config)# copy running-config startup-config
 
 
 
-=== Configure a MACsec key chain and keys
+== Configure a MACsec key chain and keys
 
 You can create a MACsec key chain or keys on your configuration.
 
@@ -143,7 +144,7 @@ IP_switch_A_1(config-macseckeychain-macseckey)# show key chain 1
 
 
 
-=== Configure a MACsec policy
+== Configure a MACsec policy
 
 .Steps
 
@@ -246,7 +247,7 @@ IP_switch_A_1(config)# copy running-config startup-config
 IP_switch_A_1(config-macsec-policy)# show macsec policy
 ----
 
-=== Enable Cisco MACsec encryption on the interfaces
+== Enable Cisco MACsec encryption on the interfaces
 
 . Enter global configuration mode:
 +
@@ -286,7 +287,7 @@ IP_switch_A_1(config)# copy running-config startup-config
 
 
 
-=== Disable Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
+== Disable Cisco MACsec Encryption WAN ISLs in MetroCluster IP configurations
 
 You might need to disable MACsec encryption for Cisco 9336C switches on the WAN ISLs in a MetroCluster IP configuration.
 
@@ -339,7 +340,7 @@ IP_switch_A_1(config)# copy running-config startup-config
 
 
 
-=== Verifying the MACsec configuration
+== Verifying the MACsec configuration
 
 
 .Steps
