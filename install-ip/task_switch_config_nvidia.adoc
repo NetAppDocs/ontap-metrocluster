@@ -11,45 +11,6 @@ summary: You must configure the NVIDIA IP switches for use as the cluster interc
 [.lead]
 You must configure the NVIDIA SN2100 IP switches for use as the cluster interconnect and for backend MetroCluster IP connectivity.
 
-== Move cluster LIFs before a NVIDIA switch or RCF upgrade
-
-When you upgrade the switch firmware or reference configuration file (RCF), you move cluster LIFs to the partner switch to enable non-disruptive cluster operations during the upgrade. 
-
-.About this task
-
-You must perform this task before you upgrade switch firmware, or replace the switch RCF.
-
-NOTE: If you are configuring the switches for the first time, you can skip this task.
-
-.Steps
-
-. Connect the cluster switch to the management network.
-
-. Use the `ping` command to verify connectivity to the server hosting the Cumulus Linux and the RCF.
-
-. Display the cluster ports on each node that are connected to the cluster switches:
-+
-`network device-discovery show`
-
-. Check the administrative and operational status of each cluster port.
-
-.. Verify that all the cluster ports are up with a healthy status:
-+
-`network port show -role cluster`
-
-.. Verify that all the cluster interfaces (LIFs) are on the home port:
-+
-`network interface show -role cluster`
-
-.. Verify that the cluster displays information for both cluster switches:
-+
-`system cluster-switch show -is-monitoring-enabled-operational true`
-
-. Disable auto-revert on the cluster LIFs. The cluster LIFs fail over to the partner cluster switch and remain there as you perform the upgrade procedure on the targeted switch:
-+
-`network interface modify -vserver Cluster -lif * -auto-revert false`
-
-
 == [[Reset-the-switch]] Reset the NVIDIA IP SN2100 switch to factory defaults
 
 You can choose from the following methods to reset a switch to factory default settings.
@@ -432,6 +393,67 @@ cumulus@IP_switch_A_1:mgmt:~$
 `sudo reboot`
 +
 NOTE: When you set the DAC option for multiple switch ports, you only need to reboot the switch once.
+
+. If you are updating the RCF on existing switches, modify all cluster LIFs to re-enable auto-revert:
++
+NOTE: For a switch firmware or RCF update, you disabled auto-revert as part of the step to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. If you are installing an RCF on the switch for the first time,  you can skip this step.  
++
+.. Re-enable auto-revert:
++
+`network interface modify -vserver Cluster -lif * -auto-revert true`
++
+----
+cluster_A::*> network interface modify -vserver Cluster -lif * -auto-revert true
+
+Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
+         sure you want to continue? {y|n}: y
+4 entries were modified.
+
+cluster_A::*>
+----
+
+
+.. Revert all cluster LIFs that are not currently on their home ports to their home ports:
++
+`network interface revert -vserver Cluster -lif *`
++
+Wait a few minutes for the LIFs to revert to their home port:
+
+.. Confirm that all LIFs are on their home ports:
++
+----
+cluster_A::*> network interface show -role cluster
+            Logical        Status     Network            Current       Current Is
+Vserver     Interface      Admin/Oper Address/Mask       Node          Port    Home
+----------- -------------- ---------- ------------------ ------------- ------- ----
+Cluster
+            node_A_1_clus1 up/up      192.168.204.88/18  node_A_1      e4a     true
+            node_A_1_clus2 up/up      192.168.204.93/18  node_A_1      e4b     true
+            node_A_2_clus1 up/up      192.168.204.96/18  node_A_2      e4a     true
+            node_A_2_clus2 up/up      192.168.204.97/18  node_A_2      e4b     true
+4 entries were displayed.
+----
+
+.. Verify the state of the MetroCluster nodes:
++
+`metrocluster node show`
++
+----
+cluster_A::*> metrocluster node show
+
+DR                               Configuration  DR
+Group Cluster Node               State          Mirroring Mode
+----- ------- ------------------ -------------- --------- --------------------
+1     cluster_A
+              node_A_1           configured     enabled   normal
+              node_A_2           configured     enabled   normal
+      cluster_B
+              node_B_1           configured     enabled   normal
+              node_B_2           configured     enabled   normal
+4 entries were displayed.
+
+cluster_A::*>`
+----
 
 == Set Forward Error Correction for systems using 25-Gbps connectivity
 
