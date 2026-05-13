@@ -110,13 +110,20 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 ----
 
  .. Check that there are no health alerts: `*system health alert show*`
+
+. link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs] before you begin the switch replacement or conversion.
+
 . Configure the new switch before installation.
 +
 If you are reusing existing switches, go to <<existing_step4,Step 4>>.
 +
 NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
 +
-Follow the steps in the section _Configuring the IP switches_ in the link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration.]
+Follow the steps for your switch vendor:
++
+* link:../install-ip/task_switch_config_broadcom.html[Configure Broadcom IP switches]
+* link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
+* link:../install-ip/task_switch_config_nvidia.html[Configure NVIDIA IP switches]
 +
 Make sure that you apply the correct RCF file for switch _A_1, _A_2, _B_1 or _B_2. If the new switch is the same as the old switch, you need to apply the same RCF file.
 +
@@ -164,7 +171,7 @@ To configure the existing switches, follow the steps to install and upgrade the 
 
 . Cable the switches. 
 +
-You can follow the steps in the  _Cabling the IP switches_ section in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration]. 
+You can follow the steps in link:../install-ip/using_rcf_generator.html[Cable the MetroCluster IP switches]. 
 +
 Cable the switches in the following order (if required): 
 +
@@ -191,13 +198,13 @@ If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs.
 
 . Power up the switch or switches.
 +
-If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second network is updated.
+If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second fabric is updated.
 
 . Verify that the MetroCluster configuration is healthy by repeating <<all_step1,Step 1>>.
 +
-If you are upgrading or downgrading the switches in the first network, you might see some alerts related to local clustering.
+If you are upgrading or downgrading the switches in the first fabric, you might see some alerts related to local clustering.
 +
-NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for the second network.
+NOTE: If you upgrade or downgrade the fabric, then repeat all of the steps for the second fabric.
 
 . Modify all cluster LIFs to re-enable auto-revert: 
 +
