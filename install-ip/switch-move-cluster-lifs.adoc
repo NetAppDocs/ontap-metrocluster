@@ -25,13 +25,14 @@ NOTE: If you are configuring the switches for the first time, you can skip this 
 
 . On NVIDIA IP switches, complete the following steps:
 +
-For Cisco or Broadcom IP switches, you can skip to <<display_cluster_ports, the step to display the cluster ports>>
+NOTE: For Cisco or Broadcom IP switches, you can skip to <<display_cluster_ports, the step to display the cluster ports>>
 
 .. Connect the cluster switch to the management network.
+
 .. Use the `ping` command to verify connectivity to the server hosting the Cumulus Linux and the RCF.
 
-[[display_cluster_ports]]
-. Display the cluster ports on each node that are connected to the cluster switches:
+
+. [[display_cluster_ports]] Display the cluster ports on each node that are connected to the cluster switches:
 +
 `network device-discovery show`
 +
@@ -254,8 +255,8 @@ IP_switch_A1(config-if-range)# *shutdown*
 --
 ====
 
-[[verify_cluster_lif_migration]]
-. Verify that the cluster LIFs have migrated to the ports hosted on cluster switch IP_switch_A2. This might take a few seconds.
+
+. [[verify_cluster_lif_migration]] Verify that the cluster LIFs have migrated to the ports hosted on cluster switch IP_switch_A2. This might take a few seconds.
 +
 `network interface show -role cluster`
 +
@@ -294,3 +295,11 @@ node_A_2             true    true          false
 2 entries were displayed.
 ----
 ====
+
+.After you finish
+
+After the cluster LIFs have moved to the other switch, you can follow the standard configuration procedures according to your switch vendor:
+
+* link:../install-ip/task_switch_config_broadcom.html[Configure Broadcom IP switches]
+* link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
+* link:../install-ip/task_switch_config_nvidia.html[Configure NVIDIA IP switches]
