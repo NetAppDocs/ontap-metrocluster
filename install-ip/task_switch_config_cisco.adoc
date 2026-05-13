@@ -25,7 +25,7 @@ Before installing any RCF file, you must erase the Cisco switch configuration an
 * You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
 * You must be connected to the switch using the serial console.
 * This task resets the configuration of the management network.
-* If you are using these steps to replace an existing RCF, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
 
 //ontap-metrocluster/issues/88 and BURT 1444675 2022.02.21
 
@@ -161,7 +161,7 @@ You must download the switch operating system file and RCF file to each switch i
 
 * These steps must be repeated on each of the IP switches in the MetroCluster IP configuration.
 
-* If you are using these steps to upgrade or downgrade the switch firmware, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
 
 
 * You must use the supported switch software version. Refer to the https://hwu.netapp.com[NetApp Hardware Universe].
@@ -403,9 +403,9 @@ Module 1 EPLD upgrade is successful.
 
 . Repeat the previous steps on the remaining three IP switches in the MetroCluster IP configuration.
 
-. If you are upgrading the firmware on existing switches, modify all cluster LIFs to re-enable auto-revert:
+. If auto-revert is disabled, modify all cluster LIFs to re-enable auto-revert:
 +
-NOTE: For a switch firmware or RCF update, you disabled auto-revert as part of the step to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. If you are installing the firmware on the switch for the first time, you can skip this step.  
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you should have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs].  
 +
 .. Re-enable auto-revert:
 +
@@ -474,8 +474,7 @@ You must generate and install the RCF file to each switch in the MetroCluster IP
 
 * These steps must be repeated on each of the IP switches in the MetroCluster IP configuration.
 
-* If you are using these steps to replace the RCF, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations.  Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
-
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
 
 * You must use the supported switch software version. Refer to the https://hwu.netapp.com[NetApp Hardware Universe].
 
@@ -618,9 +617,9 @@ IP_switch_A_1# reload
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-. If you are updating the RCF on existing switches, modify all cluster LIFs to re-enable auto-revert:
+. If auto-revert is disabled, modify all cluster LIFs to re-enable auto-revert:
 +
-NOTE: For a switch firmware or RCF update, you disabled auto-revert as part of the step to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. If you are installing an RCF on the switch for the first time,  you can skip this step.  
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you should have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
 +
 .. Re-enable auto-revert:
 +

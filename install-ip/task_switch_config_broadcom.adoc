@@ -26,6 +26,7 @@ Before installing a new switch software version and RCFs, you must erase the Bro
 * You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
 * You must be connected to the switch using the serial console.
 * This task resets the configuration of the management network.
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
 
 .Steps
 
@@ -270,6 +271,8 @@ You must download the switch operating system file and RCF file to each switch i
 
 This task must be repeated on each switch in the MetroCluster IP configuration.
 
+If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
+
 =====
 *Note the following:*
 
@@ -278,6 +281,7 @@ This task must be repeated on each switch in the MetroCluster IP configuration.
 * The configuration for EFOS 3.4.x.x and 3.7.x.x or later are different. Changing the EFOS version from 3.4.x.x to 3.7.x.x or later, or vice versa, requires the switch to be reset to factory defaults and the RCF files for the corresponding EFOS version to be (re)applied. This procedure requires access through the serial console port.
 
 * Beginning with EFOS version 3.7.x.x or later, a non-FIPS compliant and a FIPS compliant version is available. Different steps apply when moving to from a non-FIPS compliant to a FIPS compliant version or vice versa. Changing EFOS from a non-FIPS compliant to a FIPS compliant version or vice versa will reset the switch to factory defaults. This procedure requires access through the serial console port.
+
 =====
 
 .Steps
@@ -621,6 +625,8 @@ This task requires file transfer software, such as FTP, TFTP, SFTP, or SCP, to c
 
 These steps must be repeated on each of the IP switches in the MetroCluster IP configuration.
 
+If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
+
 There are four RCF files, one for each of the four switches in the MetroCluster IP configuration. You must use the correct RCF files for the switch model you are using.
 
 |===
@@ -801,9 +807,9 @@ IP_switch_A_1# reload
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-. If you are updating the RCF on existing switches, modify all cluster LIFs to re-enable auto-revert:
+. If auto-revert is disabled, modify all cluster LIFs to re-enable auto-revert:
 +
-NOTE: For a switch firmware or RCF update, you disabled auto-revert as part of the step to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. If you are installing an RCF on the switch for the first time,  you can skip this step.  
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you should have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
 +
 .. Re-enable auto-revert:
 +

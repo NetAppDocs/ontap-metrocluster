@@ -40,6 +40,7 @@ NOTE: All other configuration changes that occur during application of the RCF f
 * You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
 * You must be connected to the switch with a serial console connection.
 * This task resets the configuration of the management network.
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
 
 
 
@@ -126,7 +127,7 @@ Use these steps if you want to reset the switch completely by applying the Cumul
 NOTE: For more information about installing Cumulus Linux, see link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-nvidia-sn2100/configure-overview-sn2100-cluster.html#initial-configuration-overview[Overview of installation and configuration for NVIDIA SN2100 switches^]
 
 * You must have the root password for `sudo` access to the commands.
-
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
 
 .Steps
 
@@ -303,6 +304,8 @@ You must generate and install the switch RCF file to each switch in the MetroClu
 +
 NOTE: If you perform further configuration after resetting the switch and before applying the RCF file, you cannot use this procedure.
 
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, you should have already moved the cluster LIFs to the partner switch to enable non-disruptive cluster operations. Refer to link:switch-move-cluster-lifs.html[Move cluster LIFs] for more information. 
+
 
 .About this task
 You must repeat these steps on each of the IP switches in the MetroCluster IP configuration (new installation) or on the replacement switch (switch replacement).
@@ -394,9 +397,9 @@ cumulus@IP_switch_A_1:mgmt:~$
 +
 NOTE: When you set the DAC option for multiple switch ports, you only need to reboot the switch once.
 
-. If you are updating the RCF on existing switches, modify all cluster LIFs to re-enable auto-revert:
+. If auto-revert is disabled, modify all cluster LIFs to re-enable auto-revert:
 +
-NOTE: For a switch firmware or RCF update, you disabled auto-revert as part of the step to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. If you are installing an RCF on the switch for the first time,  you can skip this step.  
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you should have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
 +
 .. Re-enable auto-revert:
 +
