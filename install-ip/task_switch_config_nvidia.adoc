@@ -397,9 +397,13 @@ cumulus@IP_switch_A_1:mgmt:~$
 +
 NOTE: When you set the DAC option for multiple switch ports, you only need to reboot the switch once.
 
-. If auto-revert is disabled, modify all cluster LIFs to re-enable auto-revert:
+. Verify that auto-revert is enabled for the cluster LIFs:
 +
-NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you should have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
+`network interface show -vserver Cluster -fields auto-revert`
+
+. If auto-revert is not enabled, modify all cluster LIFs to enable auto-revert:
++
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you might have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
 +
 .. Re-enable auto-revert:
 +

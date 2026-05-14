@@ -459,6 +459,71 @@ NOTE: In rare scenarios the switch may fail to boot. Follow the <<Steps to upgra
 
 . Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
 
+. Verify that auto-revert is enabled for the cluster LIFs:
++
+`network interface show -vserver Cluster -fields auto-revert`
+
+. If auto-revert is not enabled, modify all cluster LIFs to enable auto-revert:
++
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you might have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
++
+.. Re-enable auto-revert:
++
+`network interface modify -vserver Cluster -lif * -auto-revert true`
++
+----
+cluster_A::*> network interface modify -vserver Cluster -lif * -auto-revert true
+
+Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
+         sure you want to continue? {y|n}: y
+4 entries were modified.
+
+cluster_A::*>
+----
+
+
+.. Revert all cluster LIFs that are not currently on their home ports to their home ports:
++
+`network interface revert -vserver Cluster -lif *`
++
+Wait a few minutes for the LIFs to revert to their home port:
+
+.. Confirm that all LIFs are on their home ports:
++
+----
+cluster_A::*> network interface show -role cluster
+            Logical        Status     Network            Current       Current Is
+Vserver     Interface      Admin/Oper Address/Mask       Node          Port    Home
+----------- -------------- ---------- ------------------ ------------- ------- ----
+Cluster
+            node_A_1_clus1 up/up      192.168.204.88/18  node_A_1      e4a     true
+            node_A_1_clus2 up/up      192.168.204.93/18  node_A_1      e4b     true
+            node_A_2_clus1 up/up      192.168.204.96/18  node_A_2      e4a     true
+            node_A_2_clus2 up/up      192.168.204.97/18  node_A_2      e4b     true
+4 entries were displayed.
+----
+
+.. Verify the state of the MetroCluster nodes:
++
+`metrocluster node show`
++
+----
+cluster_A::*> metrocluster node show
+
+DR                               Configuration  DR
+Group Cluster Node               State          Mirroring Mode
+----- ------- ------------------ -------------- --------- --------------------
+1     cluster_A
+              node_A_1           configured     enabled   normal
+              node_A_2           configured     enabled   normal
+      cluster_B
+              node_B_1           configured     enabled   normal
+              node_B_2           configured     enabled   normal
+4 entries were displayed.
+
+cluster_A::*>`
+----
+
 === Steps to upgrade EFOS using the ONIE OS installation
 
 You can perform the following steps if one EFOS version is FIPS compliant and the other EFOS version is non-FIPS compliant. These steps can be used to install the non-FIPS or FIPS compliant EFOS 3.7.x.x image from ONIE if the switch fails to boot.
@@ -807,9 +872,13 @@ IP_switch_A_1# reload
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-. If auto-revert is disabled, modify all cluster LIFs to re-enable auto-revert:
+. Verify that auto-revert is enabled for the cluster LIFs:
 +
-NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you should have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
+`network interface show -vserver Cluster -fields auto-revert`
+
+. If auto-revert is not enabled, modify all cluster LIFs to enable auto-revert:
++
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you might have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
 +
 .. Re-enable auto-revert:
 +

@@ -403,9 +403,13 @@ Module 1 EPLD upgrade is successful.
 
 . Repeat the previous steps on the remaining three IP switches in the MetroCluster IP configuration.
 
-. If auto-revert is disabled, modify all cluster LIFs to re-enable auto-revert:
+. Verify that auto-revert is enabled for the cluster LIFs:
 +
-NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you should have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs].  
+`network interface show -vserver Cluster -fields auto-revert`
+
+. If auto-revert is not enabled, modify all cluster LIFs to enable auto-revert:
++
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you might have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs].  
 +
 .. Re-enable auto-revert:
 +
@@ -617,9 +621,13 @@ IP_switch_A_1# reload
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-. If auto-revert is disabled, modify all cluster LIFs to re-enable auto-revert:
+. Verify that auto-revert is enabled for the cluster LIFs:
 +
-NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you should have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
+`network interface show -vserver Cluster -fields auto-revert`
+
+. If auto-revert is not enabled, modify all cluster LIFs to enable auto-revert:
++
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you might have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
 +
 .. Re-enable auto-revert:
 +
