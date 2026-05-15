@@ -203,7 +203,9 @@ cluster_A::*>
 ----
 ====
 
-. Disable auto-revert on the cluster LIFs.
+. Disable auto-revert on the cluster LIFs. The cluster LIFs fail over to the partner cluster switch and remain there as you perform the upgrade procedure on the targeted switch:
++
+`network interface modify -vserver Cluster -lif * -auto-revert false`
 +
 .Show example 
 [%collapsible]
@@ -224,7 +226,7 @@ Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
 
 . If you are using Cisco or Broadcom switches, on cluster switch IP_switch_A1, shut down the ports connected to the cluster ports of the nodes.
 +
-If you are using NVIDIA switches, you can skip to the <<verify_cluster_lifs_migration, step to verify the cluster LIF migration>>.
+If you are using NVIDIA switches, you can skip to the <<verify_cluster_lif_migration, step to verify the cluster LIF migration>>.
 +
 [role="tabbed-block"]
 ====
@@ -298,7 +300,7 @@ node_A_2             true    true          false
 
 .After you finish
 
-After the cluster LIFs have moved to the other switch, you can follow the standard configuration procedures according to your switch vendor:
+After the cluster LIFs have moved to the partner switch, you can follow the standard configuration procedures according to your switch vendor:
 
 * link:../install-ip/task_switch_config_broadcom.html[Configure Broadcom IP switches]
 * link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
