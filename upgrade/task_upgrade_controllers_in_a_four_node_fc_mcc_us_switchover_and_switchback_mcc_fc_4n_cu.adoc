@@ -485,7 +485,11 @@ cluster_B
 
 .. Obtain the address and port number of a primary key server associated with the external key manager configured on the admin SVM  (cluster):
 +
-NOTE: The admin SVM can have up to four primary key servers but you'll only need the port number and address of one of the primary key servers to restore the key management configuration later in the procedure. If there is a username and password associated with the primary key server you choose, you'll also need that information for the recovery process. 
+[NOTE]
+====
+* The admin SVM can have up to four primary key servers but you'll only need the port number and address of one of the primary key servers to restore the key management configuration later in the procedure. 
+* If there is a username and password associated with the primary key server you choose, you'll also need that information for the recovery process.
+==== 
 +
 `security key-manager external show -instance -vserver <admin_svm_name>`
 +
@@ -1044,9 +1048,9 @@ Onboard key management
 a|
 Option `10`
 
-Follow the prompts to provide the required inputs to recover and restore the key manager configuration.
+Follow the prompts to provide the following inputs to recover and restore the key manager configuration:
 
-*Note:* You'll need the Onboard Key Manager backup and passphrase that you gathered earlier in the procedure.
+* The Onboard Key Manager backup and passphrase
 a|
 External key management
 a|
@@ -1124,9 +1128,9 @@ Onboard key management
 a|
 Option `10`
 
-Follow the prompts to provide the required inputs to recover and restore the key manager configuration.
+Follow the prompts to provide the following inputs to recover and restore the key manager configuration:
 
-*Note:* You'll need the Onboard Key Manager backup and passphrase that you gathered earlier in the procedure.
+* The Onboard Key Manager backup and passphrase
 a|
 External key management
 a|
@@ -1220,7 +1224,7 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 a|
 External key management
 a|
-`security key-manager external restore -vserver _SVM_ -node _node_ -key-server _host_name\|IP_address:port_ -key-id key_id -key-tag key_tag _node-name_`
+`security key-manager external restore -vserver <admin-svm> -key-server <host_name\|IP_address:port>`
 
 For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restoring external key management encryption keys^].
 
