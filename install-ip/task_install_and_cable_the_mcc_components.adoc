@@ -21,17 +21,21 @@ If you are performing a fresh MetroCluster IP installation, you should use the f
 
 == Switch replacement and RCF or firmware updates
 
-As part of other MetroCluster IP procedures, such as a switch replacement or upgrade, you might need to update the switch firmware, reference configuration file (RCF), or both. In these scenarios, you must move the cluster LIFs before you configure the IP switches.
+As part of other MetroCluster IP procedures, such as a switch replacement or upgrade, you might need to update the switch firmware, reference configuration file (RCF), or both. In these scenarios, you must move the cluster LIFs before you configure the IP switches. 
 
-* link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs]
+NOTE: You must update the switches in the following order Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2. After you have configured the switches in the first fabric (Switch_A_1, Switch_B_1), you must repeat the steps to move the cluster LIFs on the second fabric ( Switch_A_2, Switch_B_2).
 
-After the cluster LIFs have moved to the partner switch, you can follow the standard configuration procedures according to your switch vendor:
+Review the following high-level steps:
+
+. link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs]
+
+. After the cluster LIFs have moved to the partner switch, you can follow the standard configuration procedures according to your switch vendor:
 
 * link:../install-ip/task_switch_config_broadcom.html[Configure Broadcom IP switches]
 * link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
 * link:../install-ip/task_switch_config_nvidia.html[Configure NVIDIA IP switches]
 
-
+. After you have configured the switches in the first fabric, you repeat the steps for the switches in the second fabric, starting from link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs].
 
 
 
