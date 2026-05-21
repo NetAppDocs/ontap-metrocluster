@@ -224,9 +224,7 @@ Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
 ----
 ====
 
-. If you are using Cisco or Broadcom switches, on cluster switch IP_switch_A1, shut down the ports connected to the cluster ports of the nodes.
-+
-If you are using NVIDIA switches, you can skip to the <<verify_cluster_lif_migration, step to verify the cluster LIF migration>>.
+. On cluster switch IP_switch_A1, shut down the ports connected to the cluster ports of the nodes.
 +
 [role="tabbed-block"]
 ====
@@ -255,6 +253,23 @@ IP_switch_A1(config)# *interface eth1/1/1-2,eth1/7-8*
 IP_switch_A1(config-if-range)# *shutdown*
 ----
 --
+.NVIDIA
+--
+
+.. Display the cluster interfaces:
++
+----
+cumulus@IP_switch_A_1:mgmt:~$ nv show interface
+Interface    Admin Status  Oper Status  Speed  MTU    Type      Remote Host     Remote Port  Summary             
+-----------  ------------  -----------  -----  -----  --------  --------------  -----------  ---------
+swp1         up            up           100G   9216   swp       cluster1         e1a
+----
+
+.. Shut down the cluster interface port:
++
+----
+sudo python3 <RCFFILE> runCmd swp1 state down
+----
 ====
 
 
