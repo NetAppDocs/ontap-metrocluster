@@ -92,11 +92,15 @@ ONTAP Mediator can be used to monitor multiple MetroCluster IP configurations si
 
 === ONTAP Mediator configured with HTTPS
 
-Beginning with ONTAP 9.19.1GA and ONTAP Mediator 1.12.1, ONTAP Mediator configured with HTTPS has the following support for monitoring multiple MetroCluster IP configurations:
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI. ONTAP Mediator configured with HTTPS has the following support for monitoring multiple MetroCluster IP configurations.
 
-* If ONTAP Mediator is installed on a host OS running 8-core CPU, a single ONTAP Mediator instance can manage a maximum of ten MetroCluster IP configurations simultaneously.
+Beginning with ONTAP 9.19.1GA and ONTAP Mediator 1.12.1:
 
-* If ONTAP Mediator is installed on a host OS running 2-core or 4-core CPU, a single ONTAP Mediator instance can manage a maximum of two four-node MetroCluster IP configurations simultaneously. 
+* If ONTAP Mediator is installed on a host OS running 8-core CPU and at least 16GB of RAM, a single ONTAP Mediator instance can manage a maximum of ten MetroCluster IP configurations simultaneously.
+
+* If ONTAP Mediator is installed on a host OS that is running less than 8-core CPU and at least 8GB of RAM, a single ONTAP Mediator instance can manage one MetroCluster IP configuration. 
+
+NOTE: In ONTAP Mediator 1.12, ONTAP Mediator configured with HTTPS can only monitor one MetroCluster IP configuration per ONTAP Mediator instance, regardless of the host OS specifications.
 
 == Guidelines for upgrading ONTAP Mediator in a MetroCluster configuration
 
