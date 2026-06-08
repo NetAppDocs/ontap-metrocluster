@@ -71,7 +71,9 @@ You must ensure that the configuration meets several host requirements.
 
 By default, MetroCluster IP nodes access ONTAP Mediator mailbox LUNs using iSCSI sessions. ONTAP Mediator relies on the SCST package to provide iSCSI. iSCSI sessions are authenticated using the Challenge Handshake Authentication Protocol (CHAP) with an obfuscated, machine-generated pre-shared key, but are not fully encrypted.
 
-Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI. HTTPS is a secure protocol for communication that encrypts entire sessions using SSL/TLS, providing increased security when compared with iSCSI. For more information, see link:https://docs.netapp.com/us-en/ontap/mediator/index.html#https-iscsi-installation[HTTPS and iSCSI installation options for ONTAP Mediator^].
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI. HTTPS is a secure protocol for communication that encrypts entire sessions using SSL/TLS, providing increased security when compared with iSCSI.
+
+You can install ONTAP Mediator with support for both iSCSI and HTTPS, or HTTPS only. For more information, see link:https://docs.netapp.com/us-en/ontap/mediator/index.html#https-iscsi-installation[HTTPS and iSCSI installation options for ONTAP Mediator^].
 
 You can only configure an ONTAP Mediator that uses HTTPS using the CLI. System Manager is not supported. 
 
@@ -92,15 +94,21 @@ ONTAP Mediator can be used to monitor multiple MetroCluster IP configurations si
 
 === ONTAP Mediator configured with HTTPS
 
-Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI. ONTAP Mediator configured with HTTPS has the following support for monitoring multiple MetroCluster IP configurations.
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI.
 
-Beginning with ONTAP 9.19.1GA and ONTAP Mediator 1.12.1:
+ONTAP Mediator configured with HTTPS has the following support for monitoring multiple MetroCluster IP configurations. The support depends on the ONTAP Mediator version, the host OS specification, and whether the configuration is a four-node or eight-node MetroCluster IP configuration.
 
-* If ONTAP Mediator is installed on a host OS running 8-core CPU and at least 16GB of RAM, a single ONTAP Mediator instance can manage a maximum of ten MetroCluster IP configurations simultaneously.
+[cols=4*,options="header"]
+|===
+| ONTAP Mediator version
+| Four-node MetroCluster configurations
+| Eight-node MetroCluster configurations
+| Host OS requirements
+| 1.12 | 1 | 1 | N/A
+| 1.12.1 and later | 1| 1 | On hosts with fewer than 8 CPUs and less than 16GB of RAM 
+| 1.12.1 and later | 5| 8 | On hosts with 8 CPUs and 16GB of RAM 
+|===
 
-* If ONTAP Mediator is installed on a host OS that is running less than 8-core CPU and at least 8GB of RAM, a single ONTAP Mediator instance can manage one MetroCluster IP configuration. 
-
-NOTE: In ONTAP Mediator 1.12, ONTAP Mediator configured with HTTPS can only monitor one MetroCluster IP configuration per ONTAP Mediator instance, regardless of the host OS specifications.
 
 == Guidelines for upgrading ONTAP Mediator in a MetroCluster configuration
 
