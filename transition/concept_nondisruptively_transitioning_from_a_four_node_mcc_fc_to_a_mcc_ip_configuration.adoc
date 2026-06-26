@@ -37,7 +37,7 @@ Review the following table to learn about the transition scenarios supported by 
 
 NOTE: In all transition scenarios, you can only add or remove a single DR group at a time. After the DR group addition or removal is successful, you need to verify that the MetroCluster is healthy and operating normally before proceeding. 
 
-[cols="2" options="header"]
+[cols="2*",options="header"]
 |===
 | For this transition scenario...
 | Perform the following...
@@ -49,7 +49,7 @@ a| Four-node FC to eight-node IP configuration
 a| Requires adding one MetroCluster IP DR group. After you add the first MetroCluster IP DR group, check the overall health of the cluster, and repeat the steps for the second MetroCluster IP DR group.
 
 a| Eight-node FC to four-node IP configuration
-a| Follow this procedure as written. During the transition, the MetroCluster configuration will expand from eight-nodes to twelve-nodes.
+a| Follow this procedure as written. During the transition, the MetroCluster configuration will expand from eight nodes to twelve nodes.
 After the transition is complete and all MetroCluster FC nodes are unjoined, the final configuration will be a four-node MetroCluster IP configuration.
 
 a| Eight-node FC to eight-node IP configuration
@@ -57,9 +57,9 @@ a| This transition requires adding one MetroCluster IP DR group to the cluster.
 
 After you confirm the health of the twelve-node configuration, move data and LIFs (as required) from one of the MetroCluster FC DR groups to the MetroCluster IP DR group. When one of the MetroCluster FC DR groups is empty, remove that DR group and unjoin those nodes. The resulting configuration is an eight-node cluster consisting of one MetroCluster FC and one MetroCluster IP DR group. 
 
-Then, add the second MetroCluster IP DR group to the cluster and transition data and LIFs (as required). When the last remaining MetroCluster FC DR group is empty, remove it and unjoin those nodes.  
+Then, add the second MetroCluster IP DR group to the cluster and transition data and LIFs (as required). When the last remaining MetroCluster FC DR group is empty, remove it and unjoin those nodes.
 
-At any time during the transition, the number of nodes in the MetroCluster configuration does not exceed twelve.
+At any time during the transition, the number of nodes in the MetroCluster configuration does not exceed twelve nodes.
 |===
 
 For more information, see the link:concept_transition_workflow_fc_to_ip_transition.html[Workflow for nondisruptive MetroCluster transition].
