@@ -2365,7 +2365,7 @@ mcc4-b2      mlx4_0          IB      Up     false     192.0.2.10  	ib2b
 8 entries were displayed.
 ----
 
-=== Configuring SNMPv3 in a MetroCluster configuration
+=== Configuring SNMPv3 in a MetroCluster FC configuration
 
 .Before you begin
 
@@ -2373,8 +2373,14 @@ The authentication and privacy protocols on the switches and on the ONTAP system
 
 .About this task
 
-ONTAP currently supports AES-128 encryption.
+ONTAP currently supports AES-128 encryption and SHA-256.
 //ontap-metrocluster/issues/26 2021.11.21
+
+[CAUTION]
+====
+* In FOS 10.x, Brocade supports only SHA-512 for SNMP authentication. ONTAP currently does not support SHA-512, with support limited to SHA2‑256.
+* If your MetroCluster FC switches are running FOS 10.x, you cannot configure SNMP.
+====
 
 .Steps
 
@@ -2444,7 +2450,7 @@ node_A_1 SVM 4 snmpv3user     snmp        usm                   10.10.10.13
 +
 [role="tabbed-block"]
 ====
-.Brocade switches (FOS 9.0 and later)
+.Brocade switches (FOS 9.x)
 --
 `snmpconfig --add snmpv3 -index <index> -user <user_name> -groupname <rw/ro> -auth_proto <auth_protocol> -auth_passwd <auth_password> -priv_proto <priv_protocol> -priv_passwd <priv_password>`
 --

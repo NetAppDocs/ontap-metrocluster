@@ -37,6 +37,12 @@ Beginning in Fabric OS 9.0.1, SNMPv2 is not supported on Brocade switches. If yo
 
 If you are upgrading to Fabric OS v 9.2.x or later, you must have a Brocade TruFOS certificate installed, refer to link:https://techdocs.broadcom.com/us/en/fibre-channel-networking/fabric-os/fabric-os-software-upgrade/9-2-x/Obtaining-Firmware/download-prerequisites-new/brocade-trufos-certificates.html[Brocade Fabric OS Software Upgrade Guide, 9.2.x^] for more information.
 
+[CAUTION]
+====
+* In Fabric OS 10.x, Brocade supports only SHA-512 for SNMP authentication. ONTAP currently does not support SHA-512, with support limited to SHA2‑256.
+* If you upgrade your MetroCluster FC switches to FOS 10.x, SNMP monitoring visibility from ONTAP will be lost. This causes an increased risk when troubleshooting and loss of proactive alerting. You must carefully consider these limitations before you proceed to upgrade the switch firmware to Fabric OS 10.x or later. 
+====
+
 This task must be performed on each of the switch fabrics in succession so that all switches are running the same firmware version.
 
 NOTE: This procedure is nondisruptive and takes approximately one hour to complete.
