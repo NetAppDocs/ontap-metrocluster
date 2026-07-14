@@ -40,9 +40,9 @@ If the partner-sysid is not correct, set it:
 . Display the ONTAP boot menu:
 +
 `boot_ontap menu`
-. If root encryption is used, select the boot menu option for your key management configuration.
-+
 
+. If the admin SVM of the MetroCluster system is configured with a key manager, select the correct boot menu option for your key management configuration.  
++
 |===
 
 h| If you are using... h| Select this boot menu option...
@@ -52,14 +52,23 @@ Onboard key management
 a|
 Option `10`
 
-Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+Follow the prompts to provide the following inputs to recover and restore the key manager configuration:
+
+* The Onboard Key Manager backup and passphrase
 a|
 External key management
 a|
 Option `11`
 
-Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+Follow the prompts to provide the following inputs to recover and restore the key manager configuration:
+
+* The port number and address of one of the primary key servers for the admin SVM
+* The username and password if one is associated with the chosen primary key server
+* The keystore UUID for the admin SVM (required in ONTAP 9.16.1 or later)
+
+*Note:* Although the admin SVM can have up to four primary key servers, only information for one primary key server can be specified during the recovery process. 
 |===
+
 
 . From the boot menu, select "`(6) Update flash from backup config`".
 +
@@ -86,7 +95,7 @@ If the partner-sysid is not correct, set it:
 +
 `setenv partner-sysid <partner-sysID>`
 
-. If root encryption is used, select the boot menu option again for your key management configuration.
+. If root volume encryption is used, select the boot menu option again for your key management configuration.
 +
 |===
 
@@ -97,22 +106,30 @@ Onboard key management
 a|
 Option `10`
 
-Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+Follow the prompts to provide the following inputs to recover and restore the key manager configuration:
+
+* The Onboard Key Manager backup and passphrase
 a|
 External key management
 a|
-Option "`11`"
+Option `11`
 
-Follow the prompts to provide the required inputs to recover and restore the key-manager configuration.
+Follow the prompts to provide the following inputs to recover and restore the key manager configuration:
+
+* The port number and address of one of the primary key servers for the admin SVM
+* The username and password if one is associated with the chosen primary key server
+* The keystore UUID for the admin SVM (required in ONTAP 9.16.1 or later)
+
+*Note:* Although the admin SVM can have up to four primary key servers, only information for one primary key server can be specified during the recovery process. 
 |===
 +
-Depending on the key manager setting, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
+Depending on the key manager type, perform the recovery procedure by selecting option "`10`" or option "`11`", followed by option `6` at the first boot menu prompt. To boot the nodes completely, you might need to repeat the recovery procedure continued by option "`1`" (normal boot).
 
 . Wait for the replaced nodes to boot.
 +
 If either node is in takeover mode, perform a giveback using the `storage failover giveback` command.
 
-. If encryption is used, restore the keys using the correct command for your key management configuration.
+. If encryption is enabled on the admin SVM, restore the keys using the correct command for your key management configuration.
 +
 
 |===
@@ -127,7 +144,7 @@ For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.p
 a|
 External key management
 a|
-`security key-manager external restore -vserver <SVM> -node <node> -key-server <host_name\|IP_address:port> -key-id key_id -key-tag key_tag <node_name>`
+`security key-manager external restore -vserver <admin-svm> -key-server <host_name\|IP_address:port>`
 
 For more information, see https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-32DA96C3-9B04-4401-92B8-EAF323C3C863.html[Restore external key management encryption keys^].
 
@@ -193,7 +210,7 @@ When entering the network interface modify command within the `vserver config ov
 +
 `network interface show`  
 
-.. Return to the admin privilege level:
+.. Return to the admin privilege level: 
 +
 `set -privilege admin`
 . Revert the interfaces to their home node:
