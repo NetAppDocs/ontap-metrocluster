@@ -24,22 +24,22 @@ Review these considerations before cabling the switches:
 
 The following lists cabling requirements based on the specific switch type.
 
-Cisco 3132Q-V::
+=== Cisco 3132Q-V
 
 If you configure the switch for MetroCluster FC to IP transition, port 5, port 6, port 13, or port 14 can be used to connect the local cluster interfaces of the MetroCluster FC node. Refer to the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP^] and the generated cabling files for more details on cabling this configuration.
 
-Cisco 3232C or 36-port Cisco 9336C::
+=== Cisco 3232C or 36-port Cisco 9336C
 
 * RCF file version v2.10 or later is required for 25G breakout mode for MetroCluster ISLs.
 * ONTAP 9.13.1 or later and RCF file version 2.00 are required to use a platform other than FAS8200 or AFF A300 in the "MetroCluster 4" group.
 +
 NOTE: The RCF file version is different to the version of the RCFfilegenerator tool used to generate the file. For example, you can generate an RCF file version 2.00 using RCFfilegenerator v1.6c.
 
-12-port Cisco 9336C-FX2::
+=== 12-port Cisco 9336C-FX2
 
 The 12-port Cisco 9336C-FX2 switch doesn't support connecting NS224 shelves to the MetroCluster switch.
 
-36-port Cisco 9336C-FX2 switch connecting NS224 storage::
+=== 36-port Cisco 9336C-FX2 switch connecting NS224 storage
 
 * Connecting one eight-node or two four-node MetroCluster configurations requires ONTAP 9.14.1 or later.
 
@@ -57,7 +57,7 @@ This means that when you generate the RCF for your new configuration, you might 
 
 . Select the platform that doesn't support switch-attached NS224 storage from the first drop-down field.
 
-Broadcom BES-53248::
+=== Broadcom BES-53248
 
 * You cannot use the switches with remote ISL ports of different speeds (for example, a 25 Gbps port connected to a 10 Gbps ISL port).
 //1386105 2021.11.23
@@ -81,7 +81,7 @@ Any configuration or feature that requires that the local cluster connections ar
  ** Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
 
 
-NVIDIA SN2100::
+=== NVIDIA SN2100
 
 Connecting an eight-node or two four-node MetroCluster configurations requires ONTAP 9.14.1 or later and RCF file version 2.00 or later. 
 +
