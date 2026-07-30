@@ -4,13 +4,12 @@ sidebar: sidebar
 keywords: cabling, cable, component, link, site, management, network, hardware, component, switch, cluster, connection, management, data, configuring, configure, rcf, file, generator, RcfFileGenerator
 summary: You must understand how to use the information in the port tables to correctly generate your RCF files.
 ---
-
-= How to cable your MetroCluster IP switches
+= Learn about cabling the MetroCluster IP switches
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-You must understand how to use the information in the NetApp hardware universe to correctly generate your RCF files.
+Before you begin to cable the MetroCluster IP switches, review the requirements. 
 
 .Before you begin
 
@@ -21,26 +20,72 @@ Review these considerations before cabling the switches:
 * Keep track of the MetroCluster port group (MetroCluster 1, MetroCluster 2, etc.). You'll need this information when using the RcfFileGenerator tool as described later in this configuration procedure.
 * You should cable all of the nodes in the same way. If there are different port combination options available to cable the nodes, all nodes should use the same port combinations. For example, e1a on node1 and e1a on node2 should be attached to one switch. Similarly, the second port from both nodes should be attached to the second switch. 
 
+== Cabling requirements based on the switch type
 
-== Step 1: Gather cabling information
+The following lists cabling requirements based on the specific switch type.
 
-. Navigate to the link:https://hwu.netapp.com/DetailViews/Home.aspx[Hardware Universe^]
-. Select your platform type from the *Products* tab, and then select your specific platform and whether you are cabling a four-node or eight-node MetroCluster IP configuration.
-. Select the ONTAP version from the display window and then select *Show results*.
-. Select *Supported connections* and then select the switch type in the display window.
+Cisco 3132Q-V::
+
+If you configure the switch for MetroCluster FC to IP transition, port 5, port 6, port 13, or port 14 can be used to connect the local cluster interfaces of the MetroCluster FC node. Refer to the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP^] and the generated cabling files for more details on cabling this configuration.
+
+Cisco 3232C or 36-port Cisco 9336C::
+
+* RCF file version v2.10 or later is required for 25G breakout mode for MetroCluster ISLs.
+* ONTAP 9.13.1 or later and RCF file version 2.00 are required to use a platform other than FAS8200 or AFF A300 in the "MetroCluster 4" group.
 +
-You can now gather the information for cluster interconnect, MetroCluster-over-IP, shared cluster/storage and storage connections. 
+NOTE: The RCF file version is different to the version of the RCFfilegenerator tool used to generate the file. For example, you can generate an RCF file version 2.00 using RCFfilegenerator v1.6c.
+
+12-port Cisco 9336C-FX2::
+
+The 12-port Cisco 9336C-FX2 switch doesn't support connecting NS224 shelves to the MetroCluster switch.
+
+36-port Cisco 9336C-FX2 switch connecting NS224 storage::
+
+* Connecting one eight-node or two four-node MetroCluster configurations requires ONTAP 9.14.1 or later.
+
+* When you cable a Cisco 9336C-FX2 switch connecting NS224 storage, you can only have a maximum of two MetroCluster configurations or DR groups. At least one MetroCluster configuration or DR group must be connecting NS224 shelves to the MetroCluster switch.
+
+* The RcfFileGenerator only shows eligible platforms when the first platform is selected.
+
+* If you are expanding a regular MetroCluster configuration that doesn't support switch-attached NS224 storage and you want to add a MetroCluster configuration that has switch-attached NS224 storage, review the following information:
 +
-You can choose to export the information in each tab to a PDF or excel. The following example shows the PDF output for Shared Cluster/Storage connections for cabling an AFF A1K system to a 36-port Cisco Nexus N9K-C9336C-FX2 switch in an eight-node MetroCluster IP configuration:
+In the RcfFileGenerator tool, you must select the platform that supports switch-attached NS224 storage first, then select the platform that doesn't support switch-attached NS224 storage.
 +
-image::../media/example-cabling-affa1k.png[]
+This means that when you generate the RCF for your new configuration, you might need to select the platforms in the RcfFileGenerator tool in the following order:
 
-== Step 2: Verify your cabling using the RCFfilegenerator tool
+. Select the platform that supports switch-attached NS224 storage from the second drop-down field.
 
-The https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP^] tool also provides a per-port cabling overview for each switch.
-You can use this cabling overview to verify your cabling.
+. Select the platform that doesn't support switch-attached NS224 storage from the first drop-down field.
 
-For information on using the RcfFileGenerator tool, refer to link:https://kb.netapp.com/on-prem/ontap/mc/MC-KBs/How_to_use_the_RCF_Generator_for_MetroCluster_IP[How to use the RCF Generator for MetroCluster IP^]
+Broadcom BES-53248::
+
+* You cannot use the switches with remote ISL ports of different speeds (for example, a 25 Gbps port connected to a 10 Gbps ISL port).
+//1386105 2021.11.23
+
+* If you configure the switch for MetroCluster FC to IP Transition, the following ports are used depending on the target platform that you choose:
++
+[cols=2*,options="header",cols="75,25"]
+|===
+| Target platform
+| Port
+| FAS500f, AFF C250, ASA C250, AFF A250, ASA A250, FAS8300, AFF C400, ASA C400, AFF A400, ASA A400, or FAS8700 platforms | ports 1 - 6, 10Gbps
+| FAS8200 or AFF A300 platforms| ports 3 - 4 and 9 - 12, 10Gbps
+|===
+
+* AFF A320 systems configured with Broadcom BES-53248 switches might not support all features.
++
+Any configuration or feature that requires that the local cluster connections are connected to a switch is not supported. For example, the following configurations and procedures are not supported:
+
+ ** Eight-node MetroCluster configurations
+ ** Transitioning from MetroCluster FC to MetroCluster IP configurations
+ ** Refreshing a four-node MetroCluster IP configuration (ONTAP 9.8 and later)
+
+
+NVIDIA SN2100::
+
+Connecting an eight-node or two four-node MetroCluster configurations requires ONTAP 9.14.1 or later and RCF file version 2.00 or later. 
++
+NOTE: The RCF file version is different to the version of the RCFfilegenerator tool used to generate the file. For example, you can generate an RCF file version 2.00 using RCFfilegenerator v1.6c. 
 
 
 == Cabling two MetroCluster configurations to the switches
