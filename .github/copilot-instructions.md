@@ -3,6 +3,8 @@
 ### Repository overview
 Product: ONTAP MetroCluster
 
+Title naming pattern: MetroCluster [IP/FC] or stretch MetroCluster— for example, MetroCluster IP, MetroCluster FC, stretch MetroCluster. For topics that apply to all MetroCluster configurations, only "MetroCluster" is required in the title. See the Repository structure and Product-specific context sections for more details.
+
 NetApp MetroCluster combines array-based clustering with synchronous replication to deliver continuous availability, duplicating mission-critical data on a transaction-by-transaction basis across two geographically separated sites. MetroCluster enhances the built-in high availability and nondisruptive operations of ONTAP storage software by providing an additional layer of protection for the entire storage and host environment.
 
 ### Repository structure
