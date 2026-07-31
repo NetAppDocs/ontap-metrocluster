@@ -6,7 +6,7 @@ Product: ONTAP MetroCluster
 NetApp MetroCluster combines array-based clustering with synchronous replication to deliver continuous availability, duplicating mission-critical data on a transaction-by-transaction basis across two geographically separated sites. MetroCluster enhances the built-in high availability and nondisruptive operations of ONTAP storage software by providing an additional layer of protection for the entire storage and host environment.
 
 ### Repository structure
-- `install-ip/` – Installation and configuration for MetroCluster IP configurations, including IP switch cabling, port assignments, ONTAP Mediator setup, software configuration, and RCF (Reference Configuration File) usage.
+- `install-ip/` – Installation and configuration for MetroCluster IP configurations, including IP switch cabling, port assignments, ONTAP Mediator setup, software configuration, and RCF (reference configuration file) usage.
 - `install-fc/` – Installation and configuration for fabric-attached (FC) MetroCluster configurations, including FC switch cabling (Brocade and Cisco), FC-to-SAS bridge setup, port assignments, and RCF usage.
 - `install-stretch/` – Installation and configuration for stretch MetroCluster configurations (two-node, bridge-attached and direct-attached SAS).
 - `manage/` – Day-to-day management topics including switchover, healing, and switchback operations; data protection concepts; NVFAIL monitoring; and configuration monitoring.
@@ -28,11 +28,11 @@ NetApp MetroCluster combines array-based clustering with synchronous replication
 - *MetroCluster IP*: Uses IP switches for back-end connectivity and storage replication over the cluster interconnect network; supports ONTAP Mediator for automatic unplanned switchover (AUSO).
 - *MetroCluster FC (fabric-attached)*: Uses FC switch fabrics (two redundant fabrics) and FC-to-SAS bridges (ATTO FibreBridge) to connect storage; supports ONTAP AUSO and Tiebreaker.
 - *Stretch MetroCluster*: Two-node configurations where storage is directly attached (SAS optical) or bridge-attached, without FC switch fabrics between sites.
-- *ONTAP Mediator*: A service installed on a third-site Linux host that provides a tie-breaking vote for automatic unplanned switchover in MetroCluster IP configurations; cannot be used simultaneously with Tiebreaker on the same configuration.
+- *ONTAP Mediator*: A service which runs on a Linux host physically separate from the MetroCluster sites. The MetroCluster IP nodes can use the mailbox information to monitor the state of their disaster recovery (DR) partners and implement a Mediator-assisted unplanned switchover (MAUSO) in the case of a disaster; cannot be used simultaneously with Tiebreaker on the same configuration.
 - *MetroCluster Tiebreaker*: Software on a third-site Linux host that monitors up to 15 MetroCluster configurations (IP, FC, and stretch) and triggers alerts on site failure; cannot be used simultaneously with ONTAP Mediator on the same MetroCluster IP configuration.
 - *ATTO FibreBridge*: FC-to-SAS protocol bridge used in fabric-attached and stretch MetroCluster configurations to connect SAS disk shelves to FC switches.
 - *ISL (Inter-Switch Link)*: The long-haul connection between FC or IP switches at the two MetroCluster sites.
-- *RCF (Reference Configuration File)*: A switch configuration script provided by NetApp for Brocade FC, Cisco FC, and supported MetroCluster IP switches.
+- *RCF (reference configuration file)*: A switch configuration script provided by NetApp for Brocade FC, Cisco FC, and supported MetroCluster IP switches.
 
 **Key concepts:**
 - *Switchover*: The operation where one MetroCluster site takes over the other site's storage and SVM workloads; can be negotiated (planned) or forced (after a disaster).
@@ -65,3 +65,9 @@ NetApp MetroCluster combines array-based clustering with synchronous replication
 **Upgrade controllers:** Choose upgrade method (switchover/switchback or system controller replace command) → Prepare network configuration → Perform switchover → Uninstall old controllers → Set up and boot new controllers → Apply RCF files and set boot arguments → Perform switchback → Complete upgrade
 
 **Transition MetroCluster FC to MetroCluster IP:** Assess transition requirements → Choose disruptive or nondisruptive procedure → Prepare IP controllers → Move cluster connections → Configure new IP switches → Complete transition → Verify MetroCluster health
+
+** Refresh MetroCluster FC or MetroCluster IP** Enable console logging → Gather information from old nodes → Remove from monitoring software (if required)→ Expand the configuration → Move CRS volumes and data → Remove old DR group → Restore monitoring (if required)
+
+** Expand MetroCluster IP** Enable console logging → Review requirements→ Verify health of the MetroCluster configuration → Remove configuration from monitoring software → Prepare and configure the new controller modules → Upgrade RCF files → Boot and join controllers to the cluster → Configure intercluster LIFs → Create MetroCluster IP interfaces → Mirror the root aggregates → Check the MetroCluster configuration → Restore monitoring software 
+
+** Expand MetroCluster FC** Enable console logging → Determine the new cable layout → Rack the new equipment → Verify health of the MetroCluster configuration  → Disconnect the existing DR group from the fabric → Recable and reconfigure the switches → Clear the controller configuration → Assign disk ownership → Verify HA state → Boot and join controllers to the cluster → Configure intercluster LIFs → Mirror the root aggregates → Implement the MetroCluster -> Verify switchover, healing, and switchbac
