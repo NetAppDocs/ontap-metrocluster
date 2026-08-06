@@ -4,12 +4,30 @@ sidebar: sidebar
 keywords: metrocluster, maintain, service, upgrade, downgrade, firmware, brocade, fc, switch
 summary: 'To upgrade or downgrade the firmware on a Brocade FC switch, you must use the Brocade-specific commands to disable the switch, perform and verify the firmware change, and reboot and reenable the switch.'
 ---
-= Upgrade or downgrade the firmware on a Brocade FC switch
+= Upgrade or downgrade the firmware on a Brocade MetroCluster FC switch
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 To upgrade or downgrade the firmware on a Brocade FC switch, you must use the Brocade-specific commands to disable the switch, perform and verify the firmware change, and reboot and reenable the switch.
+
+.Before you begin
+
+Review the following information carefully before using this procedure: 
+
+
+* Beginning with Fabric OS 10.x, Brocade supports only SHA-512 for SNMP authentication. ONTAP currently does not support SHA-512, with support limited to SHA-256.
++
+If you upgrade your MetroCluster FC switch firmware to Fabric OS 10.x, SNMP monitoring visibility from ONTAP will be lost. This leads to increased risk when troubleshooting and the loss of proactive alerting. 
++
+If you upgrade to or downgrade from Fabric OS 10.x, you must perform the mandatory tasks outlined in link:https://techdocs.broadcom.com/us/en/fibre-channel-networking/fabric-os/fabric-os-software-upgrade/10-0-x/Upgrading-and-Downgrading-Firmware/v24512876.html[Brocade Fabric OS Software Upgrade Guide, 10.0.x - Upgrade or Downgrade Prerequisites^].
++
+CAUTION: You must carefully consider these limitations before you proceed to upgrade to or downgrade from Fabric OS 10.x or later. 
+
+
+* Beginning with Fabric OS 9.0.1, SNMPv2 is not supported on Brocade switches. If you upgrade to Fabric OS 9.0.1 or later, you must use SNMPv3 for health monitoring. For more information, see link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#snmpv3-mcc-fc[Configuring SNMPv3 in a MetroCluster configuration].
+
+* If you are upgrading to Fabric OS 9.2.x or later, you must have a Brocade TruFOS certificate installed. Refer to link:https://techdocs.broadcom.com/us/en/fibre-channel-networking/fabric-os/fabric-os-software-upgrade/9-2-x/Obtaining-Firmware/download-prerequisites-new/brocade-trufos-certificates.html[Brocade Fabric OS Software Upgrade Guide, 9.2.x^] for more information.
 
 .About this task
 
@@ -32,10 +50,6 @@ link:enable-console-logging-before-maintenance.html[Enable console logging]
 // 2024 Aug 13, ONTAPDOC-1988
 
 The switch fabric is disabled during a firmware upgrade or downgrade, and the MetroCluster configuration relies on the second fabric to continue operation.
-
-Beginning in Fabric OS 9.0.1, SNMPv2 is not supported on Brocade switches. If you upgrade to Fabric OS 9.0.1 or later, you must use SNMPv3 for health monitoring. For more information, see link:../install-fc/concept_configure_the_mcc_software_in_ontap.html#configuring-snmpv3-in-a-metrocluster-configuration[Configuring SNMPv3 in a MetroCluster configuration]. 
-
-If you are upgrading to Fabric OS v 9.2.x or later, you must have a Brocade TruFOS certificate installed, refer to link:https://techdocs.broadcom.com/us/en/fibre-channel-networking/fabric-os/fabric-os-software-upgrade/9-2-x/Obtaining-Firmware/download-prerequisites-new/brocade-trufos-certificates.html[Brocade Fabric OS Software Upgrade Guide, 9.2.x^] for more information.
 
 This task must be performed on each of the switch fabrics in succession so that all switches are running the same firmware version.
 
@@ -169,7 +183,7 @@ https://mysupport.netapp.com/site/tools/tool-eula/activeiq-configadvisor[NetApp 
  .. After running Config Advisor, review the tool's output and follow the recommendations in the output to address any issues discovered.
 . Wait 15 minutes before repeating this procedure for the second switch fabric.
 
-
+// 2026 July 02, ONTAPDOC-3961, ONTAPDOC-3963
 // 2025 Aug 21, ONTAPDOC-2573
 // 2025 Mar 13, ONTAPDOC-2668
 // ONTAPDOC-2969, 2026-JAN-21
