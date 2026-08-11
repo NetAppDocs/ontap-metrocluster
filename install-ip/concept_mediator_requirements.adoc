@@ -23,9 +23,7 @@ The connectivity between the ONTAP Mediator and each site must be two separate f
 
 * Automatic unplanned switchover is supported in ONTAP 9.7 and later.
 
-* Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator that uses HTTPS for communication instead of iSCSI. When ONTAP Mediator is configured with HTTPS, only one MetroCluster IP configuration per ONTAP Mediator instance can be monitored. For more information, see <<Select a communication protocol for ONTAP Mediator>>.
-
-* Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance configured with iSCSI can manage up to ten MetroCluster configurations simultaneously. In ONTAP 9.17.1 and ONTAP Mediator 1.10 and earlier, an ONTAP Mediator configured with iSCSI can support up to five MetroCluster configurations simultaneously.
+* Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator that uses HTTPS for communication instead of iSCSI. For more information, see <<Select a communication protocol for ONTAP Mediator>>.
 
 * Beginning with ONTAP 9.18.1, IPv6 is supported for ONTAP Mediator 1.11 or later in a MetroCluster IP configuration.
 
@@ -71,22 +69,68 @@ You must ensure that the configuration meets several host requirements.
 
 By default, MetroCluster IP nodes access ONTAP Mediator mailbox LUNs using iSCSI sessions. ONTAP Mediator relies on the SCST package to provide iSCSI. iSCSI sessions are authenticated using the Challenge Handshake Authentication Protocol (CHAP) with an obfuscated, machine-generated pre-shared key, but are not fully encrypted.
 
-Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI. HTTPS is a secure protocol for communication that encrypts entire sessions using SSL/TLS, providing increased security when compared with iSCSI. 
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI. HTTPS is a secure protocol for communication that encrypts entire sessions using SSL/TLS, providing increased security when compared with iSCSI.
+
+You can install ONTAP Mediator with support for both iSCSI and HTTPS, or HTTPS only. For more information, see link:https://docs.netapp.com/us-en/ontap/mediator/index.html#https-iscsi-installation[HTTPS and iSCSI installation options for ONTAP Mediator^].
+
+You can configure ONTAP Mediator with iSCSI or HTTPS, not both. Using a mix of protocols in your deployment is not supported.  
 
 You can only configure an ONTAP Mediator that uses HTTPS using the CLI. System Manager is not supported. 
 
-[CAUTION]
-====
-* If you configure ONTAP Mediator with HTTPS, a single ONTAP Mediator instance can only monitor one MetroCluster IP configuration. Monitoring multiple MetroCluster IP configurations simultaneously is not supported. 
-
-* If you need ONTAP Mediator configured with HTTPS to monitor multiple MetroCluster IP configurations, you must configure separate ONTAP Mediator instances for each MetroCluster IP configuration. You must carefully evaluate the requirements for your MetroCluster IP environment before you choose to configure ONTAP Mediator with HTTPS for MetroCluster IP. 
-
-* If you want to use a single ONTAP Mediator instance to monitor more than one MetroCluster IP configurations, you should configure ONTAP Mediator using iSCSI instead of HTTPS. 
-====
-
-For more information, see link:https://docs.netapp.com/us-en/ontap/mediator/index.html#https-iscsi-installation[HTTPS and iSCSI installation options for ONTAP Mediator^].
+Support for monitoring multiple MetroCluster IP configurations depends on whether you are configuring ONTAP Mediator for iSCSI or HTTPS. For more information see <<Use ONTAP Mediator to monitor multiple MetroCluster IP configurations>>.
 
 // 2026 Feb 12, GH 504
+
+[[mediator-multiple-mccip]]
+== Use ONTAP Mediator to monitor multiple MetroCluster IP configurations
+
+ONTAP Mediator can be used to monitor multiple MetroCluster IP configurations simultaneously. The support depends on whether you configure ONTAP Mediator with iSCSI or HTTPS.
+
+=== ONTAP Mediator configured with HTTPS
+
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can configure an ONTAP Mediator instance that uses HTTPS for communication instead of iSCSI. This section outlines the support for monitoring multiple configurations using one HTTPS ONTAP Mediator instance.
+
+CAUTION: Attempting to add multiple HTTPS ONTAP Mediator instances beyond the limitations described in this section is not supported.
+
+.Monitoring multiple MetroCluster IP configurations
+
+ONTAP Mediator configured with HTTPS has the following support for monitoring multiple MetroCluster IP configurations. Support depends on the ONTAP Mediator version, host OS specifications, and whether the MetroCluster IP configuration is four-node or eight-node.
+
+[cols="1,2,1,1",options="header"]
+|===
+| ONTAP Mediator version
+| Host OS requirements
+| Four-node MetroCluster IP configurations 
+| Eight-node MetroCluster IP configurations 
+| 1.12
+| N/A
+| 1
+| 1
+.2+| 1.12.1 and later
+| Hosts with fewer than 8 CPU cores and at least 8GB of RAM
+| 1
+| 1
+| Hosts with at least 8 CPU cores and at least 16GB of RAM
+| 10
+| 5
+|=== 
+
+.Monitoring MetroCluster IP and SnapMirror active sync configurations
+
+Beginning with ONTAP 9.19.1 and ONTAP Mediator 1.12, you can use the same ONTAP Mediator instance to monitor a four-node MetroCluster IP configuration and a SnapMirror active sync cluster peer relationship simultaneously. Your configuration must meet the following requirements:
+
+* ONTAP Mediator 1.12.1 or later is installed on a host OS with a 2-core CPU
+* The ONTAP Mediator instance is configured with the HTTPS protocol
+
+NOTE: You can only monitor one four-node MetroCluster IP configuration and one SnapMirror active sync peer relationship using the same ONTAP Mediator instance.
+
+link:https://docs.netapp.com/us-en/ontap/snapmirror-active-sync/index.html[Learn about ONTAP SnapMirror active sync^].
+
+=== ONTAP Mediator configured with iSCSI
+
+* Beginning with ONTAP 9.18.1 and ONTAP Mediator 1.11, a single ONTAP Mediator instance configured with iSCSI can manage up to ten MetroCluster configurations simultaneously. 
+
+* In ONTAP 9.17.1 and ONTAP Mediator 1.10 and earlier, an ONTAP Mediator configured with iSCSI can support up to five MetroCluster configurations simultaneously.
 
 == Guidelines for upgrading ONTAP Mediator in a MetroCluster configuration
 
