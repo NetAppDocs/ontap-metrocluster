@@ -205,6 +205,8 @@ cluster_A::*>
 
 . Disable auto-revert on the cluster LIFs. The cluster LIFs fail over to the partner cluster switch and remain there as you perform the upgrade procedure on the targeted switch:
 +
+NOTE: If you have are upgrading the second fabric, you can skip this step.
++
 `network interface modify -vserver Cluster -lif * -auto-revert false`
 +
 .Show example 
@@ -315,7 +317,7 @@ node_A_2             true    true          false
 
 .After you finish
 
-After the cluster LIFs have moved to the partner switch, you can follow the standard configuration procedures according to your switch vendor:
+After the cluster LIFs have moved to the partner switch, you can follow the standard configuration procedures according to your switch vendor to complete the upgrade to the target firmware or RCF version:
 
 * link:../install-ip/task_switch_config_broadcom.html[Configure Broadcom IP switches]
 * link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
