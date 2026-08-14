@@ -140,6 +140,46 @@ mcc1A::> metrocluster operation show
      Errors: -
 ----
 
+== Verify and restore LIF configuration
+
+Verify that LIFs are hosted on appropriate nodes and ports before you perform a switchback.
+
+.Steps
+
+. Verify that LIFs are hosted on the appropriate nodes and ports before you perform a switchback.
+
+.. Change to the advanced privilege level:
++
+`set -privilege advanced`
+
+..  Display the LIFs, and confirm that each data LIF is using the correct home port:
++
+`network interface show` 
+
+.. Modify any LIFs that aren't using the correct home port:
++
+`network interface modify -vserver <svm-name> -lif <data-lif> -home-port <port-id>`
++
+If the command returns an error, you can override the port configuration:
++
+`vserver config override -command "network interface modify -vserver <svm-name> -home-port <active_port_after_upgrade> -lif <lif_name> -home-node <new_node_name>"`
++
+When entering the network interface modify command within the `vserver config override` command, you cannot use the tab autocomplete feature. You can create the network `interface modify` using autocomplete and then enclose it in the `vserver config override` command.
+
+.. Confirm that all data LIFs are now on the correct home port:
++
+`network interface show`  
+
+.. Return to the admin privilege level:
++
+`set -privilege admin`
+. Revert the interfaces to their home node:
++
+`network interface revert * -vserver <svm-name>`
++
+Perform this step on all SVMs as required.
+
+CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switchback the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur when the home port connection to the switch port and VLAN is incorrect. If you encounter any problems placing the LIFs on the correct nodes or ports, do not proceed with the switchback and contact NetApp technical support. 
 
 == Verifying that your system is ready for a switchback
 
@@ -231,6 +271,8 @@ Job ID Name                 Vserver    Node           State
                                                       Success
        Description: MetroCluster Switchback Job - Simulation
 ----
+
+
 
 == Performing a switchback
 
@@ -388,7 +430,7 @@ vs1a           data    sync-source
 `metrocluster operation show`
 +
 
-
++
 |===
 
 h| If the command output shows... h| Then...
@@ -403,9 +445,49 @@ a|
 Perform the suggested fix provided in the output of the `metrocluster operation show` command.
 |===
 
-.After you finish
+. Perform the following checks to confirm that switchover is operational between the two clusters:
 
-You must repeat the previous sections to perform the switchback in the opposite direction. If site_A did a switchover of site_B, have site_B do a switchover of site_A.
+.. From the DR cluster, check if a switchover from the surviving cluster to the DR cluster is possible:
++
+`metrocluster switchover -simulate`
++
+
+.. From the surviving cluster, check if a switchover from the DR cluster to the surviving cluster is possible:
++
+`metrocluster switchover -simulate`
+
+.. Verify that the MetroCluster components are healthy:
++
+`metrocluster check run`
++
+----
+cluster_A::*> metrocluster check run
+----
++
+The operation runs in the background.
+
+.. After the `metrocluster check run` operation completes, run:
++
+`metrocluster check show`
++
+After approximately five minutes, the following results are displayed:
++
+----
+cluster_A:::*> metrocluster check show
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+clusters            ok
+connections         ok
+volumes             ok
+7 entries were displayed.
+----
++
+NOTE: In a MetroCluster FC environment, 'connections' should show as "not-applicable" in the command output.
 
 == Deleting stale aggregate listings after switchback
 
@@ -465,6 +547,7 @@ You need to respond with `y` when prompted to continue into advanced mode and se
 +
 `run local aggr status -r`
 
+// 2026 Feb 12, ONTAPDOC-3582
 // 2025 June 05, ONTAPDOC-2894
 // 2025 Feb 13, ONTAPDOC-2660
 // 2023 Nov 28, ONTAPDOC-1471
