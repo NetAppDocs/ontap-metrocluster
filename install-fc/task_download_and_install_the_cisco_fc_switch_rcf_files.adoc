@@ -9,7 +9,7 @@ summary: 'You must download the RCF file to each switch in the MetroCluster fabr
 :imagesdir: ../media/
 
 [.lead]
-You must download the RCF file to each switch in the MetroCluster fabric configuration.
+You must download the reference configuration file (RCF) to each switch in the MetroCluster fabric configuration.
 
 .Before you begin
 
@@ -23,12 +23,12 @@ You must use the supported switch software version.
 
 https://hwu.netapp.com[NetApp Hardware Universe]
 
-There are four RCF files, one for each of the four switches in the MetroCluster fabric configuration. You must use the correct RCF files for the switch model you are using.
+There are four RCFs, one for each of the four switches in the MetroCluster fabric configuration. You must use the correct RCFs for the switch model you are using.
 
 
 |===
 
-h| Switch h| RCF file
+h| Switch h| RCF
 
 a|
 FC_switch_A_1
@@ -52,13 +52,13 @@ NOTE: The outputs shown are for Cisco IP switches; however, these steps are also
 
 .Steps
 
-. Download the Cisco FC RCF files from the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF download page].
-. Copy the RCF files to the switches.
-.. Copy the RCF files to the first switch:
+. Download the Cisco FC RCFs from the https://mysupport.netapp.com/site/products/all/details/metrocluster-rcf/downloads-tab[MetroCluster RCF download page].
+. Copy the RCFs to the switches.
+.. Copy the RCF to the first switch:
 +
 `copy sftp://__root@FTP-server-IP-address/tftpboot/switch-specific-RCF__ bootflash: vrf management`
 +
-In this example, the `NX3232_v1.80_Switch-A1.txt` RCF file is copied from the SFTP server at `10.10.99.99` to the local bootflash. You must use the IP address of your TFTP/SFTP server and the file name of the RCF file that you need to install.
+In this example, the `NX3232_v1.80_Switch-A1.txt` RCF is copied from the SFTP server at `10.10.99.99` to the local bootflash. You must use the IP address of your TFTP/SFTP server and the file name of the RCF that you need to install.
 +
 ----
 IP_switch_A_1# copy sftp://root@10.10.99.99/tftpboot/NX3232_v1.8T-X1_Switch-A1.txt bootflash: vrf management
@@ -73,8 +73,8 @@ Copy complete, now saving to disk (please wait)...
 IP_switch_A_1#
 ----
 
-.. Repeat the previous substep for each of the other three switches, being sure to copy the matching RCF file to the corresponding switch.
-. Verify on each switch that the RCF file is present in each switch's `bootflash` directory:
+.. Repeat the previous substep for each of the other three switches, being sure to copy the matching RCF to the corresponding switch.
+. Verify on each switch that the RCF is present in each switch's `bootflash` directory:
 +
 `dir bootflash:`
 +
@@ -97,10 +97,10 @@ Usage for bootflash://sup-local
 IP_switch_A_1#
 ----
 
-. Copy the matching RCF file from the local bootflash to the running configuration on each switch:
+. Copy the matching RCF from the local bootflash to the running configuration on each switch:
 +
 `copy bootflash:__switch-specific-RCF__.txt running-config`
-. Copy the RCF files from the running configuration to the startup configuration on each switch:
+. Copy the RCFs from the running configuration to the startup configuration on each switch:
 +
 `copy running-config startup-config`
 +
