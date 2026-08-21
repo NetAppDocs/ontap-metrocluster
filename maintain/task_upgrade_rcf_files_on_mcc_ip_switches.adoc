@@ -66,6 +66,9 @@ volumes             ok
 .. Verify that there are no health alerts:
 +
 `system health alert show`
+
+. link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs] before you begin the upgrade. 
+
 . Prepare the IP switches for the application of the new RCFs.
 +
 Follow the steps for your switch vendor:
@@ -86,6 +89,11 @@ Follow the steps for your switch vendor:
 +
 NOTE: If you have an L2 shared or L3 network configuration, you might need to adjust the ISL ports on the intermediate/customer switches. The switchport mode might change from 'access' to 'trunk' mode. Only proceed to upgrade the second switch pair (A_2, B_2) if the network connectivity between switches A_1 and B_1 is fully operational and the network is healthy.
 
+. Repeat the previous steps for each of the switches.
++
+NOTE: After you have configured the switches in the first fabric (Switch_A_1, Switch_B_1), you must repeat the steps to move the cluster LIFs on the second fabric (Switch_A_2, Switch_B_2). Refer to link:../install-ip/task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
+
+
 // 2025 Mar 05, ONTAPDOC-2286, 1587
 // 2025 Jan 17, GH issue 449
 // 2024 Feb 22, GH issue 366
@@ -93,3 +101,4 @@ NOTE: If you have an L2 shared or L3 network configuration, you might need to ad
 // 2023 Nov 28, ONTAPDOC-1493
 // GitHub issue 135, July 4th 2022
 // GH issue 213, 2022-Oct-06
+// 2026 Aug 20, ONTAPDOC-2880
