@@ -9,7 +9,7 @@ summary: When you update the switch firmware or reference configuration file (RC
 :imagesdir: ../media/
 
 [.lead]
-When you replace a MetroCluster IP switch or change the switch firmware or reference configuration file (RCF), you move cluster LIFs to the partner switch to enable non-disruptive cluster operations. 
+When you replace a MetroCluster IP switch or change the switch firmware or reference configuration file (RCF), you need to move cluster LIFs to the partner switch to enable non-disruptive cluster operations. 
 
 .About this task
 
@@ -18,7 +18,7 @@ When you replace a MetroCluster IP switch or change the switch firmware or refer
 NOTE: If you are configuring the switches for the first time, you can skip this task unless you are performing a switch replacement.
 
 * The task requires you to use both ONTAP commands and switch commands; ONTAP commands are used unless otherwise indicated.
-* In the examples used in this procedure, IP_switch_A_1 is being upgraded, so you need to migrate the cluster LIFs to IP_switch_A_2.
+* In the examples used in this procedure, you are upgrading IP_switch_A_1, so you need to migrate the cluster LIFs to IP_switch_A_2.
 * The command output examples in this procedure show the details for a Cisco switch. The output can vary depending on your switch model and vendor. 
 
 .Steps
@@ -197,7 +197,7 @@ cluster_A::*>
 
 . Disable auto-revert on the cluster LIFs. The cluster LIFs fail over to the partner cluster switch and remain there as you perform the upgrade procedure on the targeted switch:
 +
-NOTE: If you are upgrading the second fabric, you can skip this step.
+NOTE: If you are upgrading the second fabric, you can skip this step and go to <<shut-down-ports,Step 4>>.
 +
 `network interface modify -vserver Cluster -lif * -auto-revert false`
 +
@@ -218,7 +218,7 @@ Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
 ----
 ====
 
-. On cluster switch IP_switch_A1, shut down the ports connected to the cluster ports of the nodes.
+. [[shut-down-ports]]On cluster switch IP_switch_A1, shut down the ports connected to the cluster ports of the nodes.
 +
 [role="tabbed-block"]
 ====
@@ -243,8 +243,8 @@ IP_switch_A_1(config-if-range)#
 .Broadcom
 --
 ----
-IP_switch_A1(config)# *interface eth1/1/1-2,eth1/7-8*
-IP_switch_A1(config-if-range)# *shutdown*
+IP_switch_A1(config)# interface eth1/1/1-2,eth1/7-8
+IP_switch_A1(config-if-range)# shutdown
 ----
 --
 .NVIDIA
@@ -315,5 +315,5 @@ After the cluster LIFs have moved to the partner switch, you can follow the stan
 * link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
 * link:../install-ip/task_switch_config_nvidia.html[Configure NVIDIA IP switches]
 
-NOTE: After you have configured the switches in the first fabric, you must repeat the steps to move cluster LIFs on the second fabric. 
+NOTE: After configuring the switches in the first fabric, you must repeat the steps to move cluster LIFs on the second fabric. 
 // 2026 Aug 20, ONTAPDOC-2880
