@@ -77,8 +77,51 @@ a|
 Perform the suggested fix provided in the output of the `metrocluster operation show` command.
 |===
 
-You must repeat the previous sections to perform the switchback in the opposite direction. If site_A did a switchover of site_B, have site_B do a switchover of site_A.
+. Perform the following checks to confirm that switchover is operational between the two clusters:
 
+.. From the DR cluster, check if a switchover from the surviving cluster to the DR cluster is possible:
++
+`metrocluster switchover -simulate`
++
+
+..  From the surviving cluster, check if a switchover from the DR cluster to the surviving cluster is possible:
++
+`metrocluster switchover -simulate`
+
+.. Verify that the MetroCluster components are healthy:
++
+`metrocluster check run`
++
+----
+cluster_A::*> metrocluster check run
+----
++
+The operation runs in the background.
+
+.. After the `metrocluster check run` operation completes, run:
++
+`metrocluster check show`
++
+After approximately five minutes, the following results are displayed:
++
+----
+cluster_A:::*> metrocluster check show
+
+Component           Result
+------------------- ---------
+nodes               ok
+lifs                ok
+config-replication  ok
+aggregates          ok
+clusters            ok
+connections         ok
+volumes             ok
+7 entries were displayed.
+----
++
+NOTE: In a MetroCluster FC environment, 'connections' should show as "not-applicable" in the command output.
+
+// 2026 Feb 12, ONTAPDOC-3583
 // 2024 Dec 16, ONTAPDOC-2384
 // BURT 1448684, 03 FEB 2022
 // BURT 1485050, 2022-06-29
