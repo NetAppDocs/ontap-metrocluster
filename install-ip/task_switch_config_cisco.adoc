@@ -15,7 +15,8 @@ You must configure the Cisco IP switches for use as the cluster interconnect and
 
 Several of the procedures in this section are independent procedures and you only need to execute those you are directed to or are relevant to your task.
 
-== Resetting the Cisco IP switch to factory defaults
+
+== Reset the Cisco IP switch to factory defaults
 
 Before installing any RCF file, you must erase the Cisco switch configuration and perform basic configuration. This procedure is required when you want to reinstall the same RCF file after a previous installation failed, or if you want to install a new version of an RCF file.
 
@@ -24,6 +25,7 @@ Before installing any RCF file, you must erase the Cisco switch configuration an
 * You must repeat these steps on each of the IP switches in the MetroCluster IP configuration.
 * You must be connected to the switch using the serial console.
 * This task resets the configuration of the management network.
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, check if you need to move the cluster LIFs to the partner switch to enable non-disruptive cluster operations. link:task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
 
 //ontap-metrocluster/issues/88 and BURT 1444675 2022.02.21
 
@@ -149,7 +151,7 @@ IP_switch_A_1#
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
 
-== Downloading and installing the Cisco switch NX-OS software
+== Download and install the Cisco switch NX-OS software
 
 You must download the switch operating system file and RCF file to each switch in the MetroCluster IP configuration.
 
@@ -157,11 +159,10 @@ You must download the switch operating system file and RCF file to each switch i
 
 This task requires file transfer software, such as FTP, TFTP, SFTP, HTTP, or SCP, to copy the files to the switches.
 
-These steps must be repeated on each of the IP switches in the MetroCluster IP configuration.
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, check if you need to move the cluster LIFs to the partner switch to enable non-disruptive cluster operations. link:task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
 
-You must use the supported switch software version.
 
-https://hwu.netapp.com[NetApp Hardware Universe]
+* You must use the supported switch software version. Refer to the https://hwu.netapp.com[NetApp Hardware Universe].
 
 .Steps
 
@@ -398,9 +399,78 @@ Module 1 EPLD upgrade is successful.
 +
 `show version module 1 epld`
 
-. Repeat these steps on the remaining three IP switches in the MetroCluster IP configuration.
+. Repeat the previous steps on the remaining three IP switches in the MetroCluster IP configuration.
++
+NOTE: You must update the switches in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2. If your procedure requires you to move cluster LIFs, you must repeat the steps to move the cluster LIFs on the second fabric (Switch_A_2, Switch_B_2) after configuring the switches in the first fabric (Switch_A_1, Switch_B_1). Refer to link:task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
 
-== Downloading and installing the Cisco IP RCF files
+. Verify that auto-revert is enabled for the cluster LIFs:
++
+`network interface show -vserver Cluster -fields auto-revert`
++
+CAUTION: You must ensure that auto-revert is enabled for the cluster LIFs.
+
+. If auto-revert is not enabled, modify all cluster LIFs to enable auto-revert:
++
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you might have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs].  
++
+.. Re-enable auto-revert:
++
+`network interface modify -vserver Cluster -lif * -auto-revert true`
++
+----
+cluster_A::*> network interface modify -vserver Cluster -lif * -auto-revert true
+
+Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
+         sure you want to continue? {y|n}: y
+4 entries were modified.
+
+cluster_A::*>
+----
+
+
+.. Revert all cluster LIFs that are not currently on their home ports to their home ports:
++
+`network interface revert -vserver Cluster -lif *`
++
+Wait a few minutes for the LIFs to revert to their home port:
+
+.. Confirm that all LIFs are on their home ports:
++
+----
+cluster_A::*> network interface show -role cluster
+            Logical        Status     Network            Current       Current Is
+Vserver     Interface      Admin/Oper Address/Mask       Node          Port    Home
+----------- -------------- ---------- ------------------ ------------- ------- ----
+Cluster
+            node_A_1_clus1 up/up      192.168.204.88/18  node_A_1      e4a     true
+            node_A_1_clus2 up/up      192.168.204.93/18  node_A_1      e4b     true
+            node_A_2_clus1 up/up      192.168.204.96/18  node_A_2      e4a     true
+            node_A_2_clus2 up/up      192.168.204.97/18  node_A_2      e4b     true
+4 entries were displayed.
+----
+
+.. Verify the state of the MetroCluster nodes:
++
+`metrocluster node show`
++
+----
+cluster_A::*> metrocluster node show
+
+DR                               Configuration  DR
+Group Cluster Node               State          Mirroring Mode
+----- ------- ------------------ -------------- --------- --------------------
+1     cluster_A
+              node_A_1           configured     enabled   normal
+              node_A_2           configured     enabled   normal
+      cluster_B
+              node_B_1           configured     enabled   normal
+              node_B_2           configured     enabled   normal
+4 entries were displayed.
+
+cluster_A::*>
+----
+
+== Download and install the Cisco IP RCF files
 
 You must generate and install the RCF file to each switch in the MetroCluster IP configuration.
 
@@ -408,18 +478,18 @@ You must generate and install the RCF file to each switch in the MetroCluster IP
 
 This task requires file transfer software, such as FTP, TFTP, SFTP, HTTP, or SCP, to copy the files to the switches.
 
-These steps must be repeated on each of the IP switches in the MetroCluster IP configuration.
+* These steps must be repeated on each of the IP switches in the MetroCluster IP configuration.
 
-You must use the supported switch software version.
+* If you are using these steps as part of another procedure, such as a switch replacement or upgrade, check if you need to move the cluster LIFs to the partner switch to enable non-disruptive cluster operations. link:task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
 
-https://hwu.netapp.com[NetApp Hardware Universe]
+* You must use the supported switch software version. Refer to the https://hwu.netapp.com[NetApp Hardware Universe].
 
-If you are using a QSFP-to-SFP+ adapter, you might need to configure the ISL port in native speed mode instead of breakout speed mode. Refer to your switch vendor documentation to determine the ISL port speed mode.
+* If you are using a QSFP-to-SFP+ adapter, you might need to configure the ISL port in native speed mode instead of breakout speed mode. Refer to your switch vendor documentation to determine the ISL port speed mode.
 
 // 2025 Mar 03, ONTAPDOC-2699
 
-There are four RCF files, one for each of the four switches in the MetroCluster IP configuration. You must use the correct RCF files for the switch model you are using.
-
+* There are four RCF files, one for each of the four switches in the MetroCluster IP configuration. You must use the correct RCF files for the switch model you are using.
++
 |===
 
 h| Switch h| RCF file
@@ -552,10 +622,78 @@ IP_switch_A_1# reload
 ----
 
 . Repeat the previous steps on the other three switches in the MetroCluster IP configuration.
++
+NOTE: You must update the switches in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2. If your procedure requires you to move cluster LIFs, you must repeat the steps to move the cluster LIFs on the second fabric (Switch_A_2, Switch_B_2) after configuring the switches in the first fabric (Switch_A_1, Switch_B_1). Refer to link:task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
+
+. Verify that auto-revert is enabled for the cluster LIFs:
++
+`network interface show -vserver Cluster -fields auto-revert`
++
+CAUTION: You must ensure that auto-revert is enabled for the cluster LIFs.
+
+. If auto-revert is not enabled, modify all cluster LIFs to enable auto-revert:
++
+NOTE: If you are performing these steps as part of another procedure, such as a switch replacement or upgrade, you might have disabled auto-revert as part of the steps to link:switch-move-cluster-lifs.html[Move the cluster LIFs]. 
++
+.. Re-enable auto-revert:
++
+`network interface modify -vserver Cluster -lif * -auto-revert true`
++
+----
+cluster_A::*> network interface modify -vserver Cluster -lif * -auto-revert true
+
+Warning: Changes to a cluster LIF can affect the health of the Cluster. Are you
+         sure you want to continue? {y|n}: y
+4 entries were modified.
+
+cluster_A::*>
+----
 
 
+.. Revert all cluster LIFs that are not currently on their home ports to their home ports:
++
+`network interface revert -vserver Cluster -lif *`
++
+Wait a few minutes for the LIFs to revert to their home port:
 
-== Setting Forward Error Correction for systems using 25-Gbps connectivity
+.. Confirm that all LIFs are on their home ports:
++
+----
+cluster_A::*> network interface show -role cluster
+            Logical        Status     Network            Current       Current Is
+Vserver     Interface      Admin/Oper Address/Mask       Node          Port    Home
+----------- -------------- ---------- ------------------ ------------- ------- ----
+Cluster
+            node_A_1_clus1 up/up      192.168.204.88/18  node_A_1      e4a     true
+            node_A_1_clus2 up/up      192.168.204.93/18  node_A_1      e4b     true
+            node_A_2_clus1 up/up      192.168.204.96/18  node_A_2      e4a     true
+            node_A_2_clus2 up/up      192.168.204.97/18  node_A_2      e4b     true
+4 entries were displayed.
+----
+
+.. Verify the state of the MetroCluster nodes:
++
+`metrocluster node show`
++
+----
+cluster_A::*> metrocluster node show
+
+DR                               Configuration  DR
+Group Cluster Node               State          Mirroring Mode
+----- ------- ------------------ -------------- --------- --------------------
+1     cluster_A
+              node_A_1           configured     enabled   normal
+              node_A_2           configured     enabled   normal
+      cluster_B
+              node_B_1           configured     enabled   normal
+              node_B_2           configured     enabled   normal
+4 entries were displayed.
+
+cluster_A::*>
+----
+
+
+== Set Forward Error Correction for systems using 25-Gbps connectivity
 // BURT 1369575 //redoing this
 
 If your system is configured using 25-Gbps connectivity, you need to set the Forward Error Correction (fec) parameter manually to off after applying the RCF file. The RCF file does not apply this setting.
@@ -634,3 +772,4 @@ Copy complete.
 // 29 MAR 2022, BURT 1354395
 // GH issue 165, June 29 2022
 // GH issue 466, 2025-APR-16
+// 2026 Aug 20, ONTAPDOC-2880
