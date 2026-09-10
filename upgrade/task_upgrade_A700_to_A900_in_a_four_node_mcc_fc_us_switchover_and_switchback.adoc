@@ -772,52 +772,38 @@ You must verify the HA state of the controllers and chassis, and, if necessary, 
 `ha-config show`
 +
 The HA state for all components should be mcc.
-+
-
-|===
-
-h| If the MetroCluster configuration has... h| The HA state should be...
-
-a|
-Two nodes
-a|
-mcc-2n
-a|
-Four or eight nodes
-a|
-mcc
-|===
 
 . If the displayed system state of the controller is not correct, set the HA state for the controller module and chassis:
 +
+* `ha-config modify controller mcc`
 
-|===
+* `ha-config modify chassis mcc`
 
-h| If the MetroCluster configuration has... h| Issue these commands...
-
-a|
-*Two nodes*
-a|
-`ha-config modify controller mcc-2n`
-
-`ha-config modify chassis mcc-2n`
-a|
-*Four or eight nodes*
-a|
-`ha-config modify controller mcc`
-
-`ha-config modify chassis mcc`
-|===
-
-.	Halt the node: `halt`
+.	Halt the node: 
++
+`halt`
++
 The node should stop at the `LOADER>` prompt.
-.	On each node, check the system date, time, and time zone: `Show date`
-.	If necessary, set the date in UTC or Greenwich Mean Time (GMT): `set date <mm/dd/yyyy>`
-.	Check the time by using the following command at the boot environment prompt: `show time`
-.	If necessary, set the time in UTC or GMT: `set time <hh:mm:ss>`
-.	Save the settings: `saveenv`
-.	Gather environment variables: `printenv`
-.	Boot the node back into Maintenance mode to enable the configuration changes to take effect:
+.	On each node, check the system date, time, and time zone: 
++
+`Show date`
+.	If necessary, set the date in UTC or Greenwich Mean Time (GMT): 
++
+`set date <mm/dd/yyyy>`
+.	Check the time by using the following command at the boot environment prompt:
++
+`show time`
+.	If necessary, set the time in UTC or GMT: 
++
+`set time <hh:mm:ss>`
+.	Save the settings: 
++
+`saveenv`
+.	Gather environment variables:
++
+`printenv`
+.	Boot the node back into Maintenance mode to apply the configuration changes:
++
 `boot_ontap maint`
 
 .	Verify the changes you made are effective and ucadmin shows FC initiator ports online.
@@ -835,8 +821,11 @@ a|
 |===
 
 
-.	Verify the ha-config mode: `ha-config show`
-.. Verify that you have the following output:
+.	Verify the ha-config mode:
++
+`ha-config show`
++
+The output should be similar to the following example:
 +
 ----
 *> ha-config show
