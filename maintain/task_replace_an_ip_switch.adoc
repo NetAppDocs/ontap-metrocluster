@@ -11,11 +11,20 @@ summary: 'You might need to replace a failed switch, or upgrade or downgrade a s
 [.lead]
 You might need to replace a failed switch, upgrade or downgrade a switch, or change the use of existing MetroCluster IP switches. 
 
+CAUTION: If you need to perform a switch replacement on AFF A220, AFF A250 or FAS2750 platforms, refer to link:https://kb.netapp.com/on-prem/ontap/mc/MC-KBs/Cluster_and_HA_communication_issues_during_back-end_switch_replacement[the Knowledge Base article "Cluster and HA communication issues during back-end switch replacement"^].
+
 .About this task 
 This procedure applies when you are using NetApp-validated switches. If you are using MetroCluster-compliant switches, refer to the switch vendor.
 //GH issue #64 25/01/2022
 
 link:enable-console-logging-before-maintenance.html[Enable console logging] before performing this task.
+
+[NOTE]
+====
+Mixed link speeds are not supported on platforms that use an X60134A network interface card. To check if your platform is affected, refer to the https://hwu.netapp.com/[Hardware Universe^]. 
+ 
+If you are replacing a switch that uses 25G ports with a new switch that uses 100G ports on an affected platform (for example replacing a BES-53248 switch with a Cisco 9336C switch on an AFF A50 platform), refer to link:https://kb.netapp.com/on-prem/ontap/mc/MC-KBs/100G_link_not_coming_online_during_MetroCluster_back-end_switch_replacement?caseId=2010523490[the Knowledge Base article "100G link not coming online during MetroCluster back-end switch replacement"^]. 
+====
 
 // 2024 Aug 13, ONTAPDOC-1988
 
@@ -226,6 +235,8 @@ If you are reconfiguring a MetroCluster IP configuration that does not connect N
 * link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-cluster-dat-storage.html[Migrate from a switchless cluster with direct-attached storage^]
 * link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-configuration-sat-storage.html[Migrate from a switchless configuration with switch-attached storage by reusing the storage switches^]
 
+
+// 2026 Sep 10, ONTAPDOC-4210, ONTAPDOC-3507
 // 2025 Nov 21, ONTAPDOC-3280
 // 2022 Apr 13, BURT 1536708
 // 2022 May 04, Issue 235
