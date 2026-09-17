@@ -1377,9 +1377,9 @@ cluster_A::*>
 . Move the MDV_CRS volumes in advanced privilege mode.
 .. Display the volumes to identify the MDV volumes:
 +
-If you have a single mirrored data aggregate per site then move both the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate.
+If you have a single mirrored data aggregate per site then move both of the MDV volumes to this single aggregate. If you have two or more mirrored data aggregates, then move each MDV volume to a different aggregate. After a successful expansion (to a four-node or eight-node configuration), each MetroCluster IP site contains two MDV volumes.
 +
-If you are expanding a four-node MetroCluster configuration to a permanent eight-node configuration, you should move one of the MDV volumes to the new DR group. 
+If you are expanding a four-node MetroCluster configuration to a permanent eight-node configuration, you must move one of the MDV volumes to any mirrored aggregate in the new DR group. It does't make a difference whether the MDV volume you move has the suffix `_A` or `_B`.
 +
 The following example shows the MDV volumes in the `volume show` output:
 +
@@ -1427,11 +1427,11 @@ Warning: You are about to modify the system volume
 The following output shows that the MDV volume has been successfully moved.
 +
 ----
-cluster_A::*> vol show MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
+cluster_A::*> vol show MDV_CRS_d6b0b313ff5611e9837100a098544e51_A
 Vserver     Volume       Aggregate    State      Type       Size  Available Used%
 ---------   ------------ ------------ ---------- ---- ---------- ---------- -----
-cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_B
-                       aggr_a2      online     RW         10GB     9.50GB    0%
+cluster_A   MDV_CRS_d6b0b313ff5611e9837100a098544e51_A
+                         data_a3      online      RW        10GB     9.50GB    0%
 ----
 
 . Move epsilon from an old node to a new node:
