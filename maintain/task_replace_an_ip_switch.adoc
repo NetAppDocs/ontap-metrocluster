@@ -207,16 +207,18 @@ If you are upgrading or downgrading the switches in the first fabric, you might 
 +
 NOTE: If you upgrade or downgrade the fabric, then repeat all of the steps for the second fabric.
 
-. Modify all cluster LIFs to re-enable auto-revert: 
+. Revert all cluster LIFs to their home port.
 +
-NOTE: Do not re-enable auto-revert until all four switches have been updated.
+CAUTION: Do not revert the cluster LIFs to their home ports until the switches in both fabrics are updated.
+
+.. Modify all cluster LIFs to re-enable auto-revert: 
 +
 [source,cli]
 ----
 network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true
 ----
 
-. Revert all cluster LIFs that are not currently on their home ports to their home ports:
+.. Manually revert all cluster LIFs that are not currently on their home ports to their home ports:
 +
 `network interface revert -vserver * -lif *`
 
