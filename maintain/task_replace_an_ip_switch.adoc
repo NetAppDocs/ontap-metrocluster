@@ -216,16 +216,20 @@ If you are upgrading or downgrading the switches in the first fabric, you might 
 +
 NOTE: If you upgrade or downgrade the fabric, then repeat all of the steps for the second fabric.
 
-. Modify all cluster LIFs to re-enable auto-revert: 
+. Revert all cluster LIFs to their home port.
++
+CAUTION: Do not revert the cluster LIFs to their home ports until you have completed the previous steps for all switches that require an update.
+
+.. Modify all cluster LIFs to re-enable auto-revert: 
 +
 [source,cli]
 ----
 network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true
 ----
 
-. Revert all cluster LIFs that are not currently on their home ports to their home ports:
+.. Manually revert all cluster LIFs that are not currently on their home ports to their home ports:
 +
-`network interface revert -vserver * -lif *`
+`network interface revert -vserver Cluster -lif *`
 
 . Optionally, move the NS224 shelves.
 +
@@ -243,3 +247,4 @@ If you are reconfiguring a MetroCluster IP configuration that does not connect N
 // 2023 Dec 14, ONTAPDOC-1502
 // 2024 Apr 04, ONTAPDOC-1875
 // 2026 Aug 20, ONTAPDOC-2880
+// 2026 Sept 25, ONTAPDOC-4343
