@@ -143,6 +143,25 @@ volumes             ok
 
 . link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs] before you begin the upgrade. 
 
+. If you are upgrading the firmware on Cisco or Broadcom MetroCluster IP switches, you can save a copy of the current switch configuration before proceeding with the upgrade.
++
+NOTE: If your workflow requires you to upgrade the RCF after you upgrade the switch firmware, you should skip this step because upgrading the RCF requires you to reset the switch to factory defaults.
++
+[role="tabbed-block"]
+====
+.Cisco
+--
+Save the configuration:
+
+`copy running-config startup-config`
+--
+.Broadcom
+--
+Save the configuration:
+
+`write memory`
+-- 
+====
 
 . Install the software on the first switch.
 +
