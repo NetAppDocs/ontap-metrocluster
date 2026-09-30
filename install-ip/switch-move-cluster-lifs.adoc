@@ -139,6 +139,8 @@ e4b       Cluster      Cluster          up   9000  auto/40000 healthy  false
 
 .. Verify that all the cluster interfaces (LIFs) are on the home port:
 +
+NOTE: If you are repeating this procedure for the switches in the second fabric after you have already updated the switches in the first fabric, you can skip this step.
++
 `network interface show -role cluster`
 +
 .Show example 
@@ -194,6 +196,12 @@ IP_switch_A_2               cluster-network    10.231.7.252     N9K-C9336C-FX2
 cluster_A::*>
 ----
 ====
+
+.. Check the MetroCluster IP connections:
++
+`set -privilege advanced`
++
+`storage iscsi-initiator show`
 
 . Disable auto-revert on the cluster LIFs. The cluster LIFs fail over to the partner cluster switch and remain there as you perform the upgrade procedure on the targeted switch:
 +
