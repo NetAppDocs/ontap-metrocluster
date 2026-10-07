@@ -1,0 +1,10 @@
+Beginning with ONTAP 9.20.1, storage limits can be configured for SVMs that are part of a MetroCluster IP configuration.
+
+The following limitations apply to enabling or disabling storage limits during a MetroCluster switchover:
+
+* On the sync-destination SVM, you can't use the `vserver modify -storage-limit` command to enable or disable the storage limit. This means that you cannot change the value from 0 to a non-zero value, or from a non-zero value to 0. The command fails with the following error:
++
+`This operation is not permitted on a Vserver that is configured as the destination of a MetroCluster Vserver relationship`
+* You can still change the storage limit from one non-zero value to another (for example, from 100TB to 200TB). This new value is retained across switchback.
+* To enable or disable the storage limit, wait until switchback completes, then make the change on the sync-source SVM. The value is then replicated to the sync-destination SVM.
+* If a cluster is already stuck in switchover because the storage limit was enabled or disabled on the destination SVM, set the sync-destination SVM to the same enabled or disabled state as the sync-source SVM, and then retry the switchback.
