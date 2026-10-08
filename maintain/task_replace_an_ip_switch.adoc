@@ -2,20 +2,29 @@
 permalink: maintain/task_replace_an_ip_switch.html
 sidebar: sidebar
 keywords: metrocluster, maintain, service, replace, ip, switch
-summary: 'You might need to replace a failed switch, or upgrade or downgrade a switch. The new switch can be the same as the old switch when a switch has failed, or you can change the switch type \(upgrade or downgrade the switch\).'
+summary: 'You might need to replace a failed switch, or upgrade or downgrade a switch. The new switch can match the old one, or you can change the switch type.'
 ---
-= Replace an IP switch or change the use of existing MetroCluster IP switches
+= Replace or repurpose a switch in a MetroCluster IP configuration 
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
 You might need to replace a failed switch, upgrade or downgrade a switch, or change the use of existing MetroCluster IP switches. 
 
+CAUTION: If you need to perform a switch replacement on AFF A220, AFF A250 or FAS2750 platforms, refer to link:https://kb.netapp.com/on-prem/ontap/mc/MC-KBs/Cluster_and_HA_communication_issues_during_back-end_switch_replacement[the Knowledge Base article "Cluster and HA communication issues during back-end switch replacement"^].
+
 .About this task 
 This procedure applies when you are using NetApp-validated switches. If you are using MetroCluster-compliant switches, refer to the switch vendor.
 //GH issue #64 25/01/2022
 
 link:enable-console-logging-before-maintenance.html[Enable console logging] before performing this task.
+
+[NOTE]
+====
+Mixed link speeds are not supported on platforms that use an X60134A network interface card. To check if your platform is affected, refer to the https://hwu.netapp.com/[Hardware Universe^]. 
+ 
+If you are replacing a switch that uses 25G ports with a new switch that uses 100G ports on an affected platform (for example replacing a BES-53248 switch with a Cisco 9336C switch on an AFF A50 platform), refer to link:https://kb.netapp.com/on-prem/ontap/mc/MC-KBs/100G_link_not_coming_online_during_MetroCluster_back-end_switch_replacement?caseId=2010523490[the Knowledge Base article "100G link not coming online during MetroCluster back-end switch replacement"^]. 
+====
 
 // 2024 Aug 13, ONTAPDOC-1988
 
@@ -110,13 +119,18 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 ----
 
  .. Check that there are no health alerts: `*system health alert show*`
+
 . Configure the new switch before installation.
 +
 If you are reusing existing switches, go to <<existing_step4,Step 4>>.
 +
 NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
 +
-Follow the steps in the section _Configuring the IP switches_ in the link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration.]
+Follow the steps for your switch vendor:
++
+* link:../install-ip/task_switch_config_broadcom.html[Configure Broadcom IP switches]
+* link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
+* link:../install-ip/task_switch_config_nvidia.html[Configure NVIDIA IP switches]
 +
 Make sure that you apply the correct RCF file for switch _A_1, _A_2, _B_1 or _B_2. If the new switch is the same as the old switch, you need to apply the same RCF file.
 +
@@ -132,6 +146,9 @@ If you upgrade or downgrade a switch, apply the latest supported RCF file for th
 ----
 network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert false
 ----
+.. link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs].
++
+NOTE: You must update the switches in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2. You must repeat the steps to move the cluster LIFs on the second fabric (Switch_A_2, Switch_B_2) after you have configured the switches in the first fabric (Switch_A_1, Switch_B_1). Refer to link:../install-ip/task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
 
 . [[existing_step4]]Disconnect the connections from the old switch. 
 +
@@ -164,7 +181,7 @@ To configure the existing switches, follow the steps to install and upgrade the 
 
 . Cable the switches. 
 +
-You can follow the steps in the  _Cabling the IP switches_ section in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration]. 
+You can follow the steps in link:../install-ip/using_rcf_generator.html[Cable the MetroCluster IP switches]. 
 +
 Cable the switches in the following order (if required): 
 +
@@ -187,28 +204,32 @@ If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs.
 
 .. If the local cluster interfaces are *not* connected to a switch:
 +
-... Use the link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-bes-53248/migrate-to-2n-switched.html[Migrate to a switched NetApp cluster environment] procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration] or the RCF cabling files to connect the local cluster interface.
+... Use the link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-bes-53248/migrate-to-2n-switched.html[Migrate to a switched NetApp cluster environment^] procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration] or the RCF cabling files to connect the local cluster interface.
 
 . Power up the switch or switches.
 +
-If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second network is updated.
+If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second fabric is updated.
 
 . Verify that the MetroCluster configuration is healthy by repeating <<all_step1,Step 1>>.
 +
-If you are upgrading or downgrading the switches in the first network, you might see some alerts related to local clustering.
+If you are upgrading or downgrading the switches in the first fabric, you might see some alerts related to local clustering.
 +
-NOTE: If you upgrade or downgrade the networks, then repeat all of the steps for the second network.
+NOTE: If you upgrade or downgrade the fabric, then repeat all of the steps for the second fabric.
 
-. Modify all cluster LIFs to re-enable auto-revert: 
+. Revert all cluster LIFs to their home port.
++
+CAUTION: Do not revert the cluster LIFs to their home ports until you have completed the previous steps for all switches that require an update.
+
+.. Modify all cluster LIFs to re-enable auto-revert: 
 +
 [source,cli]
 ----
 network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert true
 ----
 
-. Revert all cluster LIFs that are not currently on their home ports to their home ports:
+.. Manually revert all cluster LIFs that are not currently on their home ports to their home ports:
 +
-`network interface revert -vserver * -lif *`
+`network interface revert -vserver Cluster -lif *`
 
 . Optionally, move the NS224 shelves.
 +
@@ -218,8 +239,12 @@ If you are reconfiguring a MetroCluster IP configuration that does not connect N
 * link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-cluster-dat-storage.html[Migrate from a switchless cluster with direct-attached storage^]
 * link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-configuration-sat-storage.html[Migrate from a switchless configuration with switch-attached storage by reusing the storage switches^]
 
+
+// 2026 Sep 10, ONTAPDOC-4210, ONTAPDOC-3507
 // 2025 Nov 21, ONTAPDOC-3280
 // 2022 Apr 13, BURT 1536708
 // 2022 May 04, Issue 235
 // 2023 Dec 14, ONTAPDOC-1502
 // 2024 Apr 04, ONTAPDOC-1875
+// 2026 Aug 20, ONTAPDOC-2880
+// 2026 Sept 25, ONTAPDOC-4343

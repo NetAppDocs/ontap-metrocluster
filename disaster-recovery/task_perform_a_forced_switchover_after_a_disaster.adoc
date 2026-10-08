@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: disaster, occur, perform, surviving, cluster, survive, switchover, ensure, safe, data, service, force, fence, fencing, off, site, access, volume, nvfail, state, output, storage, aggregate, plex, show, command, indeterminate, metroxluster
 summary: If a disaster has occurred, there are steps you must perform on both the disaster cluster and the surviving cluster after the switchover to ensure safe and continued data service.
 ---
-= Performing a forced switchover after a disaster
+= Perform a forced MetroCluster switchover after a disaster
 :icons: font
 :imagesdir: ../media/
 
@@ -42,7 +42,6 @@ The switchover process, in addition to providing nondisruptive operations during
 +
 This is to avoid competition with the negotiated switchover or switchback operation.
 
-NOTE: SnapMirror and SnapVault configurations are deleted automatically.
 
 .About this task
 
@@ -77,10 +76,6 @@ mcc1A::> metrocluster operation show
 ....
 +
 If the switchover is vetoed, you have the option of reissuing the `metrocluster switchover-forced-on-disaster true` command with the `--override-vetoes` option. If you use this optional parameter, the system overrides any soft vetoes that prevented the switchover.
-
-.After you finish
-
-SnapMirror relationships need to be reestablished after switchover.
 
 == Output for the storage aggregate plex show command is indeterminate after a MetroCluster switchover
 
