@@ -1,14 +1,16 @@
 Beginning with ONTAP 9.20.1, storage limits can be configured for SVMs that are part of a MetroCluster IP configuration.
 
-Before a MetroCluster switchover operation, you can only make changes to the storage limit configuration on the *sync-source SVM*, you cannot enable, disable, or modify storage limits on the *sync-destination SVM*.
+CAUTION: You must ensure that your MetroCluster configuration does not exceed the limits for your platform listed in the https://hwu.netapp.com/[Hardware Universe^].
 
-During a MetoCluster switchover operation, the following restrictions apply to the *sync-destination SVM*:
+* Before a MetroCluster switchover operation, you can only make changes to the storage limit configuration on the *sync-source SVM*, you cannot enable, disable, or modify storage limits on the *sync-destination SVM*.
 
-* You can't use the `vserver modify -storage-limit` command to enable or disable the storage limit on the sync-destination SVM. This means that you cannot change the value from 0 to a non-zero value, or from a non-zero value to 0. The command fails with the following error:
+* During a MetoCluster switchover operation, the following restrictions apply to the *sync-destination SVM*:
+
+** You can't use the `vserver modify -storage-limit` command to enable or disable the storage limit on the sync-destination SVM. This means that you cannot change the value from 0 to a non-zero value, or from a non-zero value to 0. The command fails with the following error:
 +
 `This operation is not permitted on a Vserver that is configured as the destination of a MetroCluster Vserver relationship`
-* You can still change the storage limit from one non-zero value to another (for example, from 100TB to 200TB). This new value is retained across switchback.
-* To enable or disable the storage limit, wait until switchback completes, then make the change on the *sync-source SVM*. The value is then replicated to the sync-destination SVM.
-* If a cluster is already stuck in switchover because the storage limit was enabled or disabled on the sync-destination SVM, set the sync-destination SVM to the same enabled or disabled state as the sync-source SVM, and then retry the switchback.
+** You can still change the storage limit from one non-zero value to another (for example, from 100TB to 200TB). This new value is retained across switchback.
+** To enable or disable the storage limit, wait until switchback completes, then make the change on the *sync-source SVM*. The value is then replicated to the sync-destination SVM.
+** If a cluster is already stuck in switchover because the storage limit was enabled or disabled on the sync-destination SVM, set the sync-destination SVM to the same enabled or disabled state as the sync-source SVM, and then retry the switchback.
 
 For more information, refer to link:https://review.docs.netapp.com/us-en/ontap_aoife-9201/volumes/manage-svm-capacity.html[Manage ONTAP SVM capacity^]
