@@ -49,12 +49,11 @@ metrocluster interconnect congestion-control show
 ----
 cluster_A::> metrocluster interconnect congestion-control show
 
-Status: enabled
-T_auto (MiB/s): 2400
-cur_wafl_thrpt (MiB/s): 3100
-num_rejected_reqs: 142
-suspend_msecs: 12
-Driving-signal summary: rx_pause
+Node            Enabled Ceiling (MiB/s)
+--------------- ------- ---------------
+cluster_A-01    true    1250
+cluster_A-02    true    1250
+2 entries were displayed.
 ----
 
 NOTE: If you need to modify the calculated ceiling after this feature is enabled, contact NetApp technical support.
@@ -93,12 +92,33 @@ When enabled, the output should be similar to the following example:
 ----
 cluster_A::> metrocluster interconnect congestion-control show
 
-Status: enabled
-T_auto (MiB/s): 2400
-cur_wafl_thrpt (MiB/s): 3100
-num_rejected_reqs: 142
-suspend_msecs: 12
-Driving-signal summary: rx_pause
+Node            Enabled Ceiling (MiB/s)
+--------------- ------- ---------------
+cluster_A-01    true    1250
+cluster_A-02    true    1250
+2 entries were displayed.
+----
+
+You can also view more detailed information for each node by using the `-instance` parameter:
+
+[source,cli]
+----
+metrocluster interconnect congestion-control show -instance
+----
++
+----
+cluster_A::> metrocluster interconnect congestion-control show -instance
+
+                        Node Name: cluster_A-01
+       Congestion Control Enabled: true
+       Throughput Ceiling (MiB/s): 1250
+Throughput Low-Water Mark (MiB/s): -
+
+                        Node Name: cluster_A-02
+       Congestion Control Enabled: true
+       Throughput Ceiling (MiB/s): 1250
+Throughput Low-Water Mark (MiB/s): -
+2 entries were displayed.
 ----
 
 == Disable congestion control
@@ -108,12 +128,25 @@ Driving-signal summary: rx_pause
 . Disable WAN ISL congestion control on cluster_A:
 +
 [source,cli]
+----
 metrocluster interconnect congestion-control disable
-
+----
 
 . Verify that the feature is disabled:
 +
 [source,cli]
+----
 metrocluster interconnect congestion-control show
+----
 +
-The output should show the status as `disabled`.
+The output should be similar to the following example:
++
+----
+cluster_A::> metrocluster interconnect congestion-control show
+
+Node            Enabled Ceiling (MiB/s)
+--------------- ------- ---------------
+cluster_A-01    false   -
+cluster_A-02    false   -
+2 entries were displayed.
+----
