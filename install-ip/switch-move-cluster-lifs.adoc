@@ -202,6 +202,40 @@ cluster_A::*>
 `set -privilege advanced`
 +
 `storage iscsi-initiator show`
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::*> storage iscsi-initiator show
+                                                                       Status
+Node Type Label    Target Portal      Target Name                      Admin/Op
+---- ---- -------- ------------------ -------------------------------- --------
+cluster_A-01
+     dr_auxiliary
+          mccip-aux-a-initiator 172.16.1.104:65200 iqn.2016-06.com.company:aux1a1b2c up/up
+          mccip-aux-a-initiator2 172.16.1.104:65200 iqn.2016-07.com.company:aux1a1b2c up/up
+          mccip-aux-b-initiator 172.16.2.104:65200 iqn.2016-06.com.company:aux1a1b2c up/up
+          mccip-aux-b-initiator2 172.16.2.104:65200 iqn.2016-07.com.company:aux1a1b2c up/up
+     dr_partner
+          mccip-pri-a-initiator 172.16.1.103:65200 iqn.2016-06.com.company:pri1d4e5f up/up
+          mccip-pri-a-initiator2 172.16.1.103:65200 iqn.2016-07.com.company:pri1d4e5f up/up
+          mccip-pri-b-initiator 172.16.2.103:65200 iqn.2016-06.com.company:pri1d4e5f up/up
+          mccip-pri-b-initiator2 172.16.2.103:65200 iqn.2016-07.com.company:pri1d4e5f up/up
+cluster_A-02
+     dr_auxiliary
+          mccip-aux-a-initiator 172.16.1.103:65200 iqn.2016-06.com.company:pri1d4e5f up/up
+          mccip-aux-a-initiator2 172.16.1.103:65200 iqn.2016-07.com.company:pri1d4e5f up/up
+          mccip-aux-b-initiator 172.16.2.103:65200 iqn.2016-06.com.company:pri1d4e5f up/up
+          mccip-aux-b-initiator2 172.16.2.103:65200 iqn.2016-07.com.company:pri1d4e5f up/up
+     dr_partner
+          mccip-pri-a-initiator 172.16.1.104:65200 iqn.2016-06.com.company:aux1a1b2c up/up
+          mccip-pri-a-initiator2 172.16.1.104:65200 iqn.2016-07.com.company:aux1a1b2c up/up
+          mccip-pri-b-initiator 172.16.2.104:65200 iqn.2016-06.com.company:aux1a1b2c up/up
+          mccip-pri-b-initiator2 172.16.2.104:65200 iqn.2016-07.com.company:aux1a1b2c up/up
+18 entries were displayed.
+----
+====
 
 . Disable auto-revert on the cluster LIFs. The cluster LIFs fail over to the partner cluster switch and remain there as you perform the upgrade procedure on the targeted switch:
 +
