@@ -98,27 +98,28 @@ cluster_A::>
 [%collapsible]
 ====
 ----
-cluster1::> storage shelf show -shelf 1.2 -connectivity
-               Shelf Name: 1.2
-                 Stack ID: 1
-                 Shelf ID: 2
-                Shelf UID: 50:0a:09:80:01:b9:75:41
-            Serial Number: 6000647652
-              Module Type: IOM6
-                    Model: DS2246
-             Shelf Vendor: NETAPP
-               Disk Count: 12
-          Connection Type: SAS
-              Shelf State: Online
-                   Status: Normal
+cluster_A::> storage shelf show -shelf 1.0 -connectivity
+            Shelf Name: 1.0
+             Stack ID: 1
+             Shelf ID: 0
+            Shelf UID: 00:00:00:00:00:00:00:00
+        Serial Number: 952123456789
+          Module Type: NSM100
+                Model: NS224NSM100
+         Shelf Vendor: NETAPP
+           Disk Count: 24
+      Connection Type: NVMe
+          Shelf State: Online
+               Status: Normal
 Paths:
+
 Controller         Initiator Initiator Side Switch Port Target Side Switch Port    Target Port        TPGN
-    ------------------ --------- -------------------------- -------------------------- ------------------ ------
-    stsw-8020-01       0a        -                          -                          -                  -
-    stsw-8020-01       2b        -                          -                          -                  -
-    stsw-8020-02       0a        -                          -                          -                  -
-    stsw-8020-02       2b        -                          -                          -                  -
+------------------ --------- -------------------------- -------------------------- ------------------ ------
+cluster_A-01       0x        -                          0x                         05000005abff0000   67
+cluster_A-02       0x        -                          0x                         030f0005abff0000   44
+
 Errors:
+------
     ------
     -
 cluster_A::>
@@ -136,10 +137,10 @@ cluster_A::> storage shelf port show -remote-device IP_switch_A_1
 
 Shelf ID Module State        Internal?
 ----- -- ------ ------------ ---------
-3.23
+1.0
        1 A      connected    false
        3 B      connected    false
-3.24
+1.02
        1 A      connected    false
        3 B      connected    false
 4 entries were displayed.
