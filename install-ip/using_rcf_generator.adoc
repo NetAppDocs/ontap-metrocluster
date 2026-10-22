@@ -19,6 +19,9 @@ Review these considerations before cabling the switches:
 * You cannot configure the switches with ports of different speeds (for example, a mix of 100 Gbps ports and 40 Gbps ports).
 * Keep track of the MetroCluster port group (MetroCluster 1, MetroCluster 2, etc.). You'll need this information when using the RcfFileGenerator tool as described later in this configuration procedure.
 * You should cable all of the nodes in the same way. If there are different port combination options available to cable the nodes, all nodes should use the same port combinations. For example, e1a on node1 and e1a on node2 should be attached to one switch. Similarly, the second port from both nodes should be attached to the second switch. 
+* RCF file version v2.10 or later is required for 25G breakout mode for MetroCluster ISLs on supported platforms.
+
+NOTE: The RCF file version is different to the version of the RCFfilegenerator tool used to generate the file. For example, you can generate an RCF file version 2.00 using RCFfilegenerator v1.6c. 
 
 == Cabling requirements based on the switch type
 
@@ -26,14 +29,13 @@ The following lists cabling requirements based on the specific switch type.
 
 === Cisco 3132Q-V
 
-If you configure the switch for MetroCluster FC to IP transition, port 5, port 6, port 13, or port 14 can be used to connect the local cluster interfaces of the MetroCluster FC node. Refer to the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP^] and the generated cabling files for more details on cabling this configuration.
+If you configure the switch for MetroCluster FC to IP transition, port 5 or port 6 can be used to connect the local cluster interfaces of the MetroCluster FC node. Refer to the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP^] and the generated cabling files for more details on cabling this configuration.
 
 === Cisco 3232C or 36-port Cisco 9336C
 
-* RCF file version v2.10 or later is required for 25G breakout mode for MetroCluster ISLs.
+* If you configure the switch for MetroCluster FC to IP transition, port 5, port 6, port 13, or port 14 can be used to connect the local cluster interfaces of the MetroCluster FC node. Refer to the link:https://mysupport.netapp.com/site/tools/tool-eula/rcffilegenerator[RcfFileGenerator for MetroCluster IP^] and the generated cabling files for more details on cabling this configuration.
+
 * ONTAP 9.13.1 or later and RCF file version 2.00 are required to use a platform other than FAS8200 or AFF A300 in the "MetroCluster 4" group.
-+
-NOTE: The RCF file version is different to the version of the RCFfilegenerator tool used to generate the file. For example, you can generate an RCF file version 2.00 using RCFfilegenerator v1.6c.
 
 === 12-port Cisco 9336C-FX2
 
@@ -85,7 +87,7 @@ Any configuration or feature that requires that the local cluster connections ar
 
 Connecting an eight-node or two four-node MetroCluster configurations requires ONTAP 9.14.1 or later and RCF file version 2.00 or later. 
 
-NOTE: The RCF file version is different to the version of the RCFfilegenerator tool used to generate the file. For example, you can generate an RCF file version 2.00 using RCFfilegenerator v1.6c. 
+
 
 
 
