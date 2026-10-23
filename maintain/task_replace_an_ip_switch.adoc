@@ -131,27 +131,23 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 ====
 ----
 cluster_A::> storage shelf show
-Module  Operational
-           Shelf Name  Shelf ID  Serial Number    Model        Type    Status
-    -----------------  --------  ---------------  -----------  ------  -----------
-                  1.1         1  6000832415       DS2246       IOM6    Critical
-                  1.2         2  6000647652       DS2246       IOM6    Normal
-                  1.3         3  6000003844       DS2246       IOM6    Normal
-                  1.4         4  SHJ000000013A9E  DS4246       IOM6    Normal
-                  1.5         5  SHJ000000013A84  DS4246       IOM6    Normal
-                  1.6         6  6000005555       DS2246       IOM6    Normal
-    6 entries were displayed.
-cluster_A::>
+                                                        Module  Operational
+       Shelf Name Shelf ID Serial Number   Model        Type    Status
+----------------- -------- --------------- ------------ ------- -----------
+              1.0        0 952123456789    NS224NSM100  NSM100  Normal
+              1.2        0 952987654321    NS224NSM100  NSM100  Normal
 ----
+cluster_A::>
 ====
 .. Show the shelf connectivity for the switch-attached NVMe shelves:
 +
 `storage shelf show -shelf <shelf_id> -connectivity`
 +
+.Show example 
 [%collapsible]
 ====
 ----
-cluster_A::> storage shelf show -shelf 1.0 -connectivity
+cluster_A::> storage shelf show -shelf 0 -connectivity
             Shelf Name: 1.0
              Stack ID: 1
              Shelf ID: 0
@@ -171,11 +167,25 @@ Controller         Initiator Initiator Side Switch Port Target Side Switch Port 
 cluster_A-01       0x        -                          0x                         05000005abff0000   67
 cluster_A-02       0x        -                          0x                         030f0005abff0000   44
 
-Errors:
-------
-    ------
-    -
 cluster_A::>
+----
+====
+
+.. If required, collect the remote-device (MetroCluster switch) names:
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf port show -fields remote-device
+
+shelf id remote-device
+----- -- -------------
+1.0   0  IP_switch_A_1  
+1.0   1  IP_switch_B_1
+1.0   2  IP_switch_A_2
+1.0   3  IP_switch_B_2
+4 entries were displayed
 ----
 ====
 
@@ -183,6 +193,7 @@ cluster_A::>
 +
 `storage shelf port show -remote-device <switch name>`
 +
+.Show example 
 [%collapsible]
 ====
 ----
@@ -193,12 +204,12 @@ Shelf ID Module State        Internal?
 1.0
        1 A      connected    false
        3 B      connected    false
-1.02
+1.2
        1 A      connected    false
        3 B      connected    false
 4 entries were displayed.
 
-Cluster_A::>
+cluster_A::>
 ----
 ====
 
