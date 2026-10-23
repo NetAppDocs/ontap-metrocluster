@@ -2,7 +2,7 @@
 permalink: disaster-recovery/task_recover_from_a_non_controller_failure_mcc_dr.html
 sidebar: sidebar
 keywords: equipment, disaster, site, undergone, require, maintenance, replacement, controller, replace, process, metrocluster, configuration, data, aggregate, switchback, operation, recover, non-controller, failure, heal, configuration, metrocluster, fc, data, aggregate, root, disaster, verify, system, switchback, verification, result, perform, successful, delete, deleting, stale, listing
-summary: After the equipment at the disaster site has undergone any required maintenance or replacement, but no controllers were replaced, you can begin the process of returning the MetroCluster configuration to a fully redundant state. This includes healing the configuration (first the data aggregates and then the root aggregates) and performing the switchback operation.
+summary: "Heal the MetroCluster configuration after a non-controller failure and perform the switchback operation to return to normal, fully redundant operation."
 ---
 = Recover from a non-controller failure in a MetroCluster configuration
 :icons: font
@@ -32,9 +32,7 @@ In MetroCluster IP configurations, healing operations should start automatically
 .Before you begin
 
 * Switchover must have been performed and the surviving site must be serving data.
-* Nodes on the disaster site must be halted or remain powered off.
-+
-They must not be fully booted during the healing process.
+* In fabric-attached and stretch MetroCluster configurations, nodes on the disaster site must be halted or remain powered off. They must not be fully booted during the healing process.
 
 * Storage at the disaster site must be accessible (shelves are powered up, functional, and accessible).
 * In fabric-attached MetroCluster configurations, inter-switch links (ISLs) must be up and operating.
@@ -50,7 +48,7 @@ You must heal the data aggregates after repairing and replacing any hardware on 
 
 .About this task
 
-The following example shows a forced switchover, where you bring the switched-over aggregate online. All configuration updates in the remote cluster successfully replicate to the local cluster. You power up the storage on the disaster site as part of this procedure, but you do not and must not power up the controller modules on the disaster site.
+The following example shows a forced switchover, where you bring the switched-over aggregate online. All configuration updates in the remote cluster successfully replicate to the local cluster. You power up the storage on the disaster site as part of this procedure, but you do not and must not power up the controller modules on the disaster site in a fabric-attached or stretch MetroCluster configuration.
 
 .Steps
 
@@ -76,7 +74,7 @@ controller_A_1::> metrocluster heal -phase aggregates
 [Job 130] Job succeeded: Heal Aggregates is successful.
 ----
 +
-If the healing is vetoed, you have the option of reissuing the `metrocluster heal` command with the `--override-vetoes` parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
+If the healing is vetoed, you can reissue the `metrocluster heal` command with the `--override-vetoes` parameter to override any soft vetoes that prevent the healing operation.
 
 . Verify that the operation has been completed:
 +
@@ -124,7 +122,7 @@ mcc1A::> metrocluster heal -phase root-aggregates
 [Job 137] Job succeeded: Heal Root Aggregates is successful
 ----
 +
-If the healing is vetoed, you have the option of reissuing the `metrocluster heal` command with the `--override-vetoes` parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
+If the healing is vetoed, you can reissue the `metrocluster heal` command with the `--override-vetoes` parameter to override any soft vetoes that prevent the healing operation.
 
 . Ensure that the heal operation is complete by running the following command on the destination cluster:
 +
@@ -179,7 +177,7 @@ When entering the network interface modify command within the `vserver config ov
 +
 Perform this step on all SVMs as required.
 
-CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switchback the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur when the home port connection to the switch port and VLAN is incorrect. If you encounter any problems placing the LIFs on the correct nodes or ports, do not proceed with the switchback and contact NetApp technical support. 
+CAUTION: You must verify that the location of the data LIFs is correct on the new nodes before you perform a switchback. When you switch back the configuration, ONTAP attempts to resume traffic on the home port used by the LIFs. I/O failure can occur when the home port connection to the switch port and VLAN is incorrect. If you encounter any problems placing the LIFs on the correct nodes or ports, do not proceed with the switchback and contact NetApp technical support. 
 
 == Verifying that your system is ready for a switchback
 
@@ -485,7 +483,7 @@ volumes             ok
 7 entries were displayed.
 ----
 +
-NOTE: In a MetroCluster FC environment, 'connections' should show as "not-applicable" in the command output.
+NOTE: In a MetroCluster FC environment, "connections" should show as "not-applicable" in the command output.
 
 == Deleting stale aggregate listings after switchback
 
@@ -545,6 +543,7 @@ You need to respond with `y` when prompted to continue into advanced mode and se
 +
 `run local aggr status -r`
 
+// 2026 Oct 22, ONTAPDOC-3937
 // 2026 Feb 12, ONTAPDOC-3582
 // 2025 June 05, ONTAPDOC-2894
 // 2025 Feb 13, ONTAPDOC-2660
