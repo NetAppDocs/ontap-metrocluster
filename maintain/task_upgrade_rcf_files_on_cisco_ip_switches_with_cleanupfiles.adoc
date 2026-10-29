@@ -357,7 +357,7 @@ IP_switch_A_1# show running-config diff
 IP_switch_A_1#
 ----
 
-. If you see system output, save the running configuration to the startup configuration: `copy running-config startup-config`
+.. If you see system output, save the running configuration to the startup configuration: `copy running-config startup-config`
 +
 NOTE: System output indicates that the startup configuration and running configuration are different and pending changes.
 If you do not save the pending changes, you are unable to roll back using a reload of the switch.
@@ -414,6 +414,10 @@ IP_switch_A_1# copy running-config startup-config
 
 IP_switch_A_1# reload
 ----
+
+. Repeat the previous steps for each of the switches.
++
+NOTE: After you have configured the switches in the first fabric (Switch_A_1, Switch_B_1), you must repeat the steps to move the cluster LIFs on the second fabric (Switch_A_2, Switch_B_2). Refer to link:../install-ip/task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
 
 . Modify all cluster LIFs to enable auto-revert:
 .. Re-enable auto-revert:
@@ -480,3 +484,4 @@ cluster_A::*>
 // 2022-NOV-21, GH issue 223
 // 2026 Aug 20, ONTAPDOC-2880
 // 30 Sep 2026, ONTAPDOC-3715
+// 2026 Oct 10, GH issue 569
