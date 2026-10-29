@@ -142,13 +142,13 @@ cluster_A::>
 ====
 .. Show the shelf connectivity for the switch-attached NVMe shelves:
 +
-`storage shelf show -shelf <shelf_id> -connectivity`
+`storage shelf show -shelf <shelf_name> -connectivity`
 +
 .Show example 
 [%collapsible]
 ====
 ----
-cluster_A::> storage shelf show -shelf 0 -connectivity
+cluster_A::> storage shelf show -shelf 1.0 -connectivity
             Shelf Name: 1.0
              Stack ID: 1
              Shelf ID: 0
@@ -216,7 +216,7 @@ cluster_A::>
 
 . Configure the new switch before installation.
 +
-If you are reusing existing switches, go to <<existing_step4,Step 4>>.
+If you are reusing existing switches, proceed to <<existing_disconnect,the step to disconnect the connections from the old switch>>.
 +
 NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
 +
@@ -236,7 +236,7 @@ If you upgrade or downgrade a switch, apply the latest supported RCF file for th
 +
 NOTE: You must update the switches in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2. You must repeat the steps to move the cluster LIFs on the second fabric (Switch_A_2, Switch_B_2) after you have configured the switches in the first fabric (Switch_A_1, Switch_B_1). Refer to link:../install-ip/task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
 
-. [[existing_step4]]Disconnect the connections from the old switch. 
+. [[existing_disconnect]]Disconnect the connections from the old switch. 
 +
 NOTE: You only disconnect connections that are not using the same port in the old and new configurations. If you are using new switches, you must disconnect all connections.
 +
@@ -251,11 +251,11 @@ In the example <<port_usage_worksheet>>, the switches do not change. The MetroCl
 
 . If you are using new switches, power off the old switch, remove the cables, and physically remove the old switch.
 +
-If you are reusing existing switches, go to <<existing_step6,Step 6>>.
+If you are reusing existing switches, proceed to <<existing_configure,the step to configure the existing switches>>.
 +
 NOTE: Do *not* cable the new switches except for the management interface (if used).
 
-. [[existing_step6]]Configure the existing switches.
+. [[existing_configure]]Configure the existing switches.
 + 
 If you have pre-configured the switches already, you can skip this step.
 +
