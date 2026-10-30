@@ -120,37 +120,123 @@ To check if the nodes are ready to do a switchover or switchback operation, run 
 
  .. Check that there are no health alerts: `*system health alert show*`
 
+. If your MetroCluster IP configuration has NVMe shelves connected to the MetroCluster IP switches, run the following commands to verify the shelf status.
++
+.. Show the shelf status:
++
+`storage shelf show`
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf show
+                                                        Module  Operational
+       Shelf Name Shelf ID Serial Number   Model        Type    Status
+----------------- -------- --------------- ------------ ------- -----------
+              1.0        0 952123456789    NS224NSM100  NSM100  Normal
+              1.2        0 952987654321    NS224NSM100  NSM100  Normal
+cluster_A::>
+----
+
+====
+.. Show the shelf connectivity for the switch-attached NVMe shelves:
++
+`storage shelf show -shelf <shelf_name> -connectivity`
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf show -shelf 1.0 -connectivity
+            Shelf Name: 1.0
+             Stack ID: 1
+             Shelf ID: 0
+            Shelf UID: 00:00:00:00:00:00:00:00
+        Serial Number: 952123456789
+          Module Type: NSM100
+                Model: NS224NSM100
+         Shelf Vendor: NETAPP
+           Disk Count: 24
+      Connection Type: NVMe
+          Shelf State: Online
+               Status: Normal
+Paths:
+
+Controller         Initiator Initiator Side Switch Port Target Side Switch Port    Target Port        TPGN
+------------------ --------- -------------------------- -------------------------- ------------------ ------
+cluster_A-01       0x        -                          0x                         05000005abff0000   67
+cluster_A-02       0x        -                          0x                         030f0005abff0000   44
+
+cluster_A::>
+----
+====
+
+.. If required, collect the remote-device (MetroCluster switch) names:
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf port show -fields remote-device
+
+shelf id remote-device
+----- -- -------------
+1.0   0  IP_switch_A_1  
+1.0   1  IP_switch_B_1
+1.0   2  IP_switch_A_2
+1.0   3  IP_switch_B_2
+4 entries were displayed
+----
+====
+
+.. Show the shelf port connectivity for the switch-attached NVMe shelves:
++
+`storage shelf port show -remote-device <switch name>`
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf port show -remote-device IP_switch_A_1
+
+Shelf ID Module State        Internal?
+----- -- ------ ------------ ---------
+1.0
+       1 A      connected    false
+       3 B      connected    false
+1.2
+       1 A      connected    false
+       3 B      connected    false
+4 entries were displayed.
+
+cluster_A::>
+----
+====
+
 . Configure the new switch before installation.
 +
-If you are reusing existing switches, go to <<existing_step4,Step 4>>.
+If you are reusing existing switches, proceed to <<existing_disconnect,the step to disconnect the connections from the old switch>>.
 +
 NOTE: If you are upgrading or downgrading the switches, you must configure all the switches in the network.
 +
 Follow the steps for your switch vendor:
 +
-* link:../install-ip/task_switch_config_broadcom.html[Configure Broadcom IP switches]
-* link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
-* link:../install-ip/task_switch_config_nvidia.html[Configure NVIDIA IP switches]
-+
 Make sure that you apply the correct RCF file for switch _A_1, _A_2, _B_1 or _B_2. If the new switch is the same as the old switch, you need to apply the same RCF file.
 +
 If you upgrade or downgrade a switch, apply the latest supported RCF file for the new switch.
-
-. Run the port show command to view information about the network ports:
 +
-`*network port show*`
+* link:../install-ip/task_switch_config_broadcom.html[Configure Broadcom IP switches]
+* link:../install-ip/task_switch_config_cisco.html[Configure Cisco IP switches]
+* link:../install-ip/task_switch_config_nvidia.html[Configure NVIDIA IP switches]
 
-.. Modify all cluster LIFs to disable auto-revert:
-+
-[source,cli]
-----
-network interface modify -vserver <vserver_name> -lif <lif_name> -auto-revert false
-----
-.. link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs].
+
+
+. link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs].
 +
 NOTE: You must update the switches in the following order: Switch_A_1, Switch_B_1, Switch_A_2, Switch_B_2. You must repeat the steps to move the cluster LIFs on the second fabric (Switch_A_2, Switch_B_2) after you have configured the switches in the first fabric (Switch_A_1, Switch_B_1). Refer to link:../install-ip/task_install_and_cable_the_mcc_components.html[Learn about configuring the MetroCluster IP switches].
 
-. [[existing_step4]]Disconnect the connections from the old switch. 
+. [[existing_disconnect]]Disconnect the connections from the old switch. 
 +
 NOTE: You only disconnect connections that are not using the same port in the old and new configurations. If you are using new switches, you must disconnect all connections.
 +
@@ -165,11 +251,11 @@ In the example <<port_usage_worksheet>>, the switches do not change. The MetroCl
 
 . If you are using new switches, power off the old switch, remove the cables, and physically remove the old switch.
 +
-If you are reusing existing switches, go to <<existing_step6,Step 6>>.
+If you are reusing existing switches, proceed to <<existing_configure,the step to configure the existing switches>>.
 +
 NOTE: Do *not* cable the new switches except for the management interface (if used).
 
-. [[existing_step6]]Configure the existing switches.
+. [[existing_configure]]Configure the existing switches.
 + 
 If you have pre-configured the switches already, you can skip this step.
 +
@@ -193,8 +279,15 @@ Cable the switches in the following order (if required):
 ====
 * The used ports might be different from those on the old switch if the switch type is different.
 If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs. Only cable the local ISLs if you are upgrading or downgrading the switches in the second network and both switches at one site are the same type and cabling.
-* If you are upgrading Switch-A1 and Switch-B1, you must perform steps 1 to 6 for switches Switch-A2 and Switch-B2.
 ====
+
+. Power up the switch or switches.
++
+If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. 
+
+. Repeat the previous steps for the second fabric (Switch_A_2 and Switch_B_2) after you have updated the first fabric (Switch_A_1 and Switch_B_1).
++
+NOTE: If you are replacing a failed switch with the same type, you only need to update the failed switch and do not need to repeat the steps for the second fabric.
 
 . Finalize the local cluster cabling.
 +
@@ -206,15 +299,7 @@ If you are upgrading or downgrading the switches, do *NOT* cable the local ISLs.
 +
 ... Use the link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-bes-53248/migrate-to-2n-switched.html[Migrate to a switched NetApp cluster environment^] procedure to convert a switchless cluster to a switched cluster. Use the ports indicated in link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/using_rcf_generator.html[MetroCluster IP installation and configuration] or the RCF cabling files to connect the local cluster interface.
 
-. Power up the switch or switches.
-+
-If the new switch is the same, power up the new switch. If you are upgrading or downgrading the switches, then power up both switches. The configuration can operate with two different switches at each site until the second fabric is updated.
-
 . Verify that the MetroCluster configuration is healthy by repeating <<all_step1,Step 1>>.
-+
-If you are upgrading or downgrading the switches in the first fabric, you might see some alerts related to local clustering.
-+
-NOTE: If you upgrade or downgrade the fabric, then repeat all of the steps for the second fabric.
 
 . Revert all cluster LIFs to their home port.
 +
@@ -239,6 +324,10 @@ If you are reconfiguring a MetroCluster IP configuration that does not connect N
 * link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-cluster-dat-storage.html[Migrate from a switchless cluster with direct-attached storage^]
 * link:https://docs.netapp.com/us-en/ontap-systems-switches/switch-cisco-9336c-fx2-shared/migrate-from-switchless-configuration-sat-storage.html[Migrate from a switchless configuration with switch-attached storage by reusing the storage switches^]
 
+.After you finish
+
+link:../install-ip/task-configure-log-collection-mccip.html[Configure log collection on a MetroCluster IP switch]
+
 
 // 2026 Sep 10, ONTAPDOC-4210, ONTAPDOC-3507
 // 2025 Nov 21, ONTAPDOC-3280
@@ -248,3 +337,4 @@ If you are reconfiguring a MetroCluster IP configuration that does not connect N
 // 2024 Apr 04, ONTAPDOC-1875
 // 2026 Aug 20, ONTAPDOC-2880
 // 2026 Sept 25, ONTAPDOC-4343
+// 30 Sep 2026, ONTAPDOC-3715
