@@ -133,8 +133,122 @@ volumes             ok
 +
 `system health alert show`
 
+. If your MetroCluster IP configuration has NVMe shelves connected to the MetroCluster IP switches, run the following commands to verify the shelf status.
++
+.. Show the shelf status:
++
+`storage shelf show`
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf show
+                                                        Module  Operational
+       Shelf Name Shelf ID Serial Number   Model        Type    Status
+----------------- -------- --------------- ------------ ------- -----------
+              1.0        0 952123456789    NS224NSM100  NSM100  Normal
+              1.2        0 952987654321    NS224NSM100  NSM100  Normal
+cluster_A::>
+----
+====
+
+
+.. Show the shelf connectivity for the switch-attached NVMe shelves:
++
+`storage shelf show -shelf <shelf_name> -connectivity`
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf show -shelf 0 -connectivity
+            Shelf Name: 1.0
+             Stack ID: 1
+             Shelf ID: 0
+            Shelf UID: 00:00:00:00:00:00:00:00
+        Serial Number: 952123456789
+          Module Type: NSM100
+                Model: NS224NSM100
+         Shelf Vendor: NETAPP
+           Disk Count: 24
+      Connection Type: NVMe
+          Shelf State: Online
+               Status: Normal
+Paths:
+
+Controller         Initiator Initiator Side Switch Port Target Side Switch Port    Target Port        TPGN
+------------------ --------- -------------------------- -------------------------- ------------------ ------
+cluster_A-01       0x        -                          0x                         05000005abff0000   67
+cluster_A-02       0x        -                          0x                         030f0005abff0000   44
+
+cluster_A::>
+----
+====
+
+.. If required, collect the remote-device (MetroCluster switch) names:
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf port show -fields remote-device
+
+shelf id remote-device
+----- -- -------------
+1.0   0  IP_switch_A_1  
+1.0   1  IP_switch_B_1
+1.0   2  IP_switch_A_2
+1.0   3  IP_switch_B_2
+4 entries were displayed
+----
+====
+
+.. Show the shelf port connectivity for the switch-attached NVMe shelves:
++
+`storage shelf port show -remote-device <switch name>`
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::> storage shelf port show -remote-device IP_switch_A_1
+
+Shelf ID Module State        Internal?
+----- -- ------ ------------ ---------
+1.0
+       1 A      connected    false
+       3 B      connected    false
+1.2
+       1 A      connected    false
+       3 B      connected    false
+4 entries were displayed.
+
+cluster_A::>
+----
+====
+
 . link:../install-ip/switch-move-cluster-lifs.html[Move the cluster LIFs] before you begin the upgrade. 
 
+. If you are upgrading the firmware on Cisco or Broadcom MetroCluster IP switches, you can save a copy of the current switch configuration before proceeding with the upgrade.
++
+NOTE: If your workflow requires you to reset the switch in order to upgrade the RCF after the firmware upgrade, you can skip this step because the reset clears the saved switch configuration.
++
+[role="tabbed-block"]
+====
+.Cisco
+--
+Save the configuration:
+
+`copy running-config startup-config`
+--
+.Broadcom
+--
+Save the configuration:
+
+`write memory`
+-- 
+====
 
 . Install the software on the first switch.
 +
@@ -161,3 +275,4 @@ NOTE: After you have configured the switches in the first fabric (Switch_A_1, Sw
 // BURT 1451283 and GH issue 126 27/01/2022
 // BURT 1380522
 // 2026 Aug 20, ONTAPDOC-2880
+// 30 Sep 2026, ONTAPDOC-3715
