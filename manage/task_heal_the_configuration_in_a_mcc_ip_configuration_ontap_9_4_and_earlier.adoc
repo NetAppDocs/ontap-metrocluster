@@ -30,25 +30,29 @@ This procedure differs from the healing procedure for MetroCluster FC configurat
 +
 If the system displays the LOADER prompt, run the `boot_ontap` command.
 
-. Perform the root aggregate healing phase: `metrocluster heal root-aggregates`
+. Heal the data aggregates:
 +
-----
-cluster_A::> metrocluster heal root-aggregates
-[Job 137] Job succeeded: Heal Root-Aggregates is successful
-----
-+
-If the healing is vetoed, you have the option of reissuing the metrocluster heal root-aggregates command with the --override-vetoes parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
-
-. Resynchronize the aggregates: `metrocluster heal aggregates`
+`metrocluster heal aggregates`
 +
 ----
 cluster_A::> metrocluster heal aggregates
 [Job 137] Job succeeded: Heal Aggregates is successful
 ----
 +
-If the healing is vetoed, you have the option of reissuing the metrocluster heal command with the --override-vetoes parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
+If the healing is vetoed, you have the option of reissuing the `metrocluster heal` command with the `--override-vetoes` parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
 
-. Confirm the heal operation is complete by running the metrocluster operation show command on the healthy cluster:
+. Heal the root aggregates:
++
+`metrocluster heal root-aggregates`
++
+----
+cluster_A::> metrocluster heal root-aggregates
+[Job 137] Job succeeded: Heal Root-Aggregates is successful
+----
++
+If the healing is vetoed, you have the option of reissuing the `metrocluster heal root-aggregates` command with the `--override-vetoes` parameter. If you use this optional parameter, the system overrides any soft vetoes that prevent the healing operation.
+
+. Confirm the heal operation is complete by running the `metrocluster operation show` command on the healthy cluster:
 +
 ----
 
@@ -59,3 +63,4 @@ cluster_A::> metrocluster operation show
    End Time: 7/29/2017 20:54:42
      Errors: -
 ----
+// 2026 Oct 08, ONTAPDOC-3482

@@ -139,6 +139,8 @@ e4b       Cluster      Cluster          up   9000  auto/40000 healthy  false
 
 .. Verify that all the cluster interfaces (LIFs) are on the home port:
 +
+NOTE: If you are repeating this procedure for the switches in the second fabric after you have already updated the switches in the first fabric, you can skip this step.
++
 `network interface show -role cluster`
 +
 .Show example 
@@ -190,6 +192,48 @@ IP_switch_A_2               cluster-network    10.231.7.252     N9K-C9336C-FX2
     Version Source: CDP/ISDP
 
 2 entries were displayed.
+
+cluster_A::*>
+----
+====
+
+.. Check the MetroCluster IP connections:
++
+`set -privilege advanced`
++
+`storage iscsi-initiator show`
++
+.Show example 
+[%collapsible]
+====
+----
+cluster_A::*> storage iscsi-initiator show
+                                                                       Status
+Node Type Label    Target Portal      Target Name                      Admin/Op
+---- ---- -------- ------------------ -------------------------------- --------
+cluster_A-01
+     dr_auxiliary
+          mccip-aux-a-initiator 172.16.1.104:65200 iqn.2016-06.com.company:aux1a1b2c up/up
+          mccip-aux-a-initiator2 172.16.1.104:65200 iqn.2016-07.com.company:aux1a1b2c up/up
+          mccip-aux-b-initiator 172.16.2.104:65200 iqn.2016-06.com.company:aux1a1b2c up/up
+          mccip-aux-b-initiator2 172.16.2.104:65200 iqn.2016-07.com.company:aux1a1b2c up/up
+     dr_partner
+          mccip-pri-a-initiator 172.16.1.103:65200 iqn.2016-06.com.company:pri1d4e5f up/up
+          mccip-pri-a-initiator2 172.16.1.103:65200 iqn.2016-07.com.company:pri1d4e5f up/up
+          mccip-pri-b-initiator 172.16.2.103:65200 iqn.2016-06.com.company:pri1d4e5f up/up
+          mccip-pri-b-initiator2 172.16.2.103:65200 iqn.2016-07.com.company:pri1d4e5f up/up
+cluster_A-02
+     dr_auxiliary
+          mccip-aux-a-initiator 172.16.1.103:65200 iqn.2016-06.com.company:aux1d4e5f up/up
+          mccip-aux-a-initiator2 172.16.1.103:65200 iqn.2016-07.com.company:aux1d4e5f up/up
+          mccip-aux-b-initiator 172.16.2.103:65200 iqn.2016-06.com.company:aux1d4e5f up/up
+          mccip-aux-b-initiator2 172.16.2.103:65200 iqn.2016-07.com.company:aux1d4e5f up/up
+     dr_partner
+          mccip-pri-a-initiator 172.16.1.104:65200 iqn.2016-06.com.company:pri1a1b2c up/up
+          mccip-pri-a-initiator2 172.16.1.104:65200 iqn.2016-07.com.company:pri1a1b2c up/up
+          mccip-pri-b-initiator 172.16.2.104:65200 iqn.2016-06.com.company:pri1a1b2c up/up
+          mccip-pri-b-initiator2 172.16.2.104:65200 iqn.2016-07.com.company:pri1a1b2c up/up
+18 entries were displayed.
 
 cluster_A::*>
 ----
@@ -317,3 +361,4 @@ After the cluster LIFs have moved to the partner switch, you can follow the stan
 
 NOTE: After configuring the switches in the first fabric, you must repeat the steps to move cluster LIFs on the second fabric. 
 // 2026 Aug 20, ONTAPDOC-2880
+// 30 Sep 2026, ONTAPDOC-3715
