@@ -11,6 +11,10 @@ summary: After you heal the MetroCluster configuration, perform the switchback o
 [.lead]
 After you heal the MetroCluster configuration, you can perform the MetroCluster switchback operation. The MetroCluster switchback operation returns the configuration to its normal operating state, with the sync-source storage virtual machines (SVMs) on the disaster site active and serving data from the local disk pools.
 
+.About this task
+
+Review the following requirements before performing the switchback:
+
 * The disaster cluster must have successfully switched over to the surviving cluster.
 * Healing must have been performed on the data and root aggregates.
 * The surviving cluster nodes must not be in the HA failover state (all nodes must be up and running for each HA pair).
@@ -18,6 +22,8 @@ After you heal the MetroCluster configuration, you can perform the MetroCluster 
 * The root aggregate must be mirrored.
 * The Inter-Switch Links (ISLs) must be online.
 * Any required licenses must be installed on the system.
+
+.Steps
 
 . Confirm that all nodes are in the enabled state: `metrocluster node show`
 +
