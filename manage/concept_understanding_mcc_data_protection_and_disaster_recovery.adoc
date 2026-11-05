@@ -407,6 +407,18 @@ a|
 `snapmirror break`
 a|
 You can break a SnapMirror relationship between a source and destination endpoint of a data protection mirror.
+a|
+`vserver modify -storage-limit`
+a|
+Beginning with ONTAP 9.20.1, storage limits can be configured for SVMs that are part of a MetroCluster IP configuration.
+
+The following limitations apply to enabling or disabling storage limits during a MetroCluster switchover:
+
+* On the sync-destination SVM, you can't use the `vserver modify -storage-limit` command to enable or disable the storage limit. This means that you cannot change the value from 0 to a non-zero value, or from a non-zero value to 0. The command fails with the following error:
++
+`This operation is not permitted on a Vserver that is configured as the destination of a MetroCluster Vserver relationship`
+
+* You can still change the storage limit from one non-zero value to another (for example, from 100TB to 200TB). This new value is retained across switchback.
 |===
 
 === Differences in switchover between MetroCluster FC and IP configurations
