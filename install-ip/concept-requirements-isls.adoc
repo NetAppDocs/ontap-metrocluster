@@ -21,9 +21,13 @@ These requirements apply to ISLs on all MetroCluster IP configurations:
 * The maximum supported difference in distance between fabric 1 and fabric 2 is 20km or 0.2ms.
 * The ISLs must have the same topology. For example, they should all be direct links, or if the configuration uses WDM, then they must all use WDM.
 * The minimum required ISL speed depends on the platform model:
-** Beginning with ONTAP 9.18.1, platforms with a MetroCluster IP backend port speed of 100Gbps require a minimum ISL link speed of 100Gbps. Using a different ISL speed requires a Feature Policy Variance Request (FPVR). To file an FPVR, contact your NetApp sales team.
+** Beginning with ONTAP 9.20.1, you can enable WAN Inter-Switch Links (ISL) congestion control in MetroCluster IP configurations so that ISLs running at lower or mixed bandwidths, such as 10Gbps, 25Gbps, or 40Gbps, can be used with platforms that have a MetroCluster IP backend port speed of 100Gbps. For more information, see link:../install-ip/mcc-congestion-control.html[Configure WAN ISL congestion control].
 +
-CAUTION: Upgrades to ONTAP 9.18.1 and later on platforms that do not currently meet the 100Gbps ISL requirement are not blocked and can proceed. However, NetApp strongly recommends that customers transition to 100Gbps ISL connectivity to maintain expected performance and availability levels.
+CAUTION: Configuring WAN ISL congestion control does *not* guarantee that performance issues that might be present when using lower bandwidth ISLs will not occur. NetApp strongly recommends that you transition to 100Gbps ISL connectivity for optimal performance.
+
+** In ONTAP 9.18.1 and ONTAP 9.19.1, platforms with a MetroCluster IP backend port speed of 100Gbps require a minimum ISL link speed of 100Gbps. Using a different ISL speed on affected platforms running these ONTAP versions requires a Feature Policy Variance Request (FPVR). To file an FPVR, contact your NetApp sales team.
++
+CAUTION: ONTAP software upgrades on platforms that do not currently meet the 100Gbps ISL requirement are not blocked and can proceed. However, NetApp strongly recommends that customers transition to 100Gbps ISL connectivity to maintain expected performance and availability levels.
 
 ** On all other platforms, the minimum supported ISL link speed is 10Gbps.
 * There must be at least one 10Gbps ISL port per fabric.

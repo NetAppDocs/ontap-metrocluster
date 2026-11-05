@@ -2374,13 +2374,19 @@ The authentication and privacy protocols on the switches and on the ONTAP system
 
 .About this task
 
-ONTAP currently supports AES-128 for privacy (encryption) and SHA-256 for authentication.
-//ontap-metrocluster/issues/26 2021.11.21
+* Beginning with ONTAP 9.20.1, ONTAP supports SHA-512 for SNMP authentication. 
+
+* ONTAP supports the following protocols for SNMP authentication and encryption:
+** Privacy (encryption): AES-128
+** Authentication:
+*** SHA-512 (beginning with ONTAP 9.20.1)
+*** SHA-256
+
 
 [CAUTION]
 ====
-* In Fabric OS 10.x and later, Brocade supports only SHA-512 for SNMP authentication. ONTAP currently does not support SHA-512, with support limited to SHA‑256.
-* If your MetroCluster FC switches are running Fabric OS 10.x or later, you cannot configure SNMP and you cannot add those switches to ONTAP health monitoring. If you want to downgrade the switch firmware, you can follow the steps in link:../maintain/task_upgrade_or_downgrad_the_firmware_on_a_brocade_fc_switch_mcc.html[Upgrade or downgrade the firmware on a Brocade FC switch].
+* In Fabric OS 10.x and later, Brocade supports only SHA-512 for SNMP authentication. 
+* If you are running an ONTAP version earlier than 9.20.1 and your MetroCluster FC switches are running Fabric OS 10.x or later, you cannot configure SNMP and you cannot add those switches to ONTAP health monitoring. If you want to downgrade the switch firmware, you can follow the steps in link:../maintain/task_upgrade_or_downgrad_the_firmware_on_a_brocade_fc_switch_mcc.html[Upgrade or downgrade the firmware on a Brocade FC switch].
 ====
 
 .Steps
@@ -2397,11 +2403,13 @@ Controller_A_1::> security login create -user-or-group-name snmpv3user -applicat
 +
 NOTE: For EngineID, press *ENTER* to assign the default value.
 +
+The following output is for example purporses only, you should choose the settings that are supported in your environment. 
++
 ----
 
 Enter the authoritative entity's EngineID [remote EngineID]:
 
-Which authentication protocol do you want to choose (none, md5, sha, sha2-256) [none]: sha
+Which authentication protocol do you want to choose (none, md5, sha, sha2-256, sha512) [none]: sha512
 
 Enter the authentication protocol password (minimum 8 characters long):
 
