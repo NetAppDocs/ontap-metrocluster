@@ -2,22 +2,22 @@
 permalink: maintain/concept_identifying_storage_in_a_mcc_ip_configuration.html
 sidebar: sidebar
 keywords: metrocluster, maintain, service, identifying, storage, ip, configuration
-summary: 'If you need to replace a drive or shelf module, you first need to identify the location.'
+summary: "Identify whether a drive or shelf is local or remote in a MetroCluster IP configuration so you can find the correct drive or shelf module to replace."
 ---
 = Identify the storage location in a MetroCluster IP configuration
 :icons: font
 :imagesdir: ../media/
 
 [.lead]
-If you need to replace a drive or shelf module, you first need to identify the location.
+Before you replace a drive or shelf module in a MetroCluster IP configuration, identify its location by determining whether it is local or remote.
 
 == Identification of local and remote shelves
 
-When you view shelf information from a MetroCluster site, all remote drives are on 0m, the virtual iSCSI host adapter. This means that the drives are accessed via the MetroCluster IP interfaces. All other drives are local.
+When you view shelf information from a MetroCluster site, all remote drives are on 0m, the virtual iSCSI host adapter. This means that the drives are accessed through the MetroCluster IP interfaces. All other drives are local.
 
 After identifying whether a shelf is remote (on 0m), you can further identify the drive or shelf by the serial number or, depending on shelf ID assignments in your configuration, by shelf ID.
 
-NOTE: In MetroCluster IP configurations running ONTAP 9.4, the shelf ID is not required to be unique between the MetroCluster sites. This includes both internal shelves (0) and external shelves. The serial number is consistent when viewed from any node on either MetroCluster site.
+NOTE: In MetroCluster IP configurations running ONTAP 9.4, the shelf ID doesn't need to be unique between the MetroCluster sites. This includes both internal shelves (0) and external shelves. The serial number is consistent when viewed from any node on either MetroCluster site.
 
 Shelf IDs should be unique within the disaster recovery (DR) group except for the internal shelf.
 
