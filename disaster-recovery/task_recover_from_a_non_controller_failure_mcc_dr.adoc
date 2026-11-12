@@ -198,7 +198,7 @@ Power on the nodes.
 Run the command: `boot_ontap`
 --
 ====
-. After the node boot completes, verify that the root aggregates are mirrored.
+. After the node boot completes, verify that the root and data aggregates are mirrored.
 +
 [role="tabbed-block"]
 ====
@@ -214,8 +214,12 @@ Run the command: `boot_ontap`
 --
 .If a plex is offline:
 --
-Online the plex:
+.. From the disaster site, confirm that the root aggregate plexes are online:
++
+`storage aggregate plex show`
 
+.. From the surviving site, online all plexes that are offline:
++
 `storage aggregate plex online -aggregate <aggregate_name> -plex <plex_name>`
 --
 .If both plexes are present:

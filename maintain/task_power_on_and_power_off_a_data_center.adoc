@@ -201,10 +201,6 @@ Yes. Disks are remote to cluster A.
 a|
 Node_B_1_aggr1/plex0
 
-Node_B_1_aggr0/plex0
-
-Node_B_2_aggr0/plex0
-
 Node_B_2_aggr1/plex0
 a|
 Disks in pool 1
@@ -222,7 +218,7 @@ a|
 storage aggregate plex offline -aggregate Node_B_1_aggr0 -plex plex0
 ----
 +
-NOTE: Perform this step for all plexes that have disks that are remote to Cluster_A.
+NOTE: Do not move the plexes of the Cluster_B root aggregates (aggr0) offline. The root aggregates of the disaster site are not switched over. After you heal the configuration, ownership returns to Cluster_B.
 
 . Offline the ISL switch ports. Select the correct procedure for your switch type.
 +
