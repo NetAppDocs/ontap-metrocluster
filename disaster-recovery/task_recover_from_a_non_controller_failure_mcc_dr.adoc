@@ -214,9 +214,14 @@ Run the command: `boot_ontap`
 --
 .If a plex is offline:
 --
-.. From the disaster site, confirm that the root aggregate plexes are online:
+
+ .. From the disaster site, check the root aggregate plexes:
 +
 `storage aggregate plex show`
++
+If a root aggregate plex is offline, bring it online from the disaster site:
++
+`storage aggregate plex online -aggregate <aggregate_name> -plex <plex_name>`
 
 .. From the surviving site, online all plexes that are offline:
 +
