@@ -201,10 +201,6 @@ Yes. Disks are remote to cluster A.
 a|
 Node_B_1_aggr1/plex0
 
-Node_B_1_aggr0/plex0
-
-Node_B_2_aggr0/plex0
-
 Node_B_2_aggr1/plex0
 a|
 Disks in pool 1
@@ -219,10 +215,10 @@ a|
 `storage aggregate plex offline`
 +
 ----
-storage aggregate plex offline -aggregate Node_B_1_aggr0 -plex plex0
+storage aggregate plex offline -aggregate Node_B_1_aggr1 -plex plex0
 ----
 +
-NOTE: Perform this step for all plexes that have disks that are remote to Cluster_A.
+NOTE: Do not move the plexes of the Cluster_B root aggregates (aggr0) offline.
 
 . Offline the ISL switch ports. Select the correct procedure for your switch type.
 +
@@ -314,6 +310,7 @@ CAUTION: Don't power up the shelves before you power up the controllers. This pr
 +
 Follow the instructions in link:../disaster-recovery/task_recover_from_a_non_controller_failure_mcc_dr.html#verifying-that-your-system-is-ready-for-a-switchback[Verifying that your system is ready for a switchback] to perform healing and switchback operations according to your MetroCluster configuration.
 
+// 2026 Nov 12, ONTAPDOC-4455
 // 2025 Jan 21, ONTAPDOC-3428
 // 2025 June 05, ONTAPDOC-2894
 // 2025 Feb 13, ONTAPDOC-2534
